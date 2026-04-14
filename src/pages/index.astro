@@ -1,0 +1,108 @@
+---
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import WhyCiCon from '../components/WhyCiCon.astro';
+import Services from '../components/Services.astro';
+import WhoWeServe from '../components/WhoWeServe.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import ProblemsSolved from '../components/ProblemsSolved.astro';
+import ReadyToGrow from '../components/ReadyToGrow.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/globals.css';
+
+import { getHomepage } from '../lib/sanity';
+import { defaultHomepageData } from '../lib/defaults';
+import type { HomepageData } from '../lib/types';
+
+// Try Sanity first, fall back to hard-coded defaults
+let data: HomepageData = defaultHomepageData;
+try {
+  const sanityData = await getHomepage();
+  if (sanityData?.hero?.headline) {
+    data = sanityData;
+  }
+} catch {
+  // Sanity not configured – using defaults is fine
+}
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Primary Meta -->
+  <title>CiCon Marketing – Boutique Digital Marketing Agency in Richmond Hill, GTA</title>
+  <meta name="description" content="CiCon Marketing is a boutique digital marketing agency delivering measurable growth across the GTA—turning ad spend into real leads, calls, and customers." />
+  <meta name="keywords" content="digital marketing agency Richmond Hill, GTA marketing agency, Google Ads, SEO, dental marketing, social media marketing" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://cicon.ca/" />
+  <meta property="og:title" content="CiCon Marketing – Boutique Digital Marketing Agency in Richmond Hill" />
+  <meta property="og:description" content="Boutique digital marketing agency delivering measurable growth across the GTA—turning ad spend into real leads, calls, and customers." />
+  <meta property="og:image" content="https://cicon.ca/og-image.jpg" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="CiCon Marketing – Digital Marketing Agency GTA" />
+  <meta name="twitter:description" content="Boutique digital marketing agency delivering measurable growth across the GTA." />
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://cicon.ca/" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Favicon (update with actual favicon path) -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <!-- Schema.org structured data -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MarketingAgency",
+      "name": "CiCon Marketing",
+      "url": "https://cicon.ca",
+      "logo": "https://cicon.ca/logo.png",
+      "description": "Boutique digital marketing agency in Richmond Hill, Ontario. Delivering measurable growth for GTA businesses since 2010.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Richmond Hill",
+        "addressRegion": "ON",
+        "addressCountry": "CA"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "email": "hello@cicon.ca"
+      },
+      "areaServed": "Greater Toronto Area",
+      "foundingDate": "2010"
+    }
+  </script>
+</head>
+
+<body class="font-sans bg-white text-gray-900 antialiased">
+
+  <Nav />
+
+  <main>
+    <Hero       data={data.hero} />
+    <WhyCiCon   data={data.whyCicon} />
+    <Services   data={data.services} />
+    <WhoWeServe data={data.whoWeServe} />
+    <HowItWorks data={data.howItWorks} />
+    <ProblemsSolved data={data.problemsSolved} />
+    <ReadyToGrow data={data.readyToGrow} />
+    <Contact     data={data.contact} />
+  </main>
+
+  <Footer />
+
+</body>
+</html>

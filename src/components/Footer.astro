@@ -1,0 +1,92 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-navy-900 text-gray-400">
+
+  <!-- Main footer content -->
+  <div class="container-xl py-16">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+
+      <!-- Brand column -->
+      <div class="lg:col-span-2">
+        <a href="/" class="flex items-center gap-2 mb-5 w-fit">
+          <div class="w-8 h-8 bg-teal-600 rounded-lg flex items-center justify-center">
+            <span class="text-white font-black text-sm">Ci</span>
+          </div>
+          <span class="text-white font-bold text-lg">
+            CiCon <span class="text-teal-400">Marketing</span>
+          </span>
+        </a>
+        <p class="text-sm leading-relaxed max-w-sm mb-6">
+          Boutique digital marketing agency in Richmond Hill, Ontario. Delivering measurable growth
+          for GTA businesses since 2010.
+        </p>
+        <a
+          href="/book-a-strategy-call-with-cicon-marketing/"
+          class="inline-flex items-center gap-2 px-5 py-2.5 bg-teal-600 hover:bg-teal-500 text-white font-semibold rounded-lg text-sm transition-all duration-200 hover:-translate-y-0.5"
+        >
+          Schedule a Strategy Call
+        </a>
+      </div>
+
+      <!-- Services column -->
+      <div>
+        <h4 class="text-white font-semibold mb-5 text-sm uppercase tracking-wider">Services</h4>
+        <ul class="space-y-3 text-sm">
+          {[
+            'Paid Advertising (PPC)',
+            'AI SEO & Traditional SEO',
+            'Dental Marketing',
+            'Social Media Marketing',
+            'Website Development',
+            'CRM Management',
+            'Directory Listings',
+            'Media Production',
+          ].map(s => (
+            <li>
+              <a href="#services" class="hover:text-teal-400 transition-colors duration-150">{s}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Company column -->
+      <div>
+        <h4 class="text-white font-semibold mb-5 text-sm uppercase tracking-wider">Company</h4>
+        <ul class="space-y-3 text-sm mb-8">
+          {[
+            { label: 'Home', href: '/' },
+            { label: 'Our Process', href: '#how-it-works' },
+            { label: 'Who We Serve', href: '#who-we-serve' },
+            { label: 'Contact Us', href: '#contact' },
+            { label: 'Schedule a Call', href: '/book-a-strategy-call-with-cicon-marketing/' },
+          ].map(l => (
+            <li>
+              <a href={l.href} class="hover:text-teal-400 transition-colors duration-150">{l.label}</a>
+            </li>
+          ))}
+        </ul>
+
+        <h4 class="text-white font-semibold mb-3 text-sm uppercase tracking-wider">Contact</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="mailto:hello@cicon.ca" class="hover:text-teal-400 transition-colors">hello@cicon.ca</a></li>
+          <li><span>Richmond Hill, ON</span></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="border-t border-white/10">
+    <div class="container-xl py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+      <p>© {year} CiCon Marketing. All rights reserved.</p>
+      <div class="flex gap-6">
+        <a href="/privacy-policy/" class="hover:text-teal-400 transition-colors">Privacy Policy</a>
+        <a href="/terms-of-service/" class="hover:text-teal-400 transition-colors">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+
+</footer>
