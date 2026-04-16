@@ -70,7 +70,7 @@ export default function ProblemCards({ problems }: Props) {
             {/* ── Problem header (dark) ─────────────────── */}
             <div
               className="relative p-6 pb-7 flex-1"
-              style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)' }}
+              style={{ background: 'linear-gradient(135deg, #212129 0%, #2e2e3a 100%)' }}
             >
               {/* Subtle radial glow behind icon */}
               <div

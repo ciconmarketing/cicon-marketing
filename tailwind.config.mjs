@@ -4,36 +4,55 @@ export default {
   theme: {
     extend: {
       colors: {
-        // ── CiCon Brand Palette ──────────────────────────────────────────
-        // bright-marine: #0071bd  | baltic-blue: #1558a4 | regal-navy: #163172
-        // white: #ffffff          | ghost-white: #efedf4
+        // ── CiCon Brand Palette (palette 3) ─────────────────────────────────
+        // dark-goldenrod: #9d833e  | shadow-grey: #212129
+        // alabaster-grey: #e7e7e7 | bright-amber: #ffcf00 (use sparingly)
+
+        // navy → shadow-grey family (dark section backgrounds)
         navy: {
-          50:  '#e8edf7',
-          100: '#c5d0eb',
-          200: '#9fb0da',
-          300: '#7890c9',
-          400: '#4f6fb5',
-          500: '#1a4f9e',
-          600: '#1558a4', // baltic-blue
-          700: '#163172', // regal-navy — hero, footer, dark sections
-          800: '#0e2055', // deeper regal navy
-          900: '#07122e', // darkest
+          50:  '#eeeef2',
+          100: '#d0d0d8',
+          200: '#aeaebb',
+          300: '#8b8b9e',
+          400: '#6d6d82',
+          500: '#4e4e64',
+          600: '#38384a',
+          700: '#2e2e3a',
+          800: '#252530',
+          900: '#212129', // shadow-grey — hero, footer, dark sections
         },
+
+        // teal → dark-goldenrod family (primary accent / CTA)
         teal: {
-          50:  '#e0f0fb',
-          100: '#b3d8f4',
-          200: '#80bcec',
-          300: '#4da0e3',
-          400: '#268cda',
-          500: '#0079cc',
-          600: '#0071bd', // bright-marine — primary CTA
-          700: '#1558a4', // baltic-blue — hover
-          800: '#163172', // regal-navy — deep hover
+          50:  '#fdf9ec',
+          100: '#f7efc8',
+          200: '#efe09a',
+          300: '#e2c96a',
+          400: '#c9a94a',
+          500: '#b09040',
+          600: '#9d833e', // dark-goldenrod — primary CTA & accents
+          700: '#7d6830',
+          800: '#5e4e24',
+          900: '#3e3418',
+          950: '#261f0d',
         },
-        // ghost-white replaces gray-50 for light section backgrounds
+
+        // alabaster-grey for borders & light backgrounds
         gray: {
-          50:  '#efedf4', // ghost-white from palette
+          50:  '#fafaf8',
+          100: '#e7e7e7', // alabaster-grey
+          200: '#d0d0d0',
+          300: '#b4b4b4',
+          400: '#969696',
+          500: '#787878',
+          600: '#5a5a5a',
+          700: '#3c3c3c',
+          800: '#2a2a2a',
+          900: '#1a1a1a',
         },
+
+        // bright-amber — use very sparingly (hero highlight, one badge)
+        'amber-brand': '#ffcf00',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
@@ -46,7 +65,7 @@ export default {
       },
       keyframes: {
         fadeInUp: {
-          '0%': { opacity: '0', transform: 'translateY(24px)' },
+          '0%':   { opacity: '0', transform: 'translateY(24px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
       },

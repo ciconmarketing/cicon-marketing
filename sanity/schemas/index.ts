@@ -1,15 +1,12 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// CiCon Marketing – Sanity Schema
+// CiCon Marketing – Sanity Schema  (v2 — with image fields & social links)
 //
 // SETUP INSTRUCTIONS:
-//   1. In your Sanity Studio project (created with `npm create sanity@latest`),
-//      open the file: schemas/index.ts  (or schemaTypes/index.ts)
-//   2. Replace the entire contents with THIS file.
+//   1. In your Sanity Studio project, open schemas/index.ts (or schemaTypes/index.ts)
+//   2. Replace the entire file with this content.
 //   3. Run `npx sanity dev` to start Sanity Studio.
-//   4. Go to "Homepage" in the Studio sidebar.
-//   5. Click "+ Create" to create the homepage document.
-//      All fields will be pre-filled with the CiCon content.
-//   6. Click "Publish". Done!
+//   4. Open "Homepage" → create the document → all fields are pre-filled.
+//   5. Publish. Done!
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { defineType, defineField, defineArrayMember } from 'sanity';
@@ -24,9 +21,7 @@ const statItem = defineArrayMember({
     defineField({ name: 'value', title: 'Value (e.g. "250+")', type: 'string' }),
     defineField({ name: 'label', title: 'Label (e.g. "Projects Completed")', type: 'string' }),
   ],
-  preview: {
-    select: { title: 'value', subtitle: 'label' },
-  },
+  preview: { select: { title: 'value', subtitle: 'label' } },
 });
 
 const serviceItem = defineArrayMember({
@@ -38,9 +33,8 @@ const serviceItem = defineArrayMember({
     defineField({ name: 'description', title: 'Short Description', type: 'text', rows: 3 }),
     defineField({
       name: 'icon',
-      title: 'Icon Key',
+      title: 'Icon',
       type: 'string',
-      description: 'Use one of: megaphone, search, tooth, social, code, crm, map, video',
       options: {
         list: [
           { title: '📢 Megaphone (Paid Ads)',    value: 'megaphone' },
@@ -55,9 +49,7 @@ const serviceItem = defineArrayMember({
       },
     }),
   ],
-  preview: {
-    select: { title: 'title', subtitle: 'description' },
-  },
+  preview: { select: { title: 'title', subtitle: 'description' } },
 });
 
 const industryItem = defineArrayMember({
@@ -69,19 +61,28 @@ const industryItem = defineArrayMember({
     defineField({ name: 'description', title: 'Short Description', type: 'text', rows: 2 }),
     defineField({
       name: 'icon',
-      title: 'Icon Key',
+      title: 'Fallback Icon (used if no photo uploaded)',
       type: 'string',
       options: {
         list: [
-          { title: '🦷 Tooth', value: 'tooth' },
-          { title: '🏠 Home', value: 'home' },
-          { title: '🛍️ Store', value: 'store' },
-          { title: '💼 Briefcase', value: 'briefcase' },
+          { title: '🦷 Dental', value: 'tooth' },
+          { title: '🏠 Home Services', value: 'home' },
+          { title: '🛍️ Retail / Store', value: 'store' },
+          { title: '💼 B2B / Professional', value: 'briefcase' },
         ],
       },
     }),
+    defineField({
+      name: 'image',
+      title: 'Card Background Photo',
+      type: 'image',
+      description: 'Upload a photo to use as this card\'s background. If left empty, a default image is used.',
+      options: { hotspot: true },
+    }),
   ],
-  preview: { select: { title: 'title' } },
+  preview: {
+    select: { title: 'title', media: 'image' },
+  },
 });
 
 const stepItem = defineArrayMember({
@@ -110,7 +111,7 @@ const problemItem = defineArrayMember({
     defineField({ name: 'solution', title: 'Our Solution', type: 'text', rows: 3 }),
     defineField({
       name: 'icon',
-      title: 'Icon Key',
+      title: 'Icon',
       type: 'string',
       options: {
         list: [
@@ -125,6 +126,30 @@ const problemItem = defineArrayMember({
     }),
   ],
   preview: { select: { title: 'problem' } },
+});
+
+const socialLinkItem = defineArrayMember({
+  type: 'object',
+  name: 'socialLinkItem',
+  title: 'Social Link',
+  fields: [
+    defineField({
+      name: 'platform',
+      title: 'Platform',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'LinkedIn',  value: 'linkedin' },
+          { title: 'Facebook',  value: 'facebook' },
+          { title: 'Instagram', value: 'instagram' },
+          { title: 'Twitter/X', value: 'twitter' },
+          { title: 'YouTube',   value: 'youtube' },
+        ],
+      },
+    }),
+    defineField({ name: 'url', title: 'Profile URL', type: 'url' }),
+  ],
+  preview: { select: { title: 'platform', subtitle: 'url' } },
 });
 
 // ── Homepage document type ────────────────────────────────────────────────────
@@ -146,6 +171,7 @@ const homepage = defineType({
           name: 'headline',
           title: 'Main Headline',
           type: 'string',
+          description: 'Include "Richmond Hill" — it will be highlighted in amber automatically.',
           validation: r => r.required().max(100),
           initialValue: 'Boutique Digital Marketing Agency in Richmond Hill',
         }),
@@ -156,17 +182,14 @@ const homepage = defineType({
           rows: 3,
           initialValue: 'CiCon Marketing is a boutique digital marketing agency delivering measurable growth across the GTA—turning ad spend into real leads, calls, and customers.',
         }),
+        defineField({ name: 'ctaText',  title: 'CTA Button Text', type: 'string', initialValue: 'Schedule a Strategy Call' }),
+        defineField({ name: 'ctaLink',  title: 'CTA Button URL',  type: 'string', initialValue: '/book-a-strategy-call-with-cicon-marketing/' }),
         defineField({
-          name: 'ctaText',
-          title: 'CTA Button Text',
-          type: 'string',
-          initialValue: 'Schedule a Strategy Call',
-        }),
-        defineField({
-          name: 'ctaLink',
-          title: 'CTA Button URL',
-          type: 'string',
-          initialValue: '/book-a-strategy-call-with-cicon-marketing/',
+          name: 'heroImage',
+          title: 'Hero Background Photo (optional)',
+          type: 'image',
+          description: 'Upload a custom hero background. Leave empty to use the default analytics photo.',
+          options: { hotspot: true },
         }),
       ],
     }),
@@ -177,12 +200,7 @@ const homepage = defineType({
       title: '② Why CiCon Section',
       type: 'object',
       fields: [
-        defineField({
-          name: 'headline',
-          title: 'Section Headline',
-          type: 'string',
-          initialValue: 'Why Businesses in the GTA Trust CiCon Marketing',
-        }),
+        defineField({ name: 'headline', title: 'Section Headline', type: 'string', initialValue: 'Why Businesses in the GTA Trust CiCon Marketing' }),
         defineField({
           name: 'stats',
           title: 'Stats (3 recommended)',
@@ -191,7 +209,7 @@ const homepage = defineType({
           initialValue: [
             { _key: 'stat1', value: '250+', label: 'Projects Completed' },
             { _key: 'stat2', value: '100+', label: 'Happy Clients' },
-            { _key: 'stat3', value: '14+',  label: 'Years of Experience' },
+            { _key: 'stat3', value: '15+',  label: 'Years of Experience' },
           ],
         }),
         defineField({
@@ -210,12 +228,7 @@ const homepage = defineType({
       title: '③ Services Section',
       type: 'object',
       fields: [
-        defineField({
-          name: 'headline',
-          title: 'Section Headline',
-          type: 'string',
-          initialValue: 'What We Do',
-        }),
+        defineField({ name: 'headline', title: 'Section Headline', type: 'string', initialValue: 'What We Do' }),
         defineField({
           name: 'items',
           title: 'Service Cards',
@@ -246,6 +259,7 @@ const homepage = defineType({
         defineField({
           name: 'industries',
           title: 'Industry Cards',
+          description: 'Upload a photo for each card. If no photo, a default image is used.',
           type: 'array',
           of: [industryItem],
           initialValue: [
@@ -312,10 +326,10 @@ const homepage = defineType({
       title: '⑦ Ready to Grow CTA Section',
       type: 'object',
       fields: [
-        defineField({ name: 'headline', type: 'string', title: 'Headline', initialValue: 'Ready to Grow Your Business?' }),
-        defineField({ name: 'subheadline', type: 'text', title: 'Subheadline', rows: 3, initialValue: "Let's build a marketing strategy that actually works for your business. Book a free strategy call and see exactly how CiCon Marketing can help you grow." }),
-        defineField({ name: 'ctaText', type: 'string', title: 'CTA Button Text', initialValue: 'Schedule a Free Strategy Call' }),
-        defineField({ name: 'ctaLink', type: 'string', title: 'CTA Button URL', initialValue: '/book-a-strategy-call-with-cicon-marketing/' }),
+        defineField({ name: 'headline',    type: 'string', title: 'Headline',     initialValue: 'Ready to Grow Your Business?' }),
+        defineField({ name: 'subheadline', type: 'text',   title: 'Subheadline', rows: 3, initialValue: "Let's build a marketing strategy that actually works for your business. Book a free strategy call and see exactly how CiCon Marketing can help you grow." }),
+        defineField({ name: 'ctaText',     type: 'string', title: 'CTA Button Text', initialValue: 'Schedule a Free Strategy Call' }),
+        defineField({ name: 'ctaLink',     type: 'string', title: 'CTA Button URL',  initialValue: '/book-a-strategy-call-with-cicon-marketing/' }),
       ],
     }),
 
@@ -326,9 +340,20 @@ const homepage = defineType({
       type: 'object',
       fields: [
         defineField({ name: 'headline', type: 'string', title: 'Section Headline', initialValue: 'Get In Touch' }),
-        defineField({ name: 'email', type: 'string', title: 'Email Address', initialValue: 'hello@cicon.ca' }),
-        defineField({ name: 'phone', type: 'string', title: 'Phone Number', initialValue: '+1 (905) 884-5060' }),
-        defineField({ name: 'address', type: 'string', title: 'Location / Address', initialValue: 'Richmond Hill, ON, Canada' }),
+        defineField({ name: 'email',    type: 'string', title: 'Email Address',    initialValue: 'info@cicon.ca' }),
+        defineField({ name: 'phone',    type: 'string', title: 'Phone Number',     initialValue: '+1 (289) 807-1020' }),
+        defineField({ name: 'address',  type: 'string', title: 'Location / Address', initialValue: 'Richmond Hill, ON, Canada' }),
+        defineField({
+          name: 'socialLinks',
+          title: 'Social Media Links',
+          type: 'array',
+          of: [socialLinkItem],
+          initialValue: [
+            { _key: 'sl1', platform: 'linkedin',  url: 'https://www.linkedin.com/company/cicon-marketing/' },
+            { _key: 'sl2', platform: 'facebook',  url: 'https://www.facebook.com/ciconmarketing/' },
+            { _key: 'sl3', platform: 'instagram', url: 'https://www.instagram.com/ciconmarketing/' },
+          ],
+        }),
       ],
     }),
 
@@ -343,6 +368,6 @@ const homepage = defineType({
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Export – paste this into your Sanity project's schemas/index.ts
+// Export — paste this into your Sanity project's schemas/index.ts
 // ─────────────────────────────────────────────────────────────────────────────
 export const schemaTypes = [homepage];

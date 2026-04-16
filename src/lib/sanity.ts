@@ -11,13 +11,16 @@ const projectId = isValidId ? rawId : null;
 
 console.log(`[Sanity] projectId="${rawId}" valid=${isValidId} dataset="${dataset}"`);
 
+// GROQ query — fetches all homepage sections.
+// Images are resolved to direct CDN URLs via asset->url projection.
 const HOMEPAGE_QUERY = `
   *[_type == "homepage"][0]{
     hero{
       headline,
       subheadline,
       ctaText,
-      ctaLink
+      ctaLink,
+      "heroImageUrl": heroImage.asset->url
     },
     whyCicon{
       headline,
@@ -31,7 +34,12 @@ const HOMEPAGE_QUERY = `
     whoWeServe{
       headline,
       subheadline,
-      industries[]{title, description, icon}
+      industries[]{
+        title,
+        description,
+        icon,
+        "imageUrl": image.asset->url
+      }
     },
     howItWorks{
       headline,
@@ -53,7 +61,8 @@ const HOMEPAGE_QUERY = `
       headline,
       email,
       phone,
-      address
+      address,
+      socialLinks[]{platform, url}
     }
   }
 `;

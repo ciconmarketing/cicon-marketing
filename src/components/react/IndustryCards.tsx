@@ -13,6 +13,7 @@ interface Industry {
   icon: string;
   title: string;
   description: string;
+  imageUrl?: string; // optional Sanity image URL — overrides Unsplash fallback
 }
 
 interface Props {
@@ -52,15 +53,15 @@ export default function IndustryCards({ industries }: Props) {
           {/* Background image */}
           <div className="absolute inset-0">
             <img
-              src={industryImages[industry.icon] ?? fallbackImage}
+              src={industry.imageUrl ?? industryImages[industry.icon] ?? fallbackImage}
               alt={industry.title}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-navy-900/90 via-navy-900/50 to-navy-900/20 group-hover:from-navy-900/95 group-hover:via-teal-900/60 transition-all duration-300" />
+            <div className="absolute inset-0 transition-all duration-300" style={{background:'linear-gradient(to top, rgba(33,33,41,0.92) 0%, rgba(33,33,41,0.45) 55%, rgba(33,33,41,0.15) 100%)'}} />
           </div>
 
           {/* Top accent bar */}
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-500 to-teal-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute top-0 left-0 right-0 h-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{background:'linear-gradient(to right, #9d833e, #c4a55a)'}} />
 
           <div className="relative p-7 pt-32">
             <h3 className="text-lg font-bold text-white mb-2">{industry.title}</h3>

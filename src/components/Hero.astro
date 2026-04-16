@@ -11,7 +11,7 @@ const { data } = Astro.props;
   <!-- Full-bleed background image -->
   <div class="absolute inset-0">
     <img
-      src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1920&q=80&auto=format&fit=crop"
+      src={data.heroImageUrl ?? "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1920&q=80&auto=format&fit=crop"}
       alt="Digital marketing analytics"
       class="w-full h-full object-cover"
       loading="eager"
@@ -41,7 +41,7 @@ const { data } = Astro.props;
       <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.05] mb-6 tracking-tight">
         {data.headline.split('Richmond Hill').map((part, i, arr) => (
           i < arr.length - 1
-            ? <>{part}<span class="text-teal-400">Richmond Hill</span></>
+            ? <>{part}<span style="color:#ffcf00">Richmond Hill</span></>
             : part
         ))}
       </h1>
