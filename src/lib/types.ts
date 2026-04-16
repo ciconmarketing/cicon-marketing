@@ -3,7 +3,9 @@ export interface HeroData {
   subheadline: string;
   ctaText: string;
   ctaLink: string;
-  heroImageUrl?: string; // optional Sanity image override
+  heroImageUrl?: string;     // optional Sanity image override
+  heroImageAlt?: string;     // alt text from Sanity
+  heroImageCaption?: string; // caption from Sanity
 }
 
 export interface Stat {
@@ -15,6 +17,9 @@ export interface WhyCiConData {
   headline: string;
   stats: Stat[];
   description: string;
+  featureImageUrl?: string;     // optional right-column photo
+  featureImageAlt?: string;
+  featureImageCaption?: string;
 }
 
 export interface Service {
@@ -32,7 +37,8 @@ export interface Industry {
   title: string;
   description: string;
   icon: string;
-  imageUrl?: string; // optional Sanity image (falls back to Unsplash)
+  imageUrl?: string;  // optional Sanity image (falls back to Unsplash)
+  imageAlt?: string;  // alt text from Sanity
 }
 
 export interface WhoWeServeData {
@@ -70,6 +76,8 @@ export interface ReadyToGrowData {
   subheadline: string;
   ctaText: string;
   ctaLink: string;
+  backgroundImageUrl?: string; // optional Sanity background photo
+  backgroundImageAlt?: string;
 }
 
 export interface SocialLink {

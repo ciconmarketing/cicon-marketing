@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// CiCon Marketing – Sanity Schema  (v2 — with image fields & social links)
+// CiCon Marketing – Sanity Schema  (v3 — rich editable images with alt/caption)
 //
 // SETUP INSTRUCTIONS:
 //   1. In your Sanity Studio project, open schemas/index.ts (or schemaTypes/index.ts)
@@ -78,6 +78,14 @@ const industryItem = defineArrayMember({
       type: 'image',
       description: 'Upload a photo to use as this card\'s background. If left empty, a default image is used.',
       options: { hotspot: true },
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Alt Text',
+          type: 'string',
+          description: 'Describe the image for screen readers and SEO (e.g. "Dental clinic reception area").',
+        }),
+      ],
     }),
   ],
   preview: {
@@ -190,6 +198,21 @@ const homepage = defineType({
           type: 'image',
           description: 'Upload a custom hero background. Leave empty to use the default analytics photo.',
           options: { hotspot: true },
+          fields: [
+            defineField({
+              name: 'alt',
+              title: 'Alt Text',
+              type: 'string',
+              description: 'Describe the image for accessibility and SEO.',
+              initialValue: 'Digital marketing analytics dashboard',
+            }),
+            defineField({
+              name: 'caption',
+              title: 'Caption (optional)',
+              type: 'string',
+              description: 'Short caption shown below the image (rarely visible in hero).',
+            }),
+          ],
         }),
       ],
     }),
@@ -218,6 +241,26 @@ const homepage = defineType({
           type: 'text',
           rows: 4,
           initialValue: 'For over 14 years, CiCon Marketing has helped local businesses, dental clinics, home improvement contractors, and service providers across the GTA grow their customer base. We combine data-driven strategy with creative execution—delivering real, measurable results that matter to your bottom line.',
+        }),
+        defineField({
+          name: 'featureImage',
+          title: 'Feature Image (optional)',
+          type: 'image',
+          description: 'Optional photo shown in the right column of this section. Leave empty to show the "What Sets Us Apart" checklist instead.',
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: 'alt',
+              title: 'Alt Text',
+              type: 'string',
+              description: 'Describe the image for accessibility and SEO.',
+            }),
+            defineField({
+              name: 'caption',
+              title: 'Caption (optional)',
+              type: 'string',
+            }),
+          ],
         }),
       ],
     }),
@@ -330,6 +373,27 @@ const homepage = defineType({
         defineField({ name: 'subheadline', type: 'text',   title: 'Subheadline', rows: 3, initialValue: "Let's build a marketing strategy that actually works for your business. Book a free strategy call and see exactly how CiCon Marketing can help you grow." }),
         defineField({ name: 'ctaText',     type: 'string', title: 'CTA Button Text', initialValue: 'Schedule a Free Strategy Call' }),
         defineField({ name: 'ctaLink',     type: 'string', title: 'CTA Button URL',  initialValue: '/book-a-strategy-call-with-cicon-marketing/' }),
+        defineField({
+          name: 'backgroundImage',
+          title: 'Background Photo (optional)',
+          type: 'image',
+          description: 'Override the default team meeting background photo. A dark overlay is applied automatically.',
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: 'alt',
+              title: 'Alt Text',
+              type: 'string',
+              description: 'Describe the image for accessibility and SEO.',
+              initialValue: 'Team meeting',
+            }),
+            defineField({
+              name: 'caption',
+              title: 'Caption (optional)',
+              type: 'string',
+            }),
+          ],
+        }),
       ],
     }),
 

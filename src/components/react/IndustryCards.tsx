@@ -13,7 +13,8 @@ interface Industry {
   icon: string;
   title: string;
   description: string;
-  imageUrl?: string; // optional Sanity image URL — overrides Unsplash fallback
+  imageUrl?: string;  // optional Sanity image URL — overrides Unsplash fallback
+  imageAlt?: string;  // optional alt text from Sanity
 }
 
 interface Props {
@@ -54,7 +55,7 @@ export default function IndustryCards({ industries }: Props) {
           <div className="absolute inset-0">
             <img
               src={industry.imageUrl ?? industryImages[industry.icon] ?? fallbackImage}
-              alt={industry.title}
+              alt={industry.imageAlt ?? industry.title}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 transition-all duration-300" style={{background:'linear-gradient(to top, rgba(33,33,41,0.92) 0%, rgba(33,33,41,0.45) 55%, rgba(33,33,41,0.15) 100%)'}} />

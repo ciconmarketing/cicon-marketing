@@ -20,12 +20,17 @@ const HOMEPAGE_QUERY = `
       subheadline,
       ctaText,
       ctaLink,
-      "heroImageUrl": heroImage.asset->url
+      "heroImageUrl": heroImage.asset->url,
+      "heroImageAlt": heroImage.alt,
+      "heroImageCaption": heroImage.caption
     },
     whyCicon{
       headline,
       stats[]{value, label},
-      description
+      description,
+      "featureImageUrl": featureImage.asset->url,
+      "featureImageAlt": featureImage.alt,
+      "featureImageCaption": featureImage.caption
     },
     services{
       headline,
@@ -38,7 +43,8 @@ const HOMEPAGE_QUERY = `
         title,
         description,
         icon,
-        "imageUrl": image.asset->url
+        "imageUrl": image.asset->url,
+        "imageAlt": image.alt
       }
     },
     howItWorks{
@@ -55,7 +61,9 @@ const HOMEPAGE_QUERY = `
       headline,
       subheadline,
       ctaText,
-      ctaLink
+      ctaLink,
+      "backgroundImageUrl": backgroundImage.asset->url,
+      "backgroundImageAlt": backgroundImage.alt
     },
     contact{
       headline,
