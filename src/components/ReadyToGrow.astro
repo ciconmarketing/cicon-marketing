@@ -4,16 +4,19 @@ interface Props { data: ReadyToGrowData }
 const { data } = Astro.props;
 ---
 
-<section id="ready-to-grow" class="relative py-24 lg:py-32 overflow-hidden bg-navy-800">
-  <!-- Layered background -->
-  <div class="absolute inset-0 bg-gradient-to-br from-navy-900 via-navy-800 to-teal-900/40"></div>
-  <div class="absolute inset-0 bg-hero-pattern opacity-50"></div>
-  <!-- Glow orbs -->
-  <div class="absolute top-1/2 left-1/4 w-[500px] h-[500px] bg-teal-600/15 rounded-full blur-3xl -translate-y-1/2"></div>
-  <div class="absolute top-1/2 right-1/4 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-3xl -translate-y-1/2"></div>
+<section id="ready-to-grow" class="relative py-24 lg:py-32 overflow-hidden">
+  <!-- Background image -->
+  <div class="absolute inset-0">
+    <img
+      src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1920&q=75&auto=format&fit=crop"
+      alt="Team meeting"
+      class="w-full h-full object-cover"
+    />
+    <div class="absolute inset-0 bg-navy-900/95"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-navy-900/40 via-transparent to-teal-900/40"></div>
+  </div>
 
   <div class="container-xl relative z-10 text-center">
-    <!-- Badge -->
     <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-600/20 border border-teal-500/30 text-teal-300 text-sm font-medium mb-8">
       <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
       Now Accepting New Clients
@@ -30,7 +33,7 @@ const { data } = Astro.props;
     <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
       <a
         href={data.ctaLink}
-        class="inline-flex items-center gap-2.5 px-9 py-4 bg-teal-600 hover:bg-teal-500 text-white font-bold text-lg rounded-xl transition-all duration-200 shadow-2xl shadow-teal-900/60 hover:shadow-teal-600/30 hover:-translate-y-0.5"
+        class="inline-flex items-center gap-2.5 px-9 py-4 bg-teal-600 hover:bg-teal-500 text-white font-bold text-lg rounded-xl transition-all duration-200 shadow-2xl hover:-translate-y-0.5"
       >
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -45,32 +48,15 @@ const { data } = Astro.props;
       </a>
     </div>
 
-    <!-- Trust row -->
     <div class="mt-12 flex flex-wrap justify-center gap-8 text-sm text-gray-400">
-      <span class="flex items-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-teal-500" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-        </svg>
-        100% Free Consultation
-      </span>
-      <span class="flex items-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-teal-500" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-        </svg>
-        No Contracts Required
-      </span>
-      <span class="flex items-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-teal-500" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-        </svg>
-        Results-Driven Strategy
-      </span>
-      <span class="flex items-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-teal-500" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-        </svg>
-        14+ Years of Experience
-      </span>
+      {['100% Free Consultation', 'No Contracts Required', 'Results-Driven Strategy', '14+ Years of Experience'].map(item => (
+        <span class="flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-teal-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+          {item}
+        </span>
+      ))}
     </div>
   </div>
 </section>

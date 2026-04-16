@@ -4,25 +4,35 @@ export default {
   theme: {
     extend: {
       colors: {
+        // ── CiCon Brand Palette ──────────────────────────────────────────
+        // bright-marine: #0071bd  | baltic-blue: #1558a4 | regal-navy: #163172
+        // white: #ffffff          | ghost-white: #efedf4
         navy: {
-          50:  '#eef3fb',
-          100: '#d5e1f5',
-          200: '#aac3eb',
-          300: '#7ea5e0',
-          400: '#4d82d0',
-          500: '#2563ae',
-          600: '#1e4d8c',
-          700: '#1a3a6b',
-          800: '#0f2044',
-          900: '#0a1628',
+          50:  '#e8edf7',
+          100: '#c5d0eb',
+          200: '#9fb0da',
+          300: '#7890c9',
+          400: '#4f6fb5',
+          500: '#1a4f9e',
+          600: '#1558a4', // baltic-blue
+          700: '#163172', // regal-navy — hero, footer, dark sections
+          800: '#0e2055', // deeper regal navy
+          900: '#07122e', // darkest
         },
         teal: {
-          300: '#5eead4',
-          400: '#2dd4bf',
-          500: '#14b8a6',
-          600: '#0d9488',
-          700: '#0f766e',
-          800: '#115e59',
+          50:  '#e0f0fb',
+          100: '#b3d8f4',
+          200: '#80bcec',
+          300: '#4da0e3',
+          400: '#268cda',
+          500: '#0079cc',
+          600: '#0071bd', // bright-marine — primary CTA
+          700: '#1558a4', // baltic-blue — hover
+          800: '#163172', // regal-navy — deep hover
+        },
+        // ghost-white replaces gray-50 for light section backgrounds
+        gray: {
+          50:  '#efedf4', // ghost-white from palette
         },
       },
       fontFamily: {

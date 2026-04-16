@@ -1,10 +1,11 @@
 ---
 import type { WhyCiConData } from '../lib/types';
+import StatCards from './react/StatCards.tsx';
 interface Props { data: WhyCiConData }
 const { data } = Astro.props;
 ---
 
-<section id="why-cicon" class="py-20 lg:py-28 bg-white">
+<section id="why-cicon" class="py-20 lg:py-28 bg-gray-50">
   <div class="container-xl">
 
     <div class="text-center mb-16">
@@ -12,23 +13,7 @@ const { data } = Astro.props;
       <h2 class="section-heading mx-auto max-w-3xl">{data.headline}</h2>
     </div>
 
-    <!-- Stats Row -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-16">
-      {data.stats.map((stat) => (
-        <div class="relative text-center p-8 rounded-2xl bg-gradient-to-br from-navy-800 to-navy-900 overflow-hidden group">
-          <!-- Glow -->
-          <div class="absolute inset-0 bg-teal-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          <div class="relative z-10">
-            <div class="text-5xl md:text-6xl font-black text-teal-400 mb-2 tabular-nums">
-              {stat.value}
-            </div>
-            <div class="text-base font-medium text-gray-300 uppercase tracking-wider">
-              {stat.label}
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
+    <StatCards stats={data.stats} client:visible />
 
     <!-- Description + visual layout -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -50,8 +35,8 @@ const { data } = Astro.props;
       </div>
 
       <!-- Feature checklist -->
-      <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100">
-        <h3 class="text-lg font-bold text-navy-800 mb-6">What Sets Us Apart</h3>
+      <div class="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
+        <h3 class="text-lg font-bold text-navy-900 mb-6">What Sets Us Apart</h3>
         <ul class="space-y-4">
           {[
             'Boutique agency — you work with the actual strategists, not account managers',
@@ -66,7 +51,7 @@ const { data } = Astro.props;
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                 </svg>
               </div>
-              <span class="text-gray-700 leading-snug">{item}</span>
+              <span class="text-gray-600 leading-snug">{item}</span>
             </li>
           ))}
         </ul>

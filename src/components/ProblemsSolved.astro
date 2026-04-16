@@ -1,22 +1,12 @@
 ---
 import type { ProblemsSolvedData } from '../lib/types';
+import ProblemCards from './react/ProblemCards.tsx';
 interface Props { data: ProblemsSolvedData }
 const { data } = Astro.props;
-
-const icons: Record<string, string> = {
-  money:  `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
-  chart:  `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>`,
-  boxing: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>`,
-  web:    `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>`,
-  trend:  `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>`,
-  clock:  `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
-};
-
-const fallbackIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>`;
 ---
 
-<section id="problems-solved" class="py-20 lg:py-28 bg-gray-50">
-  <div class="container-xl">
+<section id="problems-solved" class="relative py-20 lg:py-28 overflow-hidden bg-white">
+  <div class="container-xl relative z-10">
 
     <div class="text-center mb-14">
       <span class="section-label">Pain Points We Fix</span>
@@ -24,36 +14,7 @@ const fallbackIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBo
       <p class="section-subheading mx-auto mt-4">{data.subheadline}</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {data.problems.map((item) => (
-        <div class="group bg-white rounded-2xl p-7 border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-250">
-          <!-- Icon -->
-          <div class="w-12 h-12 rounded-xl bg-red-50 group-hover:bg-teal-50 flex items-center justify-center mb-5 transition-colors duration-200">
-            <div class="w-6 h-6 text-red-400 group-hover:text-teal-600 transition-colors duration-200"
-                 set:html={icons[item.icon] ?? fallbackIcon}
-            />
-          </div>
-
-          <!-- Problem headline -->
-          <h3 class="text-base font-bold text-navy-800 mb-3 leading-snug">
-            ❌ &nbsp;{item.problem}
-          </h3>
-
-          <!-- Divider -->
-          <div class="h-px bg-gray-100 mb-4"></div>
-
-          <!-- Solution -->
-          <div class="flex items-start gap-2.5">
-            <div class="w-5 h-5 rounded-full bg-teal-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-teal-700" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-              </svg>
-            </div>
-            <p class="text-sm text-gray-600 leading-relaxed">{item.solution}</p>
-          </div>
-        </div>
-      ))}
-    </div>
+    <ProblemCards problems={data.problems} client:visible />
 
   </div>
 </section>
