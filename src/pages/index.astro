@@ -6,9 +6,11 @@ import Services from '../components/Services.astro';
 import WhoWeServe from '../components/WhoWeServe.astro';
 import HowItWorks from '../components/HowItWorks.astro';
 import ProblemsSolved from '../components/ProblemsSolved.astro';
+import GoogleReviews from '../components/react/GoogleReviews.tsx';
 import ReadyToGrow from '../components/ReadyToGrow.astro';
 import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
+import ScrollProgress from '../components/react/ScrollProgress.tsx';
 import '../styles/globals.css';
 
 import { getHomepage } from '../lib/sanity';
@@ -58,7 +60,7 @@ try {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
-  <!-- Favicon (update with actual favicon path) -->
+  <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
   <!-- Schema.org structured data -->
@@ -89,20 +91,34 @@ try {
 
 <body class="font-sans bg-white text-gray-900 antialiased">
 
+  <!-- Scroll progress bar -->
+  <ScrollProgress client:load />
+
   <Nav />
 
   <main>
-    <Hero       data={data.hero} />
-    <WhyCiCon   data={data.whyCicon} />
-    <Services   data={data.services} />
-    <WhoWeServe data={data.whoWeServe} />
-    <HowItWorks data={data.howItWorks} />
+    <Hero           data={data.hero} />
+    <WhyCiCon       data={data.whyCicon} />
+    <Services       data={data.services} />
+    <WhoWeServe     data={data.whoWeServe} />
+    <HowItWorks     data={data.howItWorks} />
     <ProblemsSolved data={data.problemsSolved} />
-    <ReadyToGrow data={data.readyToGrow} />
-    <Contact     data={data.contact} />
+    <!-- Social proof section after Problems We Solve -->
+    <GoogleReviews  client:visible />
+    <ReadyToGrow    data={data.readyToGrow} />
+    <Contact        data={data.contact} />
   </main>
 
   <Footer />
+
+  <!-- Scroll-reveal: add .in-view to .reveal elements as they enter the viewport -->
+  <script>
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && e.target.classList.add('in-view')),
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    );
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+  </script>
 
 </body>
 </html>

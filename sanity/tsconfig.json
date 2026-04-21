@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2017", "DOM", "DOM.Iterable"],
+    "jsx": "preserve",
+    "target": "ES2017",
+    "moduleResolution": "bundler",
+    "module": "ESNext",
+    "esModuleInterop": true,
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "noEmit": true
+  },
+  "include": ["**/*.ts", "**/*.tsx"]
+}

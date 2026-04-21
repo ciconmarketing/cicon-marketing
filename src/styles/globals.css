@@ -44,3 +44,37 @@
 .nav-scrolled {
   @apply shadow-md bg-white/95 backdrop-blur-sm;
 }
+
+/* ── Ken Burns zoom ─────────────────────────────────────────── */
+@keyframes kenBurns {
+  0%   { transform: scale(1)    translate(0%,  0%); }
+  33%  { transform: scale(1.07) translate(-1%, -0.5%); }
+  66%  { transform: scale(1.1)  translate(1%,  0.5%); }
+  100% { transform: scale(1)    translate(0%,  0%); }
+}
+.ken-burns {
+  animation: kenBurns 24s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* ── Slow background pan (Ready to Grow) ───────────────────── */
+@keyframes slowPan {
+  0%   { transform: scale(1.1) translate(0%,   0%); }
+  50%  { transform: scale(1.1) translate(-2%, -1%); }
+  100% { transform: scale(1.1) translate(0%,   0%); }
+}
+.slow-pan {
+  animation: slowPan 22s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* ── Scroll-reveal base (JS adds .in-view) ──────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}

@@ -14,10 +14,11 @@ export const defaultHomepageData: HomepageData = {
     stats: [
       { value: '250+', label: 'Projects Completed' },
       { value: '100+', label: 'Happy Clients' },
-      { value: '14+',  label: 'Years of Experience' },
+      { value: '15+',  label: 'Years of Experience' },
+      { value: '40%',  label: 'More Dental Leads' },
     ],
     description:
-      'For over 14 years, CiCon Marketing has helped local businesses, dental clinics, home improvement contractors, and service providers across the GTA grow their customer base. We combine data-driven strategy with creative execution—delivering real, measurable results that matter to your bottom line.',
+      'For over 15 years, CiCon Marketing has helped local businesses, dental clinics, home improvement contractors, and service providers across the GTA grow their customer base. We combine data-driven strategy with creative execution—delivering real, measurable results that matter to your bottom line.',
   },
 
   services: {
