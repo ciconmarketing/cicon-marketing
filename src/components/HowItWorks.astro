@@ -12,20 +12,20 @@ const { data } = Astro.props;
   <div class="container-xl relative z-10">
 
     <div class="text-center mb-16">
-      <span class="inline-block text-teal-400 font-semibold text-sm tracking-widest uppercase mb-3">
+      <span class="inline-block text-teal-400 font-semibold text-sm tracking-widest uppercase mb-3" data-aos="fade-up">
         Our Process
       </span>
-      <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-4">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-4" data-aos="fade-up" data-aos-delay="100">
         {data.headline}
       </h2>
-      <p class="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
+      <p class="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="200">
         {data.subheadline}
       </p>
     </div>
 
     <ProcessSteps steps={data.steps} client:visible />
 
-    <div class="mt-14 text-center">
+    <div class="mt-14 text-center" data-aos="zoom-in-up" data-aos-delay="100">
       <a href="/book-a-strategy-call-with-cicon-marketing/"
          class="inline-flex items-center gap-2.5 px-8 py-4 bg-teal-600 hover:bg-teal-500 text-white font-bold text-lg rounded-xl transition-all duration-200 shadow-xl hover:-translate-y-0.5">
         Start Your Journey

@@ -9,7 +9,7 @@ const year = new Date().getFullYear();
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
 
       <!-- Brand column -->
-      <div class="lg:col-span-2">
+      <div class="lg:col-span-2" data-aos="fade-up">
         <a href="/" class="inline-flex mb-5 bg-white rounded-xl p-2 hover:opacity-90 transition-opacity">
           <img src="/logo-cicon.jpg" alt="CiCon Digital Marketing" class="h-10 w-auto object-contain" />
         </a>
@@ -26,7 +26,7 @@ const year = new Date().getFullYear();
       </div>
 
       <!-- Services column -->
-      <div>
+      <div data-aos="fade-up" data-aos-delay="100">
         <h4 class="text-white font-semibold mb-5 text-sm uppercase tracking-wider">Services</h4>
         <ul class="space-y-3 text-sm">
           {[
@@ -47,7 +47,7 @@ const year = new Date().getFullYear();
       </div>
 
       <!-- Company column -->
-      <div>
+      <div data-aos="fade-up" data-aos-delay="200">
         <h4 class="text-white font-semibold mb-5 text-sm uppercase tracking-wider">Company</h4>
         <ul class="space-y-3 text-sm mb-8">
           {[

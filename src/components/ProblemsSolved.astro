@@ -9,9 +9,9 @@ const { data } = Astro.props;
   <div class="container-xl relative z-10">
 
     <div class="text-center mb-14">
-      <span class="section-label">Pain Points We Fix</span>
-      <h2 class="section-heading">{data.headline}</h2>
-      <p class="section-subheading mx-auto mt-4">{data.subheadline}</p>
+      <span class="section-label" data-aos="fade-up">Pain Points We Fix</span>
+      <h2 class="section-heading" data-aos="fade-up" data-aos-delay="100">{data.headline}</h2>
+      <p class="section-subheading mx-auto mt-4" data-aos="fade-up" data-aos-delay="200">{data.subheadline}</p>
     </div>
 
     <ProblemCards problems={data.problems} client:visible />
