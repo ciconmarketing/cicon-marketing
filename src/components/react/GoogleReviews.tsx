@@ -37,19 +37,6 @@ function Stars() {
   );
 }
 
-function GoogleLogo() {
-  return (
-    <span className="text-2xl font-bold tracking-tight select-none">
-      <span style={{ color: '#4285F4' }}>G</span>
-      <span style={{ color: '#EA4335' }}>o</span>
-      <span style={{ color: '#FBBC05' }}>o</span>
-      <span style={{ color: '#4285F4' }}>g</span>
-      <span style={{ color: '#34A853' }}>l</span>
-      <span style={{ color: '#EA4335' }}>e</span>
-    </span>
-  );
-}
-
 const containerVariants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.15 } },
@@ -73,10 +60,12 @@ export default function GoogleReviews() {
           transition={{ duration: 0.6 }}
           className="flex justify-center mb-14"
         >
-          <div className="bg-white rounded-2xl px-10 py-6 shadow-md flex flex-col items-center gap-2 border border-gray-100">
-            <span className="text-sm font-black uppercase tracking-widest text-gray-700 mb-1">Excellent</span>
-            <Stars />
-            <GoogleLogo />
+          <div className="bg-white rounded-2xl px-10 py-6 shadow-md flex items-center justify-center border border-gray-100">
+            <img
+              src="/cicon-google-review-placeholder.jpg"
+              alt="Excellent 5-star rating on Google"
+              className="h-28 w-auto object-contain"
+            />
           </div>
         </motion.div>
 

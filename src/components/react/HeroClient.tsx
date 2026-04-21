@@ -193,7 +193,7 @@ export default function HeroClient({ data }: Props) {
 
             {/* WhatsApp CTA */}
             <a
-              href="https://wa.me/19058845060"
+              href="https://wa.me/message/ZOH7PUBSFSN4N1"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2.5 px-8 py-4 font-semibold text-lg rounded-xl transition-all duration-200 hover:-translate-y-0.5 text-white"
