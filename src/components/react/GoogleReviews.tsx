@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { GlowingEffect } from './GlowingEffect';
 
 const reviews = [
   {
@@ -36,7 +37,6 @@ function Stars() {
   );
 }
 
-// Google logo text in brand colours
 function GoogleLogo() {
   return (
     <span className="text-2xl font-bold tracking-tight select-none">
@@ -93,27 +93,25 @@ export default function GoogleReviews() {
               key={i}
               variants={cardVariants}
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
-              className="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 hover:shadow-lg hover:border-amber-200 transition-all duration-300 flex flex-col gap-5 cursor-default"
+              className="relative rounded-2xl"
             >
-              {/* Stars */}
-              <Stars />
-
-              {/* Quote */}
-              <p className="text-gray-600 italic leading-relaxed text-sm flex-1">
-                {review.quote}
-              </p>
-
-              {/* Reviewer */}
-              <div className="flex items-center gap-3 pt-2 border-t border-gray-100">
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
-                  style={{ background: '#212129' }}
-                >
-                  {review.initial}
-                </div>
-                <div>
-                  <p className="font-bold text-gray-900 text-sm">{review.name}</p>
-                  <p className="text-xs text-gray-500">{review.role}</p>
+              <GlowingEffect spread={40} glow={true} disabled={false} proximity={64} inactiveZone={0.01} borderWidth={2} />
+              <div className="relative bg-white rounded-2xl p-7 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 flex flex-col gap-5 cursor-default h-full">
+                <Stars />
+                <p className="text-gray-600 italic leading-relaxed text-sm flex-1">
+                  {review.quote}
+                </p>
+                <div className="flex items-center gap-3 pt-2 border-t border-gray-100">
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
+                    style={{ background: '#212129' }}
+                  >
+                    {review.initial}
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-900 text-sm">{review.name}</p>
+                    <p className="text-xs text-gray-500">{review.role}</p>
+                  </div>
                 </div>
               </div>
             </motion.div>

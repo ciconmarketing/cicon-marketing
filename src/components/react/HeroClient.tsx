@@ -115,21 +115,6 @@ export default function HeroClient({ data }: Props) {
       <div className="container-xl relative z-10 py-24 lg:py-32">
         <div className="max-w-3xl">
 
-          {/* Dental lead badge */}
-          <motion.div
-            custom={-1}
-            variants={fadeUp}
-            initial="hidden"
-            animate="visible"
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-4 text-sm font-semibold"
-            style={{ background: "rgba(157,131,62,0.18)", border: "1px solid rgba(157,131,62,0.35)", color: "#f0c84a" }}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-            </svg>
-            Dental clients see 40%+ more leads
-          </motion.div>
-
           {/* Location badge */}
           <motion.div
             custom={0}

@@ -1,5 +1,6 @@
 import { motion, useMotionValue, useTransform, animate, useInView } from 'framer-motion';
 import { useEffect, useRef } from 'react';
+import { GlowingEffect } from './GlowingEffect';
 
 interface Stat {
   value: string;
@@ -10,7 +11,6 @@ interface Props {
   stats: Stat[];
 }
 
-/** Parse "250+" → { number: 250, suffix: "+" },  "40%" → { number: 40, suffix: "%" } */
 function parseValue(raw: string): { number: number; suffix: string } {
   const match = raw.match(/^(\d+(?:\.\d+)?)(.*)/);
   if (match) return { number: parseFloat(match[1]), suffix: match[2] };
@@ -35,19 +35,21 @@ function CountStat({ stat }: { stat: Stat }) {
   }, [inView, number]);
 
   return (
-    <motion.div
-      ref={ref}
-      whileHover={{ scale: 1.04, transition: { duration: 0.2 } }}
-      className="text-center p-8 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:border-teal-200 cursor-default transition-shadow duration-300"
-    >
-      <div className="text-5xl md:text-6xl font-black text-teal-600 mb-2 tabular-nums">
-        <motion.span>{rounded}</motion.span>
-        {suffix}
-      </div>
-      <div className="text-base font-semibold text-gray-600 uppercase tracking-wider">
-        {stat.label}
-      </div>
-    </motion.div>
+    <div ref={ref} className="relative rounded-2xl h-full">
+      <GlowingEffect spread={40} glow={true} disabled={false} proximity={64} inactiveZone={0.01} borderWidth={2} />
+      <motion.div
+        whileHover={{ scale: 1.04, transition: { duration: 0.2 } }}
+        className="relative text-center p-8 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:border-teal-200 cursor-default transition-shadow duration-300 h-full"
+      >
+        <div className="text-5xl md:text-6xl font-black text-teal-600 mb-2 tabular-nums">
+          <motion.span>{rounded}</motion.span>
+          {suffix}
+        </div>
+        <div className="text-base font-semibold text-gray-600 uppercase tracking-wider">
+          {stat.label}
+        </div>
+      </motion.div>
+    </div>
   );
 }
 
