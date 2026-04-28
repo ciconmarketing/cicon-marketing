@@ -66,7 +66,9 @@ export default function HeroClient({ data }: Props) {
     }),
   };
 
-  const parts = data.headline.split("Richmond Hill");
+  // Split headline on newline — line 1 normal, line 2 with "leaking." highlighted
+  const [headlineLine1, headlineLine2] = data.headline.split('\n');
+  const leakIdx = headlineLine2?.indexOf('leaking.') ?? -1;
 
   return (
     <section
@@ -115,38 +117,40 @@ export default function HeroClient({ data }: Props) {
       <div className="container-xl relative z-10 py-24 lg:py-32">
         <div className="max-w-3xl">
 
-          {/* Location badge */}
+          {/* Eyebrow label */}
           <motion.div
             custom={0}
             variants={fadeUp}
             initial="hidden"
             animate="visible"
-            className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-sm text-teal-300 font-medium mb-8 w-fit"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold mb-8 w-fit"
+            style={{ background: "rgba(20,184,166,0.15)", border: "1px solid rgba(20,184,166,0.35)", color: "#5eead4" }}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            Richmond Hill &amp; GTA, Ontario
+            <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
+            For GTA Service Businesses
           </motion.div>
 
-          {/* Headline */}
+          {/* Headline — two lines, "leaking." in gold */}
           <motion.h1
             custom={1}
             variants={fadeUp}
             initial="hidden"
             animate="visible"
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.05] mb-6 tracking-tight"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] mb-6 tracking-tight"
           >
-            {parts.map((part, i) =>
-              i < parts.length - 1 ? (
-                <span key={i}>
-                  {part}
-                  <span style={{ color: "#ffcf00" }}>Richmond Hill</span>
-                </span>
-              ) : (
-                <span key={i}>{part}</span>
-              )
+            {headlineLine1 && (
+              <span className="block">{headlineLine1}</span>
+            )}
+            {headlineLine2 && (
+              <span className="block">
+                {leakIdx > -1 ? (
+                  <>
+                    {headlineLine2.slice(0, leakIdx)}
+                    <span style={{ color: "#ffcf00" }}>leaking.</span>
+                    {headlineLine2.slice(leakIdx + 8)}
+                  </>
+                ) : headlineLine2}
+              </span>
             )}
           </motion.h1>
 
@@ -175,7 +179,7 @@ export default function HeroClient({ data }: Props) {
               className="inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-teal-600 hover:bg-teal-500 text-white font-bold text-lg rounded-xl transition-all duration-200 shadow-2xl shadow-teal-900/60 hover:shadow-teal-600/40 hover:-translate-y-0.5"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
               </svg>
               {data.ctaText}
             </a>

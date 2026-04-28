@@ -2,10 +2,10 @@ import type { HomepageData } from './types';
 
 export const defaultHomepageData: HomepageData = {
   hero: {
-    headline: 'Boutique Digital Marketing Agency in Richmond Hill',
+    headline: "Your marketing isn't broken.\nYour lead system is leaking.",
     subheadline:
-      'CiCon Marketing is a boutique digital marketing agency delivering measurable growth across the GTA—turning ad spend into real leads, calls, and customers.',
-    ctaText: 'Schedule a Strategy Call',
+      'CiCon Marketing helps GTA businesses fix the hidden gaps between ads, landing pages, calls, CRM, and reporting — so more traffic turns into real customers.',
+    ctaText: 'Give Me a Local Preview',
     ctaLink: '/book-a-strategy-call-with-cicon-marketing/',
   },
 
