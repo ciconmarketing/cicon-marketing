@@ -173,17 +173,6 @@ export default function HeroClient({ data }: Props) {
             animate="visible"
             className="flex flex-col sm:flex-row flex-wrap gap-4"
           >
-            {/* Primary CTA */}
-            <a
-              href={data.ctaLink}
-              className="inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-teal-600 hover:bg-teal-500 text-white font-bold text-lg rounded-xl transition-all duration-200 shadow-2xl shadow-teal-900/60 hover:shadow-teal-600/40 hover:-translate-y-0.5"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-              </svg>
-              {data.ctaText}
-            </a>
-
             {/* Explore Services */}
             <a
               href="#services"
