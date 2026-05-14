@@ -1,8 +1,189 @@
 ---
 import type { HeroData } from '../lib/types';
-import HeroClient from './react/HeroClient.tsx';
 interface Props { data: HeroData }
 const { data } = Astro.props;
+
+const headlineLines = data.headline.split('\n');
+const line1 = headlineLines[0] ?? '';
+const line2 = headlineLines[1] ?? '';
+const leakIdx = line2.indexOf('leaking.');
 ---
 
-<HeroClient data={data} client:load />
+<!--
+  Dead-End to Dawn — scroll-scrubbed video hero
+  Desktop/tablet: GSAP ScrollTrigger pins the section for 100vh of scroll,
+  scrubbing video currentTime forward/backward with scroll position.
+  Mobile (<768px) & prefers-reduced-motion: static dawn image, no pinning.
+-->
+<section
+  id="hero"
+  class="hero-section relative w-full overflow-hidden"
+  style="height: 100vh;"
+>
+  <!-- ── Video background (desktop) ── -->
+  <video
+    id="hero-video"
+    class="hero-video absolute inset-0 w-full h-full object-cover"
+    src="/assets/hero/dead-end-to-dawn-optimized.mp4"
+    poster="/assets/hero/dead-end-to-dawn-poster.jpg"
+    preload="auto"
+    muted
+    playsinline
+    disablepictureinpicture
+    aria-label="Cinematic transition from a forgotten roadside billboard to the illuminated Toronto skyline at dawn — representing how CiCon Marketing takes businesses from invisible to seen."
+  ></video>
+
+  <!-- ── Mobile/reduced-motion fallback image ── -->
+  <img
+    id="hero-fallback"
+    class="hero-fallback absolute inset-0 w-full h-full object-cover hidden"
+    src="/assets/hero/dead-end-to-dawn-dawn.jpg"
+    alt="Toronto skyline at dawn — CiCon Marketing"
+    loading="eager"
+  />
+
+  <!-- ── Left-to-right gradient overlay for text legibility ── -->
+  <div
+    class="absolute inset-0 pointer-events-none"
+    style="background: linear-gradient(to right, rgba(35,50,101,0.75) 0%, rgba(35,50,101,0.45) 35%, transparent 58%);"
+  ></div>
+
+  <!-- ── Text content — left 45% ── -->
+  <div class="absolute inset-0 flex items-center">
+    <div class="w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+      <div class="max-w-[45%] min-w-[320px]">
+
+        <!-- Eyebrow -->
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold mb-7"
+             style="background: rgba(20,184,166,0.18); border: 1px solid rgba(20,184,166,0.40); color: #5eead4;">
+          <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
+          For GTA Service Businesses
+        </div>
+
+        <!-- Headline -->
+        <h1 class="font-extrabold text-white leading-[1.1] tracking-tight mb-6"
+            style="font-family: 'Montserrat', 'Inter', sans-serif; font-size: clamp(2rem, 4vw, 3.5rem);">
+          {line1 && <span class="block">{line1}</span>}
+          {line2 && (
+            <span class="block">
+              {leakIdx > -1 ? (
+                <>
+                  {line2.slice(0, leakIdx)}
+                  <span style="color: #ffcf00;">leaking.</span>
+                  {line2.slice(leakIdx + 8)}
+                </>
+              ) : line2}
+            </span>
+          )}
+        </h1>
+
+        <!-- Subheadline -->
+        <p class="text-gray-200 leading-relaxed mb-10"
+           style="font-size: clamp(1rem, 1.5vw, 1.2rem); max-width: 38ch;">
+          {data.subheadline}
+        </p>
+
+        <!-- CTAs -->
+        <div class="flex flex-col sm:flex-row flex-wrap gap-4">
+          <!-- Explore Services -->
+          <a href="#services"
+             class="inline-flex items-center justify-center gap-2 text-white font-semibold rounded transition-all duration-200 focus:outline-none focus-visible:ring-3 focus-visible:ring-[#A8843F]"
+             style="background: #A8843F; color: #fff; padding: 16px 32px; border-radius: 4px; font-size: 1rem;"
+             onmouseover="this.style.background='#8E6E33';this.style.transform='scale(1.02)'"
+             onmouseout="this.style.background='#A8843F';this.style.transform='scale(1)'">
+            Explore Services
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </a>
+
+          <!-- WhatsApp -->
+          <a href="https://wa.me/message/ZOH7PUBSFSN4N1"
+             target="_blank" rel="noopener noreferrer"
+             class="inline-flex items-center justify-center gap-2.5 text-white font-semibold rounded transition-all duration-200 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-3 focus-visible:ring-[#A8843F]"
+             style="background: rgba(37,211,102,0.18); border: 1.5px solid rgba(37,211,102,0.45); padding: 15px 28px; border-radius: 4px; font-size: 1rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            Chat on WhatsApp
+          </a>
+        </div>
+
+        <!-- Trust micro-copy -->
+        <p class="mt-8 text-sm text-gray-400 flex flex-wrap items-center gap-4">
+          {["Free consultation", "No long-term contracts", "Measurable results"].map((item) => (
+            <span class="flex items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-teal-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+              {item}
+            </span>
+          ))}
+        </p>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div id="hero-scroll-hint" class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-gray-400 text-xs animate-bounce pointer-events-none">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+    </svg>
+  </div>
+</section>
+
+<!-- Montserrat for hero headline -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const isMobile = window.matchMedia('(max-width: 767px)').matches;
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const video   = document.getElementById('hero-video') as HTMLVideoElement;
+  const fallback = document.getElementById('hero-fallback') as HTMLImageElement;
+  const section  = document.getElementById('hero') as HTMLElement;
+  const hint     = document.getElementById('hero-scroll-hint') as HTMLElement;
+
+  if (isMobile || prefersReduced) {
+    // ── Static fallback — show dawn image, hide video ──
+    video.style.display = 'none';
+    fallback.classList.remove('hidden');
+  } else {
+    // ── Desktop scroll-scrub ──
+    video.addEventListener('loadedmetadata', () => {
+      const duration = video.duration;
+
+      // Keep video paused at frame 0 on load
+      video.currentTime = 0;
+
+      ScrollTrigger.create({
+        trigger: section,
+        start: 'top top',
+        end: '+=100%',
+        pin: true,
+        scrub: 0.4,
+        onUpdate: (self) => {
+          video.currentTime = self.progress * duration;
+        },
+        onLeave: () => {
+          if (hint) hint.style.opacity = '0';
+        },
+        onEnterBack: () => {
+          if (hint) hint.style.opacity = '1';
+        },
+      });
+    });
+
+    // Fade out scroll hint as soon as user starts scrolling
+    window.addEventListener('scroll', () => {
+      if (hint && window.scrollY > 40) hint.style.opacity = '0';
+    }, { passive: true, once: true });
+  }
+</script>
