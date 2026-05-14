@@ -8,7 +8,7 @@ const reviews = [
     company: "Sparkle Light",
     rating: 5,
     content:
-      "We have been working with Cicon Marketing Agency for several years now, and they have played a critical role in the growth and success of our business. From day one, Majid and his team brought an incredible level of creativity, expertise, and genuine dedication. They handled everything from high-quality content creation to managing our entire digital marketing strategy — elevating our presence across Instagram, Facebook, YouTube, and TikTok. What makes Cicon truly stand out is their personalized approach and commitment to excellence. We have seen measurable improvements in brand awareness, customer engagement, and most importantly — sales.",
+      "Majid and his team brought an incredible level of creativity, expertise, and genuine dedication — handling everything from content creation to our full digital strategy across Instagram, Facebook, YouTube, and TikTok. What makes CiCon truly stand out is their personalized approach. We've seen measurable improvements in brand awareness, engagement, and most importantly — sales. I truly believe Sparkle Light would not be where it is today without their continued support.",
   },
   {
     id: 2,

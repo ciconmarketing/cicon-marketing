@@ -142,9 +142,9 @@ export function AnimatedTestimonials({
                   </div>
 
                   {/* Quote */}
-                  <div className="relative mb-6 flex-1">
+                  <div className="relative mb-6 flex-1 overflow-y-auto max-h-48">
                     <Quote className="absolute -top-1 -left-1 h-7 w-7 text-teal-100 rotate-180" />
-                    <p className="relative z-10 text-base md:text-lg text-gray-700 leading-relaxed font-medium pl-4">
+                    <p className="relative z-10 text-base text-gray-700 leading-relaxed font-medium pl-4">
                       "{testimonial.content}"
                     </p>
                   </div>
