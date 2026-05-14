@@ -1,6 +1,15 @@
-"use client";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
 import type { HeroData } from "../../lib/types";
+
+// ── Rotating headline words cycling on the highlighted slot ──
+const ROTATING_WORDS = [
+  "leaking.",
+  "fixable.",
+  "blocking growth.",
+  "costing you leads.",
+  "yours to fix.",
+];
 
 // ── Floating decorative pill shapes (adapted to CiCon palette) ──
 function ElegantShape({
@@ -57,18 +66,29 @@ interface Props {
 }
 
 export default function HeroClient({ data }: Props) {
+  const [wordIndex, setWordIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWordIndex((prev) => (prev + 1) % ROTATING_WORDS.length);
+    }, 2200);
+    return () => clearInterval(interval);
+  }, []);
+
   const fadeUp = {
     hidden: { opacity: 0, y: 30 },
     visible: (i: number) => ({
       opacity: 1,
       y: 0,
-      transition: { duration: 1, delay: 0.4 + i * 0.18, ease: [0.25, 0.4, 0.25, 1] },
+      transition: { duration: 1, delay: 0.4 + i * 0.18, ease: [0.25, 0.4, 0.25, 1] as [number, number, number, number] },
     }),
   };
 
-  // Split headline on newline — line 1 normal, line 2 with "leaking." highlighted
+  // Split headline on newline — line 1 static, line 2 has the rotating slot
   const [headlineLine1, headlineLine2] = data.headline.split('\n');
+  // Strip the static "leaking." from line 2 — we'll replace with the rotating word
   const leakIdx = headlineLine2?.indexOf('leaking.') ?? -1;
+  const headlinePrefix = leakIdx > -1 ? headlineLine2.slice(0, leakIdx) : (headlineLine2 ?? '');
 
   return (
     <section
@@ -130,7 +150,7 @@ export default function HeroClient({ data }: Props) {
             For GTA Service Businesses
           </motion.div>
 
-          {/* Headline — two lines, "leaking." in gold */}
+          {/* Headline — line 1 static, line 2 has an animated rotating word */}
           <motion.h1
             custom={1}
             variants={fadeUp}
@@ -141,17 +161,31 @@ export default function HeroClient({ data }: Props) {
             {headlineLine1 && (
               <span className="block">{headlineLine1}</span>
             )}
-            {headlineLine2 && (
-              <span className="block">
-                {leakIdx > -1 ? (
-                  <>
-                    {headlineLine2.slice(0, leakIdx)}
-                    <span style={{ color: "#ffcf00" }}>leaking.</span>
-                    {headlineLine2.slice(leakIdx + 8)}
-                  </>
-                ) : headlineLine2}
+            {/* Line 2: static prefix + animated rotating word */}
+            <span className="block inline-flex flex-wrap items-baseline gap-x-3">
+              {headlinePrefix && (
+                <span>{headlinePrefix}</span>
+              )}
+              {/* Rotating word slot — fixed min-width prevents layout shift */}
+              <span
+                className="relative inline-block overflow-hidden"
+                style={{ minWidth: "11ch", verticalAlign: "bottom" }}
+              >
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={wordIndex}
+                    initial={{ y: 40, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -40, opacity: 0 }}
+                    transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                    className="block"
+                    style={{ color: "#ffcf00" }}
+                  >
+                    {ROTATING_WORDS[wordIndex]}
+                  </motion.span>
+                </AnimatePresence>
               </span>
-            )}
+            </span>
           </motion.h1>
 
           {/* Subheadline */}
