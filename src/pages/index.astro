@@ -2,6 +2,7 @@
 import Nav from '../components/Nav.astro';
 import Hero from '../components/Hero.astro';
 import WhyCiCon from '../components/WhyCiCon.astro';
+import ResultsShowcase from '../components/react/ResultsShowcase.tsx';
 import Services from '../components/Services.astro';
 import WhoWeServe from '../components/WhoWeServe.astro';
 import HowItWorks from '../components/HowItWorks.astro';
@@ -102,6 +103,7 @@ try {
   <main>
     <Hero           data={data.hero} />
     <WhyCiCon       data={data.whyCicon} />
+    <ResultsShowcase client:visible />
     <Services       data={data.services} />
     <WhoWeServe     data={data.whoWeServe} />
     <HowItWorks     data={data.howItWorks} />
