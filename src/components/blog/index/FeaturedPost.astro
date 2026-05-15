@@ -18,7 +18,7 @@ function formatDate(d: string) {
 
       <!-- Image column — cols 1-8 -->
       <div class="lg:col-span-8">
-        <a href={`/${post.slug}/`} aria-label={`Read: ${post.title}`} class="block group">
+        <a href={`/blog/${post.slug}/`} aria-label={`Read: ${post.title}`} class="block group">
           <div class="overflow-hidden rounded-xl" style="transform:rotate(-1.5deg);box-shadow:0 30px 60px -20px rgba(33,33,41,0.4),0 10px 30px -10px rgba(0,0,0,0.2);outline:1px solid rgba(157,131,62,0.2);transition:transform 300ms cubic-bezier(0.4,0,0.2,1);"
                onmouseover="this.style.transform='rotate(0deg) translateY(-4px)'"
                onmouseout="this.style.transform='rotate(-1.5deg)'">
@@ -54,7 +54,7 @@ function formatDate(d: string) {
 
         <!-- Title -->
         <h2 class="font-bold text-black leading-tight mb-4" style="font-family:'Montserrat',sans-serif;font-size:clamp(1.5rem,2.5vw,2.125rem);letter-spacing:-0.01em;">
-          <a href={`/${post.slug}/`} class="hover:text-teal-600 transition-colors duration-200">{post.title}</a>
+          <a href={`/blog/${post.slug}/`} class="hover:text-teal-600 transition-colors duration-200">{post.title}</a>
         </h2>
 
         <!-- Dek -->
@@ -72,7 +72,7 @@ function formatDate(d: string) {
         </p>
 
         <!-- CTA link -->
-        <a href={`/${post.slug}/`} class="group inline-flex items-center gap-1.5 font-semibold text-sm text-teal-600 relative" style="font-family:'Montserrat',sans-serif;">
+        <a href={`/blog/${post.slug}/`} class="group inline-flex items-center gap-1.5 font-semibold text-sm text-teal-600 relative" style="font-family:'Montserrat',sans-serif;">
           Read the guide
           <span class="transition-transform duration-200 group-hover:translate-x-1">→</span>
           <span class="absolute -bottom-0.5 left-0 h-px w-0 group-hover:w-full transition-all duration-300" style="background:#FFCF00;"></span>

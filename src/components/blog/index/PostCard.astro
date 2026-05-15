@@ -13,7 +13,7 @@ const tilt = tilts[index % 3];
 ---
 
 <article class="group flex flex-col h-full" data-aos="fade-up" data-aos-delay={Math.min(index * 50, 300)}>
-  <a href={`/${post.slug}/`} class="flex flex-col h-full" aria-label={post.title}>
+  <a href={`/blog/${post.slug}/`} class="flex flex-col h-full" aria-label={post.title}>
 
     <!-- Image -->
     <div class="overflow-hidden rounded-xl mb-5 relative" style={`transform:rotate(${tilt});transition:transform 300ms cubic-bezier(0.4,0,0.2,1);`}
