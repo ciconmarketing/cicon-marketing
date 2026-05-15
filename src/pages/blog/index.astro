@@ -13,6 +13,8 @@ import { WEBSITE_CICON, ORG_CICON } from '../../lib/schema-constants';
 import type { BlogPost, BlogCategory } from '../../lib/sanity';
 import '../../styles/globals.css';
 
+const isPreview = import.meta.env.VERCEL_ENV !== 'production'
+
 const PER_PAGE = 12;
 let featured: BlogPost | null = null;
 let posts: BlogPost[] = [];
@@ -97,7 +99,10 @@ const ogImage = featured?.heroImage?.url ?? 'https://cicon.ca/wp-content/uploads
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Blog — CiCon Marketing" />
   <meta name="twitter:image" content={ogImage} />
-  <meta name="robots" content="index, follow" />
+  {isPreview
+    ? <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+    : <meta name="robots" content="index, follow" />
+  }
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@600;700&display=swap" rel="stylesheet" />

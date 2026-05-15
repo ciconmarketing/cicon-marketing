@@ -12,6 +12,8 @@ import { WEBSITE_CICON, ORG_CICON } from '../../lib/schema-constants';
 import type { BlogPost, BlogCategory } from '../../lib/sanity';
 import '../../styles/globals.css';
 
+const isPreview = import.meta.env.VERCEL_ENV !== 'production'
+
 export async function getStaticPaths() {
   // Try to get total posts from Sanity; fall back to fallback count
   let totalPosts = 4; // default
@@ -73,7 +75,10 @@ const schema = {
   <link rel="canonical" href={pageUrl} />
   {pageNum > 1 && <link rel="prev" href={pageNum === 2 ? 'https://cicon.ca/blog/' : `https://cicon.ca/blog/page/${pageNum - 1}/`} />}
   {pageNum < totalPages && <link rel="next" href={`https://cicon.ca/blog/page/${pageNum + 1}/`} />}
-  <meta name="robots" content="index, follow" />
+  {isPreview
+    ? <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+    : <meta name="robots" content="index, follow" />
+  }
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet" />

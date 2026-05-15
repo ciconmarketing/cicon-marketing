@@ -101,6 +101,9 @@ if (!post) {
   return Astro.redirect('/blog/', 302)
 }
 
+// Block indexing on Vercel preview builds; allow on production (cicon.ca).
+const isPreview = import.meta.env.VERCEL_ENV !== 'production'
+
 // ── Derived data ───────────────────────────────────────────────────────────────
 
 const postUrl = `https://cicon.ca/blog/${post.slug}/`
@@ -218,7 +221,10 @@ const schema: any = {
   <title>{metaTitle}</title>
   <meta name="description" content={metaDesc} />
   <link rel="canonical" href={canonicalUrl} />
-  <meta name="robots" content="index, follow" />
+  {isPreview
+    ? <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+    : <meta name="robots" content="index, follow" />
+  }
 
   <!-- Open Graph -->
   <meta property="og:type" content="article" />

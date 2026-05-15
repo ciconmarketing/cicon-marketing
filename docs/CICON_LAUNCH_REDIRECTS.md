@@ -175,3 +175,59 @@ curl -o /dev/null -w "%{http_code}" "https://cicon.ca/blog/local-seo-agency-toro
 
 Expected output for each redirect: `301` + `Location: https://cicon.ca/blog/[slug]/`
 Expected output for each destination: `200`
+
+---
+
+## 7. Indexing Controls — How the Preview Block Works
+
+### Architecture
+
+The site uses `output: 'static'` (no SSR adapter). Hostname detection at request time
+is not available in fully-static builds. Instead, **Vercel sets `VERCEL_ENV` at build time**:
+
+| Deployment | `VERCEL_ENV` value | robots.txt content | `<meta name="robots">` |
+|---|---|---|---|
+| Production (`cicon.ca`) | `production` | Allow: / + sitemap | `index, follow` |
+| Preview (`*.vercel.app`) | `preview` | Disallow: / | `noindex, nofollow, noarchive, nosnippet` |
+| Local dev | _(unset)_ | Disallow: / | `noindex, nofollow, noarchive, nosnippet` |
+
+Each Vercel build receives its own independently-generated artifact. The blocking
+content is baked into the preview artifact; it does not exist in the production artifact.
+
+### Files changed
+
+- `src/pages/robots.txt.ts` — replaces the deleted `public/robots.txt`; checks
+  `import.meta.env.VERCEL_ENV === 'production'` at build time.
+- `src/pages/index.astro`, `src/pages/blog/index.astro`,
+  `src/pages/blog/[page].astro`, `src/pages/blog/[slug].astro` — all
+  render `<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">`
+  when `VERCEL_ENV !== 'production'`.
+- `vercel.json` — sets `Cache-Control: public, max-age=300` on `/robots.txt`
+  so re-deployments propagate within 5 minutes.
+
+### Verification after DNS cutover to cicon.ca
+
+Run these once the DNS A-record / CNAME points to Vercel production:
+
+```bash
+# 1. Production robots.txt — must allow crawlers
+curl https://cicon.ca/robots.txt
+# Expected: "User-agent: *\nAllow: /\n\nSitemap: https://cicon.ca/sitemap-index.xml"
+
+# 2. Production blog post — must NOT contain noindex
+curl -s https://cicon.ca/blog/local-seo-agency-toronto-guide-2026/ | grep -i "noindex"
+# Expected: no output (noindex tag absent on production build)
+
+# 3. Preview robots.txt — must still block (separate build artifact)
+curl https://cicon-marketing.vercel.app/robots.txt
+# Expected: "User-agent: *\nDisallow: /"
+
+# 4. Preview blog post — must still contain noindex
+curl -s https://cicon-marketing.vercel.app/blog/local-seo-agency-toronto-guide-2026/ | grep -i "noindex"
+# Expected: <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+```
+
+> **Note on (3) and (4):** The preview deployment's robots.txt and noindex tag will
+> remain in place indefinitely because they are baked into that build's artifact.
+> Even after DNS cutover, `cicon-marketing.vercel.app` will always block indexing
+> because it was built with `VERCEL_ENV=preview`.

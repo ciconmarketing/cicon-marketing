@@ -18,6 +18,10 @@ import { getHomepage } from '../lib/sanity';
 import { defaultHomepageData } from '../lib/defaults';
 import type { HomepageData } from '../lib/types';
 
+// Block indexing on Vercel preview builds; allow on production (cicon.ca).
+// Vercel sets VERCEL_ENV='production' for the production build only.
+const isPreview = import.meta.env.VERCEL_ENV !== 'production'
+
 // Try Sanity first, fall back to hard-coded defaults
 let data: HomepageData = defaultHomepageData;
 try {
@@ -55,6 +59,10 @@ try {
 
   <!-- Canonical -->
   <link rel="canonical" href="https://cicon.ca/" />
+  {isPreview
+    ? <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+    : <meta name="robots" content="index, follow" />
+  }
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
