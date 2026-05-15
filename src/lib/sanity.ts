@@ -80,7 +80,7 @@ const HOMEPAGE_QUERY = `
 export const FEATURED_POST_QUERY = `
   *[_type == "blogPost" && status == "published"] | order(publishedAt desc)[0] {
     _id, title, "slug": slug.current, dek,
-    "heroImage": heroImage{ "url": asset->url, alt },
+    heroImage{ url, alt, caption },
     readTime, publishedAt,
     "category": category->{ name, "slug": slug.current }
   }
@@ -90,7 +90,7 @@ export const BLOG_INDEX_POSTS_QUERY = `
   *[_type == "blogPost" && status == "published" && _id != $featuredId]
   | order(publishedAt desc) [$start...$end] {
     _id, title, "slug": slug.current, dek,
-    "heroImage": heroImage{ "url": asset->url, alt },
+    heroImage{ url, alt, caption },
     readTime, publishedAt,
     "category": category->{ name, "slug": slug.current }
   }
@@ -129,7 +129,7 @@ export type BlogPost = {
   title: string
   slug: string
   dek: string
-  heroImage: { url: string; alt: string } | null
+  heroImage: { url: string; alt: string; caption?: string } | null
   readTime: number
   publishedAt: string
   author?: { name: string; slug: string }
