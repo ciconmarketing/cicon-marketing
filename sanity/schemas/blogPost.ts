@@ -175,6 +175,14 @@ export default defineType({
         ],
       },
       initialValue: 'arvow-imported',
+      validation: (Rule) =>
+        Rule.custom((status, ctx) => {
+          const doc = ctx.document as Record<string, unknown> | undefined
+          if (status === 'published' && doc?.enrichmentRequired === true) {
+            return 'Cannot publish: run `npm run enrich-arvow` first to complete enrichment.'
+          }
+          return true
+        }),
     }),
     defineField({
       name: 'notes', title: 'Migration Notes', type: 'array',
@@ -188,6 +196,49 @@ export default defineType({
       group: 'workflow',
       description: 'Flag: this post has no FAQ section on the source page. Add 4–6 Q&A items manually during the content-enrichment sprint.',
       initialValue: false,
+    }),
+
+    // ── Arvow ingestion metadata ──────────────────────────────────────────────
+    defineField({
+      name: 'enrichmentRequired',
+      title: 'Enrichment Required',
+      type: 'boolean',
+      group: 'workflow',
+      description: 'Set to true automatically when Arvow imports a post. Cleared by the enrich-arvow script. Publishing is blocked while this is true.',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'arvowId',
+      title: 'Arvow Article ID',
+      type: 'string',
+      group: 'workflow',
+      description: 'Unique ID assigned by Arvow. Used for idempotency — prevents duplicate imports.',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'arvowBatchId',
+      title: 'Arvow Batch ID',
+      type: 'string',
+      group: 'workflow',
+      description: 'Batch / campaign identifier from Arvow (e.g. "may-2026-dental").',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'arvowReceivedAt',
+      title: 'Arvow Received At',
+      type: 'datetime',
+      group: 'workflow',
+      description: 'UTC timestamp when the webhook payload arrived.',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'arvowRawPayload',
+      title: 'Arvow Raw Payload (debug)',
+      type: 'text',
+      rows: 6,
+      group: 'workflow',
+      description: 'Full raw JSON payload received from Arvow. Stored for debugging only — not used in rendering.',
+      readOnly: true,
     }),
 
     // ── Core identity ─────────────────────────────────────────────────────────
