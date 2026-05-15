@@ -10,7 +10,16 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { defineType, defineField, defineArrayMember } from 'sanity';
-import blogPost from './blogPost'
+import blogPost, {
+  externalImageType,
+  faqItemType,
+  entityReferenceType,
+  statCalloutType,
+  pullQuoteType,
+  inlineImageType,
+  comparisonTabsType,
+  deepDiveType,
+} from './blogPost'
 import blogCategory from './blogCategory'
 
 // ── Shared sub-types ──────────────────────────────────────────────────────────
@@ -436,4 +445,17 @@ const homepage = defineType({
 // ─────────────────────────────────────────────────────────────────────────────
 // Export — paste this into your Sanity project's schemas/index.ts
 // ─────────────────────────────────────────────────────────────────────────────
-export const schemaTypes = [homepage, blogPost, blogCategory];
+export const schemaTypes = [
+  homepage,
+  blogPost,
+  blogCategory,
+  // Supporting object types for blogPost rich fields
+  externalImageType,
+  faqItemType,
+  entityReferenceType,
+  statCalloutType,
+  pullQuoteType,
+  inlineImageType,
+  comparisonTabsType,
+  deepDiveType,
+];

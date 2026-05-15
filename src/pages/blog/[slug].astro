@@ -1,0 +1,1131 @@
+---
+/**
+ * [slug].astro — CiCon Blog Post Template (v1.0)
+ * 11 sections + 5 micro-interactions per CICON_BLOG_TEMPLATE_SPEC.md
+ */
+import { createClient } from '@sanity/client'
+import { renderPortableText, extractH2s } from '../../lib/portable-text'
+import type { PTNode } from '../../lib/portable-text'
+import { PERSON_MAJID, ORG_CICON, WEBSITE_CICON } from '../../lib/schema-constants'
+import '../../styles/globals.css'
+
+// ── Sanity client ──────────────────────────────────────────────────────────────
+
+function getSanityClient() {
+  const rawId = (import.meta.env.PUBLIC_SANITY_PROJECT_ID ?? '').trim()
+  const dataset = (import.meta.env.PUBLIC_SANITY_DATASET ?? 'production').trim()
+  if (!/^[a-z0-9-]+$/.test(rawId)) return null
+  return createClient({ projectId: rawId, dataset, useCdn: false, apiVersion: '2024-01-01' })
+}
+
+// ── Queries ────────────────────────────────────────────────────────────────────
+
+const ALL_SLUGS_QUERY = `
+  *[_type == "blogPost" && status == "published" && !(_id in path("drafts.**"))] {
+    "slug": slug.current
+  }
+`
+
+const POST_QUERY = `
+  *[_type == "blogPost" && slug.current == $slug && status == "published" && !(_id in path("drafts.**"))][0] {
+    _id, _createdAt, _updatedAt,
+    title,
+    "slug": slug.current,
+    dek,
+    heroImage{ url, alt, caption },
+    readTime,
+    publishedAt,
+    quickAnswer,
+    body[]{
+      _key, _type,
+      style, listItem, level,
+      children[]{ _key, _type, text, marks },
+      markDefs[]{ _key, _type, href },
+      number, label, source,
+      quote, attribution,
+      url, alt, caption, tilt,
+      heading,
+      tabs[]{ _key, title, body[]{ _key, _type, style, listItem, level, children[]{ _key, _type, text, marks }, markDefs[]{ _key, _type, href } } },
+      title, whyItMatters,
+      "body": body[]{ _key, _type, style, listItem, level, children[]{ _key, _type, text, marks }, markDefs[]{ _key, _type, href } }
+    },
+    faqs[]{ _key, question, answer },
+    endCtaStat{ number, context, source },
+    "category": category->{ name, "slug": slug.current },
+    "relatedPosts": relatedPosts[0..2]->{
+      _id, title, "slug": slug.current, dek,
+      heroImage{ url, alt, caption },
+      readTime, publishedAt,
+      "category": category->{ name, "slug": slug.current }
+    },
+    metaTitle, metaDescription, keywords,
+    "aboutEntities": aboutEntities[]{ name, type, sameAs },
+    "mentionsEntities": mentionsEntities[]{ name, type, sameAs }
+  }
+`
+
+// ── getStaticPaths ─────────────────────────────────────────────────────────────
+
+export async function getStaticPaths() {
+  try {
+    const { createClient: _createClient } = await import('@sanity/client')
+    const rawId = (import.meta.env.PUBLIC_SANITY_PROJECT_ID ?? '').trim()
+    const dataset = (import.meta.env.PUBLIC_SANITY_DATASET ?? 'production').trim()
+    if (!/^[a-z0-9-]+$/.test(rawId)) return []
+    const _client = _createClient({ projectId: rawId, dataset, useCdn: false, apiVersion: '2024-01-01' })
+    const slugs = await _client.fetch<Array<{ slug: string }>>(
+      `*[_type == "blogPost" && status == "published" && !(_id in path("drafts.**"))] { "slug": slug.current }`
+    )
+    return slugs.map(({ slug }) => ({ params: { slug } }))
+  } catch (err) {
+    console.error('[Sanity] Failed to fetch slugs for [slug].astro:', err)
+    return []
+  }
+}
+
+// ── Fetch post data ────────────────────────────────────────────────────────────
+
+const { slug } = Astro.params
+const client = getSanityClient()
+
+let post: any = null
+if (client) {
+  try {
+    post = await client.fetch(POST_QUERY, { slug })
+  } catch (err) {
+    console.error(`[Sanity] Failed to fetch post "${slug}":`, err)
+  }
+}
+
+if (!post) {
+  return Astro.redirect('/blog/', 302)
+}
+
+// ── Derived data ───────────────────────────────────────────────────────────────
+
+const postUrl = `https://cicon.ca/blog/${post.slug}/`
+const datePublished = post.publishedAt ?? post._createdAt?.slice(0, 10) ?? ''
+const dateModified = post._updatedAt?.slice(0, 10) ?? datePublished
+const datePublishedISO = datePublished ? new Date(datePublished).toISOString() : ''
+const dateModifiedISO = dateModified ? new Date(dateModified).toISOString() : ''
+
+const formattedDate = dateModified
+  ? new Date(dateModified).toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' })
+  : ''
+
+const bodyHtml = renderPortableText((post.body ?? []) as PTNode[])
+const tocHeadings = extractH2s((post.body ?? []) as PTNode[])
+
+const metaTitle = post.metaTitle || `${post.title} | CiCon Marketing`
+const metaDesc = post.metaDescription || post.dek || ''
+const canonicalUrl = postUrl
+
+// ── JSON-LD Connected Graph (7 nodes) ─────────────────────────────────────────
+
+const faqNodes = (post.faqs ?? []).map((faq: any) => ({
+  '@type': 'Question',
+  name: faq.question,
+  acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+}))
+
+const aboutEntities = (post.aboutEntities ?? []).map((e: any) => {
+  const node: any = { '@type': e.type ?? 'Thing', name: e.name }
+  if (e.sameAs) node.sameAs = e.sameAs
+  return node
+})
+
+const mentionsEntities = (post.mentionsEntities ?? []).map((e: any) => {
+  const node: any = { '@type': e.type ?? 'Thing', name: e.name }
+  if (e.sameAs) node.sameAs = e.sameAs
+  return node
+})
+
+const schema: any = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BlogPosting',
+      '@id': `${postUrl}#blogposting`,
+      url: postUrl,
+      headline: post.title,
+      description: metaDesc,
+      datePublished: datePublishedISO,
+      dateModified: dateModifiedISO,
+      inLanguage: 'en-CA',
+      author: { '@id': 'https://cicon.ca/#majid-behzad' },
+      publisher: { '@id': 'https://cicon.ca/#organization' },
+      isPartOf: { '@id': `${postUrl}#webpage` },
+      mainEntityOfPage: { '@id': `${postUrl}#webpage` },
+      speakable: {
+        '@type': 'SpeakableSpecification',
+        cssSelector: ['.quick-answer__body', '.end-cta__stat-number', '.end-cta__stat-context'],
+      },
+      ...(post.heroImage?.url ? {
+        image: {
+          '@type': 'ImageObject',
+          url: post.heroImage.url,
+          description: post.heroImage.alt ?? post.title,
+        },
+      } : {}),
+      ...(aboutEntities.length > 0 ? { about: aboutEntities } : {}),
+      ...(mentionsEntities.length > 0 ? { mentions: mentionsEntities } : {}),
+      ...(post.readTime ? { timeRequired: `PT${post.readTime}M` } : {}),
+    },
+    {
+      '@type': 'WebPage',
+      '@id': `${postUrl}#webpage`,
+      url: postUrl,
+      name: metaTitle,
+      description: metaDesc,
+      isPartOf: { '@id': 'https://cicon.ca/#website' },
+      primaryImageOfPage: post.heroImage?.url ? { '@type': 'ImageObject', url: post.heroImage.url } : undefined,
+      breadcrumb: { '@id': `${postUrl}#breadcrumb` },
+      inLanguage: 'en-CA',
+    },
+    WEBSITE_CICON,
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${postUrl}#breadcrumb`,
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://cicon.ca/' },
+        { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://cicon.ca/blog/' },
+        { '@type': 'ListItem', position: 3, name: post.title, item: postUrl },
+      ],
+    },
+    PERSON_MAJID,
+    ORG_CICON,
+    ...(faqNodes.length > 0 ? [{
+      '@type': 'FAQPage',
+      '@id': `${postUrl}#faqpage`,
+      mainEntity: faqNodes,
+    }] : []),
+  ].filter(Boolean),
+}
+---
+
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{metaTitle}</title>
+  <meta name="description" content={metaDesc} />
+  <link rel="canonical" href={canonicalUrl} />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content={postUrl} />
+  <meta property="og:title" content={metaTitle} />
+  <meta property="og:description" content={metaDesc} />
+  {post.heroImage?.url && <meta property="og:image" content={post.heroImage.url} />}
+  <meta property="article:published_time" content={datePublishedISO} />
+  <meta property="article:modified_time" content={dateModifiedISO} />
+  <meta property="article:author" content="Majid Behzad" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet" />
+
+  <!-- JSON-LD Connected Graph -->
+  <script type="application/ld+json" id="article-schema" set:html={JSON.stringify(schema)} />
+</head>
+
+<body class="font-sans antialiased" style="background:var(--off-white);color:var(--charcoal)">
+
+<!-- ══ SECTION 1: STICKY HEADER ══════════════════════════════════════════════ -->
+<header id="blog-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background:rgba(250,250,250,0.95);backdrop-filter:blur(12px);height:64px;border-bottom:1px solid var(--hairline)">
+  <div class="max-w-[1280px] mx-auto px-6 h-full flex items-center justify-between">
+    <!-- Logo -->
+    <a href="/" aria-label="CiCon Marketing Home" class="flex items-center gap-2">
+      <img src="/logo-cicon.jpg" alt="CiCon Marketing" class="h-9 w-auto object-contain" />
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden md:flex items-center gap-7" aria-label="Site navigation">
+      {[
+        { href: 'https://cicon.ca/#services', label: 'Services' },
+        { href: '/blog/', label: 'Blog' },
+        { href: 'https://cicon.ca/about-us/', label: 'About' },
+        { href: 'https://cicon.ca/#contact', label: 'Contact' },
+      ].map(link => (
+        <a href={link.href} class="text-sm font-medium transition-colors duration-200" style="color:var(--charcoal)" onmouseover="this.style.color='var(--goldenrod)'" onmouseout="this.style.color='var(--charcoal)'">{link.label}</a>
+      ))}
+    </nav>
+
+    <!-- WhatsApp CTA -->
+    <a
+      href="https://wa.me/12898071020"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="hidden md:inline-flex items-center gap-2 text-white font-display font-semibold text-sm px-4 py-2 rounded-lg transition-colors duration-200"
+      style="background:var(--whatsapp-bright);border-radius:8px"
+      onmouseover="this.style.background='var(--whatsapp-bright-hover)'"
+      onmouseout="this.style.background='var(--whatsapp-bright)'"
+    >
+      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+      Chat on WhatsApp
+    </a>
+  </div>
+
+  <!-- Reading progress bar -->
+  <div id="reading-progress" class="absolute bottom-0 left-0 h-[3px] w-0 transition-none" style="background:var(--amber);z-index:10" aria-hidden="true"></div>
+</header>
+
+<!-- ══ SECTION 2: HERO BLOCK ══════════════════════════════════════════════════ -->
+<section id="hero" class="relative" style="background:var(--shadow);padding-top:64px">
+  <div class="max-w-[1280px] mx-auto px-6 py-16 md:py-24">
+    <!-- Category chip -->
+    {post.category && (
+      <span class="inline-block font-display font-semibold uppercase text-[11px] tracking-[0.1em] px-4 py-1.5 rounded-full mb-4" style="color:var(--goldenrod);border:1px solid var(--goldenrod)">
+        {post.category.name}
+      </span>
+    )}
+
+    <!-- H1 -->
+    <h1 class="font-display font-bold text-white max-w-[900px] mb-5 leading-tight" style="font-size:clamp(2.5rem,5vw,4rem);letter-spacing:-0.02em">
+      {post.title}
+    </h1>
+
+    <!-- Dek -->
+    {post.dek && (
+      <p class="font-body text-[1.25rem] italic max-w-[700px] mb-8 leading-relaxed" style="color:rgba(255,255,255,0.8)">
+        {post.dek}
+      </p>
+    )}
+
+    <!-- Meta row -->
+    <p class="font-body font-medium text-sm mb-6" style="color:rgba(255,255,255,0.7)">
+      By Majid Behzad
+      {post.readTime && <span> · {post.readTime} min read</span>}
+      {formattedDate && <span> · Last updated <time datetime={dateModifiedISO}>{formattedDate}</time></span>}
+    </p>
+
+    <!-- Amber accent rule -->
+    <div class="w-[60px] h-[2px]" style="background:var(--amber)"></div>
+  </div>
+
+  <!-- Featured image card — overlaps next section -->
+  {post.heroImage?.url && (
+    <div class="relative pb-0">
+      <div class="max-w-[880px] mx-auto px-6">
+        <figure class="relative" style="transform:rotate(-1.5deg);margin-bottom:-80px">
+          <img
+            src={post.heroImage.url}
+            alt={post.heroImage.alt ?? post.title}
+            loading="eager"
+            fetchpriority="high"
+            width="880"
+            height="495"
+            class="w-full rounded-lg object-cover"
+            style="box-shadow:0 30px 60px -20px rgba(33,33,41,0.4),0 10px 30px -10px rgba(0,0,0,0.2);border:1px solid rgba(157,131,62,0.4)"
+          />
+          {post.heroImage.caption && (
+            <figcaption class="text-center mt-3 font-body italic text-sm" style="color:rgba(58,58,58,0.7)">
+              {post.heroImage.caption}
+            </figcaption>
+          )}
+        </figure>
+      </div>
+    </div>
+  )}
+</section>
+
+<!-- ══ SECTION 3: QUICK ANSWER CARD ══════════════════════════════════════════ -->
+{post.quickAnswer && (
+  <section id="quick-answer" class="max-w-[880px] mx-auto px-6" style="padding-top:calc(80px + 80px);padding-bottom:0">
+    <div class="quick-answer-card relative rounded-xl p-8 md:p-10" style="background:var(--glass-bg);backdrop-filter:blur(16px);border:1px solid var(--glass-border);border-left:4px solid var(--goldenrod);box-shadow:0 0 0 1px rgba(157,131,63,0.25),0 20px 40px -20px rgba(33,33,41,0.18)">
+      <!-- Header row -->
+      <div class="flex items-start justify-between gap-4 mb-4">
+        <span class="font-display font-semibold uppercase text-[11px] tracking-[0.15em]" style="color:var(--goldenrod)">Quick Answer</span>
+        <button
+          id="copy-answer-btn"
+          class="flex-shrink-0 p-1 rounded transition-colors duration-200 group"
+          aria-label="Copy answer to clipboard"
+          title="Copy to clipboard"
+          style="color:rgba(58,58,58,0.5)"
+          onmouseover="this.style.color='var(--charcoal)'"
+          onmouseout="this.style.color='rgba(58,58,58,0.5)'"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+          </svg>
+        </button>
+      </div>
+      <!-- Answer -->
+      <p id="quick-answer-text" class="quick-answer__body font-body font-medium leading-relaxed" style="font-size:1.125rem;color:var(--charcoal);line-height:1.6">
+        {post.quickAnswer}
+      </p>
+      <!-- Copied tooltip -->
+      <span id="copy-tooltip" class="hidden absolute top-4 right-10 text-xs font-display font-semibold text-white px-2 py-1 rounded" style="background:var(--goldenrod)">Copied!</span>
+    </div>
+  </section>
+)}
+
+<!-- ══ SECTION 4 + 5 + 6: ANTI-GRID BODY + TOC SIDEBAR + ARTICLE ════════════ -->
+<main id="article-main" class="max-w-[1280px] mx-auto px-6" style={`padding-top:${post.quickAnswer ? '64px' : 'calc(80px + 64px)'};padding-bottom:80px`}>
+  <div class="article-grid">
+
+    <!-- LEFT GUTTER (desktop-only pull quotes via CSS grid) -->
+    <div class="article-gutter" aria-hidden="true"></div>
+
+    <!-- MAIN PROSE COLUMN -->
+    <article id="article-body" class="article-prose min-w-0">
+      <div set:html={bodyHtml} />
+
+      <!-- ══ FAQ SECTION ══════════════════════════════════════════════════════ -->
+      {post.faqs && post.faqs.length > 0 && (
+        <section class="mt-16" aria-label="Frequently Asked Questions">
+          <h2 class="font-display font-bold mb-8 leading-tight scroll-mt-24" style="font-size:clamp(1.75rem,3vw,2.5rem);color:var(--black);letter-spacing:-0.01em" id="faq">
+            Frequently Asked Questions
+          </h2>
+
+          <div class="faq-list space-y-3">
+            {post.faqs.map((faq: any, i: number) => (
+              <div class="faq-item rounded-xl border overflow-hidden" style="border-color:var(--hairline)">
+                <button
+                  class="faq-toggle w-full flex items-start justify-between gap-4 px-6 py-5 text-left transition-colors duration-200 bg-white hover:bg-[#FAFAFA]"
+                  aria-expanded="false"
+                  aria-controls={`faq-answer-${i}`}
+                  id={`faq-question-${i}`}
+                >
+                  <span class="font-display font-semibold text-[1rem] leading-snug" style="color:var(--black)">{faq.question}</span>
+                  <svg class="faq-chevron flex-shrink-0 mt-0.5 w-5 h-5 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true" style="color:var(--goldenrod)">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </button>
+                <div id={`faq-answer-${i}`} class="faq-answer hidden" role="region" aria-labelledby={`faq-question-${i}`}>
+                  <div class="px-6 pb-6 pt-1 border-t" style="border-color:var(--hairline)">
+                    <p class="font-body leading-relaxed" style="color:var(--charcoal);font-size:1rem;line-height:1.7">{faq.answer}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+    </article>
+
+    <!-- STICKY RIGHT SIDEBAR (desktop ≥1024px) -->
+    {tocHeadings.length > 0 && (
+      <aside id="toc-sidebar" class="article-sidebar hidden lg:block" aria-label="Table of contents">
+        <div class="sticky top-24">
+          <p class="font-display font-semibold uppercase text-[11px] tracking-[0.15em] mb-4" style="color:var(--goldenrod)">On This Page</p>
+          <nav aria-label="Article sections">
+            <ul class="space-y-0" role="list">
+              {tocHeadings.map(h => (
+                <li>
+                  <a
+                    href={`#${h.id}`}
+                    class="toc-link block py-2.5 text-sm font-medium transition-all duration-200 border-l-2 pl-4"
+                    style="color:rgba(58,58,58,0.7);border-color:transparent"
+                    data-toc-target={h.id}
+                  >
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <!-- Sidebar divider -->
+          <div class="my-6 h-px" style="background:var(--hairline)"></div>
+
+          <!-- Sidebar WhatsApp CTA -->
+          <a
+            href="https://wa.me/12898071020"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center justify-center gap-2 w-full text-white font-display font-semibold text-xs px-4 py-3 rounded-lg transition-colors duration-200"
+            style="background:var(--whatsapp-bright);padding:6px 16px"
+            onmouseover="this.style.background='var(--whatsapp-bright-hover)'"
+            onmouseout="this.style.background='var(--whatsapp-bright)'"
+          >
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            Chat on WhatsApp →
+          </a>
+        </div>
+      </aside>
+    )}
+  </div>
+</main>
+
+<!-- ══ SECTION 7: END CTA ════════════════════════════════════════════════════ -->
+<section id="end-cta" class="py-[120px]" style="background:var(--shadow)">
+  <div class="max-w-[1080px] mx-auto px-6">
+    <div class="end-cta-grid">
+      <!-- Left: copy -->
+      <div class="end-cta-left">
+        <p class="font-display font-semibold uppercase text-[11px] tracking-[0.15em] mb-4" style="color:var(--goldenrod)">Ready to Grow?</p>
+        <h2 class="font-display font-bold text-white mb-5 leading-tight" style="font-size:clamp(2rem,4vw,3rem)">
+          Stop guessing.<br/>Start growing.
+        </h2>
+        <p class="font-body text-[1.125rem] mb-8 max-w-[520px] leading-relaxed" style="color:rgba(255,255,255,0.8)">
+          {post.dek || 'Let CiCon Marketing build a data-driven growth system tailored to your business in the GTA.'}
+        </p>
+        <div class="flex flex-wrap gap-5 items-center">
+          <a
+            href="https://wa.me/12898071020"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 text-white font-display font-semibold text-sm px-7 py-4 transition-colors duration-200"
+            style="background:var(--whatsapp-deep);border-radius:100px;font-size:14px;padding:14px 28px"
+            onmouseover="this.style.background='var(--whatsapp-deep-hover)'"
+            onmouseout="this.style.background='var(--whatsapp-deep)'"
+          >
+            <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            Chat on WhatsApp
+          </a>
+          <a href="tel:2898071020" class="font-body font-medium text-sm transition-opacity duration-200" style="color:rgba(255,255,255,0.8);font-size:14px" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">
+            Or call (289) 807-1020 →
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: stat pull -->
+      {post.endCtaStat?.number && (
+        <div class="end-cta-right text-center lg:text-left mt-12 lg:mt-0">
+          <p class="font-display font-semibold uppercase mb-4" style="font-size:10px;letter-spacing:0.15em;color:var(--goldenrod)">By the Numbers</p>
+          <div
+            class="end-cta__stat-number stat-count-up font-display font-bold leading-none mb-4"
+            data-target={post.endCtaStat.number}
+            style="font-size:clamp(5rem,9vw,8rem);color:var(--amber);letter-spacing:-0.04em;text-shadow:0 4px 24px rgba(255,207,0,0.25);line-height:0.95"
+          >
+            0
+          </div>
+          {post.endCtaStat.context && (
+            <p class="end-cta__stat-context font-body italic leading-relaxed max-w-[280px] mx-auto lg:mx-0 mb-3" style="font-size:1rem;color:rgba(255,255,255,0.75)">
+              {post.endCtaStat.context}
+            </p>
+          )}
+          <div class="w-8 h-px mb-3" style="background:rgba(255,207,0,0.6)"></div>
+          {post.endCtaStat.source && (
+            <p class="font-body font-medium uppercase" style="font-size:11px;letter-spacing:0.05em;color:rgba(255,255,255,0.5)">
+              {post.endCtaStat.source}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECTION 8: AUTHOR BIO ════════════════════════════════════════════════ -->
+<section id="author-bio" class="py-24" style="background:var(--off-white)">
+  <div class="max-w-[880px] mx-auto px-6">
+    <div class="author-card rounded-xl p-8 flex flex-col sm:flex-row gap-8 items-start sm:items-center" style="background:white;border:1px solid var(--hairline);box-shadow:0 4px 24px rgba(33,33,41,0.04)">
+      <!-- Photo -->
+      <div class="flex-shrink-0">
+        <img
+          src={PERSON_MAJID.image}
+          alt="Majid Behzad — CiCon Marketing"
+          width="160"
+          height="160"
+          loading="lazy"
+          class="rounded-full object-cover mx-auto sm:mx-0"
+          style="width:160px;height:160px;border:3px solid var(--goldenrod)"
+          onerror="this.style.display='none';document.getElementById('author-initials').style.display='flex'"
+        />
+        <div id="author-initials" class="rounded-full items-center justify-center text-white font-display font-bold text-2xl mx-auto sm:mx-0 hidden" style="width:160px;height:160px;background:var(--goldenrod)">MB</div>
+      </div>
+      <!-- Bio -->
+      <div class="flex-1">
+        <p class="font-display font-semibold uppercase text-[10px] tracking-[0.15em] mb-2" style="color:var(--goldenrod)">About the Author</p>
+        <h3 class="font-display font-bold text-[1.5rem] mb-1" style="color:var(--black)">{PERSON_MAJID.name}</h3>
+        <p class="font-body font-medium text-sm mb-4" style="color:rgba(58,58,58,0.7)">{PERSON_MAJID.jobTitle}</p>
+        <p class="font-body leading-relaxed mb-5" style="font-size:1rem;color:var(--charcoal);line-height:1.6">
+          {PERSON_MAJID.description}
+        </p>
+        <div class="flex items-center gap-4">
+          <!-- LinkedIn -->
+          <a href={PERSON_MAJID.sameAs[0]} target="_blank" rel="noopener noreferrer" aria-label="Majid on LinkedIn" class="transition-colors duration-200" style="color:rgba(58,58,58,0.6)" onmouseover="this.style.color='var(--goldenrod)'" onmouseout="this.style.color='rgba(58,58,58,0.6)'">
+            <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+          </a>
+          <!-- Instagram -->
+          <a href={PERSON_MAJID.sameAs[1]} target="_blank" rel="noopener noreferrer" aria-label="Majid on Instagram" class="transition-colors duration-200" style="color:rgba(58,58,58,0.6)" onmouseover="this.style.color='var(--goldenrod)'" onmouseout="this.style.color='rgba(58,58,58,0.6)'">
+            <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+            </svg>
+          </a>
+          <a href={PERSON_MAJID.url} class="font-body font-medium text-sm transition-colors duration-200" style="color:var(--goldenrod)" onmouseover="this.style.color='var(--amber)'" onmouseout="this.style.color='var(--goldenrod)'">
+            More from Majid →
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECTION 9: RELATED POSTS ════════════════════════════════════════════ -->
+{post.relatedPosts && post.relatedPosts.length > 0 && (
+  <section id="related-posts" class="py-24" style="background:var(--off-white);padding-bottom:120px">
+    <div class="max-w-[1280px] mx-auto px-6">
+      <div class="mb-10">
+        <p class="font-display font-semibold uppercase text-[11px] tracking-[0.15em] mb-3" style="color:var(--goldenrod)">Continue Reading</p>
+        <h2 class="font-display font-bold" style="font-size:2rem;color:var(--black)">
+          More on {post.category?.name ?? 'Digital Marketing'} →
+        </h2>
+      </div>
+
+      <div class="related-posts-grid">
+        {post.relatedPosts.map((related: any, i: number) => {
+          const relDate = related.publishedAt
+            ? new Date(related.publishedAt).toLocaleDateString('en-CA', { month: 'long', year: 'numeric' })
+            : ''
+          const offsets = ['0px', '48px', '0px']
+          return (
+            <a
+              href={`/blog/${related.slug}/`}
+              class="related-card group block rounded-xl overflow-hidden no-underline"
+              style={`background:white;border:1px solid var(--hairline);margin-top:${offsets[i]};text-decoration:none`}
+            >
+              {related.heroImage?.url && (
+                <div class="overflow-hidden" style="aspect-ratio:16/9">
+                  <img
+                    src={related.heroImage.url}
+                    alt={related.heroImage.alt ?? related.title}
+                    loading="lazy"
+                    width="480"
+                    height="270"
+                    class="w-full h-full object-cover transition-transform duration-[400ms] group-hover:scale-105"
+                  />
+                </div>
+              )}
+              <div class="p-6">
+                {related.category && (
+                  <span class="inline-block font-display font-semibold uppercase text-[10px] tracking-[0.1em] px-3 py-1 rounded-full mb-3" style="color:var(--goldenrod);border:1px solid var(--goldenrod)">
+                    {related.category.name}
+                  </span>
+                )}
+                <h3 class="font-display font-semibold leading-snug mb-3 related-card-title" style="font-size:1.25rem;color:var(--black);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">
+                  {related.title}
+                </h3>
+                <p class="font-body text-sm" style="color:rgba(58,58,58,0.6);font-size:13px">
+                  {related.readTime && `${related.readTime} min read`}{relDate && related.readTime ? ' · ' : ''}{relDate}
+                </p>
+              </div>
+            </a>
+          )
+        })}
+      </div>
+    </div>
+  </section>
+)}
+
+<!-- ══ SECTION 10: SLIM FOOTER ═══════════════════════════════════════════════ -->
+<footer style="background:var(--shadow);padding:64px 0">
+  <div class="max-w-[1280px] mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
+    <div class="flex flex-wrap items-center gap-6">
+      <span class="font-body text-sm" style="color:rgba(255,255,255,0.6)">© {new Date().getFullYear()} CiCon Marketing</span>
+      <a href="https://cicon.ca/privacy-policy/" class="font-body text-sm transition-opacity duration-200" style="color:rgba(255,255,255,0.6)" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">Privacy</a>
+      <a href="https://cicon.ca/terms/" class="font-body text-sm transition-opacity duration-200" style="color:rgba(255,255,255,0.6)" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">Terms</a>
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="https://www.facebook.com/ciconmarketing/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="transition-opacity duration-200" style="color:rgba(255,255,255,0.6)" onmouseover="this.style.color='var(--goldenrod)'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/ciconmktg/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="transition-opacity duration-200" style="color:rgba(255,255,255,0.6)" onmouseover="this.style.color='var(--goldenrod)'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+      <a href="https://linkedin.com/company/cicon-marketing/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="transition-opacity duration-200" style="color:rgba(255,255,255,0.6)" onmouseover="this.style.color='var(--goldenrod)'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<!-- ══ SECTION 11: MOBILE FLOATING TOC ═══════════════════════════════════════ -->
+{tocHeadings.length > 0 && (
+  <>
+    <button
+      id="mobile-toc-btn"
+      class="fixed z-40 lg:hidden transition-all duration-300 flex items-center justify-center"
+      aria-label="Jump to section"
+      aria-expanded="false"
+      aria-controls="mobile-toc-sheet"
+      style="bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:var(--amber);box-shadow:0 8px 24px rgba(255,207,0,0.5);opacity:0;pointer-events:none"
+    >
+      <svg class="w-6 h-6 text-[var(--shadow)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"/>
+      </svg>
+    </button>
+
+    <div id="mobile-toc-backdrop" class="hidden fixed inset-0 z-40" style="background:rgba(0,0,0,0.4);backdrop-filter:blur(8px)" aria-hidden="true"></div>
+
+    <div
+      id="mobile-toc-sheet"
+      class="hidden fixed z-50 lg:hidden left-0 right-0"
+      style="bottom:0;background:var(--off-white);border-radius:16px 16px 0 0;padding:24px;transform:translateY(100%);transition:transform 400ms cubic-bezier(0.4,0,0.2,1);max-height:50vh;overflow-y:auto"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Article sections"
+    >
+      <div class="flex items-center justify-between mb-5">
+        <span class="font-display font-semibold text-base" style="color:var(--black)">Jump to Section</span>
+        <button id="mobile-toc-close" class="p-1 rounded" aria-label="Close" style="color:var(--charcoal)">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <ul class="space-y-1" role="list">
+        {tocHeadings.map(h => (
+          <li>
+            <a
+              href={`#${h.id}`}
+              class="mobile-toc-link block py-3 px-4 rounded-lg font-body font-medium text-sm transition-colors duration-200"
+              style="color:var(--charcoal)"
+              data-toc-target={h.id}
+            >
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </>
+)}
+
+<!-- ══ STYLES ════════════════════════════════════════════════════════════════ -->
+<style>
+  :root {
+    --amber: #FFCF00;
+    --goldenrod: #9D833E;
+    --shadow: #212129;
+    --alabaster: #E7E7E7;
+    --black: #000000;
+    --off-white: #FAFAFA;
+    --white: #FFFFFF;
+    --charcoal: #3A3A3A;
+    --glass-bg: rgba(255, 255, 255, 0.65);
+    --glass-border: rgba(157, 131, 62, 0.3);
+    --hairline: rgba(157, 131, 62, 0.15);
+    --whatsapp-bright: #25D366;
+    --whatsapp-deep: #128C7E;
+    --whatsapp-bright-hover: #1FB855;
+    --whatsapp-deep-hover: #0E6E62;
+  }
+
+  .font-display { font-family: 'Montserrat', sans-serif; }
+  .font-body { font-family: 'Inter', sans-serif; }
+
+  /* ── Article grid (anti-grid asymmetric layout) ────────────────────────── */
+  .article-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .article-grid {
+      display: grid;
+      grid-template-columns: 0 1fr 280px;
+      gap: 0 40px;
+    }
+    .article-gutter { display: block; }
+    .article-prose { max-width: 70ch; }
+    .article-sidebar { display: block !important; }
+  }
+
+  .article-prose {
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* ── TOC active state ──────────────────────────────────────────────────── */
+  .toc-link.active {
+    color: var(--charcoal) !important;
+    border-color: var(--amber) !important;
+    padding-left: 20px;
+  }
+
+  /* ── End CTA grid ──────────────────────────────────────────────────────── */
+  .end-cta-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .end-cta-grid {
+      grid-template-columns: 8fr 4fr;
+      gap: 64px;
+    }
+  }
+
+  /* ── Related posts stagger grid ────────────────────────────────────────── */
+  .related-posts-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  @media (min-width: 768px) {
+    .related-posts-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      align-items: start;
+    }
+  }
+
+  /* ── Deep dive accordion animation ────────────────────────────────────── */
+  .deep-dive-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .deep-dive-body.open {
+    max-height: 2000px;
+  }
+
+  /* ── FAQ accordion animation ───────────────────────────────────────────── */
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .faq-answer.open {
+    max-height: 800px;
+  }
+
+  /* ── Related card hover underline ──────────────────────────────────────── */
+  .related-card-title {
+    position: relative;
+    display: inline-block;
+  }
+
+  /* ── Bullet list custom marker ─────────────────────────────────────────── */
+  .article-prose ul li {
+    list-style: none;
+    position: relative;
+    padding-left: 28px;
+  }
+  .article-prose ul li::before {
+    content: "▪";
+    position: absolute;
+    left: 0;
+    color: var(--goldenrod);
+  }
+
+  /* ── Reduced motion ────────────────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .deep-dive-body,
+    .faq-answer,
+    #reading-progress,
+    .toc-link,
+    .stat-count-up {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+
+  /* ── Mobile stat in end CTA ────────────────────────────────────────────── */
+  @media (max-width: 767px) {
+    .end-cta__stat-number {
+      font-size: clamp(4rem, 14vw, 6rem) !important;
+      text-align: center;
+    }
+    .end-cta-right {
+      text-align: center;
+    }
+    .end-cta-right .h-px {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+</style>
+
+<!-- ══ SCRIPTS: 5 Micro-Interactions ════════════════════════════════════════ -->
+<script is:inline>
+(function() {
+  'use strict';
+
+  // ── Micro-interaction 1: Reading Progress Bar ──────────────────────────
+  const progressBar = document.getElementById('reading-progress');
+  const articleBody = document.getElementById('article-body');
+
+  if (progressBar && articleBody) {
+    let rafId = null;
+    function updateProgress() {
+      const articleRect = articleBody.getBoundingClientRect();
+      const articleTop = articleRect.top + window.scrollY;
+      const articleHeight = articleRect.height;
+      const viewportH = window.innerHeight;
+      const scrollable = articleHeight - viewportH;
+      if (scrollable <= 0) { progressBar.style.width = '100%'; return; }
+      const scrolled = window.scrollY - articleTop;
+      const pct = Math.min(100, Math.max(0, (scrolled / scrollable) * 100));
+      progressBar.style.width = pct + '%';
+    }
+    window.addEventListener('scroll', function() {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(updateProgress);
+    }, { passive: true });
+    updateProgress();
+  }
+
+  // ── Micro-interaction 2: Scroll-Spy TOC ────────────────────────────────
+  const tocLinks = document.querySelectorAll('.toc-link[data-toc-target]');
+  const mobileTocLinks = document.querySelectorAll('.mobile-toc-link[data-toc-target]');
+
+  if (tocLinks.length > 0) {
+    const headings = Array.from(tocLinks).map(link => {
+      const id = link.getAttribute('data-toc-target');
+      return document.getElementById(id);
+    }).filter(Boolean);
+
+    let activeId = null;
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          activeId = entry.target.id;
+          tocLinks.forEach(link => {
+            const matches = link.getAttribute('data-toc-target') === activeId;
+            link.classList.toggle('active', matches);
+          });
+        }
+      });
+    }, { rootMargin: '-80px 0px -70% 0px', threshold: 0 });
+
+    headings.forEach(h => observer.observe(h));
+  }
+
+  // ── Micro-interaction 3: Stat Count-Up ────────────────────────────────
+  function parseStatTarget(rawTarget) {
+    if (!rawTarget) return null;
+    const str = String(rawTarget);
+    const match = str.match(/[\d.]+/);
+    if (!match) return null;
+    return {
+      value: parseFloat(match[0]),
+      prefix: str.slice(0, match.index),
+      suffix: str.slice(match.index + match[0].length),
+      decimals: (match[0].split('.')[1] || '').length,
+    };
+  }
+
+  function animateCountUp(el, parsed, duration) {
+    const start = performance.now();
+    function step(now) {
+      const elapsed = now - start;
+      const t = Math.min(elapsed / duration, 1);
+      const eased = t * (2 - t); // ease-out
+      const current = parsed.value * eased;
+      el.textContent = parsed.prefix + current.toFixed(parsed.decimals) + parsed.suffix;
+      if (t < 1) requestAnimationFrame(step);
+      else el.textContent = parsed.prefix + parsed.value.toFixed(parsed.decimals) + parsed.suffix;
+    }
+    requestAnimationFrame(step);
+  }
+
+  const statEls = document.querySelectorAll('.stat-count-up[data-target]');
+  if (statEls.length > 0) {
+    const statObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const parsed = parseStatTarget(el.getAttribute('data-target'));
+          if (parsed) {
+            const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (reduced) {
+              el.textContent = parsed.prefix + parsed.value.toFixed(parsed.decimals) + parsed.suffix;
+            } else {
+              animateCountUp(el, parsed, 1500);
+            }
+          }
+          statObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.3 });
+    statEls.forEach(el => statObserver.observe(el));
+  }
+
+  // ── Micro-interaction 5: Smooth Scroll (anchor clicks with -80px offset)
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const id = this.getAttribute('href').slice(1);
+      const target = document.getElementById(id);
+      if (!target) return;
+      e.preventDefault();
+      const top = target.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    });
+  });
+
+  // ── FAQ Accordion ────────────────────────────────────────────────────
+  document.querySelectorAll('.faq-toggle').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const expanded = this.getAttribute('aria-expanded') === 'true';
+      const answerId = this.getAttribute('aria-controls');
+      const answer = document.getElementById(answerId);
+      const chevron = this.querySelector('.faq-chevron');
+
+      this.setAttribute('aria-expanded', String(!expanded));
+      if (answer) {
+        answer.classList.toggle('open', !expanded);
+        answer.classList.toggle('hidden', false); // remove hidden once opened
+        if (expanded) {
+          // closing: re-hide after transition
+          answer.addEventListener('transitionend', function hide() {
+            if (!answer.classList.contains('open')) answer.classList.add('hidden');
+            answer.removeEventListener('transitionend', hide);
+          });
+        }
+      }
+      if (chevron) {
+        chevron.style.transform = expanded ? '' : 'rotate(180deg)';
+      }
+    });
+  });
+
+  // ── Deep Dive Accordion ──────────────────────────────────────────────
+  document.querySelectorAll('.deep-dive-toggle').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const expanded = this.getAttribute('aria-expanded') === 'true';
+      const bodyId = this.getAttribute('aria-controls');
+      const body = document.getElementById(bodyId);
+      const chevron = this.querySelector('.deep-dive-chevron');
+
+      this.setAttribute('aria-expanded', String(!expanded));
+      if (body) {
+        body.classList.toggle('open', !expanded);
+        body.classList.toggle('hidden', false);
+        if (expanded) {
+          body.addEventListener('transitionend', function hide() {
+            if (!body.classList.contains('open')) body.classList.add('hidden');
+            body.removeEventListener('transitionend', hide);
+          });
+        }
+      }
+      if (chevron) {
+        chevron.style.transform = expanded ? '' : 'rotate(180deg)';
+      }
+    });
+  });
+
+  // ── Comparison Tabs ──────────────────────────────────────────────────
+  document.querySelectorAll('[data-tab-group]').forEach(container => {
+    const groupId = container.getAttribute('data-tab-group');
+    const buttons = container.querySelectorAll(`.tab-btn[data-tab-group="${groupId}"]`);
+    const panels = container.querySelectorAll(`[id^="tab-panel-${groupId}-"]`);
+    const underline = container.querySelector('.tab-underline');
+
+    function activateTab(index) {
+      buttons.forEach((btn, i) => {
+        const active = i === index;
+        btn.setAttribute('aria-selected', String(active));
+        btn.style.color = active ? 'var(--black)' : 'rgba(58,58,58,0.6)';
+        btn.style.fontWeight = active ? '700' : '600';
+      });
+      panels.forEach((panel, i) => {
+        panel.classList.toggle('hidden', i !== index);
+      });
+      // Move underline
+      if (underline && buttons[index]) {
+        const btn = buttons[index];
+        underline.style.left = btn.offsetLeft + 'px';
+        underline.style.width = btn.offsetWidth + 'px';
+      }
+    }
+
+    buttons.forEach((btn, i) => {
+      btn.addEventListener('click', () => activateTab(i));
+    });
+
+    // Initialize
+    activateTab(0);
+  });
+
+  // ── Quick Answer Copy ────────────────────────────────────────────────
+  const copyBtn = document.getElementById('copy-answer-btn');
+  const copyTooltip = document.getElementById('copy-tooltip');
+  const answerText = document.getElementById('quick-answer-text');
+
+  if (copyBtn && answerText) {
+    copyBtn.addEventListener('click', async function() {
+      try {
+        await navigator.clipboard.writeText(answerText.textContent || '');
+        if (copyTooltip) {
+          copyTooltip.classList.remove('hidden');
+          setTimeout(() => copyTooltip.classList.add('hidden'), 2000);
+        }
+      } catch (err) {
+        // Clipboard API unavailable — fail silently
+      }
+    });
+  }
+
+  // ── Mobile TOC Sheet ─────────────────────────────────────────────────
+  const mobileTocBtn = document.getElementById('mobile-toc-btn');
+  const mobileTocSheet = document.getElementById('mobile-toc-sheet');
+  const mobileTocBackdrop = document.getElementById('mobile-toc-backdrop');
+  const mobileTocClose = document.getElementById('mobile-toc-close');
+
+  function openMobileToc() {
+    if (!mobileTocSheet || !mobileTocBackdrop) return;
+    mobileTocSheet.classList.remove('hidden');
+    mobileTocBackdrop.classList.remove('hidden');
+    requestAnimationFrame(() => {
+      mobileTocSheet.style.transform = 'translateY(0)';
+    });
+    if (mobileTocBtn) mobileTocBtn.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeMobileToc() {
+    if (!mobileTocSheet || !mobileTocBackdrop) return;
+    mobileTocSheet.style.transform = 'translateY(100%)';
+    mobileTocSheet.addEventListener('transitionend', function hide() {
+      mobileTocSheet.classList.add('hidden');
+      mobileTocBackdrop.classList.add('hidden');
+      mobileTocSheet.removeEventListener('transitionend', hide);
+    });
+    if (mobileTocBtn) mobileTocBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  if (mobileTocBtn) mobileTocBtn.addEventListener('click', openMobileToc);
+  if (mobileTocClose) mobileTocClose.addEventListener('click', closeMobileToc);
+  if (mobileTocBackdrop) mobileTocBackdrop.addEventListener('click', closeMobileToc);
+
+  // Close mobile TOC when a link is clicked
+  document.querySelectorAll('.mobile-toc-link').forEach(link => {
+    link.addEventListener('click', closeMobileToc);
+  });
+
+  // Show mobile TOC button after hero
+  if (mobileTocBtn) {
+    const heroEl = document.getElementById('hero');
+    const showObserver = new IntersectionObserver(entries => {
+      const heroVisible = entries[0].isIntersecting;
+      mobileTocBtn.style.opacity = heroVisible ? '0' : '1';
+      mobileTocBtn.style.pointerEvents = heroVisible ? 'none' : 'auto';
+    }, { threshold: 0 });
+    if (heroEl) showObserver.observe(heroEl);
+  }
+
+  // ── Mobile nav back-compat (anchor links in header) ──────────────────
+  const blogHeader = document.getElementById('blog-header');
+  if (blogHeader) {
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 80) {
+        blogHeader.style.boxShadow = '0 2px 16px rgba(33,33,41,0.08)';
+      } else {
+        blogHeader.style.boxShadow = 'none';
+      }
+    }, { passive: true });
+  }
+
+})();
+</script>
+
+</body>
+</html>
