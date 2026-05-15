@@ -1,0 +1,83 @@
+---
+import type { BlogPost } from '../../../lib/sanity';
+
+interface Props {
+  post: BlogPost | null;
+}
+const { post } = Astro.props;
+if (!post) return;
+
+function formatDate(d: string) {
+  return new Date(d).toLocaleDateString('en-CA', { month: 'long', year: 'numeric' });
+}
+---
+
+<section class="bg-gray-50 py-20 md:py-24" aria-label="Featured post">
+  <div class="container-xl">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+
+      <!-- Image column — cols 1-8 -->
+      <div class="lg:col-span-8">
+        <a href={`/${post.slug}/`} aria-label={`Read: ${post.title}`} class="block group">
+          <div class="overflow-hidden rounded-xl" style="transform:rotate(-1.5deg);box-shadow:0 30px 60px -20px rgba(33,33,41,0.4),0 10px 30px -10px rgba(0,0,0,0.2);outline:1px solid rgba(157,131,62,0.2);transition:transform 300ms cubic-bezier(0.4,0,0.2,1);"
+               onmouseover="this.style.transform='rotate(0deg) translateY(-4px)'"
+               onmouseout="this.style.transform='rotate(-1.5deg)'">
+            <div class="aspect-video overflow-hidden">
+              <img
+                src={post.heroImage?.url ?? ''}
+                alt={post.heroImage?.alt ?? post.title}
+                width="880" height="495"
+                loading="eager"
+                fetchpriority="high"
+                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+              />
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Text column — cols 9-12 -->
+      <div class="lg:col-span-4 flex flex-col justify-center">
+
+        <!-- Featured eyebrow -->
+        <div class="flex items-center gap-1.5 mb-3">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="#FFCF00" stroke="none" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span class="font-semibold uppercase tracking-widest text-[11px]" style="font-family:'Montserrat',sans-serif;color:#FFCF00;letter-spacing:0.15em;">Featured</span>
+        </div>
+
+        <!-- Category chip -->
+        {post.category && (
+          <span class="inline-flex w-fit items-center border border-teal-600 text-teal-600 uppercase rounded-full px-2.5 py-1 mb-4 text-[10px] font-semibold tracking-wide" style="font-family:'Montserrat',sans-serif;letter-spacing:0.1em;">
+            {post.category.name}
+          </span>
+        )}
+
+        <!-- Title -->
+        <h2 class="font-bold text-black leading-tight mb-4" style="font-family:'Montserrat',sans-serif;font-size:clamp(1.5rem,2.5vw,2.125rem);letter-spacing:-0.01em;">
+          <a href={`/${post.slug}/`} class="hover:text-teal-600 transition-colors duration-200">{post.title}</a>
+        </h2>
+
+        <!-- Dek -->
+        {post.dek && (
+          <p class="text-gray-600 leading-relaxed mb-5 text-base line-clamp-3">{post.dek}</p>
+        )}
+
+        <!-- Meta row -->
+        <p class="text-[13px] text-gray-500 mb-6" style="font-weight:500;">
+          By {post.author?.name ?? 'Majid Behzad'}
+          <span class="mx-1.5 text-gray-300">·</span>
+          {post.readTime ?? 9} min read
+          <span class="mx-1.5 text-gray-300">·</span>
+          {post.publishedAt ? formatDate(post.publishedAt) : ''}
+        </p>
+
+        <!-- CTA link -->
+        <a href={`/${post.slug}/`} class="group inline-flex items-center gap-1.5 font-semibold text-sm text-teal-600 relative" style="font-family:'Montserrat',sans-serif;">
+          Read the guide
+          <span class="transition-transform duration-200 group-hover:translate-x-1">→</span>
+          <span class="absolute -bottom-0.5 left-0 h-px w-0 group-hover:w-full transition-all duration-300" style="background:#FFCF00;"></span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

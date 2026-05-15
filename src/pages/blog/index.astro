@@ -1,0 +1,265 @@
+---
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import BlogHero from '../../components/blog/index/BlogHero.astro';
+import FeaturedPost from '../../components/blog/index/FeaturedPost.astro';
+import CategoryFilter from '../../components/blog/index/CategoryFilter.astro';
+import PostGrid from '../../components/blog/index/PostGrid.astro';
+import Pagination from '../../components/blog/index/Pagination.astro';
+import EndCtaIndex from '../../components/blog/index/EndCtaIndex.astro';
+import { getBlogIndexData } from '../../lib/sanity';
+import { FALLBACK_POSTS, FALLBACK_CATEGORIES } from '../../lib/blog-fallback';
+import { WEBSITE_CICON, ORG_CICON } from '../../lib/schema-constants';
+import type { BlogPost, BlogCategory } from '../../lib/sanity';
+import '../../styles/globals.css';
+
+const PER_PAGE = 12;
+let featured: BlogPost | null = null;
+let posts: BlogPost[] = [];
+let categories: BlogCategory[] = [];
+let totalPosts = 0;
+
+try {
+  const data = await getBlogIndexData(1, PER_PAGE);
+  if (data.featured || data.posts.length > 0) {
+    ({ featured, posts, categories, totalPosts } = data);
+  } else {
+    // Sanity connected but no data — use fallback
+    featured = FALLBACK_POSTS[0];
+    posts = FALLBACK_POSTS.slice(1);
+    categories = FALLBACK_CATEGORIES;
+    totalPosts = FALLBACK_POSTS.length;
+  }
+} catch {
+  featured = FALLBACK_POSTS[0];
+  posts = FALLBACK_POSTS.slice(1);
+  categories = FALLBACK_CATEGORIES;
+  totalPosts = FALLBACK_POSTS.length;
+}
+
+const totalPages = Math.ceil(totalPosts / PER_PAGE);
+const allPostsForPage = featured ? [featured, ...posts] : posts;
+
+// Build Connected Graph schema for CollectionPage
+const allPostIds = allPostsForPage.map(p => ({ '@id': `https://cicon.ca/${p.slug}/#article` }));
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      '@id': 'https://cicon.ca/blog/#collectionpage',
+      url: 'https://cicon.ca/blog/',
+      name: 'Field Notes on Modern Marketing',
+      description: 'Data-driven playbooks from the boutique agency growing GTA businesses.',
+      isPartOf: { '@id': 'https://cicon.ca/#website' },
+      breadcrumb: { '@id': 'https://cicon.ca/blog/#breadcrumb' },
+      inLanguage: 'en-CA',
+    },
+    {
+      '@type': 'Blog',
+      '@id': 'https://cicon.ca/blog/#blog',
+      url: 'https://cicon.ca/blog/',
+      name: 'CiCon Marketing Blog',
+      description: 'Boutique digital marketing insights for Greater Toronto Area businesses.',
+      publisher: { '@id': 'https://cicon.ca/#organization' },
+      inLanguage: 'en-CA',
+      blogPost: allPostIds,
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://cicon.ca/blog/#breadcrumb',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://cicon.ca/' },
+        { '@type': 'ListItem', position: 2, name: 'Blog' },
+      ],
+    },
+    WEBSITE_CICON,
+    ORG_CICON,
+  ],
+};
+
+const ogImage = featured?.heroImage?.url ?? 'https://cicon.ca/wp-content/uploads/2026/05/journalist2Fa6c9972a-093d-40f0-a397-a8e4d4795e602Fthumbnail-1024x576.jpeg';
+---
+
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — CiCon Marketing</title>
+  <meta name="description" content="Data-driven playbooks from the boutique agency growing GTA businesses. Covering local SEO, paid acquisition, dental marketing, and the strategy stack behind real growth." />
+  <link rel="canonical" href="https://cicon.ca/blog/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Blog — CiCon Marketing" />
+  <meta property="og:description" content="Data-driven marketing playbooks for GTA businesses." />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:url" content="https://cicon.ca/blog/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Blog — CiCon Marketing" />
+  <meta name="twitter:image" content={ogImage} />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+</head>
+<body class="font-sans bg-gray-50 text-gray-900 antialiased">
+  <Nav />
+  <BlogHero />
+  <FeaturedPost post={featured} />
+  <CategoryFilter categories={categories} />
+  <PostGrid posts={posts} categories={categories} />
+  <Pagination currentPage={1} totalPages={totalPages} />
+  <EndCtaIndex />
+  <Footer />
+
+  <!-- AOS init -->
+  <script is:inline src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script is:inline>
+    (function() {
+      if (typeof AOS !== 'undefined') {
+        AOS.init({ duration: 600, easing: 'ease-out-cubic', once: true, offset: 60 });
+      }
+    })();
+  </script>
+
+  <!-- Blog index client-side filtering + search -->
+  <script>
+    // Fuse.js search + category filter
+    (async () => {
+      const cards = Array.from(document.querySelectorAll('[data-post-card]')) as HTMLElement[];
+      const chips = Array.from(document.querySelectorAll('[data-category-chip]')) as HTMLButtonElement[];
+      const searchInput = document.getElementById('blog-search') as HTMLInputElement | null;
+      const noResults = document.getElementById('no-results') as HTMLElement | null;
+      const filterBar = document.getElementById('filter-bar');
+      const filterBarSentinel = document.getElementById('filter-bar-sentinel');
+
+      let activeCategory = 'all';
+      let searchQuery = '';
+      let FuseClass: any = null;
+      let fuseIndex: any = null;
+
+      // Load fuse.js lazily
+      async function loadFuse() {
+        if (!FuseClass) {
+          try {
+            const mod = await import('https://cdn.skypack.dev/fuse.js@6.6.2');
+            FuseClass = mod.default;
+            const postData = cards.map(card => ({
+              id: card.dataset.postCard,
+              title: card.dataset.title ?? '',
+              dek: card.dataset.dek ?? '',
+              category: card.dataset.category ?? '',
+            }));
+            fuseIndex = new FuseClass(postData, { keys: ['title', 'dek', 'category'], threshold: 0.4 });
+          } catch (e) {
+            console.warn('Fuse.js failed to load', e);
+          }
+        }
+      }
+
+      function applyFilters() {
+        const matchingIds = fuseIndex && searchQuery
+          ? new Set(fuseIndex.search(searchQuery).map((r: any) => r.item.id))
+          : null;
+
+        let visible = 0;
+        cards.forEach(card => {
+          const catMatch = activeCategory === 'all' || card.dataset.category === activeCategory;
+          const searchMatch = !matchingIds || matchingIds.has(card.dataset.postCard);
+          const show = catMatch && searchMatch;
+          card.classList.toggle('hidden', !show);
+          if (show) visible++;
+        });
+
+        if (noResults) noResults.classList.toggle('hidden', visible > 0);
+      }
+
+      function updateUrl() {
+        const params = new URLSearchParams();
+        if (activeCategory !== 'all') params.set('category', activeCategory);
+        if (searchQuery) params.set('q', searchQuery);
+        const newUrl = params.toString() ? `?${params}` : window.location.pathname;
+        history.pushState({}, '', newUrl);
+      }
+
+      // Category chips
+      chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          activeCategory = chip.dataset.categoryChip ?? 'all';
+          chips.forEach(c => {
+            const isActive = c.dataset.categoryChip === activeCategory;
+            c.setAttribute('aria-pressed', String(isActive));
+            c.classList.toggle('chip-active', isActive);
+            c.classList.toggle('chip-inactive', !isActive);
+          });
+          applyFilters();
+          updateUrl();
+        });
+      });
+
+      // Search input
+      let debounceTimer: ReturnType<typeof setTimeout>;
+      searchInput?.addEventListener('input', async (e) => {
+        searchQuery = (e.target as HTMLInputElement).value.trim();
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(async () => {
+          if (searchQuery) await loadFuse();
+          applyFilters();
+          updateUrl();
+        }, 300);
+      });
+
+      // Expand/collapse search
+      const searchToggle = document.getElementById('search-toggle');
+      const searchWrapper = document.getElementById('search-wrapper');
+      searchToggle?.addEventListener('click', () => {
+        searchWrapper?.classList.toggle('search-expanded');
+        if (searchWrapper?.classList.contains('search-expanded')) {
+          searchInput?.focus();
+        }
+      });
+
+      searchInput?.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          searchQuery = '';
+          searchInput.value = '';
+          searchWrapper?.classList.remove('search-expanded');
+          applyFilters();
+          updateUrl();
+        }
+      });
+
+      // Read URL params on load
+      const params = new URLSearchParams(window.location.search);
+      const urlCat = params.get('category');
+      const urlQ = params.get('q');
+      if (urlCat) {
+        activeCategory = urlCat;
+        chips.forEach(c => {
+          const isActive = c.dataset.categoryChip === activeCategory;
+          c.setAttribute('aria-pressed', String(isActive));
+          c.classList.toggle('chip-active', isActive);
+          c.classList.toggle('chip-inactive', !isActive);
+        });
+      }
+      if (urlQ) {
+        searchQuery = urlQ;
+        if (searchInput) searchInput.value = urlQ;
+        searchWrapper?.classList.add('search-expanded');
+        await loadFuse();
+      }
+      if (urlCat || urlQ) applyFilters();
+
+      // Sticky filter bar
+      if (filterBarSentinel && filterBar) {
+        const observer = new IntersectionObserver(([entry]) => {
+          filterBar.classList.toggle('filter-stuck', !entry.isIntersecting);
+        }, { threshold: 0, rootMargin: '-80px 0px 0px 0px' });
+        observer.observe(filterBarSentinel);
+      }
+    })();
+  </script>
+</body>
+</html>

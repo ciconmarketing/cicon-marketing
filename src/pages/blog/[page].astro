@@ -1,0 +1,94 @@
+---
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import BlogHero from '../../components/blog/index/BlogHero.astro';
+import CategoryFilter from '../../components/blog/index/CategoryFilter.astro';
+import PostGrid from '../../components/blog/index/PostGrid.astro';
+import Pagination from '../../components/blog/index/Pagination.astro';
+import EndCtaIndex from '../../components/blog/index/EndCtaIndex.astro';
+import { getBlogIndexData } from '../../lib/sanity';
+import { FALLBACK_CATEGORIES } from '../../lib/blog-fallback';
+import { WEBSITE_CICON, ORG_CICON } from '../../lib/schema-constants';
+import type { BlogPost, BlogCategory } from '../../lib/sanity';
+import '../../styles/globals.css';
+
+export async function getStaticPaths() {
+  // Try to get total posts from Sanity; fall back to fallback count
+  let totalPosts = 4; // default
+  try {
+    const { createClient } = await import('@sanity/client');
+    const rawId = (import.meta.env.PUBLIC_SANITY_PROJECT_ID ?? '').trim();
+    if (/^[a-z0-9-]+$/.test(rawId)) {
+      const client = createClient({ projectId: rawId, dataset: (import.meta.env.PUBLIC_SANITY_DATASET ?? 'production').trim(), useCdn: false, apiVersion: '2024-01-01' });
+      totalPosts = await client.fetch<number>('count(*[_type == "blogPost" && status == "published"])');
+    }
+  } catch {}
+
+  const PER_PAGE = 12;
+  const totalPages = Math.max(1, Math.ceil(totalPosts / PER_PAGE));
+  // pages 2 and beyond — page 1 is handled by index.astro
+  return Array.from({ length: Math.max(0, totalPages - 1) }, (_, i) => ({
+    params: { page: String(i + 2) },
+    props: { pageNum: i + 2, totalPages },
+  }));
+}
+
+const { pageNum, totalPages } = Astro.props;
+const PER_PAGE = 12;
+
+let posts: BlogPost[] = [];
+let categories: BlogCategory[] = [];
+
+try {
+  const data = await getBlogIndexData(pageNum, PER_PAGE);
+  if (data.posts.length > 0) {
+    posts = data.posts;
+    categories = data.categories;
+  } else {
+    posts = [];
+    categories = FALLBACK_CATEGORIES;
+  }
+} catch {
+  posts = [];
+  categories = FALLBACK_CATEGORIES;
+}
+
+const pageUrl = `https://cicon.ca/blog/page/${pageNum}/`;
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'CollectionPage', '@id': `${pageUrl}#collectionpage`, url: pageUrl, name: `Field Notes on Modern Marketing — Page ${pageNum}`, isPartOf: { '@id': 'https://cicon.ca/#website' }, inLanguage: 'en-CA' },
+    WEBSITE_CICON, ORG_CICON,
+  ],
+};
+---
+
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog (Page {pageNum}) — CiCon Marketing</title>
+  <meta name="description" content={`Browse the CiCon Marketing blog archive — page ${pageNum}.`} />
+  <link rel="canonical" href={pageUrl} />
+  {pageNum > 1 && <link rel="prev" href={pageNum === 2 ? 'https://cicon.ca/blog/' : `https://cicon.ca/blog/page/${pageNum - 1}/`} />}
+  {pageNum < totalPages && <link rel="next" href={`https://cicon.ca/blog/page/${pageNum + 1}/`} />}
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+</head>
+<body class="font-sans bg-gray-50 text-gray-900 antialiased">
+  <Nav />
+  <BlogHero />
+  <CategoryFilter categories={categories} />
+  <PostGrid posts={posts} categories={categories} />
+  <Pagination currentPage={pageNum} totalPages={totalPages} />
+  <EndCtaIndex />
+  <Footer />
+  <script is:inline src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script is:inline>if (typeof AOS !== 'undefined') AOS.init({ duration: 600, easing: 'ease-out-cubic', once: true, offset: 60 });</script>
+</body>
+</html>

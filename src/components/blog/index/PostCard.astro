@@ -1,0 +1,64 @@
+---
+import type { BlogPost } from '../../../lib/sanity';
+interface Props { post: BlogPost; index: number; }
+const { post, index } = Astro.props;
+
+function formatDate(d: string) {
+  return new Date(d).toLocaleDateString('en-CA', { month: 'long', year: 'numeric' });
+}
+
+// Tilt pattern: 3n+1 = -1deg, 3n+2 = 1deg, 3n = -0.5deg
+const tilts = ['-1deg', '1deg', '-0.5deg'];
+const tilt = tilts[index % 3];
+---
+
+<article class="group flex flex-col h-full" data-aos="fade-up" data-aos-delay={Math.min(index * 50, 300)}>
+  <a href={`/${post.slug}/`} class="flex flex-col h-full" aria-label={post.title}>
+
+    <!-- Image -->
+    <div class="overflow-hidden rounded-xl mb-5 relative" style={`transform:rotate(${tilt});transition:transform 300ms cubic-bezier(0.4,0,0.2,1);`}
+         onmouseover={`this.style.transform='rotate(0deg) scale(1.03)'`}
+         onmouseout={`this.style.transform='rotate(${tilt})'`}>
+      <div class="aspect-video overflow-hidden bg-gray-100">
+        {post.heroImage?.url ? (
+          <img
+            src={post.heroImage.url}
+            alt={post.heroImage.alt ?? post.title}
+            width="600" height="338"
+            loading="lazy"
+            class="w-full h-full object-cover transition-transform duration-300"
+          />
+        ) : (
+          <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-gray-400"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+          </div>
+        )}
+      </div>
+    </div>
+
+    <!-- Category chip -->
+    {post.category && (
+      <span class="inline-flex w-fit items-center border border-teal-600 text-teal-600 uppercase rounded-full px-2.5 py-1 mb-3 text-[10px] font-semibold" style="font-family:'Montserrat',sans-serif;letter-spacing:0.1em;">
+        {post.category.name}
+      </span>
+    )}
+
+    <!-- Title -->
+    <h3 class="font-semibold text-black leading-snug mb-2 relative" style="font-family:'Montserrat',sans-serif;font-size:1.25rem;letter-spacing:-0.005em;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">
+      {post.title}
+      <span class="absolute -bottom-1 left-0 h-0.5 w-0 group-hover:w-full transition-all duration-300 ease-out" style="background:#FFCF00;" aria-hidden="true"></span>
+    </h3>
+
+    <!-- Dek -->
+    {post.dek && (
+      <p class="text-gray-500 text-sm leading-relaxed mb-4 flex-1" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{post.dek}</p>
+    )}
+
+    <!-- Meta -->
+    <p class="text-[13px] text-gray-400 mt-auto">
+      {post.readTime ?? 9} min read
+      <span class="mx-1.5 text-gray-300">·</span>
+      {post.publishedAt ? formatDate(post.publishedAt) : ''}
+    </p>
+  </a>
+</article>

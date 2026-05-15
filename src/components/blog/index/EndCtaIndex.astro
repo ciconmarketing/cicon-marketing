@@ -1,0 +1,50 @@
+---
+// WhatsApp SVG path
+const waPath = "M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
+---
+
+<section class="bg-navy-900 py-28" aria-label="Call to action">
+  <div class="mx-auto px-6" style="max-width:1080px;">
+    <div class="flex flex-col md:flex-row md:items-center gap-12 md:gap-16">
+
+      <!-- Left — text + CTAs (8/12) -->
+      <div class="flex-1">
+        <p class="text-teal-600 font-semibold uppercase text-[11px] tracking-widest mb-4" style="font-family:'Montserrat',sans-serif;letter-spacing:0.15em;">Ready to Grow?</p>
+        <h2 class="text-white font-bold leading-tight mb-5" style="font-family:'Montserrat',sans-serif;font-size:clamp(2rem,4vw,3rem);">
+          Reading is good.<br />Growing is better.
+        </h2>
+        <p class="text-white/80 leading-relaxed mb-8 max-w-lg" style="font-size:1.125rem;">
+          You've seen our playbook. Now let's apply it to your business. Book a 30-minute call and we'll audit your current marketing stack, identify the top 3 levers for growth, and show you what a CiCon engagement looks like — no pitch deck, no fluff.
+        </p>
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="https://wa.me/12898071020"
+             target="_blank" rel="noopener noreferrer"
+             class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-semibold text-white transition-all duration-200 hover:-translate-y-0.5"
+             style="background:#128C7E;font-family:'Montserrat',sans-serif;font-size:14px;box-shadow:0 4px 16px rgba(18,140,126,0.3);"
+             onmouseover="this.style.background='#0E6E62'" onmouseout="this.style.background='#128C7E'">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><path d={waPath}/></svg>
+            Chat on WhatsApp
+          </a>
+          <a href="tel:2898071020" class="text-white/70 hover:text-white font-medium text-sm transition-colors" style="font-family:'Montserrat',sans-serif;">
+            Or call (289) 807-1020 →
+          </a>
+        </div>
+      </div>
+
+      <!-- Right — Agency stats (4/12) -->
+      <div class="flex flex-row md:flex-col gap-8 md:gap-6 flex-shrink-0">
+        {[
+          { num: '12+', label: 'Published Guides' },
+          { num: '250+', label: 'Client Projects Delivered' },
+          { num: '15+ Yrs', label: 'Founder Experience' },
+        ].map(stat => (
+          <div>
+            <p class="font-bold leading-none mb-1" style={`font-family:'Montserrat',sans-serif;font-size:2.5rem;color:#FFCF00;`}>{stat.num}</p>
+            <p class="text-white/70 uppercase text-[13px] font-medium tracking-wide">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </div>
+</section>

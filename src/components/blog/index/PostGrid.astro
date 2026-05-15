@@ -1,0 +1,47 @@
+---
+import type { BlogPost, BlogCategory } from '../../../lib/sanity';
+import PostCard from './PostCard.astro';
+import SpotlightRow from './SpotlightRow.astro';
+
+interface Props {
+  posts: BlogPost[];
+  categories: BlogCategory[];
+}
+const { posts, categories } = Astro.props;
+const SPOTLIGHT_INTERVAL = 6;
+---
+
+<section class="bg-gray-50 pb-24 pt-10" aria-label="Blog post grid">
+  <div class="container-xl">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" id="post-grid">
+      {posts.map((post, i) => {
+        const spotlightBefore = i > 0 && i % SPOTLIGHT_INTERVAL === 0;
+        return (
+          <>
+            {spotlightBefore && (
+              <div class="col-span-full">
+                <SpotlightRow variant={Math.floor(i / SPOTLIGHT_INTERVAL) % 2 === 0 ? 'stat' : 'category'} categories={categories} />
+              </div>
+            )}
+            <div
+              data-post-card={post._id}
+              data-title={post.title}
+              data-dek={post.dek ?? ''}
+              data-category={post.category?.slug ?? ''}
+              class="flex flex-col"
+              style={`margin-top: ${[0, 48, 16][i % 3]}px`}
+            >
+              <PostCard post={post} index={i} />
+            </div>
+          </>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  @media (max-width: 1023px) {
+    [data-post-card] { margin-top: 0 !important; }
+  }
+</style>
