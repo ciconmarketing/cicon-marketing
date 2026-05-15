@@ -128,14 +128,21 @@ const faqNodes = (post.faqs ?? []).map((faq: any) => ({
   acceptedAnswer: { '@type': 'Answer', text: faq.answer },
 }))
 
+// Only Place and Organization pass through; everything else (including any legacy
+// SoftwareApplication values) coerces to Thing — safe for Google Rich Results.
+const ALLOWED_ENTITY_TYPES = new Set(['Place', 'Organization'])
+function safeEntityType(raw: string | undefined): string {
+  return raw && ALLOWED_ENTITY_TYPES.has(raw) ? raw : 'Thing'
+}
+
 const aboutEntities = (post.aboutEntities ?? []).map((e: any) => {
-  const node: any = { '@type': e.type ?? 'Thing', name: e.name }
+  const node: any = { '@type': safeEntityType(e.type), name: e.name }
   if (e.sameAs) node.sameAs = e.sameAs
   return node
 })
 
 const mentionsEntities = (post.mentionsEntities ?? []).map((e: any) => {
-  const node: any = { '@type': e.type ?? 'Thing', name: e.name }
+  const node: any = { '@type': safeEntityType(e.type), name: e.name }
   if (e.sameAs) node.sameAs = e.sameAs
   return node
 })

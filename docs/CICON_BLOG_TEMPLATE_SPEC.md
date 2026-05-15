@@ -418,63 +418,71 @@ AI Overviews and generative search engines preferentially cite sources that are:
 
 Stored as JSON at `src/lib/entities.json`. The Claude Code post-processor scans every article and auto-wraps first-mention-per-H2-section in `<strong>` tags. Editor reviews in Sanity Studio before publish.
 
+> **`schemaType` field (added May 2026):** Each entry now carries an explicit `schemaType`
+> that maps to a Schema.org type. The permitted values are `"Thing"`, `"Place"`, and
+> `"Organization"`. **`SoftwareApplication` is never used** — software/platform mentions in
+> CiCon articles are article references, not products being sold; they do not carry the
+> `offers`/`aggregateRating`/`operatingSystem` fields that `SoftwareApplication` requires.
+> Pipeline B's post-processor reads `schemaType` directly; `[slug].astro` further enforces
+> this by whitelisting only `Place` and `Organization`, coercing everything else to `Thing`.
+
 ```json
 {
   "brands_products": [
-    { "term": "Google Business Profile", "aliases": ["GBP", "Google My Business", "GMB"], "wikipedia": "https://en.wikipedia.org/wiki/Google_Business_Profile" },
-    { "term": "Google Map Pack", "aliases": ["Map Pack", "Local Pack"], "wikipedia": "https://en.wikipedia.org/wiki/Google_Maps" },
-    { "term": "Google Analytics 4", "aliases": ["GA4"], "wikipedia": "https://en.wikipedia.org/wiki/Google_Analytics" },
-    { "term": "Google Ads", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Google_Ads" },
-    { "term": "Google Tag Manager", "aliases": ["GTM"], "wikipedia": "https://en.wikipedia.org/wiki/Google_Tag_Manager" },
-    { "term": "Meta Ads", "aliases": ["Facebook Ads"], "wikipedia": "https://en.wikipedia.org/wiki/Meta_Platforms" },
-    { "term": "BrightLocal", "aliases": [], "wikipedia": null },
-    { "term": "Ahrefs", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Ahrefs" },
-    { "term": "SEMrush", "aliases": ["Semrush"], "wikipedia": "https://en.wikipedia.org/wiki/Semrush" },
-    { "term": "WordPress", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/WordPress" },
-    { "term": "Shopify", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Shopify" },
-    { "term": "Sanity.io", "aliases": ["Sanity"], "wikipedia": null },
-    { "term": "CiCon Marketing", "aliases": ["CiCon"], "wikipedia": null }
+    { "term": "Google Business Profile", "schemaType": "Thing", "aliases": ["GBP", "Google My Business", "GMB"], "wikipedia": "https://en.wikipedia.org/wiki/Google_Business_Profile" },
+    { "term": "Google Map Pack", "schemaType": "Thing", "aliases": ["Map Pack", "Local Pack"], "wikipedia": "https://en.wikipedia.org/wiki/Google_Maps" },
+    { "term": "Google Analytics 4", "schemaType": "Thing", "aliases": ["GA4"], "wikipedia": "https://en.wikipedia.org/wiki/Google_Analytics" },
+    { "term": "Google Ads", "schemaType": "Thing", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Google_Ads" },
+    { "term": "Google Tag Manager", "schemaType": "Thing", "aliases": ["GTM"], "wikipedia": "https://en.wikipedia.org/wiki/Google_Tag_Manager" },
+    { "term": "Meta Ads", "schemaType": "Thing", "aliases": ["Facebook Ads"], "wikipedia": "https://en.wikipedia.org/wiki/Meta_Platforms" },
+    { "term": "BrightLocal", "schemaType": "Thing", "aliases": [], "wikipedia": null },
+    { "term": "Ahrefs", "schemaType": "Thing", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Ahrefs" },
+    { "term": "SEMrush", "schemaType": "Thing", "aliases": ["Semrush"], "wikipedia": "https://en.wikipedia.org/wiki/Semrush" },
+    { "term": "WordPress", "schemaType": "Thing", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/WordPress" },
+    { "term": "Shopify", "schemaType": "Thing", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Shopify" },
+    { "term": "Sanity.io", "schemaType": "Thing", "aliases": ["Sanity"], "wikipedia": null },
+    { "term": "CiCon Marketing", "schemaType": "Organization", "aliases": ["CiCon"], "wikipedia": null }
   ],
 
   "geographic": [
-    { "term": "Toronto", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Toronto" },
-    { "term": "Greater Toronto Area", "aliases": ["GTA"], "wikipedia": "https://en.wikipedia.org/wiki/Greater_Toronto_Area" },
-    { "term": "Richmond Hill", "aliases": ["Richmond Hill, Ontario"], "wikipedia": "https://en.wikipedia.org/wiki/Richmond_Hill,_Ontario" },
-    { "term": "North York", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/North_York" },
-    { "term": "Vaughan", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Vaughan" },
-    { "term": "Markham", "aliases": ["Markham, Ontario"], "wikipedia": "https://en.wikipedia.org/wiki/Markham,_Ontario" },
-    { "term": "Scarborough", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Scarborough,_Toronto" },
-    { "term": "Etobicoke", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Etobicoke" },
-    { "term": "Mississauga", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Mississauga" },
-    { "term": "Brampton", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Brampton" },
-    { "term": "Oakville", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Oakville,_Ontario" },
-    { "term": "Yonge and Eglinton", "aliases": ["Yonge & Eglinton"], "wikipedia": null },
-    { "term": "Financial District", "aliases": ["Toronto Financial District"], "wikipedia": "https://en.wikipedia.org/wiki/Financial_District,_Toronto" },
-    { "term": "Ontario", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Ontario" },
-    { "term": "Canada", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Canada" }
+    { "term": "Toronto", "schemaType": "Place", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Toronto" },
+    { "term": "Greater Toronto Area", "schemaType": "Place", "aliases": ["GTA"], "wikipedia": "https://en.wikipedia.org/wiki/Greater_Toronto_Area" },
+    { "term": "Richmond Hill", "schemaType": "Place", "aliases": ["Richmond Hill, Ontario"], "wikipedia": "https://en.wikipedia.org/wiki/Richmond_Hill,_Ontario" },
+    { "term": "North York", "schemaType": "Place", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/North_York" },
+    { "term": "Vaughan", "schemaType": "Place", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Vaughan" },
+    { "term": "Markham", "schemaType": "Place", "aliases": ["Markham, Ontario"], "wikipedia": "https://en.wikipedia.org/wiki/Markham,_Ontario" },
+    { "term": "Scarborough", "schemaType": "Place", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Scarborough,_Toronto" },
+    { "term": "Etobicoke", "schemaType": "Place", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Etobicoke" },
+    { "term": "Mississauga", "schemaType": "Place", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Mississauga" },
+    { "term": "Brampton", "schemaType": "Place", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Brampton" },
+    { "term": "Oakville", "schemaType": "Place", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Oakville,_Ontario" },
+    { "term": "Yonge and Eglinton", "schemaType": "Place", "aliases": ["Yonge & Eglinton"], "wikipedia": null },
+    { "term": "Financial District", "schemaType": "Place", "aliases": ["Toronto Financial District"], "wikipedia": "https://en.wikipedia.org/wiki/Financial_District,_Toronto" },
+    { "term": "Ontario", "schemaType": "Place", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Ontario" },
+    { "term": "Canada", "schemaType": "Place", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Canada" }
   ],
 
   "industry_concepts": [
-    { "term": "local SEO", "aliases": ["local search engine optimization", "local search optimization"], "wikipedia": "https://en.wikipedia.org/wiki/Local_search_(Internet)" },
-    { "term": "search engine optimization", "aliases": ["SEO"], "wikipedia": "https://en.wikipedia.org/wiki/Search_engine_optimization" },
-    { "term": "conversion rate optimization", "aliases": ["CRO"], "wikipedia": "https://en.wikipedia.org/wiki/Conversion_rate_optimization" },
-    { "term": "pay-per-click", "aliases": ["PPC"], "wikipedia": "https://en.wikipedia.org/wiki/Pay-per-click" },
-    { "term": "return on investment", "aliases": ["ROI"], "wikipedia": "https://en.wikipedia.org/wiki/Return_on_investment" },
-    { "term": "lifetime value", "aliases": ["LTV", "customer lifetime value", "CLV"], "wikipedia": "https://en.wikipedia.org/wiki/Customer_lifetime_value" },
-    { "term": "cost per lead", "aliases": ["CPL"], "wikipedia": null },
-    { "term": "cost per acquisition", "aliases": ["CPA"], "wikipedia": "https://en.wikipedia.org/wiki/Cost_per_action" },
-    { "term": "key performance indicator", "aliases": ["KPI", "KPIs"], "wikipedia": "https://en.wikipedia.org/wiki/Performance_indicator" },
-    { "term": "schema markup", "aliases": ["structured data"], "wikipedia": "https://en.wikipedia.org/wiki/Schema.org" },
-    { "term": "Generative Engine Optimization", "aliases": ["GEO"], "wikipedia": null },
-    { "term": "content marketing", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Content_marketing" },
-    { "term": "lead generation", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Lead_generation" }
+    { "term": "local SEO", "schemaType": "Thing", "aliases": ["local search engine optimization", "local search optimization"], "wikipedia": "https://en.wikipedia.org/wiki/Local_search_(Internet)" },
+    { "term": "search engine optimization", "schemaType": "Thing", "aliases": ["SEO"], "wikipedia": "https://en.wikipedia.org/wiki/Search_engine_optimization" },
+    { "term": "conversion rate optimization", "schemaType": "Thing", "aliases": ["CRO"], "wikipedia": "https://en.wikipedia.org/wiki/Conversion_rate_optimization" },
+    { "term": "pay-per-click", "schemaType": "Thing", "aliases": ["PPC"], "wikipedia": "https://en.wikipedia.org/wiki/Pay-per-click" },
+    { "term": "return on investment", "schemaType": "Thing", "aliases": ["ROI"], "wikipedia": "https://en.wikipedia.org/wiki/Return_on_investment" },
+    { "term": "lifetime value", "schemaType": "Thing", "aliases": ["LTV", "customer lifetime value", "CLV"], "wikipedia": "https://en.wikipedia.org/wiki/Customer_lifetime_value" },
+    { "term": "cost per lead", "schemaType": "Thing", "aliases": ["CPL"], "wikipedia": null },
+    { "term": "cost per acquisition", "schemaType": "Thing", "aliases": ["CPA"], "wikipedia": "https://en.wikipedia.org/wiki/Cost_per_action" },
+    { "term": "key performance indicator", "schemaType": "Thing", "aliases": ["KPI", "KPIs"], "wikipedia": "https://en.wikipedia.org/wiki/Performance_indicator" },
+    { "term": "schema markup", "schemaType": "Thing", "aliases": ["structured data"], "wikipedia": "https://en.wikipedia.org/wiki/Schema.org" },
+    { "term": "Generative Engine Optimization", "schemaType": "Thing", "aliases": ["GEO"], "wikipedia": null },
+    { "term": "content marketing", "schemaType": "Thing", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Content_marketing" },
+    { "term": "lead generation", "schemaType": "Thing", "aliases": [], "wikipedia": "https://en.wikipedia.org/wiki/Lead_generation" }
   ],
 
   "dental_vertical": [
-    { "term": "dental marketing", "aliases": [], "wikipedia": null },
-    { "term": "dental SEO", "aliases": [], "wikipedia": null },
-    { "term": "patient acquisition", "aliases": [], "wikipedia": null },
-    { "term": "dental clinic", "aliases": ["dental practice"], "wikipedia": null }
+    { "term": "dental marketing", "schemaType": "Thing", "aliases": [], "wikipedia": null },
+    { "term": "dental SEO", "schemaType": "Thing", "aliases": [], "wikipedia": null },
+    { "term": "patient acquisition", "schemaType": "Thing", "aliases": [], "wikipedia": null },
+    { "term": "dental clinic", "schemaType": "Thing", "aliases": ["dental practice"], "wikipedia": null }
   ]
 }
 ```
@@ -524,7 +532,12 @@ The complete node-by-node JSON is documented in `/mnt/user-data/outputs/claude_c
    - `about` = 2–3 core entities the article is fundamentally about.
    - `mentions` = 5–10 secondary entities referenced.
    - No overlap between the two arrays.
-5. **`sameAs` URLs must resolve.** If Wikipedia page doesn't exist, omit the entity rather than guess. Use the `wikipedia` field from `entities.json`.
+5. **Entity `@type` — default is `Thing`.**
+   - `Place` for geographic entries.
+   - `Organization` for named companies/agencies (e.g., CiCon Marketing).
+   - **`Thing` for everything else** — tools, platforms, concepts, software products.
+   - **`SoftwareApplication` is never used.** It requires `offers`/`aggregateRating`/`operatingSystem` which don't apply to article mentions. `[slug].astro` enforces this by whitelisting only `Place` and `Organization`; any other value coerces to `Thing`.
+6. **`sameAs` URLs must resolve.** If Wikipedia page doesn't exist, omit the entity rather than guess. Use the `wikipedia` field from `entities.json`.
 6. **`speakable` CSS selectors must match real DOM classes:**
    - `.quick-answer__body`
    - `.end-cta__stat-number`
@@ -739,7 +752,7 @@ export default defineType({
 - `pullQuote` — quote text, attribution
 - `inlineImage` — image, caption, tilt direction
 - `faqItem` — question, answer
-- `entityReference` — name, type (Thing/Place/Organization/SoftwareApplication), sameAs URL
+- `entityReference` — name, type (Thing/Place/Organization — **never SoftwareApplication**), sameAs URL
 - `author` — name, jobTitle, bio, photo, knowsAbout (array), social links
 - `blogCategory` — name, slug, color override (optional)
 

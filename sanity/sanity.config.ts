@@ -4,7 +4,7 @@ import { visionTool } from '@sanity/vision';
 import { schemaTypes } from './schemas';
 
 export default defineConfig({
-  name: 'cicon-marketing',
+  name: 'default',
   title: 'CiCon Marketing',
 
   projectId: '26ol0sqj',

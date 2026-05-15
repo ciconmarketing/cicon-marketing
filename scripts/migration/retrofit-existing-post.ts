@@ -30,6 +30,7 @@ const sanity = createClient({
 
 interface Entity {
   term: string
+  schemaType?: string
   aliases: string[]
   wikipedia: string | null
 }
@@ -973,10 +974,12 @@ export async function retrofitPost(url: string): Promise<RetrofitResult> {
 // ── Schema.org type inference ─────────────────────────────────────────────────
 
 function inferSchemaOrgType(entity: Entity): string {
+  // Look up schemaType from entity dictionary (source of truth)
+  const found = allEntities.find(e => e.term === entity.term)
+  if (found?.schemaType) return found.schemaType
+  // Fallback for any entity not in the dictionary
   const geo = entityDict.geographic.find(e => e.term === entity.term)
   if (geo) return 'Place'
-  const brand = entityDict.brands_products.find(e => e.term === entity.term)
-  if (brand) return brand.term.includes('Marketing') ? 'Organization' : 'SoftwareApplication'
   return 'Thing'
 }
 
