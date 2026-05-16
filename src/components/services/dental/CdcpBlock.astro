@@ -1,0 +1,54 @@
+---
+/**
+ * CdcpBlock — Dental only. "Built for the CDCP era" section.
+ * Dark background with amber accents.
+ */
+interface Props {
+  headline?: string
+  body?: string
+  bullets?: string[]
+}
+const {
+  headline = 'Built for the CDCP era',
+  body = `The Canadian Dental Care Plan changed dental marketing in the GTA overnight. Most clinics are still running pre-CDCP ad copy, pre-CDCP keyword lists, and pre-CDCP landing pages — and wondering why their cost per patient keeps climbing.\n\nWe rebuilt our dental playbook around CDCP. Here's what that means in practice:`,
+  bullets = [
+    'CDCP-eligible patient targeting in Google Ads and Meta',
+    'Dedicated CDCP landing pages with clear eligibility messaging',
+    'Call-only campaigns optimized for high-intent CDCP searches',
+    'Tracking that separates CDCP leads from private-pay leads — so you can price each correctly',
+  ],
+} = Astro.props
+---
+
+<section class="py-20" style="background:var(--shadow)">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="flex items-center gap-2 mb-3">
+      <span class="h-[1px] w-8" style="background:var(--action)"></span>
+      <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--action)">Dental Specialty</span>
+    </div>
+    <h2 class="text-3xl font-extrabold text-white mb-6">{headline}</h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+      <div class="space-y-4">
+        {body.split('\n\n').map((para) => (
+          <p class="text-base leading-relaxed" style="color:#b0b0bb">{para}</p>
+        ))}
+      </div>
+
+      <ul class="space-y-4">
+        {bullets.map((bullet) => (
+          <li class="flex items-start gap-4 p-4 rounded-xl" style="background:#1a1a22;border:1px solid #2a2a35">
+            <div class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background:var(--action)">
+              <svg class="w-3.5 h-3.5" style="color:var(--shadow)" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <span class="text-sm leading-relaxed" style="color:#c0c0cc">{bullet}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+  </div>
+</section>

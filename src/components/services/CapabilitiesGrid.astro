@@ -1,0 +1,109 @@
+---
+/**
+ * CapabilitiesGrid — "What we actually do" section.
+ * 4–6 cards in a responsive grid. Alternating light/dark visual rhythm.
+ */
+interface Capability {
+  title: string
+  definition?: string
+  description?: string
+  icon?: string
+}
+interface Props {
+  headline?: string
+  intro?: string
+  capabilities: Capability[]
+}
+const {
+  headline = 'What we actually do',
+  intro,
+  capabilities = [],
+} = Astro.props
+if (!capabilities.length) return
+
+// Map icon name to inline SVG path (subset of Lucide)
+const ICON_PATHS: Record<string, string> = {
+  'search':        'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z',
+  'target':        'M12 22a10 10 0 100-20 10 10 0 000 20zm0-14a4 4 0 100 8 4 4 0 000-8zm0 2a2 2 0 110 4 2 2 0 010-4z',
+  'bar-chart-2':   'M18 20V10M12 20V4M6 20v-6',
+  'trending-up':   'M23 6l-9.5 9.5-5-5L1 18',
+  'megaphone':     'M3 11l19-9-9 19-2-8-8-2z',
+  'smartphone':    'M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z',
+  'globe':         'M12 2a10 10 0 100 20 10 10 0 000-20zm-2 14.5v-9l7 4.5-7 4.5z',
+  'users':         'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2m22 0v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75',
+  'mail':          'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zm18 2l-10 7L2 6',
+  'camera':        'M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z M12 17a4 4 0 100-8 4 4 0 000 8z',
+  'database':      'M12 2C6.48 2 2 4.24 2 7v10c0 2.76 4.48 5 10 5s10-2.24 10-5V7c0-2.76-4.48-5-10-5zm0 18c-4.42 0-8-1.79-8-4V9.77C5.69 11.1 8.66 12 12 12s6.31-.9 8-2.23V16c0 2.21-3.58 4-8 4z',
+  'settings':      'M12 15a3 3 0 100-6 3 3 0 000 6z M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z',
+  'star':          'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z',
+  'map-pin':       'M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z M12 13a3 3 0 100-6 3 3 0 000 6z',
+  'video':         'M15 10l4.553-2.069A1 1 0 0121 8.82v6.362a1 1 0 01-1.447.894L15 14M4 8h11a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1V9a1 1 0 011-1z',
+  'zap':           'M13 2L3 14h9l-1 8 10-12h-9l1-8z',
+  'link':          'M15 7h3a5 5 0 010 10h-3m-6 0H6A5 5 0 016 7h3m-1 5h8',
+}
+const defaultPath = 'M12 6v6m0 0v6m0-6h6m-6 0H6' // plus icon fallback
+---
+
+<section class="py-20" style="background:var(--off-white)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="max-w-2xl mb-12">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+        <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Capabilities</span>
+      </div>
+      <h2 class="text-3xl font-extrabold mb-4" style="color:var(--black)">{headline}</h2>
+      {intro && <p class="text-lg leading-relaxed" style="color:var(--charcoal)">{intro}</p>}
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {capabilities.map((cap, i) => {
+        const isDark = i % 2 === 1
+        const iconPath = ICON_PATHS[cap.icon ?? ''] ?? defaultPath
+        return (
+          <div
+            class="rounded-2xl p-8 border"
+            style={isDark
+              ? 'background:var(--shadow);border-color:#333'
+              : 'background:#fff;border-color:var(--alabaster)'}
+          >
+            <!-- Icon -->
+            <div
+              class="w-11 h-11 rounded-xl flex items-center justify-center mb-5"
+              style={isDark ? 'background:#2a2a32' : 'background:var(--off-white)'}
+            >
+              <svg
+                class="w-5 h-5"
+                style={`color:var(--accent)`}
+                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"
+                aria-hidden="true"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d={iconPath}/>
+              </svg>
+            </div>
+
+            <h3
+              class="text-lg font-bold mb-2"
+              style={`color:${isDark ? '#fff' : 'var(--black)'}`}
+            >{cap.title}</h3>
+
+            {cap.definition && (
+              <p
+                class="text-sm font-medium mb-3"
+                style={`color:${isDark ? 'var(--action)' : 'var(--accent)'}`}
+              >{cap.definition}</p>
+            )}
+
+            {cap.description && (
+              <p
+                class="text-sm leading-relaxed"
+                style={`color:${isDark ? '#888' : 'var(--charcoal)'}`}
+              >{cap.description}</p>
+            )}
+          </div>
+        )
+      })}
+    </div>
+
+  </div>
+</section>

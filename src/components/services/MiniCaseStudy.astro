@@ -1,0 +1,54 @@
+---
+/**
+ * MiniCaseStudy — compact proof card. Dark accent card on light background.
+ * Used twice per spoke page: top (near hero) and bottom (near FAQ).
+ */
+interface CaseStudy {
+  clientName: string
+  isPlaceholder: boolean
+  summary: string
+  heroStat: { value: string; label: string }
+}
+interface Props {
+  caseStudy: CaseStudy | null | undefined
+  position: 'top' | 'bottom'
+}
+const { caseStudy, position } = Astro.props
+if (!caseStudy) return
+---
+
+<section class="py-16" style="background:var(--off-white)">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div
+      class="relative overflow-hidden rounded-2xl p-8 sm:p-10 flex flex-col sm:flex-row gap-8 items-start"
+      style="background:var(--shadow)"
+    >
+      <!-- Gold accent bar -->
+      <div class="absolute top-0 left-0 right-0 h-[3px]" style="background:var(--accent)"></div>
+
+      <!-- Stat block -->
+      <div class="flex-shrink-0 text-center sm:text-left">
+        <div class="text-5xl font-extrabold" style="color:var(--action)">{caseStudy.heroStat.value}</div>
+        <div class="text-sm mt-1" style="color:#888">{caseStudy.heroStat.label}</div>
+        {caseStudy.isPlaceholder && (
+          <div class="mt-2 text-xs px-2 py-0.5 rounded-full inline-block" style="background:#333;color:#666">
+            Placeholder
+          </div>
+        )}
+      </div>
+
+      <!-- Content -->
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">
+            {position === 'top' ? 'Client Result' : 'Another Result'}
+          </span>
+        </div>
+        <p class="text-base leading-relaxed" style="color:#b0b0bb">{caseStudy.summary}</p>
+        <p class="text-sm mt-3 font-medium" style="color:#555">{caseStudy.clientName}</p>
+      </div>
+    </div>
+
+  </div>
+</section>

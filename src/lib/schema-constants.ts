@@ -31,6 +31,9 @@ export const ORG_CICON = {
   sameAs: ['https://www.facebook.com/ciconmarketing/','https://www.instagram.com/ciconmktg/','https://linkedin.com/company/cicon-marketing/'],
 } as const
 
+/** Update this number in one place — it propagates to all service page AggregateRating schemas. */
+export const REVIEW_COUNT = 47
+
 export const WEBSITE_CICON = {
   '@type': 'WebSite',
   '@id': 'https://cicon.ca/#website',

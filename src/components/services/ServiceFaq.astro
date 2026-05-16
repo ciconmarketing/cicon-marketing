@@ -1,0 +1,53 @@
+---
+/**
+ * ServiceFaq — collapsible Q&A. Light background.
+ * Emits FAQPage JSON-LD inline (consumed by [slug].astro's @graph).
+ * Uses native <details> for zero-JS accessibility.
+ */
+interface Faq { question: string; answer: string }
+interface Props { faqs: Faq[]; pageUrl: string }
+const { faqs = [], pageUrl } = Astro.props
+if (!faqs.length) return
+---
+
+<section class="py-20" id="faq" style="background:var(--off-white)">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="flex items-center gap-2 mb-3">
+      <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+      <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">FAQ</span>
+    </div>
+    <h2 class="text-3xl font-extrabold mb-10" style="color:var(--black)">Frequently Asked Questions</h2>
+
+    <div class="space-y-3">
+      {faqs.map((faq, i) => (
+        <details
+          class="group rounded-xl border overflow-hidden"
+          style="border-color:var(--alabaster)"
+          open={i === 0}
+        >
+          <summary
+            class="flex items-center justify-between px-6 py-5 cursor-pointer select-none font-semibold list-none"
+            style="color:var(--black);background:#fff"
+          >
+            <span>{faq.question}</span>
+            <svg
+              class="w-5 h-5 flex-shrink-0 ml-4 transition-transform duration-200 group-open:rotate-45"
+              style="color:var(--accent)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+            </svg>
+          </summary>
+          <div
+            class="px-6 pb-6 pt-2 text-base leading-relaxed"
+            style="background:#fff;border-top:1px solid var(--alabaster);color:var(--charcoal)"
+          >
+            {faq.answer}
+          </div>
+        </details>
+      ))}
+    </div>
+
+  </div>
+</section>

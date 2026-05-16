@@ -1,0 +1,56 @@
+---
+/**
+ * RelatedServices — 2 adjacent service cards with exact-match anchor text.
+ * Light background.
+ */
+interface Service { title: string; slug: string; serviceType: string; heroSubheadline?: string }
+interface Props { services: Service[] }
+const { services = [] } = Astro.props
+if (!services.length) return
+
+const SERVICE_ICONS: Record<string, string> = {
+  dental:     '🦷',
+  'paid-ads': '📢',
+  seo:        '🔍',
+  'local-seo':'📍',
+  social:     '💬',
+  'web-dev':  '</>',
+  media:      '🎥',
+  crm:        '🔗',
+}
+---
+
+<section class="py-16" style="background:var(--off-white)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="flex items-center gap-2 mb-6">
+      <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+      <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Related Services</span>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {services.map((svc) => (
+        <a
+          href={`/services/${svc.slug}/`}
+          class="group flex items-center gap-5 p-6 rounded-xl border transition-all hover:-translate-y-0.5 hover:shadow-md"
+          style="background:#fff;border-color:var(--alabaster)"
+        >
+          <div
+            class="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+            style="background:var(--off-white)"
+          >
+            {SERVICE_ICONS[svc.serviceType] ?? '⚡'}
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="font-bold group-hover:underline" style="color:var(--black)">{svc.title}</p>
+            {svc.heroSubheadline && (
+              <p class="text-sm mt-0.5 truncate" style="color:var(--charcoal)">{svc.heroSubheadline}</p>
+            )}
+          </div>
+          <svg class="w-4 h-4 flex-shrink-0 transition-transform group-hover:translate-x-1" style="color:var(--accent)" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </a>
+      ))}
+    </div>
+
+  </div>
+</section>

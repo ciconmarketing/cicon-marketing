@@ -1,0 +1,60 @@
+---
+/**
+ * AntiPitch — "This isn't for you if..." section.
+ * Light background with subtle accent. Used on both spoke pages and hub page.
+ */
+interface Item { disqualifier: string; explanation?: string }
+interface Props {
+  headline?: string
+  items: Item[]
+}
+const {
+  headline = "This isn't for you if...",
+  items = [],
+} = Astro.props
+if (!items.length) return
+---
+
+<section class="py-20" style="background:var(--off-white)">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="flex items-center gap-2 mb-3">
+      <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+      <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Honest Marketing</span>
+    </div>
+    <h2 class="text-3xl font-extrabold mb-10" style="color:var(--black)">{headline}</h2>
+
+    <div class="space-y-4">
+      {items.map((item) => (
+        <div
+          class="flex gap-5 p-6 rounded-xl border"
+          style="background:#fff;border-color:var(--alabaster)"
+        >
+          <div
+            class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mt-0.5"
+            style="background:#fff3f3;border:1px solid #fca5a5"
+          >
+            <svg class="w-4 h-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </div>
+          <div>
+            <p class="font-semibold" style="color:var(--black)">{item.disqualifier}</p>
+            {item.explanation && (
+              <p class="text-sm mt-1 leading-relaxed" style="color:var(--charcoal)">{item.explanation}</p>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Positive flip -->
+    <div class="mt-8 p-6 rounded-xl border-l-4" style="background:#f0fdf4;border-color:#22c55e">
+      <p class="font-semibold" style="color:#166534">
+        If you want a senior strategist who tracks every dollar and gives you the numbers straight —
+        <a href="#contact" class="underline hover:no-underline" style="color:#166534">let's talk.</a>
+      </p>
+    </div>
+
+  </div>
+</section>

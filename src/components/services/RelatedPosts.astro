@@ -1,0 +1,68 @@
+---
+/**
+ * RelatedPosts — up to 3 supporting blog posts. Light background.
+ */
+interface Post {
+  title: string
+  slug: string
+  dek?: string
+  publishedAt?: string
+  heroImage?: { url: string; alt: string } | null
+  category?: { name: string; slug: string } | null
+}
+interface Props { posts: Post[] }
+const { posts = [] } = Astro.props
+if (!posts.length) return
+
+function formatDate(iso?: string) {
+  if (!iso) return ''
+  return new Date(iso).toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' })
+}
+---
+
+<section class="py-16" style="background:var(--off-white)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="flex items-center gap-2 mb-6">
+      <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+      <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Related Reading</span>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {posts.map((post) => (
+        <a
+          href={`/blog/${post.slug}/`}
+          class="group flex flex-col rounded-xl border overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-md"
+          style="background:#fff;border-color:var(--alabaster)"
+        >
+          {post.heroImage?.url && (
+            <div class="aspect-[16/9] overflow-hidden">
+              <img
+                src={post.heroImage.url}
+                alt={post.heroImage.alt ?? post.title}
+                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                loading="lazy"
+                width="400" height="225"
+              />
+            </div>
+          )}
+          <div class="flex flex-col flex-1 p-5">
+            {post.category && (
+              <span class="text-xs font-semibold tracking-wider uppercase mb-2" style="color:var(--accent)">
+                {post.category.name}
+              </span>
+            )}
+            <h3 class="font-bold leading-snug mb-2 group-hover:underline" style="color:var(--black)">{post.title}</h3>
+            {post.dek && (
+              <p class="text-sm leading-relaxed flex-1" style="color:var(--charcoal)">{post.dek}</p>
+            )}
+            {post.publishedAt && (
+              <p class="text-xs mt-3" style="color:#999">{formatDate(post.publishedAt)}</p>
+            )}
+          </div>
+        </a>
+      ))}
+    </div>
+
+  </div>
+</section>

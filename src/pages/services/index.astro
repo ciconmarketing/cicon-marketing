@@ -1,0 +1,284 @@
+---
+/**
+ * /services/ — Services hub page.
+ * Orchestrates traffic to 8 spoke pages.
+ * Sections: HubHero → ServicesGrid → ServiceRouter → AntiPitch →
+ *           ProcessStrip → EeatBlock → TestimonialsPlaceholder → FinalCta
+ */
+import { getAllServicePages, getServicesHub } from '../../lib/sanity'
+import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON, REVIEW_COUNT } from '../../lib/schema-constants'
+import AntiPitch    from '../../components/services/AntiPitch.astro'
+import ProcessStrip from '../../components/services/ProcessStrip.astro'
+import EeatBlock    from '../../components/services/EeatBlock.astro'
+import FinalCta     from '../../components/services/FinalCta.astro'
+
+// ── Data ──────────────────────────────────────────────────────────────────────
+const [hub, servicePages] = await Promise.all([
+  getServicesHub(),
+  getAllServicePages(),
+])
+
+const isPreview = import.meta.env.VERCEL_ENV !== 'production'
+
+// Service display config (icon + display order)
+const SERVICE_CONFIG: Record<string, { icon: string; order: number }> = {
+  dental:     { icon: '🦷', order: 1 },
+  'paid-ads': { icon: '📢', order: 2 },
+  seo:        { icon: '🔍', order: 3 },
+  'local-seo':{ icon: '📍', order: 4 },
+  social:     { icon: '💬', order: 5 },
+  'web-dev':  { icon: '</>', order: 6 },
+  media:      { icon: '🎥', order: 7 },
+  crm:        { icon: '🔗', order: 8 },
+}
+
+const sortedServices = [...servicePages].sort(
+  (a, b) => (SERVICE_CONFIG[a.serviceType]?.order ?? 99) - (SERVICE_CONFIG[b.serviceType]?.order ?? 99)
+)
+
+// Router questions (static v1 — interactive logic deferred per brief §11)
+const ROUTER_QUESTIONS = [
+  {
+    question: "What's your primary goal right now?",
+    options: [
+      { label: 'More leads / new customers',    services: ['paid-ads', 'local-seo', 'seo'] },
+      { label: 'Build brand awareness',          services: ['social', 'media'] },
+      { label: 'Fix a broken system',            services: ['crm', 'web-dev'] },
+      { label: 'Grow a dental practice',         services: ['dental'] },
+    ],
+  },
+]
+
+// Schema.org
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    ORG_CICON,
+    PERSON_MAJID,
+    WEBSITE_CICON,
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home',     item: 'https://cicon.ca/' },
+        { '@type': 'ListItem', position: 2, name: 'Services', item: 'https://cicon.ca/services/' },
+      ],
+    },
+    {
+      '@type': 'AggregateRating',
+      '@id': 'https://cicon.ca/#aggregaterating',
+      itemReviewed: { '@id': 'https://cicon.ca/#organization' },
+      ratingValue: '5.0',
+      reviewCount: String(REVIEW_COUNT),
+    },
+  ],
+}
+---
+
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{hub?.heroHeadline ?? 'Digital Marketing Services'} | CiCon Marketing — GTA</title>
+  <meta name="description" content={hub?.heroDescription ?? 'Boutique digital marketing services for GTA businesses and dental clinics. Paid ads, SEO, social media, web development, and more.'} />
+  <link rel="canonical" href="https://cicon.ca/services/" />
+  {isPreview
+    ? <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+    : <meta name="robots" content="index, follow" />
+  }
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <style>
+    :root {
+      --action:    #FFCF00;
+      --accent:    #9D833E;
+      --shadow:    #212129;
+      --alabaster: #E7E7E7;
+      --off-white: #FAFAFA;
+      --charcoal:  #3A3A3A;
+      --black:     #000;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Inter', sans-serif; background: var(--off-white); }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Montserrat', sans-serif; }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+
+  <!-- ── Hub Hero ──────────────────────────────────────────────────────────── -->
+  <section class="relative overflow-hidden" style="background:var(--shadow);padding:120px 0 80px">
+    <div class="absolute inset-0 opacity-[0.04]"
+      style="background-image:linear-gradient(var(--accent) 1px,transparent 1px),linear-gradient(90deg,var(--accent) 1px,transparent 1px);background-size:60px 60px">
+    </div>
+    <div class="absolute bottom-0 left-0 right-0 h-[2px]" style="background:var(--accent);opacity:.4"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <div class="inline-flex items-center gap-2 mb-6">
+          <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+          <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Full-Service Marketing</span>
+        </div>
+        <h1 class="text-5xl lg:text-6xl font-extrabold leading-[1.1] text-white mb-5">
+          {hub?.heroHeadline ?? 'Every service your business needs to grow'}
+        </h1>
+        {hub?.heroSubheadline && (
+          <p class="text-xl font-semibold mb-4" style="color:var(--action)">{hub.heroSubheadline}</p>
+        )}
+        {hub?.heroDescription && (
+          <p class="text-lg leading-relaxed mb-8" style="color:#b0b0bb">{hub.heroDescription}</p>
+        )}
+        <div class="flex flex-wrap gap-4 mb-12">
+          <a href="#contact" class="inline-flex items-center gap-2 px-7 py-3.5 font-bold rounded-xl transition-all hover:-translate-y-0.5" style="background:var(--action);color:var(--shadow)">
+            Book Free Strategy Call
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </a>
+        </div>
+        {hub?.heroStats?.length && (
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
+            {hub.heroStats.map((s: { value: string; label: string }) => (
+              <div class="border-l-2 pl-4" style="border-color:var(--accent)">
+                <div class="text-2xl font-extrabold text-white">{s.value}</div>
+                <div class="text-xs mt-0.5" style="color:#888">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Services Grid (auto-populated from Sanity) ────────────────────────── -->
+  <section class="py-20" style="background:var(--off-white)">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl mb-12">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+          <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Our Services</span>
+        </div>
+        <h2 class="text-3xl font-extrabold" style="color:var(--black)">8 services. One senior strategist.</h2>
+      </div>
+
+      {sortedServices.length > 0 ? (
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {sortedServices.map((svc) => (
+            <a
+              href={`/services/${svc.slug}/`}
+              class="group flex flex-col p-6 rounded-2xl border transition-all hover:-translate-y-1 hover:shadow-lg"
+              style="background:#fff;border-color:var(--alabaster)"
+            >
+              <div class="text-3xl mb-4">{SERVICE_CONFIG[svc.serviceType]?.icon ?? '⚡'}</div>
+              <h3 class="font-bold text-lg mb-2 group-hover:underline" style="color:var(--black)">{svc.title}</h3>
+              {svc.heroSubheadline && (
+                <p class="text-sm leading-relaxed flex-1" style="color:var(--charcoal)">{svc.heroSubheadline}</p>
+              )}
+              {svc.heroStats?.[0] && (
+                <div class="mt-4 pt-4 border-t" style="border-color:var(--alabaster)">
+                  <span class="text-xl font-extrabold" style="color:var(--accent)">{svc.heroStats[0].value}</span>
+                  <span class="text-xs ml-2" style="color:#999">{svc.heroStats[0].label}</span>
+                </div>
+              )}
+              <div class="mt-4 flex items-center gap-1 text-sm font-semibold" style="color:var(--accent)">
+                Learn more
+                <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+              </div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <!-- Fallback when no published service pages yet -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {Object.entries(SERVICE_CONFIG).sort(([,a],[,b]) => a.order - b.order).map(([type, cfg]) => (
+            <div class="flex flex-col p-6 rounded-2xl border" style="background:#fff;border-color:var(--alabaster)">
+              <div class="text-3xl mb-4">{cfg.icon}</div>
+              <div class="h-4 rounded" style="background:var(--alabaster);width:70%;margin-bottom:8px"></div>
+              <div class="h-3 rounded" style="background:var(--alabaster);width:90%"></div>
+              <div class="mt-auto pt-4">
+                <div class="h-3 rounded" style="background:var(--alabaster);width:40%"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- ── Service Router (static v1) ────────────────────────────────────────── -->
+  <section class="py-20" style="background:#fff">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+        <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Find Your Service</span>
+      </div>
+      <h2 class="text-3xl font-extrabold mb-3" style="color:var(--black)">
+        {hub?.routerHeadline ?? 'Which service do you actually need?'}
+      </h2>
+      {hub?.routerIntro && (
+        <p class="text-lg leading-relaxed mb-10" style="color:var(--charcoal)">{hub.routerIntro}</p>
+      )}
+
+      <div class="space-y-6">
+        {ROUTER_QUESTIONS.map((rq) => (
+          <div>
+            <p class="font-semibold mb-4" style="color:var(--black)">{rq.question}</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {rq.options.map((opt) => {
+                const firstService = sortedServices.find(s => opt.services.includes(s.serviceType))
+                return (
+                  <a
+                    href={firstService ? `/services/${firstService.slug}/` : '/services/'}
+                    class="flex items-center justify-between px-5 py-4 rounded-xl border font-medium transition-all hover:-translate-y-0.5 hover:shadow-sm"
+                    style="background:var(--off-white);border-color:var(--alabaster);color:var(--black)"
+                  >
+                    {opt.label}
+                    <svg class="w-4 h-4" style="color:var(--accent)" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                  </a>
+                )
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Shared components -->
+  <AntiPitch
+    headline={hub?.antiPitchHeadline}
+    items={hub?.antiPitchItems ?? [
+      { disqualifier: "You want results before the strategy is finished.", explanation: "Good marketing takes 30–90 days to calibrate. We'll tell you what's realistic on day one." },
+      { disqualifier: "You need someone to manage everything without your involvement.", explanation: "We need monthly strategy calls. You stay informed — that's part of the model." },
+      { disqualifier: "Your budget is under $1,500/month all-in.", explanation: "Below that threshold, fees eat the spend. We can't move the needle responsibly at that level." },
+    ]}
+  />
+
+  <ProcessStrip />
+
+  <EeatBlock />
+
+  <!-- Testimonials placeholder (Trustindex integration — separate ticket) -->
+  <section class="py-20" style="background:#fff">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="flex items-center justify-center gap-2 mb-3">
+        <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+        <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Reviews</span>
+        <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+      </div>
+      <h2 class="text-3xl font-extrabold mb-4" style="color:var(--black)">5.0 stars across {REVIEW_COUNT}+ reviews</h2>
+      <p class="text-base mb-8" style="color:var(--charcoal)">Trustindex widget — integrated separately.</p>
+      <!-- Trustindex widget slot -->
+      <div id="trustindex-widget" class="min-h-[200px] rounded-2xl border flex items-center justify-center" style="border-color:var(--alabaster);background:var(--off-white)">
+        <p class="text-sm" style="color:#999">Reviews load here via Trustindex embed</p>
+      </div>
+    </div>
+  </section>
+
+  <FinalCta
+    headline={hub?.finalCtaHeadline}
+    body={hub?.finalCtaBody}
+  />
+
+</body>
+</html>

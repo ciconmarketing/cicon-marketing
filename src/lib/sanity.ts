@@ -178,6 +178,136 @@ export async function getAllPostsForSearch(): Promise<Array<{ _id: string; title
   }
 }
 
+// ── Service page GROQ queries ────────────────────────────────────────────────
+
+const SERVICE_PAGE_FIELDS = `
+  _id, title, "slug": slug.current, serviceType, status,
+  metaTitle, metaDescription, canonical,
+  heroBadge, heroHeadline, heroSubheadline, heroDescription,
+  heroStats[]{ value, label },
+  paaQuestions[]{ question, answer },
+  antiPitchHeadline, antiPitchItems[]{ disqualifier, explanation },
+  caseStudyTop->{ clientName, serviceType, isPlaceholder, summary, heroStat{ value, label } },
+  caseStudyBottom->{ clientName, serviceType, isPlaceholder, summary, heroStat{ value, label } },
+  capabilitiesHeadline, capabilitiesIntro,
+  capabilities[]{ title, definition, description, icon },
+  processSteps[]{ number, label, description },
+  eeatHeadline, eeatBody, eeatStats[]{ value, label },
+  faqs[]{ question, answer },
+  cdcpBlock{ headline, body, bullets },
+  patientChannels[]{ channel, description },
+  relatedServices[]->{ title, "slug": slug.current, serviceType, heroSubheadline },
+  relatedPosts[]->{ title, "slug": slug.current, dek, publishedAt,
+    heroImage{ url, alt }, "category": category->{ name, "slug": slug.current } },
+  serviceTypeSchema,
+  areaServed
+`
+
+export const ALL_SERVICE_PAGES_QUERY = `
+  *[_type == "servicePage" && status == "published"] | order(serviceType asc) {
+    _id, title, "slug": slug.current, serviceType,
+    heroSubheadline, heroDescription,
+    heroStats[]{ value, label }
+  }
+`
+
+export const ALL_SERVICE_SLUGS_QUERY = `
+  *[_type == "servicePage" && status == "published"]{ "slug": slug.current }
+`
+
+export const SERVICE_PAGE_QUERY = `
+  *[_type == "servicePage" && slug.current == $slug][0]{ ${SERVICE_PAGE_FIELDS} }
+`
+
+export const SERVICES_HUB_QUERY = `
+  *[_type == "servicesHub"][0]{
+    heroHeadline, heroSubheadline, heroDescription,
+    heroStats[]{ value, label },
+    antiPitchHeadline, antiPitchItems[]{ disqualifier, explanation },
+    routerHeadline, routerIntro,
+    finalCtaHeadline, finalCtaBody
+  }
+`
+
+export type ServicePageData = {
+  _id: string
+  title: string
+  slug: string
+  serviceType: string
+  status: string
+  metaTitle?: string
+  metaDescription?: string
+  canonical?: string
+  heroBadge?: string
+  heroHeadline: string
+  heroSubheadline?: string
+  heroDescription?: string
+  heroStats?: Array<{ value: string; label: string }>
+  paaQuestions?: Array<{ question: string; answer: string }>
+  antiPitchHeadline?: string
+  antiPitchItems?: Array<{ disqualifier: string; explanation?: string }>
+  caseStudyTop?: { clientName: string; isPlaceholder: boolean; summary: string; heroStat: { value: string; label: string } } | null
+  caseStudyBottom?: { clientName: string; isPlaceholder: boolean; summary: string; heroStat: { value: string; label: string } } | null
+  capabilitiesHeadline?: string
+  capabilitiesIntro?: string
+  capabilities?: Array<{ title: string; definition?: string; description?: string; icon?: string }>
+  processSteps?: Array<{ number: number; label: string; description: string }>
+  eeatHeadline?: string
+  eeatBody?: string
+  eeatStats?: Array<{ value: string; label: string }>
+  faqs?: Array<{ question: string; answer: string }>
+  cdcpBlock?: { headline: string; body: string; bullets: string[] } | null
+  patientChannels?: Array<{ channel: string; description: string }>
+  relatedServices?: Array<{ title: string; slug: string; serviceType: string; heroSubheadline?: string }>
+  relatedPosts?: Array<{ title: string; slug: string; dek?: string; publishedAt?: string; heroImage?: { url: string; alt: string } | null; category?: { name: string; slug: string } | null }>
+  serviceTypeSchema?: string
+  areaServed?: string[]
+}
+
+export type ServicesHubData = {
+  heroHeadline?: string
+  heroSubheadline?: string
+  heroDescription?: string
+  heroStats?: Array<{ value: string; label: string }>
+  antiPitchHeadline?: string
+  antiPitchItems?: Array<{ disqualifier: string; explanation?: string }>
+  routerHeadline?: string
+  routerIntro?: string
+  finalCtaHeadline?: string
+  finalCtaBody?: string
+}
+
+export async function getServicePage(slug: string): Promise<ServicePageData | null> {
+  const client = getSanityClient()
+  if (!client) return null
+  try {
+    return await client.fetch<ServicePageData>(SERVICE_PAGE_QUERY, { slug })
+  } catch (err) {
+    console.error('[Sanity] Service page fetch failed:', err)
+    return null
+  }
+}
+
+export async function getAllServicePages(): Promise<ServicePageData[]> {
+  const client = getSanityClient()
+  if (!client) return []
+  try {
+    return await client.fetch<ServicePageData[]>(ALL_SERVICE_PAGES_QUERY)
+  } catch {
+    return []
+  }
+}
+
+export async function getServicesHub(): Promise<ServicesHubData | null> {
+  const client = getSanityClient()
+  if (!client) return null
+  try {
+    return await client.fetch<ServicesHubData>(SERVICES_HUB_QUERY)
+  } catch {
+    return null
+  }
+}
+
 export async function getHomepage(): Promise<HomepageData | null> {
   if (!projectId) {
     console.warn('[Sanity] No valid projectId — using fallback content.');

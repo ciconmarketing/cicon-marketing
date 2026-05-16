@@ -21,6 +21,9 @@ import blogPost, {
   deepDiveType,
 } from './blogPost'
 import blogCategory from './blogCategory'
+import servicePage from './servicePage'
+import servicesHub from './servicesHub'
+import caseStudy from './caseStudy'
 
 // ── Shared sub-types ──────────────────────────────────────────────────────────
 
@@ -447,6 +450,7 @@ const homepage = defineType({
 // ─────────────────────────────────────────────────────────────────────────────
 export const schemaTypes = [
   homepage,
+  // Blog
   blogPost,
   blogCategory,
   // Supporting object types for blogPost rich fields
@@ -458,4 +462,8 @@ export const schemaTypes = [
   inlineImageType,
   comparisonTabsType,
   deepDiveType,
+  // Service pages system
+  servicePage,
+  servicesHub,
+  caseStudy,
 ];

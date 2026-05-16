@@ -1,0 +1,46 @@
+---
+/**
+ * PatientChannels — Dental only. Lists patient acquisition channels.
+ * Light background.
+ */
+interface Channel { channel: string; description: string }
+interface Props { channels?: Channel[] }
+
+const defaultChannels: Channel[] = [
+  { channel: 'Google Ads (Search + Performance Max)',   description: 'High-intent patient acquisition for emergency, cosmetic, and CDCP-eligible services' },
+  { channel: 'Google Business Profile + Local SEO',     description: 'Top 1–3 Maps ranking for "dentist near me" and 20+ service-specific keywords' },
+  { channel: 'Call-Only Campaigns',                     description: 'Click-to-call ads targeting mobile users searching for emergency dental services' },
+  { channel: 'Patient Testimonial Video Production',    description: 'In-house production of social proof videos that close prospects on your website' },
+  { channel: 'CRM + Lead Tracking',                    description: 'Every call, form, and chat tracked end-to-end — so you know what marketing is actually working' },
+]
+const { channels = defaultChannels } = Astro.props
+---
+
+<section class="py-20" style="background:var(--off-white)">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="flex items-center gap-2 mb-3">
+      <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+      <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Patient Acquisition</span>
+    </div>
+    <h2 class="text-3xl font-extrabold mb-10" style="color:var(--black)">Every channel that brings patients through the door</h2>
+
+    <div class="space-y-4">
+      {channels.map((ch, i) => (
+        <div class="flex gap-5 p-6 rounded-xl border" style="background:#fff;border-color:var(--alabaster)">
+          <div
+            class="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm flex-shrink-0"
+            style="background:var(--shadow);color:var(--action)"
+          >
+            {String(i + 1).padStart(2, '0')}
+          </div>
+          <div>
+            <p class="font-bold mb-1" style="color:var(--black)">{ch.channel}</p>
+            <p class="text-sm leading-relaxed" style="color:var(--charcoal)">{ch.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>

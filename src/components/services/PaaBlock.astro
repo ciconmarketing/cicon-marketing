@@ -1,0 +1,57 @@
+---
+/**
+ * PaaBlock — "People Also Ask" zero-click accordion.
+ * Light background. Each item is a native <details> element for SEO.
+ */
+interface Question { question: string; answer: string }
+interface Props { questions: Question[] }
+const { questions = [] } = Astro.props
+if (!questions.length) return
+---
+
+<section class="py-20" style="background:var(--off-white)">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="flex items-center gap-2 mb-3">
+      <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+      <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">People Also Ask</span>
+    </div>
+    <h2 class="text-3xl font-extrabold mb-10" style="color:var(--black)">Quick Answers</h2>
+
+    <div class="space-y-3" itemscope itemtype="https://schema.org/FAQPage">
+      {questions.map((q, i) => (
+        <details
+          class="group rounded-xl border overflow-hidden"
+          style="border-color:var(--alabaster)"
+          itemscope
+          itemprop="mainEntity"
+          itemtype="https://schema.org/Question"
+        >
+          <summary
+            class="flex items-center justify-between px-6 py-4 cursor-pointer select-none font-semibold list-none"
+            style="color:var(--black);background:#fff"
+          >
+            <span itemprop="name">{q.question}</span>
+            <svg
+              class="w-5 h-5 flex-shrink-0 ml-4 transition-transform duration-200 group-open:rotate-45"
+              style="color:var(--accent)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+            </svg>
+          </summary>
+          <div
+            class="px-6 pb-5 pt-1"
+            style="background:#fff;border-top:1px solid var(--alabaster)"
+            itemscope
+            itemprop="acceptedAnswer"
+            itemtype="https://schema.org/Answer"
+          >
+            <p class="leading-relaxed" style="color:var(--charcoal)" itemprop="text">{q.answer}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+
+  </div>
+</section>

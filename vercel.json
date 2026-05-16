@@ -9,5 +9,23 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    { "source": "/dental-marketing/",                 "destination": "/services/dental/",    "permanent": true },
+    { "source": "/dental-marketing",                  "destination": "/services/dental/",    "permanent": true },
+    { "source": "/local-seo/",                        "destination": "/services/local-seo/", "permanent": true },
+    { "source": "/local-seo",                         "destination": "/services/local-seo/", "permanent": true },
+    { "source": "/media-content-production/",         "destination": "/services/media/",     "permanent": true },
+    { "source": "/media-content-production",          "destination": "/services/media/",     "permanent": true },
+    { "source": "/crm-integration/",                  "destination": "/services/crm/",       "permanent": true },
+    { "source": "/crm-integration",                   "destination": "/services/crm/",       "permanent": true },
+    { "source": "/paid-advertising/",                 "destination": "/services/paid-ads/",  "permanent": true },
+    { "source": "/paid-advertising",                  "destination": "/services/paid-ads/",  "permanent": true },
+    { "source": "/ai-seo-seo/",                       "destination": "/services/seo/",       "permanent": true },
+    { "source": "/ai-seo-seo",                        "destination": "/services/seo/",       "permanent": true },
+    { "source": "/social-media-marketing/",           "destination": "/services/social/",    "permanent": true },
+    { "source": "/social-media-marketing",            "destination": "/services/social/",    "permanent": true },
+    { "source": "/website-landing-page-development/", "destination": "/services/web-dev/",   "permanent": true },
+    { "source": "/website-landing-page-development",  "destination": "/services/web-dev/",   "permanent": true }
   ]
 }
