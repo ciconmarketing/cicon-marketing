@@ -28,6 +28,8 @@
     { "source": "/website-landing-page-development/", "destination": "/services/web-dev/",   "permanent": true },
     { "source": "/website-landing-page-development",  "destination": "/services/web-dev/",   "permanent": true },
     { "source": "/marketing-services/website-development/", "destination": "/services/web-dev/", "permanent": true },
-    { "source": "/marketing-services/website-development",  "destination": "/services/web-dev/", "permanent": true }
+    { "source": "/marketing-services/website-development",  "destination": "/services/web-dev/", "permanent": true },
+    { "source": "/marketing-services/social-media-marketing/(.*)", "destination": "/services/social-media-marketing/", "permanent": true },
+    { "source": "/social-media-marketing-for-canadian-business-owners-2026-guide/(.*)", "destination": "/services/social-media-marketing/", "permanent": true }
   ]
 }
