@@ -1,0 +1,97 @@
+---
+/**
+ * PlaceholderImage — renders a Sanity image when present, or a branded
+ * skeleton placeholder when the image field is null/undefined.
+ */
+interface Props {
+  src?: any           // Sanity image asset object or null/undefined
+  alt: string
+  fieldName?: string  // shown in placeholder label, e.g. "heroImage"
+  aspectRatio?: string // "16:9" | "4:3" | "1:1" | "3:2"
+  fallback?: 'stock' | 'skeleton-only'
+  variant?: 'hero' | 'case-study' | 'inline'
+  class?: string
+}
+
+const {
+  src,
+  alt,
+  fieldName = 'image',
+  aspectRatio = '16:9',
+  fallback = 'stock',
+  variant = 'hero',
+  class: className = '',
+} = Astro.props
+
+// Derive padding-bottom % from aspect ratio string
+const ratioPadding: Record<string, string> = {
+  '16:9': '56.25%',
+  '4:3':  '75%',
+  '1:1':  '100%',
+  '3:2':  '66.67%',
+}
+const paddingBottom = ratioPadding[aspectRatio] ?? '56.25%'
+
+// Build Sanity image URL if src is a valid object with asset ref
+function getSanityImageUrl(image: any): string | null {
+  if (!image?.asset?._ref && !image?.asset?._id) return null
+  const ref: string = image.asset._ref ?? image.asset._id
+  // Parse Sanity ref: image-{id}-{dimensions}-{format}
+  const parts = ref.replace(/^image-/, '').split('-')
+  if (parts.length < 3) return null
+  const [id, dimensions, fmt] = [parts.slice(0, parts.length - 2).join('-'), parts[parts.length - 2], parts[parts.length - 1]]
+  return `https://cdn.sanity.io/images/26ol0sqj/cicon-marketing/${id}-${dimensions}.${fmt}`
+}
+
+const imageUrl = getSanityImageUrl(src)
+const hasImage = !!imageUrl
+
+const placeholderLabel = variant === 'case-study'
+  ? `Case Study Image — replace in Sanity Studio`
+  : `Image: ${fieldName} — replace in Sanity Studio`
+
+const isStockStyle = fallback === 'stock'
+---
+
+{hasImage ? (
+  <img
+    src={imageUrl}
+    alt={alt}
+    class={className}
+    loading="lazy"
+    decoding="async"
+    style="width:100%;height:auto;display:block;"
+  />
+) : (
+  <div
+    class={`cicon-placeholder ${className}`}
+    role="img"
+    aria-label={alt || placeholderLabel}
+    style={`position:relative;width:100%;padding-bottom:${paddingBottom};overflow:hidden;border-radius:8px;border:2px dashed rgba(255,255,255,0.4);${isStockStyle ? 'background:linear-gradient(30deg,#FFCF00,#9D833E);' : 'background:#E7E7E7;border-color:rgba(0,0,0,0.15);'}`}
+  >
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px;text-align:center;">
+      <!-- Image icon (inline SVG, no Lucide dependency) -->
+      <svg
+        width="48" height="48" viewBox="0 0 24 24" fill="none"
+        stroke={isStockStyle ? '#fff' : '#888'}
+        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+        <circle cx="8.5" cy="8.5" r="1.5"/>
+        <polyline points="21 15 16 10 5 21"/>
+      </svg>
+      <span style={`font-size:11px;font-family:monospace;${isStockStyle ? 'color:#fff;' : 'color:#666;'}`}>
+        {placeholderLabel}
+      </span>
+      <a
+        href="https://cicon-marketing.sanity.studio/"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={`font-size:10px;font-weight:600;padding:4px 10px;border-radius:999px;border:1px solid;text-decoration:none;${isStockStyle ? 'color:#fff;border-color:rgba(255,255,255,0.6);' : 'color:#666;border-color:rgba(0,0,0,0.2);'}`}
+      >
+        Open Sanity →
+      </a>
+    </div>
+  </div>
+)}

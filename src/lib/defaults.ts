@@ -6,7 +6,7 @@ export const defaultHomepageData: HomepageData = {
     subheadline:
       'CiCon Marketing helps GTA businesses fix the hidden gaps between ads, landing pages, calls, CRM, and reporting — so more traffic turns into real customers.',
     ctaText: 'Give Me a Local Preview',
-    ctaLink: '/book-a-strategy-call-with-cicon-marketing/',
+    ctaLink: 'https://wa.me/16475840800',
   },
 
   whyCicon: {
@@ -184,9 +184,9 @@ export const defaultHomepageData: HomepageData = {
   readyToGrow: {
     headline: 'Ready to Grow Your Business?',
     subheadline:
-      "Let's build a marketing strategy that actually works for your business. Book a free strategy call and see exactly how CiCon Marketing can help you grow.",
-    ctaText: 'Schedule a Free Strategy Call',
-    ctaLink: '/book-a-strategy-call-with-cicon-marketing/',
+      "Let's build a marketing strategy that actually works for your business. Send us a WhatsApp message and see exactly how CiCon Marketing can help you grow.",
+    ctaText: 'Chat on WhatsApp',
+    ctaLink: 'https://wa.me/16475840800',
   },
 
   contact: {

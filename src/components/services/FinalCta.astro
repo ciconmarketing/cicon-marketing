@@ -10,7 +10,7 @@ interface Props {
 }
 const {
   headline = 'Ready to grow? Let\'s build the plan.',
-  body = 'Book a free 30-minute strategy call. We\'ll audit your current marketing, identify your biggest gaps, and map out a realistic growth path — no fluff, no hard sell.',
+  body = 'Start a WhatsApp conversation. We\'ll audit your current marketing, identify your biggest gaps, and map out a realistic growth path — no fluff, no hard sell.',
   serviceName,
 } = Astro.props
 ---
@@ -27,13 +27,13 @@ const {
     <!-- CTAs -->
     <div class="flex flex-wrap justify-center gap-4 mb-12">
       <a
-        href="https://calendly.com/cicon"
+        href="https://wa.me/16475840800"
         target="_blank"
         rel="noopener noreferrer"
         class="inline-flex items-center gap-2 px-8 py-4 font-bold rounded-xl text-lg transition-all hover:-translate-y-0.5"
         style="background:var(--action);color:var(--shadow)"
       >
-        Book Free Strategy Call
+        Chat on WhatsApp
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
       </a>
       <a
@@ -50,7 +50,7 @@ const {
     <div class="flex flex-wrap justify-center gap-6 text-sm" style="color:#666">
       {[
         '✓ No long-term contracts',
-        '✓ Senior strategist on every account',
+        '✓ Senior strategist on every conversation',
         '✓ Monthly transparent reporting',
         '✓ GTA-based, always reachable',
       ].map((t) => <span>{t}</span>)}
