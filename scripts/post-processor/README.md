@@ -82,13 +82,13 @@ Get your write token from: https://www.sanity.io/manage → your project → API
 
 ### Authentication
 
-Every request must include an HMAC-SHA256 signature:
+Every request must include the shared secret in the `X-Secret` header:
 
 ```
-X-Arvow-Signature: sha256=<hex_digest>
+X-Secret: <your_arvow_webhook_secret>
 ```
 
-The digest is computed over the raw JSON body using the `ARVOW_WEBHOOK_SECRET` env var.
+The value is compared directly against the `ARVOW_WEBHOOK_SECRET` env var.
 
 ### Required env vars (Vercel Dashboard)
 
@@ -130,17 +130,16 @@ The endpoint checks `arvowId` against existing documents before creating. Sendin
 ### Testing locally
 
 ```bash
-# Start dev server with hybrid output
+# Start dev server
 npm run dev
 
-# In another terminal — generate a test signature (requires openssl)
+# In another terminal — fire a test payload
 SECRET="your-local-secret"
 BODY='{"id":"test-001","title":"Test Post","slug":"test-post","bodyMarkdown":"## Hello\n\nWorld."}'
-SIG="sha256=$(echo -n "$BODY" | openssl dgst -sha256 -hmac "$SECRET" | sed 's/SHA2-256(stdin)= //')"
 
 curl -X POST http://localhost:4321/api/arvow-webhook \
   -H "Content-Type: application/json" \
-  -H "X-Arvow-Signature: $SIG" \
+  -H "X-Secret: $SECRET" \
   -d "$BODY"
 ```
 

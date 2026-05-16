@@ -4,13 +4,13 @@
  * Receives new article payloads from Arvow and creates a blogPost document
  * in Sanity with status: 'arvow-imported'.
  *
- * Authentication: HMAC-SHA256 signature verification via ARVOW_WEBHOOK_SECRET.
+ * Authentication: shared-secret comparison via ARVOW_WEBHOOK_SECRET (X-Secret header).
  * Idempotency:    Checks for existing document with matching arvowId — returns
  *                 200 (already imported) instead of creating a duplicate.
  *
  * Expected request:
  *   POST /api/arvow-webhook
- *   X-Arvow-Signature: sha256=<hex>          // HMAC of raw body
+ *   X-Secret:          <shared_secret>        // plain string comparison
  *   X-Arvow-Batch-Id:  <batchId>             // optional batch identifier
  *   Content-Type: application/json
  *   Body: ArvowPayload (see type below)
@@ -68,39 +68,6 @@ interface ArvowPayload {
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
-/**
- * Verify HMAC-SHA256 signature from the X-Arvow-Signature header.
- * Expected header format: `sha256=<lowercase hex digest>`
- */
-async function verifySignature(
-  rawBody: string,
-  signatureHeader: string | null,
-  secret: string,
-): Promise<boolean> {
-  if (!signatureHeader) return false
-
-  const encoder = new TextEncoder()
-  const key = await crypto.subtle.importKey(
-    'raw',
-    encoder.encode(secret),
-    { name: 'HMAC', hash: 'SHA-256' },
-    false,
-    ['sign'],
-  )
-  const mac = await crypto.subtle.sign('HMAC', key, encoder.encode(rawBody))
-  const expected = 'sha256=' + Array.from(new Uint8Array(mac))
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('')
-
-  // Constant-time comparison to prevent timing attacks
-  if (expected.length !== signatureHeader.length) return false
-  const a = encoder.encode(expected)
-  const b = encoder.encode(signatureHeader)
-  let diff = 0
-  for (let i = 0; i < a.length; i++) diff |= a[i] ^ b[i]
-  return diff === 0
-}
-
 function getSanityWriteClient() {
   const projectId = (import.meta.env.PUBLIC_SANITY_PROJECT_ID ?? '').trim()
   const dataset  = (import.meta.env.PUBLIC_SANITY_DATASET ?? 'production').trim()
@@ -127,7 +94,7 @@ function json(body: unknown, status = 200) {
 // ── Route handler ─────────────────────────────────────────────────────────────
 
 export const POST: APIRoute = async ({ request }) => {
-  // ── 1. Auth: verify HMAC signature ────────────────────────────────────────
+  // ── 1. Auth: shared-secret comparison ─────────────────────────────────────
   const secret = (import.meta.env.ARVOW_WEBHOOK_SECRET ?? '').trim()
   if (!secret) {
     console.error('[arvow-webhook] ARVOW_WEBHOOK_SECRET is not set.')
@@ -135,12 +102,11 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   const rawBody = await request.text()
-  const signatureHeader = request.headers.get('X-Arvow-Signature')
+  const incomingSecret = (request.headers.get('x-secret') ?? '').trim()
 
-  const isValid = await verifySignature(rawBody, signatureHeader, secret)
-  if (!isValid) {
-    console.warn('[arvow-webhook] Signature verification failed.')
-    return json({ error: 'Unauthorized — invalid signature.' }, 401)
+  if (incomingSecret !== secret) {
+    console.warn('[arvow-webhook] Secret mismatch — unauthorized request.')
+    return json({ error: 'Unauthorized — invalid secret.' }, 401)
   }
 
   // ── 2. Parse & validate payload ────────────────────────────────────────────
