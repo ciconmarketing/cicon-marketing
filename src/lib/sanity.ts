@@ -205,7 +205,7 @@ const SERVICE_PAGE_FIELDS = `
 `
 
 export const ALL_SERVICE_PAGES_QUERY = `
-  *[_type == "servicePage" && status == "published"] | order(serviceType asc) {
+  *[_type == "servicePage" && status != "draft"] | order(serviceType asc) {
     _id, title, "slug": slug.current, serviceType,
     heroSubheadline, heroDescription,
     heroStats[]{ value, label }

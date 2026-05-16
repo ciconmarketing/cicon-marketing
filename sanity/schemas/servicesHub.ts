@@ -31,7 +31,7 @@ export default defineType({
       type: 'array',
       of: [defineArrayMember({
         type: 'object',
-        name: 'hubHeroStat',
+        name: 'heroStatItem',
         fields: [
           defineField({ name: 'value', title: 'Value', type: 'string' }),
           defineField({ name: 'label', title: 'Label', type: 'string' }),
@@ -53,7 +53,7 @@ export default defineType({
       type: 'array',
       of: [defineArrayMember({
         type: 'object',
-        name: 'hubAntiPitchItem',
+        name: 'antiPitchItem',
         fields: [
           defineField({ name: 'disqualifier', title: 'Disqualifier', type: 'string' }),
           defineField({ name: 'explanation', title: 'Explanation', type: 'string' }),
