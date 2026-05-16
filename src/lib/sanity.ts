@@ -212,7 +212,7 @@ export const ALL_SERVICE_PAGES_QUERY = `
 `
 
 export const ALL_SERVICE_SLUGS_QUERY = `
-  *[_type == "servicePage" && status == "published"]{ "slug": slug.current }
+  *[_type == "servicePage" && status != "draft"]{ "slug": slug.current }
 `
 
 export const SERVICE_PAGE_QUERY = `
