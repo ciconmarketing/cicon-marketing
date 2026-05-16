@@ -7,10 +7,11 @@
  */
 import { getAllServicePages, getServicesHub } from '../../lib/sanity'
 import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON, REVIEW_COUNT } from '../../lib/schema-constants'
-import AntiPitch    from '../../components/services/AntiPitch.astro'
-import ProcessStrip from '../../components/services/ProcessStrip.astro'
-import EeatBlock    from '../../components/services/EeatBlock.astro'
-import FinalCta     from '../../components/services/FinalCta.astro'
+import AntiPitch        from '../../components/services/AntiPitch.astro'
+import ProcessStrip     from '../../components/services/ProcessStrip.astro'
+import EeatBlock        from '../../components/services/EeatBlock.astro'
+import FinalCta         from '../../components/services/FinalCta.astro'
+import PlaceholderImage from '../../components/PlaceholderImage.astro'
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 const [hub, servicePages] = await Promise.all([
@@ -100,6 +101,32 @@ const jsonLd = {
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Inter', sans-serif; background: var(--off-white); }
     h1, h2, h3, h4, h5, h6 { font-family: 'Montserrat', sans-serif; }
+    /* Hub hero two-column layout */
+    .hub-hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .hub-hero-image-col {
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(157, 131, 62, 0.2);
+    }
+    @media (min-width: 768px) {
+      .hub-hero-grid { grid-template-columns: 1fr 1fr; }
+      .hub-hero-image-col { max-height: 400px; overflow: hidden; }
+      .hub-hero-image-col img, .hub-hero-image-col .cicon-placeholder { max-height: 400px; object-fit: cover; }
+    }
+    @media (min-width: 1024px) {
+      .hub-hero-grid { grid-template-columns: 3fr 2fr; }
+      .hub-hero-image-col { max-height: none; }
+      .hub-hero-image-col img, .hub-hero-image-col .cicon-placeholder { max-height: none; }
+    }
+    @media (max-width: 767px) {
+      .hub-hero-image-col { aspect-ratio: 16 / 9; overflow: hidden; }
+      .hub-hero-image-col img { width: 100%; height: 100%; object-fit: cover; }
+    }
   </style>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -116,36 +143,54 @@ const jsonLd = {
     <div class="absolute bottom-0 left-0 right-0 h-[2px]" style="background:var(--accent);opacity:.4"></div>
 
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="max-w-3xl">
-        <div class="inline-flex items-center gap-2 mb-6">
-          <span class="h-[1px] w-8" style="background:var(--accent)"></span>
-          <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Full-Service Marketing</span>
-        </div>
-        <h1 class="text-5xl lg:text-6xl font-extrabold leading-[1.1] text-white mb-5">
-          {hub?.heroHeadline ?? 'Every service your business needs to grow'}
-        </h1>
-        {hub?.heroSubheadline && (
-          <p class="text-xl font-semibold mb-4" style="color:var(--action)">{hub.heroSubheadline}</p>
-        )}
-        {hub?.heroDescription && (
-          <p class="text-lg leading-relaxed mb-8" style="color:#b0b0bb">{hub.heroDescription}</p>
-        )}
-        <div class="flex flex-wrap gap-4 mb-12">
-          <a href="https://wa.me/16475840800" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-7 py-3.5 font-bold rounded-xl transition-all hover:-translate-y-0.5" style="background:var(--action);color:var(--shadow)">
-            Chat on WhatsApp
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-          </a>
-        </div>
-        {hub?.heroStats?.length && (
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
-            {hub.heroStats.map((s: { value: string; label: string }) => (
-              <div class="border-l-2 pl-4" style="border-color:var(--accent)">
-                <div class="text-2xl font-extrabold text-white">{s.value}</div>
-                <div class="text-xs mt-0.5" style="color:#888">{s.label}</div>
-              </div>
-            ))}
+      <!-- Two-column grid: text left (3fr), image right (2fr) on desktop -->
+      <div class="hub-hero-grid">
+
+        <!-- Text column -->
+        <div class="hub-hero-text">
+          <div class="inline-flex items-center gap-2 mb-6">
+            <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+            <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Full-Service Marketing</span>
           </div>
-        )}
+          <h1 class="text-5xl lg:text-6xl font-extrabold leading-[1.1] text-white mb-5">
+            {hub?.heroHeadline ?? 'Every service your business needs to grow'}
+          </h1>
+          {hub?.heroSubheadline && (
+            <p class="text-xl font-semibold mb-4" style="color:var(--action)">{hub.heroSubheadline}</p>
+          )}
+          {hub?.heroDescription && (
+            <p class="text-lg leading-relaxed mb-8" style="color:#b0b0bb">{hub.heroDescription}</p>
+          )}
+          <div class="flex flex-wrap gap-4 mb-12">
+            <a href="https://wa.me/16475840800" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-7 py-3.5 font-bold rounded-xl transition-all hover:-translate-y-0.5" style="background:var(--action);color:var(--shadow)">
+              Chat on WhatsApp
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+          </div>
+          {hub?.heroStats?.length && (
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
+              {hub.heroStats.map((s: { value: string; label: string }) => (
+                <div class="border-l-2 pl-4" style="border-color:var(--accent)">
+                  <div class="text-2xl font-extrabold text-white">{s.value}</div>
+                  <div class="text-xs mt-0.5" style="color:#888">{s.label}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <!-- Image column -->
+        <div class="hub-hero-image-col">
+          <PlaceholderImage
+            src={hub?.heroImage}
+            alt="CiCon Marketing — Full-Service Digital Marketing Agency"
+            fieldName="heroImage"
+            aspectRatio="16:9"
+            variant="hero"
+            fallback="stock"
+          />
+        </div>
+
       </div>
     </div>
   </section>

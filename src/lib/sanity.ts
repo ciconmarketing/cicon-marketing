@@ -185,10 +185,11 @@ const SERVICE_PAGE_FIELDS = `
   metaTitle, metaDescription, canonical,
   heroBadge, heroHeadline, heroSubheadline, heroDescription,
   heroStats[]{ value, label },
+  heroImage{ asset->{ _id, url } },
   paaQuestions[]{ question, answer },
   antiPitchHeadline, antiPitchItems[]{ disqualifier, explanation },
-  caseStudyTop->{ clientName, serviceType, isPlaceholder, summary, heroStat{ value, label } },
-  caseStudyBottom->{ clientName, serviceType, isPlaceholder, summary, heroStat{ value, label } },
+  caseStudyTop->{ clientName, serviceType, isPlaceholder, summary, heroStat{ value, label }, placeholderImage{ asset->{ _id, url } } },
+  caseStudyBottom->{ clientName, serviceType, isPlaceholder, summary, heroStat{ value, label }, placeholderImage{ asset->{ _id, url } } },
   capabilitiesHeadline, capabilitiesIntro,
   capabilities[]{ title, definition, description, icon },
   processSteps[]{ number, label, description },
@@ -223,6 +224,7 @@ export const SERVICES_HUB_QUERY = `
   *[_type == "servicesHub"][0]{
     heroHeadline, heroSubheadline, heroDescription,
     heroStats[]{ value, label },
+    heroImage{ asset->{ _id, url } },
     antiPitchHeadline, antiPitchItems[]{ disqualifier, explanation },
     routerHeadline, routerIntro,
     finalCtaHeadline, finalCtaBody
@@ -243,11 +245,12 @@ export type ServicePageData = {
   heroSubheadline?: string
   heroDescription?: string
   heroStats?: Array<{ value: string; label: string }>
+  heroImage?: { asset?: { _id: string; url: string } } | null
   paaQuestions?: Array<{ question: string; answer: string }>
   antiPitchHeadline?: string
   antiPitchItems?: Array<{ disqualifier: string; explanation?: string }>
-  caseStudyTop?: { clientName: string; isPlaceholder: boolean; summary: string; heroStat: { value: string; label: string } } | null
-  caseStudyBottom?: { clientName: string; isPlaceholder: boolean; summary: string; heroStat: { value: string; label: string } } | null
+  caseStudyTop?: { clientName: string; isPlaceholder: boolean; summary: string; heroStat: { value: string; label: string }; placeholderImage?: any } | null
+  caseStudyBottom?: { clientName: string; isPlaceholder: boolean; summary: string; heroStat: { value: string; label: string }; placeholderImage?: any } | null
   capabilitiesHeadline?: string
   capabilitiesIntro?: string
   capabilities?: Array<{ title: string; definition?: string; description?: string; icon?: string }>
@@ -269,6 +272,7 @@ export type ServicesHubData = {
   heroSubheadline?: string
   heroDescription?: string
   heroStats?: Array<{ value: string; label: string }>
+  heroImage?: { asset?: { _id: string; url: string } } | null
   antiPitchHeadline?: string
   antiPitchItems?: Array<{ disqualifier: string; explanation?: string }>
   routerHeadline?: string

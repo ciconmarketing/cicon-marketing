@@ -20,29 +20,45 @@ const {
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
-      <!-- Text -->
+      <!-- Text — avatar + headline/body in a flex row -->
       <div>
-        <div class="flex items-center gap-2 mb-3">
-          <span class="h-[1px] w-8" style="background:var(--accent)"></span>
-          <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Why CiCon</span>
-        </div>
-        <h2 class="text-3xl font-extrabold text-white mb-6">{headline}</h2>
-        <div class="space-y-4">
-          {body.split('\n\n').map((para) => (
-            <p class="text-base leading-relaxed" style="color:#b0b0bb">{para}</p>
-          ))}
-        </div>
-
-        {stats.length > 0 && (
-          <div class="grid grid-cols-3 gap-6 mt-10">
-            {stats.map((s) => (
-              <div class="border-l-2 pl-4" style="border-color:var(--accent)">
-                <div class="text-2xl font-extrabold text-white">{s.value}</div>
-                <div class="text-xs mt-0.5" style="color:#666">{s.label}</div>
-              </div>
-            ))}
+        <div class="eeat-author-row">
+          <!-- Circular Majid avatar -->
+          <div class="eeat-avatar-wrap flex-shrink-0">
+            <img
+              src="https://cicon.ca/wp-content/uploads/majid-behzad-headshot.jpg"
+              alt="Majid Behzad, Founder & Senior Strategist, CiCon Marketing"
+              class="eeat-avatar"
+              loading="lazy"
+              width="100" height="100"
+            />
           </div>
-        )}
+
+          <!-- Headline + body -->
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+              <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Why CiCon</span>
+            </div>
+            <h2 class="text-3xl font-extrabold text-white mb-6">{headline}</h2>
+            <div class="space-y-4">
+              {body.split('\n\n').map((para) => (
+                <p class="text-base leading-relaxed" style="color:#b0b0bb">{para}</p>
+              ))}
+            </div>
+
+            {stats.length > 0 && (
+              <div class="grid grid-cols-3 gap-6 mt-10">
+                {stats.map((s) => (
+                  <div class="border-l-2 pl-4" style="border-color:var(--accent)">
+                    <div class="text-2xl font-extrabold text-white">{s.value}</div>
+                    <div class="text-xs mt-0.5" style="color:#666">{s.label}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       <!-- Majid bio card -->
@@ -100,3 +116,29 @@ const {
     </div>
   </div>
 </section>
+
+<style>
+  .eeat-author-row {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+  }
+  .eeat-avatar {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    display: block;
+  }
+  @media (max-width: 767px) {
+    .eeat-author-row {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .eeat-avatar {
+      width: 80px;
+      height: 80px;
+    }
+  }
+</style>

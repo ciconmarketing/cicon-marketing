@@ -2,12 +2,16 @@
 /**
  * MiniCaseStudy — compact proof card. Dark accent card on light background.
  * Used twice per spoke page: top (near hero) and bottom (near FAQ).
+ * Card layout: image left (200px sq desktop), text right. Mobile: image top, text below.
  */
+import PlaceholderImage from '../PlaceholderImage.astro'
+
 interface CaseStudy {
   clientName: string
   isPlaceholder: boolean
   summary: string
   heroStat: { value: string; label: string }
+  placeholderImage?: any
 }
 interface Props {
   caseStudy: CaseStudy | null | undefined
@@ -21,34 +25,92 @@ if (!caseStudy) return
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
     <div
-      class="relative overflow-hidden rounded-2xl p-8 sm:p-10 flex flex-col sm:flex-row gap-8 items-start"
+      class="relative overflow-hidden rounded-2xl"
       style="background:var(--shadow)"
     >
       <!-- Gold accent bar -->
       <div class="absolute top-0 left-0 right-0 h-[3px]" style="background:var(--accent)"></div>
 
-      <!-- Stat block -->
-      <div class="flex-shrink-0 text-center sm:text-left">
-        <div class="text-5xl font-extrabold" style="color:var(--action)">{caseStudy.heroStat.value}</div>
-        <div class="text-sm mt-1" style="color:#888">{caseStudy.heroStat.label}</div>
-        {caseStudy.isPlaceholder && (
-          <div class="mt-2 text-xs px-2 py-0.5 rounded-full inline-block" style="background:#333;color:#666">
-            Placeholder
-          </div>
-        )}
-      </div>
+      <!-- Card body: image left, content right -->
+      <div class="mini-cs-card">
 
-      <!-- Content -->
-      <div class="flex-1">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">
-            {position === 'top' ? 'Client Result' : 'Another Result'}
-          </span>
+        <!-- Image slot -->
+        <div class="mini-cs-image">
+          <PlaceholderImage
+            src={caseStudy.placeholderImage}
+            alt={`Case study — ${caseStudy.clientName}`}
+            fieldName={`placeholderImage — ${caseStudy?.clientName ?? 'Client'}`}
+            aspectRatio="1:1"
+            variant="case-study"
+            fallback="stock"
+          />
         </div>
-        <p class="text-base leading-relaxed" style="color:#b0b0bb">{caseStudy.summary}</p>
-        <p class="text-sm mt-3 font-medium" style="color:#555">{caseStudy.clientName}</p>
+
+        <!-- Text content -->
+        <div class="mini-cs-content p-8 sm:p-10">
+          <!-- Stat block -->
+          <div class="mb-5">
+            <div class="text-5xl font-extrabold" style="color:var(--action)">{caseStudy.heroStat.value}</div>
+            <div class="text-sm mt-1" style="color:#888">{caseStudy.heroStat.label}</div>
+            {caseStudy.isPlaceholder && (
+              <div class="mt-2 text-xs px-2 py-0.5 rounded-full inline-block" style="background:#333;color:#666">
+                Placeholder
+              </div>
+            )}
+          </div>
+
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">
+              {position === 'top' ? 'Client Result' : 'Another Result'}
+            </span>
+          </div>
+          <p class="text-base leading-relaxed" style="color:#b0b0bb">{caseStudy.summary}</p>
+          <p class="text-sm mt-3 font-medium" style="color:#555">{caseStudy.clientName}</p>
+        </div>
+
       </div>
     </div>
 
   </div>
 </section>
+
+<style>
+  .mini-cs-card {
+    display: flex;
+    flex-direction: column;
+  }
+  .mini-cs-image {
+    width: 100%;
+    overflow: hidden;
+  }
+  .mini-cs-image :global(img),
+  .mini-cs-image :global(.cicon-placeholder) {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+  }
+  @media (min-width: 640px) {
+    .mini-cs-card {
+      flex-direction: row;
+      align-items: stretch;
+    }
+    .mini-cs-image {
+      width: 200px;
+      flex-shrink: 0;
+    }
+    .mini-cs-image :global(img),
+    .mini-cs-image :global(.cicon-placeholder) {
+      width: 200px;
+      height: 100%;
+      min-height: 200px;
+    }
+    /* Override padding-bottom ratio trick for fixed-size image column */
+    .mini-cs-image :global(.cicon-placeholder) {
+      padding-bottom: 0 !important;
+      position: relative !important;
+    }
+    .mini-cs-content {
+      flex: 1;
+    }
+  }
+</style>
