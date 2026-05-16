@@ -1,5 +1,13 @@
 import type { HomepageData } from './types';
 
+export const CTA = {
+  text: "Chat on WhatsApp",
+  link: "https://wa.me/16475840800",
+  colorOnLight: "var(--whatsapp-bright)",
+  colorOnDark:  "var(--whatsapp-deep)",
+  iconColor:    "white",
+};
+
 export const defaultHomepageData: HomepageData = {
   hero: {
     headline: "Your marketing isn't broken.\nYour lead system is leaking.",

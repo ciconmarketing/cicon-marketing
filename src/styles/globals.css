@@ -3,6 +3,12 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --whatsapp-bright: #25D366;
+    --whatsapp-deep: #128C7E;
+    --whatsapp-bright-hover: #1FB855;
+    --whatsapp-deep-hover: #0E6E63;
+  }
   html {
     scroll-behavior: smooth;
   }
