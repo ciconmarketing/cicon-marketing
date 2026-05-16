@@ -33,9 +33,9 @@ export const ORG_CICON = {
     postalCode: 'L4C 5E1',
     addressCountry: 'CA',
   },
-  telephone: '+1-647-584-0800',
+  telephone: '+1-289-807-1020',
   email: 'info@cicon.ca',
-  sameAs: ['https://www.facebook.com/ciconmarketing/','https://www.instagram.com/ciconmktg/','https://linkedin.com/company/cicon-marketing/'],
+  sameAs: ['https://www.facebook.com/ciconmarketing/','https://www.instagram.com/ciconmktg/','https://linkedin.com/company/cicon-marketing/','https://www.youtube.com/@CiConMarketing'],
 } as const
 
 /** Update this number in one place — it propagates to all service page AggregateRating schemas. */
