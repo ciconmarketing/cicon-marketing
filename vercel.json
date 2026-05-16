@@ -26,6 +26,8 @@
     { "source": "/social-media-marketing/",           "destination": "/services/social/",    "permanent": true },
     { "source": "/social-media-marketing",            "destination": "/services/social/",    "permanent": true },
     { "source": "/website-landing-page-development/", "destination": "/services/web-dev/",   "permanent": true },
-    { "source": "/website-landing-page-development",  "destination": "/services/web-dev/",   "permanent": true }
+    { "source": "/website-landing-page-development",  "destination": "/services/web-dev/",   "permanent": true },
+    { "source": "/marketing-services/website-development/", "destination": "/services/web-dev/", "permanent": true },
+    { "source": "/marketing-services/website-development",  "destination": "/services/web-dev/", "permanent": true }
   ]
 }
