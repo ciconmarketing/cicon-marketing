@@ -7,6 +7,8 @@
  */
 import { getAllServicePages, getServicesHub } from '../../lib/sanity'
 import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON, REVIEW_COUNT } from '../../lib/schema-constants'
+import Nav              from '../../components/Nav.astro'
+import Footer           from '../../components/Footer.astro'
 import AntiPitch        from '../../components/services/AntiPitch.astro'
 import ProcessStrip     from '../../components/services/ProcessStrip.astro'
 import EeatBlock        from '../../components/services/EeatBlock.astro'
@@ -139,8 +141,10 @@ const jsonLd = {
 
 <body>
 
+  <Nav />
+
   <!-- ── Hub Hero ──────────────────────────────────────────────────────────── -->
-  <section class="relative overflow-hidden" style="background:var(--shadow);padding:120px 0 80px">
+  <section class="relative overflow-hidden" style="background:var(--shadow);padding:80px 0 80px">
     <div class="absolute inset-0 opacity-[0.04]"
       style="background-image:linear-gradient(var(--accent) 1px,transparent 1px),linear-gradient(90deg,var(--accent) 1px,transparent 1px);background-size:60px 60px">
     </div>
@@ -338,6 +342,8 @@ const jsonLd = {
     headline={hub?.finalCtaHeadline}
     body={hub?.finalCtaBody}
   />
+
+  <Footer />
 
 </body>
 </html>

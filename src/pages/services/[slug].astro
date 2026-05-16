@@ -8,8 +8,9 @@
  */
 import { getServicePage, ALL_SERVICE_SLUGS_QUERY } from '../../lib/sanity'
 import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON, REVIEW_COUNT } from '../../lib/schema-constants'
+import Nav                 from '../../components/Nav.astro'
+import Footer              from '../../components/Footer.astro'
 import ServiceHero         from '../../components/services/ServiceHero.astro'
-import StickyConversionBar from '../../components/services/StickyConversionBar.astro'
 import PaaBlock            from '../../components/services/PaaBlock.astro'
 import AntiPitch           from '../../components/services/AntiPitch.astro'
 import MiniCaseStudy       from '../../components/services/MiniCaseStudy.astro'
@@ -138,8 +139,6 @@ const jsonLd = {
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Inter', sans-serif; background: var(--off-white); color: var(--charcoal); }
     h1, h2, h3, h4, h5, h6 { font-family: 'Montserrat', sans-serif; }
-    /* Mobile bottom bar clearance */
-    @media (max-width: 767px) { body { padding-bottom: 60px; } }
     /* FAQ summary marker removal */
     details > summary { list-style: none; }
     details > summary::-webkit-details-marker { display: none; }
@@ -152,6 +151,8 @@ const jsonLd = {
 
 <body>
 
+  <Nav />
+
   <ServiceHero
     badge={page.heroBadge}
     headline={page.heroHeadline}
@@ -161,8 +162,6 @@ const jsonLd = {
     serviceName={page.title}
     heroImage={page.heroImage}
   />
-
-  <StickyConversionBar serviceName={page.title} />
 
   {page.paaQuestions?.length && (
     <PaaBlock questions={page.paaQuestions} />
@@ -224,6 +223,8 @@ const jsonLd = {
     body={page.finalCtaBody}
     serviceName={page.title}
   />
+
+  <Footer />
 
 </body>
 </html>

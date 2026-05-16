@@ -25,8 +25,15 @@ export const ORG_CICON = {
   foundingDate: '2018',
   founder: { '@id': 'https://cicon.ca/#majid-behzad' },
   areaServed: { '@type': 'AdministrativeArea', name: 'Greater Toronto Area' },
-  address: { '@type': 'PostalAddress', streetAddress: '131 Golf Club Crt', addressLocality: 'Richmond Hill', addressRegion: 'ON', addressCountry: 'CA' },
-  telephone: '+1-289-807-1020',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '131 Golf Club Ct',
+    addressLocality: 'Richmond Hill',
+    addressRegion: 'ON',
+    postalCode: 'L4C 5E1',
+    addressCountry: 'CA',
+  },
+  telephone: '+1-647-584-0800',
   email: 'info@cicon.ca',
   sameAs: ['https://www.facebook.com/ciconmarketing/','https://www.instagram.com/ciconmktg/','https://linkedin.com/company/cicon-marketing/'],
 } as const

@@ -4,7 +4,8 @@
 
 <header
   id="site-nav"
-  class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white/95 backdrop-blur-sm"
+  class="sticky top-0 z-50 transition-all duration-300"
+  style="background:#FAFAFA;border-bottom:1px solid #E7E7E7;"
 >
   <div class="container-xl">
     <nav class="flex items-center justify-between h-16 md:h-20">
@@ -125,11 +126,10 @@
   });
 
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 20) {
-      nav.classList.add('shadow-md');
-      nav.classList.remove('shadow-none');
+    if (window.scrollY > 100) {
+      nav.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)';
     } else {
-      nav.classList.remove('shadow-md');
+      nav.style.boxShadow = 'none';
     }
   }, { passive: true });
 </script>

@@ -93,7 +93,7 @@ export default function HeroClient({ data }: Props) {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center overflow-hidden pt-16"
+      className="relative min-h-screen flex items-center overflow-hidden"
       style={{ background: "linear-gradient(135deg, #212129 0%, #1a1a22 50%, #0e1a1a 100%)" }}
     >
       {/* Ambient glow */}
