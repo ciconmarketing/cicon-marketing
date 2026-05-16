@@ -1,5 +1,6 @@
 ---
-// No props – Nav is static
+import { SERVICES_NAV } from '../lib/services-nav'
+// No other props – Nav is static
 ---
 
 <header
@@ -20,9 +21,41 @@
       </a>
 
       <!-- Desktop Nav Links -->
-      <ul class="hidden md:flex items-center gap-8">
+      <ul class="hidden md:flex items-center gap-8" style="list-style:none;margin:0;padding:0;">
+
+        <!-- Services dropdown item -->
+        <li class="nav-item nav-item--has-dropdown" data-mobile-accordion>
+          <a href="/services/" class="nav-link text-gray-600 hover:text-teal-600 font-medium text-sm transition-colors duration-150 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-teal-600 after:transition-all hover:after:w-full inline-flex items-center" aria-haspopup="true" aria-expanded="false">
+            Services
+            <svg class="nav-caret" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                 aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </a>
+          <div class="nav-dropdown" role="menu" aria-label="Services menu">
+            <ul class="nav-dropdown-list" style="list-style:none;margin:0;padding:0;">
+              {SERVICES_NAV.map((service) => (
+                <li role="none">
+                  <a href={`/services/${service.slug}/`} class="nav-dropdown-item" role="menuitem">
+                    <span class="nav-dropdown-icon" aria-hidden="true">{service.icon}</span>
+                    <span class="nav-dropdown-label">{service.title}</span>
+                    {service.isFlagship && <span class="nav-dropdown-badge">Flagship</span>}
+                  </a>
+                </li>
+              ))}
+              <li role="separator" class="nav-dropdown-divider"></li>
+              <li role="none">
+                <a href="/services/" class="nav-dropdown-viewall" role="menuitem">
+                  View all services →
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+        <!-- Other desktop nav links -->
         {[
-          { href: '#services', label: 'Services' },
           { href: '#who-we-serve', label: 'Who We Serve' },
           { href: '#how-it-works', label: 'Process' },
           { href: '#why-cicon', label: 'Why CiCon' },
@@ -78,7 +111,32 @@
     class="hidden md:hidden bg-white border-t border-gray-100 shadow-lg"
   >
     <div class="container-xl py-4 flex flex-col gap-1">
-      <a href="#services" class="px-4 py-3 text-gray-700 hover:text-teal-600 hover:bg-teal-50 rounded-xl font-medium transition-colors">Services</a>
+
+      <!-- Services accordion item (mobile) -->
+      <div class="mobile-accordion-item" data-mobile-accordion>
+        <a href="/services/" class="nav-link mobile-services-link px-4 py-3 text-gray-700 hover:text-teal-600 hover:bg-teal-50 rounded-xl font-medium transition-colors flex items-center justify-between" aria-haspopup="true" aria-expanded="false">
+          Services
+          <svg class="nav-caret w-4 h-4" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+               aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </a>
+        <div class="mobile-services-dropdown" role="menu" aria-label="Services menu">
+          {SERVICES_NAV.map((service) => (
+            <a href={`/services/${service.slug}/`} class="mobile-dropdown-item" role="menuitem">
+              <span aria-hidden="true">{service.icon}</span>
+              <span>{service.title}</span>
+              {service.isFlagship && <span class="nav-dropdown-badge">Flagship</span>}
+            </a>
+          ))}
+          <div class="nav-dropdown-divider" style="margin:6px 8px;"></div>
+          <a href="/services/" class="nav-dropdown-viewall mobile-viewall" role="menuitem">
+            View all services →
+          </a>
+        </div>
+      </div>
+
       <a href="#who-we-serve" class="px-4 py-3 text-gray-700 hover:text-teal-600 hover:bg-teal-50 rounded-xl font-medium transition-colors">Who We Serve</a>
       <a href="#how-it-works" class="px-4 py-3 text-gray-700 hover:text-teal-600 hover:bg-teal-50 rounded-xl font-medium transition-colors">Process</a>
       <a href="#why-cicon" class="px-4 py-3 text-gray-700 hover:text-teal-600 hover:bg-teal-50 rounded-xl font-medium transition-colors">Why CiCon</a>
@@ -102,6 +160,118 @@
   </div>
 </header>
 
+<style>
+  /* ── Services dropdown ─────────────────────────────── */
+  .nav-item { position: relative; }
+
+  .nav-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 320px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    padding: 8px;
+    z-index: 100;
+  }
+
+  .nav-caret {
+    display: inline-block;
+    margin-left: 4px;
+    vertical-align: middle;
+    transition: transform 0.18s ease;
+  }
+
+  /* Desktop: hover/focus-within reveals dropdown */
+  @media (min-width: 1024px) {
+    .nav-dropdown {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-4px);
+      transition: opacity 0.18s ease, transform 0.18s ease, visibility 0s linear 0.18s;
+    }
+    .nav-item--has-dropdown:hover .nav-dropdown,
+    .nav-item--has-dropdown:focus-within .nav-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+    .nav-item--has-dropdown:hover .nav-caret,
+    .nav-item--has-dropdown:focus-within .nav-caret {
+      transform: rotate(180deg);
+    }
+  }
+
+  /* Mobile: accordion */
+  .mobile-services-dropdown {
+    display: none;
+    padding: 4px 0 4px 8px;
+    margin-top: 4px;
+  }
+  .mobile-accordion-item.is-open .mobile-services-dropdown { display: block; }
+  .mobile-accordion-item.is-open .nav-caret { transform: rotate(180deg); }
+
+  /* Dropdown items */
+  .nav-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    color: #3A3A3A;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+  .nav-dropdown-item:hover { background: #E7E7E7; color: #000; }
+  .nav-dropdown-icon { font-size: 18px; width: 22px; text-align: center; flex-shrink: 0; }
+  .nav-dropdown-label { flex: 1; }
+  .nav-dropdown-badge {
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #9D833E;
+    background: rgba(157,131,62,0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .nav-dropdown-divider { height: 1px; background: #E7E7E7; margin: 6px 4px; }
+  .nav-dropdown-viewall {
+    display: block;
+    padding: 10px 14px;
+    border-radius: 8px;
+    color: #9D833E;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .nav-dropdown-viewall:hover { background: #E7E7E7; }
+
+  /* Mobile dropdown items */
+  .mobile-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: #3A3A3A;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+  .mobile-dropdown-item:hover { background: #f0fdfa; color: #0d9488; }
+  .mobile-viewall {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+</style>
+
 <script>
   const btn = document.getElementById('mobile-menu-btn')!;
   const menu = document.getElementById('mobile-menu')!;
@@ -117,7 +287,7 @@
     btn.setAttribute('aria-expanded', String(!isOpen));
   });
 
-  menu.querySelectorAll('a').forEach(link => {
+  menu.querySelectorAll('a:not(.mobile-services-link):not(.mobile-dropdown-item):not(.mobile-viewall)').forEach(link => {
     link.addEventListener('click', () => {
       menu.classList.add('hidden');
       menuIcon.classList.remove('hidden');
@@ -132,4 +302,46 @@
       nav.style.boxShadow = 'none';
     }
   }, { passive: true });
+
+  // Services dropdown: mobile accordion + Escape key
+  (function() {
+    // Mobile accordion for the mobile menu's services item
+    document.querySelectorAll('[data-mobile-accordion] .nav-link').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        if (window.matchMedia('(max-width: 1023px)').matches) {
+          var parent = (link as HTMLElement).closest('[data-mobile-accordion]');
+          if (!parent) return;
+          var isOpen = parent.classList.contains('is-open');
+          if (!isOpen) {
+            e.preventDefault();
+            parent.classList.add('is-open');
+            link.setAttribute('aria-expanded', 'true');
+          }
+          // Second tap: let the link follow normally
+        }
+      });
+    });
+
+    // Escape key closes dropdown
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('[data-mobile-accordion]').forEach(function(item) {
+          item.classList.remove('is-open');
+          var link = item.querySelector('.nav-link');
+          if (link) link.setAttribute('aria-expanded', 'false');
+        });
+      }
+    });
+
+    // Click outside closes dropdown on desktop
+    document.addEventListener('click', function(e) {
+      if (!(e.target as HTMLElement).closest('[data-mobile-accordion]')) {
+        document.querySelectorAll('[data-mobile-accordion]').forEach(function(item) {
+          item.classList.remove('is-open');
+          var link = item.querySelector('.nav-link');
+          if (link) link.setAttribute('aria-expanded', 'false');
+        });
+      }
+    });
+  })();
 </script>
