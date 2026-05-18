@@ -2,7 +2,15 @@
 // ContactForm.astro
 // Self-contained multi-step lead qualification form (vanilla JS, no React dep)
 // Pre-selection from hero: listen for custom event cicon:preselect with detail.type = "dental" | "local"
+// Props:
+//   source      — optional string injected as hidden field (e.g. "Google Map Visibility Audit")
+//   submitLabel — optional override for submit button text (default "Send it →")
 const FORM_ENDPOINT = "REPLACE_WITH_GHL_WEBHOOK_OR_API";
+interface Props {
+  source?: string;
+  submitLabel?: string;
+}
+const { source = '', submitLabel = 'Send it' } = Astro.props;
 ---
 
 <section id="contact-form" style="scroll-margin-top:80px;">
@@ -250,8 +258,8 @@ const FORM_ENDPOINT = "REPLACE_WITH_GHL_WEBHOOK_OR_API";
         <button type="button" class="btn-back">
           <span aria-hidden="true">←</span> Back
         </button>
-        <button type="submit" id="btn-submit" class="btn-submit">
-          Send it <span aria-hidden="true">→</span>
+        <button type="submit" id="btn-submit" class="btn-submit" data-event="audit_form_submit">
+          {submitLabel} <span aria-hidden="true">→</span>
         </button>
       </div>
       <p style="font-size:12px;color:#999;margin:16px 0 0;text-align:center;line-height:1.5;">
@@ -259,6 +267,8 @@ const FORM_ENDPOINT = "REPLACE_WITH_GHL_WEBHOOK_OR_API";
       </p>
     </div>
 
+    <!-- Hidden source tag — injected via prop, picked up by form submit handler -->
+    {source && <input type="hidden" name="source" value={source} />}
   </form>
 </section>
 
@@ -626,6 +636,9 @@ const FORM_ENDPOINT = "REPLACE_WITH_GHL_WEBHOOK_OR_API";
       formData.phone     = (document.getElementById('phone')).value.trim();
       formData.website   = (document.getElementById('website')).value.trim();
       formData.message   = (document.getElementById('message')).value.trim();
+      // Source tag (set via hidden field from ContactForm prop)
+      var sourceField = document.querySelector('input[name="source"]');
+      if (sourceField) formData.source = sourceField.value;
 
       gtag('event', 'contact_form_submit');
       gtag('event', 'contact_form_step_complete', { step: 4 });
