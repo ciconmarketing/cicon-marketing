@@ -82,9 +82,9 @@ const jsonLd = {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{hub?.heroHeadline ?? 'Digital Marketing Services'} | CiCon Marketing — GTA</title>
-  <meta name="description" content={hub?.heroDescription ?? 'Boutique digital marketing services for GTA businesses and dental clinics. Paid ads, SEO, social media, web development, and more.'} />
-  <link rel="canonical" href="https://cicon.ca/services/" />
+  <title>{hub?.metaTitle ?? `${hub?.heroHeadline ?? 'Digital Marketing Services'} | CiCon Marketing — GTA`}</title>
+  <meta name="description" content={hub?.metaDescription ?? hub?.heroDescription ?? 'Boutique digital marketing services for GTA businesses and dental clinics. Paid ads, SEO, social media, web development, and more.'} />
+  <link rel="canonical" href={hub?.canonical ?? 'https://cicon.ca/services/'} />
   {isPreview
     ? <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
     : <meta name="robots" content="index, follow" />
@@ -158,7 +158,7 @@ const jsonLd = {
         <div class="hub-hero-text">
           <div class="inline-flex items-center gap-2 mb-6">
             <span class="h-[1px] w-8" style="background:var(--accent)"></span>
-            <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Full-Service Marketing</span>
+            <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">{hub?.heroBadge ?? 'Full-Service Marketing'}</span>
           </div>
           <h1 class="text-5xl lg:text-6xl font-extrabold leading-[1.1] text-white mb-5">
             {hub?.heroHeadline ?? 'Every service your business needs to grow'}
@@ -221,7 +221,8 @@ const jsonLd = {
           <span class="h-[1px] w-8" style="background:var(--accent)"></span>
           <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Our Services</span>
         </div>
-        <h2 class="text-3xl font-extrabold" style="color:var(--black)">8 services. One senior strategist.</h2>
+        <h2 class="text-3xl font-extrabold" style="color:var(--black)">{hub?.servicesGridHeadline ?? '8 services. One senior strategist.'}</h2>
+        {hub?.servicesGridSubhead && <p class="text-lg mt-2" style="color:var(--charcoal)">{hub.servicesGridSubhead}</p>}
       </div>
 
       {sortedServices.length > 0 ? (
@@ -329,7 +330,7 @@ const jsonLd = {
         <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Reviews</span>
         <span class="h-[1px] w-8" style="background:var(--accent)"></span>
       </div>
-      <h2 class="text-3xl font-extrabold mb-4" style="color:var(--black)">5.0 stars across {REVIEW_COUNT}+ reviews</h2>
+      <h2 class="text-3xl font-extrabold mb-4" style="color:var(--black)">{hub?.reviewsHeadline ?? `5.0 stars across ${REVIEW_COUNT}+ reviews`}</h2>
       <p class="text-base mb-8" style="color:var(--charcoal)">Trustindex widget — integrated separately.</p>
       <!-- Trustindex widget slot -->
       <div id="trustindex-widget" class="min-h-[200px] rounded-2xl border flex items-center justify-center" style="border-color:var(--alabaster);background:var(--off-white)">

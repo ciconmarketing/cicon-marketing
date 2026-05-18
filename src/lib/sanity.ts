@@ -222,12 +222,25 @@ export const SERVICE_PAGE_QUERY = `
 
 export const SERVICES_HUB_QUERY = `
   *[_type == "servicesHub"][0]{
+    title, status,
+    metaTitle, metaDescription, canonical,
+    ogImage{ asset->{ _id, url } },
+    ogTitle, ogDescription, twitterCardType,
+    robotsIndex, robotsFollow,
+    heroBadge,
     heroHeadline, heroSubheadline, heroDescription,
-    heroStats[]{ value, label },
     heroImage{ asset->{ _id, url } },
-    antiPitchHeadline, antiPitchItems[]{ disqualifier, explanation },
+    heroStats[]{ value, label },
+    heroPrimaryCtaLabel, heroPrimaryCtaUrl,
+    heroSecondaryCtaLabel, heroSecondaryCtaUrl,
+    servicesGridHeadline, servicesGridSubhead,
     routerHeadline, routerIntro,
-    finalCtaHeadline, finalCtaBody
+    antiPitchHeadline, antiPitchItems[]{ disqualifier, explanation },
+    reviewsHeadline,
+    finalCtaHeadline, finalCtaBody,
+    finalCtaPrimaryLabel, finalCtaPrimaryUrl,
+    footerCtaOverride{ headline, body, ctaLabel, ctaUrl },
+    schemaType, customJsonLd
   }
 `
 
@@ -268,17 +281,41 @@ export type ServicePageData = {
 }
 
 export type ServicesHubData = {
+  title?: string
+  status?: string
+  metaTitle?: string
+  metaDescription?: string
+  canonical?: string
+  ogImage?: { asset?: { _id: string; url: string } } | null
+  ogTitle?: string
+  ogDescription?: string
+  twitterCardType?: string
+  robotsIndex?: boolean
+  robotsFollow?: boolean
+  heroBadge?: string
   heroHeadline?: string
   heroSubheadline?: string
   heroDescription?: string
-  heroStats?: Array<{ value: string; label: string }>
   heroImage?: { asset?: { _id: string; url: string } } | null
-  antiPitchHeadline?: string
-  antiPitchItems?: Array<{ disqualifier: string; explanation?: string }>
+  heroStats?: Array<{ value: string; label: string }>
+  heroPrimaryCtaLabel?: string
+  heroPrimaryCtaUrl?: string
+  heroSecondaryCtaLabel?: string
+  heroSecondaryCtaUrl?: string
+  servicesGridHeadline?: string
+  servicesGridSubhead?: string
   routerHeadline?: string
   routerIntro?: string
+  antiPitchHeadline?: string
+  antiPitchItems?: Array<{ disqualifier: string; explanation?: string }>
+  reviewsHeadline?: string
   finalCtaHeadline?: string
   finalCtaBody?: string
+  finalCtaPrimaryLabel?: string
+  finalCtaPrimaryUrl?: string
+  footerCtaOverride?: { headline?: string; body?: string; ctaLabel?: string; ctaUrl?: string } | null
+  schemaType?: string
+  customJsonLd?: string
 }
 
 export async function getServicePage(slug: string): Promise<ServicePageData | null> {
