@@ -1,0 +1,760 @@
+---
+/**
+ * /about-us/ — CiCon Marketing About page (2026, production-ready)
+ * 11 sections per brief: Hero → Why we exist → AI transparency →
+ * Stack → Proof → Process → Values → Dental callout →
+ * Local anchor → FAQ → Final CTA
+ */
+import Nav    from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON } from '../lib/schema-constants';
+import '../styles/globals.css';
+
+const isPreview = import.meta.env.VERCEL_ENV !== 'production';
+const canonicalUrl = 'https://cicon.ca/about-us/';
+
+// ── FAQ data ──────────────────────────────────────────────────────────────────
+const faqs = [
+  {
+    question: 'Why work with a boutique agency instead of a large one?',
+    answer: 'Large agencies spread attention across hundreds of accounts. At CiCon, every account gets a senior strategist — not a junior coordinator running templated playbooks. You\'re getting direct access to the people who built the systems, not an account manager reading from a dashboard. Smaller roster means faster pivots and real ownership of your results.',
+  },
+  {
+    question: 'How does CiCon use AI in client work?',
+    answer: 'We use AI where it compounds speed without sacrificing accuracy: keyword research, content production at scale, predictive analytics, and reporting automation. We\'re transparent about this because it\'s how we keep customer acquisition costs down for clients. Human judgment drives every strategy call, creative brief, and quarterly review — AI accelerates the groundwork.',
+  },
+  {
+    question: 'What\'s included in your reporting?',
+    answer: 'Quarterly business reviews covering traffic, rankings, lead volume, cost per acquisition, and channel ROI — not vanity metrics. You\'ll see what moved, what didn\'t, and what the next 90 days look like. We don\'t hide underperformance in monthly micro-reports; we surface it, explain it, and fix it.',
+  },
+  {
+    question: 'Do you work with clinics and businesses outside the GTA?',
+    answer: 'Our core geography is the Greater Toronto Area — Richmond Hill, Toronto, Markham, Vaughan, Mississauga, and surrounding communities. Local context is central to how we build campaigns. For dental clinics specifically, we\'ve worked with practices across Ontario; reach out and we\'ll tell you honestly if it\'s a fit.',
+  },
+  {
+    question: 'How quickly do you respond to clients?',
+    answer: 'Within the next business hour for anything urgent, and same business day for general questions. You\'ll have a direct WhatsApp line to your strategist — not a ticket queue. We built our response commitment into the engagement from day one because delayed communication kills momentum.',
+  },
+  {
+    question: 'What size businesses do you typically work with?',
+    answer: 'Local service businesses and professional practices doing between $500K and $10M in annual revenue who are serious about growth infrastructure. That includes dental clinics, healthcare practices, home services, and B2B service firms across the GTA. We\'re not set up for e-commerce or venture-backed startups — that\'s a different playbook.',
+  },
+];
+
+// ── JSON-LD schemas ────────────────────────────────────────────────────────────
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    // Organization
+    ORG_CICON,
+    // Person
+    PERSON_MAJID,
+    // WebSite
+    WEBSITE_CICON,
+    // LocalBusiness
+    {
+      '@type': 'LocalBusiness',
+      '@id': 'https://cicon.ca/#localbusiness',
+      name: 'CiCon Marketing',
+      url: 'https://cicon.ca/',
+      image: 'https://cicon.ca/ciconlogofinal.png',
+      telephone: '+1-289-807-1020',
+      email: 'info@cicon.ca',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: '131 Golf Club Ct',
+        addressLocality: 'Richmond Hill',
+        addressRegion: 'ON',
+        postalCode: 'L4C 5E1',
+        addressCountry: 'CA',
+      },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: 43.8828,
+        longitude: -79.4403,
+      },
+      areaServed: [
+        { '@type': 'City', name: 'Richmond Hill' },
+        { '@type': 'City', name: 'Toronto' },
+        { '@type': 'City', name: 'Markham' },
+        { '@type': 'City', name: 'Vaughan' },
+        { '@type': 'City', name: 'Mississauga' },
+        { '@type': 'AdministrativeArea', name: 'Greater Toronto Area' },
+      ],
+      openingHoursSpecification: [
+        { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday'], opens: '09:00', closes: '18:00' },
+      ],
+      sameAs: ORG_CICON.sameAs,
+    },
+    // WebPage
+    {
+      '@type': 'AboutPage',
+      '@id': `${canonicalUrl}#webpage`,
+      url: canonicalUrl,
+      name: 'About CiCon Marketing | Boutique Digital Agency in Richmond Hill, GTA',
+      description: 'Boutique digital marketing studio based in Richmond Hill, building AI-augmented growth systems for GTA businesses and dental clinics.',
+      isPartOf: { '@id': 'https://cicon.ca/#website' },
+      breadcrumb: { '@id': `${canonicalUrl}#breadcrumb` },
+      inLanguage: 'en-CA',
+    },
+    // BreadcrumbList
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${canonicalUrl}#breadcrumb`,
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home',  item: 'https://cicon.ca/' },
+        { '@type': 'ListItem', position: 2, name: 'About', item: canonicalUrl },
+      ],
+    },
+    // FAQPage
+    {
+      '@type': 'FAQPage',
+      '@id': `${canonicalUrl}#faq`,
+      mainEntity: faqs.map(f => ({
+        '@type': 'Question',
+        name: f.question,
+        acceptedAnswer: { '@type': 'Answer', text: f.answer },
+      })),
+    },
+  ],
+};
+---
+
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Primary meta -->
+  <title>About CiCon Marketing | Boutique Digital Agency in Richmond Hill, GTA</title>
+  <meta name="description" content="CiCon is a boutique AI-augmented digital marketing studio in Richmond Hill, GTA — building compounding growth systems for local businesses and dental clinics." />
+  <link rel="canonical" href={canonicalUrl} />
+  {isPreview
+    ? <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+    : <meta name="robots" content="index, follow" />
+  }
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content={canonicalUrl} />
+  <meta property="og:title"       content="About CiCon Marketing | Boutique Digital Agency in Richmond Hill, GTA" />
+  <meta property="og:description" content="Boutique AI-augmented marketing studio in Richmond Hill building compounding growth systems for GTA businesses and dental clinics." />
+  <meta property="og:image"       content="https://cicon.ca/og-image.jpg" />
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Brand tokens -->
+  <style>
+    :root {
+      --action:      #FFCF00;
+      --accent:      #9D833E;
+      --shadow:      #212129;
+      --alabaster:   #E7E7E7;
+      --off-white:   #FAFAFA;
+      --charcoal:    #3A3A3A;
+      --wa-bright:   #25D366;
+      --wa-deep:     #128C7E;
+      --wa-bright-h: #1FB855;
+      --wa-deep-h:   #0E6E63;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Inter', sans-serif; background: var(--off-white); color: var(--charcoal); }
+    h1,h2,h3,h4,h5,h6 { font-family: 'Inter', sans-serif; }
+    /* FAQ details/summary reset */
+    details > summary { list-style: none; cursor: pointer; }
+    details > summary::-webkit-details-marker { display: none; }
+  </style>
+</head>
+
+<body>
+
+  <Nav />
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       SECTION 1 — HERO
+       ═════════════════════════════════════════════════════════════════════ -->
+  <section
+    aria-labelledby="about-h1"
+    style="background:var(--shadow);padding:120px 0 100px;position:relative;overflow:hidden;"
+  >
+    <!-- Geometric amber accent: top-right corner shape -->
+    <div
+      aria-hidden="true"
+      style="position:absolute;top:0;right:0;width:340px;height:340px;background:var(--action);clip-path:polygon(100% 0,100% 100%,0 0);opacity:0.08;pointer-events:none;"
+    ></div>
+    <!-- Amber accent rule — left edge of headline -->
+    <div
+      aria-hidden="true"
+      style="position:absolute;top:0;left:0;width:4px;height:100%;background:var(--action);opacity:0.5;"
+    ></div>
+
+    <div class="container-xl" style="position:relative;z-index:1;">
+      <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--action);margin:0 0 20px;">
+        About CiCon Marketing
+      </p>
+
+      <h1
+        id="about-h1"
+        style="font-size:clamp(2rem,4.5vw,3.75rem);font-weight:900;color:#fff;line-height:1.08;letter-spacing:-0.025em;max-width:880px;margin:0 0 28px;"
+      >
+        A boutique GTA marketing studio building AI-augmented growth systems for local businesses and dental clinics.
+      </h1>
+
+      <p style="font-size:clamp(1rem,1.8vw,1.2rem);color:rgba(255,255,255,0.65);line-height:1.65;max-width:600px;margin:0 0 44px;">
+        Operating across the Greater Toronto Area since [LEAVE_BRACKETED_FOR_REVIEW] — founded by a Google-certified strategist with a Master's in Engineering and 15+ years building data-driven growth systems.
+      </p>
+
+      <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;">
+        <!-- Primary CTA: WhatsApp -->
+        <a
+          href="https://wa.me/16475840800"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="display:inline-flex;align-items:center;gap:10px;padding:15px 32px;background:var(--wa-deep);color:#fff;font-weight:700;font-size:15px;border-radius:12px;text-decoration:none;transition:background .15s;font-family:'Inter',sans-serif;"
+          onmouseover="this.style.background='var(--wa-deep-h)'"
+          onmouseout="this.style.background='var(--wa-deep)'"
+          aria-label="Chat with CiCon Marketing on WhatsApp"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          Chat on WhatsApp
+        </a>
+
+        <!-- Secondary CTA: See our services -->
+        <a
+          href="/services/"
+          style="display:inline-flex;align-items:center;gap:8px;padding:15px 32px;border:2px solid rgba(255,255,255,0.3);color:#fff;font-weight:600;font-size:15px;border-radius:12px;text-decoration:none;transition:border-color .15s,background .15s;font-family:'Inter',sans-serif;"
+          onmouseover="this.style.borderColor='rgba(255,255,255,0.7)';this.style.background='rgba(255,255,255,0.06)'"
+          onmouseout="this.style.borderColor='rgba(255,255,255,0.3)';this.style.background='transparent'"
+        >
+          See our services
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       SECTION 2 — WHY WE EXIST
+       ═════════════════════════════════════════════════════════════════════ -->
+  <section aria-labelledby="why-h2" style="padding:96px 0;background:#fff;">
+    <div class="container-xl" style="max-width:840px;">
+      <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
+        Our reason for being
+      </p>
+      <h2 id="why-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 28px;">
+        Why CiCon exists
+      </h2>
+      <p style="font-size:clamp(1.05rem,1.6vw,1.2rem);line-height:1.75;color:var(--charcoal);">
+        Most agencies sell hours and report on impressions. CiCon was built as a reaction to that model. We don't invoice for meetings; we build compounding visibility engines — local search infrastructure, content systems, and paid acquisition funnels that earn more over time, not less. The GTA is not a generic market, and "best practices" from a playbook written for nationwide brands will lose to a competitor who actually understands Richmond Hill, Markham, and the specific search behaviour of a GTA patient or homeowner looking for a local provider. We stay small on purpose so we can stay sharp on your account.
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       SECTION 3 — AI TRANSPARENCY
+       ═════════════════════════════════════════════════════════════════════ -->
+  <section aria-labelledby="ai-h2" style="padding:96px 0;background:var(--off-white);">
+    <div class="container-xl">
+      <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
+        Transparency
+      </p>
+      <h2 id="ai-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 14px;">
+        AI-augmented, human-owned
+      </h2>
+      <p style="font-size:1.05rem;color:rgba(58,58,58,0.75);margin:0 0 52px;max-width:560px;line-height:1.6;">
+        We're upfront about our stack. Here's how the work actually gets done.
+      </p>
+
+      <!-- 3-col grid -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:32px;">
+
+        <!-- Column 1 -->
+        <div style="background:#fff;border:1px solid var(--alabaster);border-top:3px solid var(--action);border-radius:12px;padding:32px;">
+          <h3 style="font-size:1.05rem;font-weight:800;color:#000;margin:0 0 16px;letter-spacing:-0.01em;">
+            Where AI accelerates
+          </h3>
+          <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;">
+            {['Keyword research and intent mapping at scale', 'Content production with editorial QA', 'Predictive analytics and trend modelling', 'Reporting automation and dashboard builds'].map(item => (
+              <li style="display:flex;align-items:flex-start;gap:10px;font-size:0.95rem;line-height:1.55;color:var(--charcoal);">
+                <span style="flex-shrink:0;margin-top:5px;width:6px;height:6px;border-radius:50%;background:var(--action);" aria-hidden="true"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Column 2 -->
+        <div style="background:#fff;border:1px solid var(--alabaster);border-top:3px solid var(--accent);border-radius:12px;padding:32px;">
+          <h3 style="font-size:1.05rem;font-weight:800;color:#000;margin:0 0 16px;letter-spacing:-0.01em;">
+            Where humans own it
+          </h3>
+          <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;">
+            {['Strategy architecture and channel mix', 'Brand voice and creative direction', 'All client-facing judgment calls', 'Quarterly review delivery and interpretation'].map(item => (
+              <li style="display:flex;align-items:flex-start;gap:10px;font-size:0.95rem;line-height:1.55;color:var(--charcoal);">
+                <span style="flex-shrink:0;margin-top:5px;width:6px;height:6px;border-radius:50%;background:var(--accent);" aria-hidden="true"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Column 3 -->
+        <div style="background:#fff;border:1px solid var(--alabaster);border-top:3px solid var(--shadow);border-radius:12px;padding:32px;">
+          <h3 style="font-size:1.05rem;font-weight:800;color:#000;margin:0 0 16px;letter-spacing:-0.01em;">
+            What clients get back
+          </h3>
+          <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;">
+            {['Faster turnaround without extra headcount cost', 'Lower customer acquisition cost over time', 'Transparent quarterly reporting — not monthly noise', 'A senior strategist, not a junior account coordinator'].map(item => (
+              <li style="display:flex;align-items:flex-start;gap:10px;font-size:0.95rem;line-height:1.55;color:var(--charcoal);">
+                <span style="flex-shrink:0;margin-top:5px;width:6px;height:6px;border-radius:50%;background:var(--shadow);" aria-hidden="true"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       SECTION 4 — OUR STACK
+       ═════════════════════════════════════════════════════════════════════ -->
+  <section aria-labelledby="stack-h2" style="padding:96px 0;background:#fff;">
+    <div class="container-xl">
+      <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
+        Transparency
+      </p>
+      <h2 id="stack-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 14px;">
+        The stack behind every CiCon campaign
+      </h2>
+      <p style="font-size:1.05rem;color:rgba(58,58,58,0.75);margin:0 0 52px;max-width:560px;line-height:1.6;">
+        We publish our tooling because it's a signal of how we think — not what we spend, but how we build accountability into every engagement.
+      </p>
+
+      <!-- Tool cards grid: 3-col desktop, 2-col tablet, 1-col mobile -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;"
+           class="stack-grid">
+        {[
+          { name: 'Ahrefs',        category: 'SEO Intelligence',    purpose: 'Competitor analysis, backlink audits, and technical SEO depth' },
+          { name: 'Surfer',        category: 'On-page SEO',         purpose: 'Content optimization scored against live SERP data' },
+          { name: 'Ubersuggest',   category: 'Keyword Research',    purpose: 'Volume, difficulty, and intent mapping at scale' },
+          { name: 'Arvow',         category: 'AI Content Engine',   purpose: 'Programmatic SEO content production with editorial QA' },
+          { name: 'Localo',        category: 'Local SEO',           purpose: 'Google Business Profile ranking tracking and local visibility' },
+          { name: 'RankPrompt',    category: 'GEO / AI Search',     purpose: 'Visibility tracking inside ChatGPT, Perplexity, and Gemini answers' },
+          { name: 'GoHighLevel',   category: 'CRM + Automation',    purpose: 'Lead capture, nurture, and reporting in one platform' },
+          { name: 'Claude · ChatGPT · Gemini', category: 'AI Models', purpose: 'Strategy research, copy ideation, content drafting, and prompt-engineered workflows across all three frontier models' },
+          { name: 'Higgsfield',    category: 'AI Video',            purpose: 'AI-native video production for social and paid creative — at a fraction of traditional production cost' },
+        ].map(tool => (
+          <div
+            class="tool-card"
+            style="background:var(--off-white);border:1px solid var(--alabaster);border-radius:12px;padding:24px 24px 22px;transition:border-color .15s,box-shadow .15s;"
+            onmouseover="this.style.borderColor='var(--action)';this.style.boxShadow='0 4px 20px rgba(255,207,0,0.12)'"
+            onmouseout="this.style.borderColor='var(--alabaster)';this.style.boxShadow='none'"
+          >
+            <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin:0 0 10px;">{tool.category}</p>
+            <h3 style="font-size:1.15rem;font-weight:800;color:#000;margin:0 0 10px;letter-spacing:-0.01em;">{tool.name}</h3>
+            <p style="font-size:0.9rem;line-height:1.55;color:rgba(58,58,58,0.8);margin:0;">{tool.purpose}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <style>
+    @media (max-width: 1023px) {
+      .stack-grid { grid-template-columns: repeat(2,1fr) !important; }
+    }
+    @media (max-width: 599px) {
+      .stack-grid { grid-template-columns: 1fr !important; }
+    }
+  </style>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       SECTION 5 — PROOF CLUSTER
+       ═════════════════════════════════════════════════════════════════════ -->
+  <section aria-labelledby="proof-h2" style="padding:96px 0;background:var(--off-white);">
+    <div class="container-xl">
+      <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
+        Track record
+      </p>
+      <h2 id="proof-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 48px;">
+        Results, not promises
+      </h2>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;align-items:start;">
+
+        <!-- Element 1: Numerical result -->
+        <div style="background:#fff;border:1px solid var(--alabaster);border-radius:16px;padding:36px 32px;">
+          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin:0 0 20px;">By the numbers</p>
+          <!-- PLACEHOLDER: MJ to replace with real metric -->
+          <p style="font-size:clamp(2.5rem,5vw,4rem);font-weight:900;color:var(--shadow);letter-spacing:-0.04em;line-height:1;margin:0 0 12px;">
+            [METRIC]
+          </p>
+          <p style="font-size:0.95rem;line-height:1.6;color:rgba(58,58,58,0.75);margin:0;font-style:italic;">
+            [METRIC: e.g. 47% increase in qualified leads for [Client] in 6 months — MJ to fill in]
+          </p>
+        </div>
+
+        <!-- Element 2: Testimonial -->
+        <div style="background:var(--shadow);border-radius:16px;padding:36px 32px;position:relative;">
+          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--action);margin:0 0 20px;">Client voice</p>
+          <svg width="28" height="20" viewBox="0 0 28 20" fill="none" aria-hidden="true" focusable="false" style="margin-bottom:16px;">
+            <path d="M0 20V12.5C0 5.596 3.9 1.833 11.7 0l1.4 2.5C9.567 3.583 7.533 5.25 6.5 7.5H11V20H0zm16 0V12.5C16 5.596 19.9 1.833 27.7 0l1.4 2.5C25.567 3.583 23.533 5.25 22.5 7.5H27V20H16z" fill="rgba(255,207,0,0.35)"/>
+          </svg>
+          <!-- PLACEHOLDER: MJ to replace with real testimonial -->
+          <blockquote style="margin:0 0 20px;padding:0;">
+            <p style="font-size:1rem;line-height:1.65;color:rgba(255,255,255,0.85);margin:0;font-style:italic;">
+              [TESTIMONIAL: 2-3 sentence quote from a satisfied client — MJ to fill in]
+            </p>
+          </blockquote>
+          <footer>
+            <p style="font-size:0.9rem;font-weight:700;color:#fff;margin:0;">[Client Name]</p>
+            <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin:4px 0 0;">[Business Name, City]</p>
+          </footer>
+        </div>
+
+        <!-- Element 3: Client logo strip -->
+        <div style="background:#fff;border:1px solid var(--alabaster);border-radius:16px;padding:36px 32px;">
+          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin:0 0 24px;">GTA clients</p>
+          <!-- PLACEHOLDER: MJ to supply real client logos; these are placeholder rectangles -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;" aria-label="Client logo grid — placeholder">
+            {[1,2,3,4,5,6].map(n => (
+              <div
+                style="height:48px;background:var(--alabaster);border-radius:6px;display:flex;align-items:center;justify-content:center;"
+                role="img"
+                aria-label={`Client ${n} logo — placeholder`}
+              >
+                <span style="font-size:9px;font-weight:600;color:rgba(58,58,58,0.4);text-transform:uppercase;letter-spacing:0.08em;">Client {n}</span>
+              </div>
+            ))}
+          </div>
+          <p style="font-size:11px;color:rgba(58,58,58,0.4);margin:16px 0 0;font-style:italic;">MJ: replace placeholders with real client logos (SVG preferred)</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       SECTION 6 — PROCESS
+       ═════════════════════════════════════════════════════════════════════ -->
+  <section aria-labelledby="process-h2" style="padding:96px 0;background:#fff;">
+    <div class="container-xl">
+      <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
+        Engagement model
+      </p>
+      <h2 id="process-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 56px;">
+        How an engagement runs
+      </h2>
+
+      <!-- Horizontal flow desktop / vertical stack mobile -->
+      <div class="process-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;">
+
+        <!-- Connecting line (desktop only) -->
+        <div
+          aria-hidden="true"
+          class="process-line"
+          style="position:absolute;top:28px;left:calc(12.5% + 16px);right:calc(12.5% + 16px);height:2px;background:var(--alabaster);z-index:0;"
+        ></div>
+
+        {[
+          { num: '01', name: 'Discovery',  duration: 'Week 1',      body: 'Audit, goal-setting, and baseline metric capture across all active channels.' },
+          { num: '02', name: 'Strategy',   duration: 'Week 2',      body: 'Channel mix decision, KPI framework, and the 90-day roadmap delivered in writing.' },
+          { num: '03', name: 'Build',      duration: 'Weeks 3–6',   body: 'Campaign launches, content pipeline activation, and full tracking instrumentation.' },
+          { num: '04', name: 'Iterate',    duration: 'Ongoing',     body: 'Quarterly business reviews, data-led optimisation, and compounding growth scaling.' },
+        ].map((stage, i) => (
+          <div style="position:relative;z-index:1;padding:0 16px;text-align:center;" class="process-step">
+            <!-- Number badge -->
+            <div style={`width:52px;height:52px;border-radius:50%;background:${i % 2 === 0 ? 'var(--action)' : 'var(--shadow)'};display:flex;align-items:center;justify-content:center;margin:0 auto 20px;`}>
+              <span style={`font-size:15px;font-weight:900;color:${i % 2 === 0 ? 'var(--shadow)' : '#fff'};letter-spacing:-0.01em;`}>{stage.num}</span>
+            </div>
+            <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin:0 0 6px;">{stage.duration}</p>
+            <h3 style="font-size:1.15rem;font-weight:800;color:#000;margin:0 0 10px;">{stage.name}</h3>
+            <p style="font-size:0.88rem;line-height:1.6;color:rgba(58,58,58,0.75);margin:0;">{stage.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <style>
+    @media (max-width: 767px) {
+      .process-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+      .process-line { display: none !important; }
+      .process-step { text-align: left !important; display: flex; gap: 20px; }
+      .process-step > div:first-child { flex-shrink: 0; margin: 0 !important; }
+    }
+  </style>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       SECTION 7 — VALUES
+       ═════════════════════════════════════════════════════════════════════ -->
+  <section aria-labelledby="values-h2" style="padding:96px 0;background:var(--off-white);">
+    <div class="container-xl">
+      <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
+        Principles
+      </p>
+      <h2 id="values-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 52px;">
+        What we stand behind
+      </h2>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;" class="values-grid">
+        {[
+          'Build for scale, not for invoices',
+          'Show the data, even when it\'s ugly',
+          'Local context beats global templates',
+        ].map((value, i) => (
+          <div style="position:relative;padding:32px 28px 28px;background:#fff;border:1px solid var(--alabaster);border-radius:12px;">
+            <!-- Amber accent top-left line -->
+            <div
+              aria-hidden="true"
+              style="position:absolute;top:0;left:28px;width:32px;height:3px;background:var(--action);border-radius:0 0 3px 3px;"
+            ></div>
+            <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin:0 0 16px;">
+              0{i + 1}
+            </p>
+            <h3 style="font-size:1.15rem;font-weight:800;color:#000;line-height:1.35;margin:0;letter-spacing:-0.01em;">
+              {value}
+            </h3>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <style>
+    @media (max-width: 767px) {
+      .values-grid { grid-template-columns: 1fr !important; }
+    }
+  </style>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       SECTION 8 — DENTAL VERTICAL CALLOUT
+       ═════════════════════════════════════════════════════════════════════ -->
+  <section aria-labelledby="dental-h2" style="background:var(--shadow);padding:96px 0;">
+    <div class="container-xl">
+
+      <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--action);margin:0 0 14px;">
+        Dental vertical
+      </p>
+      <h2 id="dental-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#fff;letter-spacing:-0.02em;line-height:1.12;max-width:760px;margin:0 0 24px;">
+        A dedicated practice for dental clinics across the GTA
+      </h2>
+      <p style="font-size:1.05rem;line-height:1.72;color:rgba(255,255,255,0.72);max-width:680px;margin:0 0 52px;">
+        Dental is not a vertical you can serve with a generic marketing playbook. Patient acquisition cycles are longer, Google Business Profile authority is disproportionately powerful compared to other local niches, review velocity drives ranking more than in almost any other service category, and the person searching "dentist near me" has local intent that expires in hours, not days. We built a dedicated dental practice because that specificity is the work.
+      </p>
+
+      <!-- Micro-proof points -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-bottom:48px;" class="dental-proof-grid">
+        {[
+          { num: '[X]',      label: 'active dental clinic clients across the GTA', sub: 'MJ: replace with real count' },
+          { num: '100%',     label: 'specialized in GBP, local SEO, and patient acquisition funnels', sub: 'Dental-first methodology' },
+          { num: 'Q/Q',      label: 'quarterly reporting tailored to clinic ownership', sub: 'Not monthly noise — quarterly signal' },
+        ].map(pt => (
+          <div style="border-left:2px solid var(--action);padding-left:24px;">
+            <p style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:var(--action);line-height:1;margin:0 0 8px;letter-spacing:-0.03em;">{pt.num}</p>
+            <p style="font-size:0.92rem;line-height:1.5;color:rgba(255,255,255,0.8);margin:0 0 6px;">{pt.label}</p>
+            <p style="font-size:11px;color:rgba(255,255,255,0.4);margin:0;font-style:italic;">{pt.sub}</p>
+          </div>
+        ))}
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;">
+        <a
+          href="https://dental.cicon.ca"
+          style="display:inline-flex;align-items:center;gap:8px;padding:15px 32px;background:var(--wa-deep);color:#fff;font-weight:700;font-size:15px;border-radius:12px;text-decoration:none;transition:background .15s;font-family:'Inter',sans-serif;"
+          onmouseover="this.style.background='var(--wa-deep-h)'"
+          onmouseout="this.style.background='var(--wa-deep)'"
+        >
+          See our dental marketing services
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+
+        <a
+          href="https://wa.me/16475840800"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="display:inline-flex;align-items:center;gap:10px;padding:15px 32px;border:2px solid rgba(255,255,255,0.25);color:#fff;font-weight:600;font-size:15px;border-radius:12px;text-decoration:none;transition:border-color .15s;font-family:'Inter',sans-serif;"
+          onmouseover="this.style.borderColor='rgba(255,255,255,0.6)'"
+          onmouseout="this.style.borderColor='rgba(255,255,255,0.25)'"
+          aria-label="Chat about dental marketing on WhatsApp"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          Chat on WhatsApp
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <style>
+    @media (max-width: 767px) {
+      .dental-proof-grid { grid-template-columns: 1fr !important; }
+    }
+  </style>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       SECTION 9 — LOCAL ANCHOR
+       ═════════════════════════════════════════════════════════════════════ -->
+  <section aria-labelledby="local-h2" style="padding:80px 0;background:#fff;">
+    <div class="container-xl" style="max-width:840px;">
+      <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
+        Where we operate
+      </p>
+      <h2 id="local-h2" style="font-size:clamp(1.5rem,2.8vw,2.25rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.15;margin:0 0 24px;">
+        Built in Richmond Hill, working across the GTA
+      </h2>
+      <p style="font-size:1.05rem;line-height:1.75;color:var(--charcoal);">
+        CiCon's base is Richmond Hill, Ontario — and that's not a coincidence. The GTA's suburban markets have their own search behaviour, competitive dynamics, and local authority signals that don't translate directly from downtown Toronto campaigns. We serve clients across Richmond Hill, Markham, Vaughan, North York, Mississauga, and the broader Greater Toronto Area. Proximity to the market we're optimizing for isn't optional — it's how the work stays sharp.
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       SECTION 10 — FAQ
+       ═════════════════════════════════════════════════════════════════════ -->
+  <section aria-labelledby="faq-h2" style="padding:96px 0;background:var(--off-white);">
+    <div class="container-xl" style="max-width:840px;">
+      <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
+        FAQ
+      </p>
+      <h2 id="faq-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 48px;">
+        Common questions
+      </h2>
+
+      <div style="display:flex;flex-direction:column;gap:8px;" role="list">
+        {faqs.map((faq, i) => (
+          <details
+            role="listitem"
+            style="background:#fff;border:1px solid var(--alabaster);border-radius:12px;overflow:hidden;"
+          >
+            <summary
+              style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 24px;cursor:pointer;font-size:1rem;font-weight:700;color:#000;line-height:1.4;list-style:none;"
+              aria-expanded="false"
+            >
+              <span>{faq.question}</span>
+              <!-- Chevron icon rotates via CSS -->
+              <svg
+                class="faq-chevron"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+                focusable="false"
+                style="flex-shrink:0;color:var(--accent);transition:transform .25s ease;"
+              >
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </summary>
+
+            <div style="padding:0 24px 22px;border-top:1px solid var(--alabaster);">
+              <p style="font-size:0.97rem;line-height:1.72;color:rgba(58,58,58,0.85);margin:16px 0 0;">
+                {faq.answer}
+              </p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <style>
+    details[open] > summary .faq-chevron {
+      transform: rotate(180deg);
+    }
+    details > summary:focus-visible {
+      outline: 2px solid var(--action);
+      outline-offset: -2px;
+      border-radius: 12px;
+    }
+  </style>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       SECTION 11 — FINAL CTA
+       ═════════════════════════════════════════════════════════════════════ -->
+  <section aria-labelledby="cta-h2" style="padding:96px 0;background:var(--shadow);text-align:center;">
+    <div class="container-xl" style="max-width:680px;">
+
+      <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--action);margin:0 0 20px;">
+        Let's talk
+      </p>
+      <h2 id="cta-h2" style="font-size:clamp(2rem,4vw,3.25rem);font-weight:900;color:#fff;letter-spacing:-0.025em;line-height:1.1;margin:0 0 20px;">
+        Ready to talk?
+      </h2>
+
+      <!-- PLACEHOLDER: MJ to replace with real trust line -->
+      <p style="font-size:1rem;line-height:1.65;color:rgba(255,255,255,0.6);margin:0 0 40px;font-style:italic;">
+        [FINAL CTA TRUST LINE: one-line testimonial or result number — MJ to fill in]
+      </p>
+
+      <div style="display:flex;flex-direction:column;align-items:center;gap:16px;">
+        <!-- WhatsApp CTA -->
+        <a
+          href="https://wa.me/16475840800"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="display:inline-flex;align-items:center;gap:10px;padding:16px 36px;background:var(--wa-deep);color:#fff;font-weight:700;font-size:16px;border-radius:14px;text-decoration:none;transition:background .15s;font-family:'Inter',sans-serif;"
+          onmouseover="this.style.background='var(--wa-deep-h)'"
+          onmouseout="this.style.background='var(--wa-deep)'"
+          aria-label="Chat with CiCon Marketing on WhatsApp"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          Chat on WhatsApp
+        </a>
+
+        <!-- Display phone -->
+        <a
+          href="tel:+12898071020"
+          style="display:inline-flex;align-items:center;gap:8px;font-size:1rem;font-weight:600;color:rgba(255,255,255,0.65);text-decoration:none;transition:color .15s;font-family:'Inter',sans-serif;"
+          onmouseover="this.style.color='#fff'"
+          onmouseout="this.style.color='rgba(255,255,255,0.65)'"
+          aria-label="Call CiCon Marketing at +1 289 807 1020"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.95 11a19.79 19.79 0 01-3.07-8.67A2 2 0 012.88 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+          </svg>
+          +1 (289) 807-1020
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+
+  <Footer />
+
+</body>
+</html>
