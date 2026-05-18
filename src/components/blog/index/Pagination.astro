@@ -22,7 +22,7 @@ const pageList = buildPageList(currentPage, totalPages);
   {currentPage > 1 && (
     <a href={pageUrl(currentPage - 1)} rel="prev"
        class="inline-flex items-center px-4 py-1.5 rounded-full text-[13px] font-semibold border border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white transition-all duration-200"
-       style="font-family:'Montserrat',sans-serif;letter-spacing:0.05em;" aria-label="Newer posts">
+       style="font-family:'Inter',sans-serif;letter-spacing:0.05em;" aria-label="Newer posts">
       ← Newer
     </a>
   )}
@@ -38,7 +38,7 @@ const pageList = buildPageList(currentPage, totalPages);
              ? 'text-black border border-transparent'
              : 'border border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white'
          }`}
-         style={`font-family:'Montserrat',sans-serif;letter-spacing:0.05em;${page === currentPage ? 'background:#FFCF00;' : ''}`}>
+         style={`font-family:'Inter',sans-serif;letter-spacing:0.05em;${page === currentPage ? 'background:#FFCF00;' : ''}`}>
         {page}
       </a>
     )
@@ -47,7 +47,7 @@ const pageList = buildPageList(currentPage, totalPages);
   {currentPage < totalPages && (
     <a href={pageUrl(currentPage + 1)} rel="next"
        class="inline-flex items-center px-4 py-1.5 rounded-full text-[13px] font-semibold border border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white transition-all duration-200"
-       style="font-family:'Montserrat',sans-serif;letter-spacing:0.05em;" aria-label="Older posts">
+       style="font-family:'Inter',sans-serif;letter-spacing:0.05em;" aria-label="Older posts">
       Older →
     </a>
   )}

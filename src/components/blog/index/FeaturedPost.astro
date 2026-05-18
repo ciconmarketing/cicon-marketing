@@ -42,18 +42,18 @@ function formatDate(d: string) {
         <!-- Featured eyebrow -->
         <div class="flex items-center gap-1.5 mb-3">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="#FFCF00" stroke="none" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <span class="font-semibold uppercase tracking-widest text-[11px]" style="font-family:'Montserrat',sans-serif;color:#FFCF00;letter-spacing:0.15em;">Featured</span>
+          <span class="font-semibold uppercase tracking-widest text-[11px]" style="font-family:'Inter',sans-serif;color:#FFCF00;letter-spacing:0.15em;">Featured</span>
         </div>
 
         <!-- Category chip -->
         {post.category && (
-          <span class="inline-flex w-fit items-center border border-teal-600 text-teal-600 uppercase rounded-full px-2.5 py-1 mb-4 text-[10px] font-semibold tracking-wide" style="font-family:'Montserrat',sans-serif;letter-spacing:0.1em;">
+          <span class="inline-flex w-fit items-center border border-teal-600 text-teal-600 uppercase rounded-full px-2.5 py-1 mb-4 text-[10px] font-semibold tracking-wide" style="font-family:'Inter',sans-serif;letter-spacing:0.1em;">
             {post.category.name}
           </span>
         )}
 
         <!-- Title -->
-        <h2 class="font-bold text-black leading-tight mb-4" style="font-family:'Montserrat',sans-serif;font-size:clamp(1.5rem,2.5vw,2.125rem);letter-spacing:-0.01em;">
+        <h2 class="font-bold text-black leading-tight mb-4" style="font-family:'Inter',sans-serif;font-size:clamp(1.5rem,2.5vw,2.125rem);letter-spacing:-0.01em;">
           <a href={`/blog/${post.slug}/`} class="hover:text-teal-600 transition-colors duration-200">{post.title}</a>
         </h2>
 
@@ -72,7 +72,7 @@ function formatDate(d: string) {
         </p>
 
         <!-- CTA link -->
-        <a href={`/blog/${post.slug}/`} class="group inline-flex items-center gap-1.5 font-semibold text-sm text-teal-600 relative" style="font-family:'Montserrat',sans-serif;">
+        <a href={`/blog/${post.slug}/`} class="group inline-flex items-center gap-1.5 font-semibold text-sm text-teal-600 relative" style="font-family:'Inter',sans-serif;">
           Read the guide
           <span class="transition-transform duration-200 group-hover:translate-x-1">→</span>
           <span class="absolute -bottom-0.5 left-0 h-px w-0 group-hover:w-full transition-all duration-300" style="background:#FFCF00;"></span>

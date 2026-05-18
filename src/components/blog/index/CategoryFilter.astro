@@ -17,7 +17,7 @@ const { categories } = Astro.props;
           data-category-chip="all"
           aria-pressed="true"
           class="chip-active flex-shrink-0 inline-flex items-center px-4 py-1.5 rounded-full text-[13px] font-semibold uppercase tracking-wide transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2"
-          style="font-family:'Montserrat',sans-serif;letter-spacing:0.05em;"
+          style="font-family:'Inter',sans-serif;letter-spacing:0.05em;"
         >
           All
         </button>
@@ -26,7 +26,7 @@ const { categories } = Astro.props;
             data-category-chip={cat.slug}
             aria-pressed="false"
             class="chip-inactive flex-shrink-0 inline-flex items-center px-4 py-1.5 rounded-full text-[13px] font-semibold uppercase tracking-wide transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2"
-            style="font-family:'Montserrat',sans-serif;letter-spacing:0.05em;"
+            style="font-family:'Inter',sans-serif;letter-spacing:0.05em;"
           >
             {cat.name}
           </button>
@@ -59,7 +59,7 @@ const { categories } = Astro.props;
 <div id="no-results" class="hidden text-center py-20">
   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="mx-auto mb-4 text-teal-600" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
   <p class="text-gray-600 mb-4">No guides match your filters. Try clearing them or search a different term.</p>
-  <button id="clear-filters" class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-black" style="background:#FFCF00;font-family:'Montserrat',sans-serif;" aria-live="polite">
+  <button id="clear-filters" class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-black" style="background:#FFCF00;font-family:'Inter',sans-serif;" aria-live="polite">
     Clear filters
   </button>
 </div>
