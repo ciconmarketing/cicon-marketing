@@ -24,6 +24,9 @@ import blogCategory from './blogCategory'
 import servicePage from './servicePage'
 import servicesHub from './servicesHub'
 import caseStudy from './caseStudy'
+import aboutPage from './documents/aboutPage'
+import contactPage from './documents/contactPage'
+import mapCheckPage from './documents/mapCheckPage'
 
 // ── Shared sub-types ──────────────────────────────────────────────────────────
 
@@ -466,4 +469,8 @@ export const schemaTypes = [
   servicePage,
   servicesHub,
   caseStudy,
+  // Singleton pages
+  aboutPage,
+  contactPage,
+  mapCheckPage,
 ];
