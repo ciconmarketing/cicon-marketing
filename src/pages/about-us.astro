@@ -1,17 +1,19 @@
 ---
 /**
  * /about-us/ — CiCon Marketing About page (2026, production-ready)
- * 11 sections per brief: Hero → Why we exist → AI transparency →
- * Stack → Proof → Process → Values → Dental callout →
- * Local anchor → FAQ → Final CTA
+ * Content pulled from Sanity `aboutPage` singleton; falls back to hardcoded values.
  */
 import Nav    from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON } from '../lib/schema-constants';
+import { getAboutPage } from '../lib/sanity';
 import '../styles/globals.css';
 
 const isPreview = import.meta.env.VERCEL_ENV !== 'production';
 const canonicalUrl = 'https://cicon.ca/about-us/';
+
+// ── Sanity fetch (graceful fallback if Studio not configured) ─────────────────
+const cms = await getAboutPage();
 
 // ── FAQ data ──────────────────────────────────────────────────────────────────
 const faqs = [
@@ -126,10 +128,10 @@ const jsonLd = {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Primary meta -->
-  <title>About CiCon Marketing | Boutique Digital Agency in Richmond Hill, GTA</title>
-  <meta name="description" content="CiCon is a boutique AI-augmented digital marketing studio in Richmond Hill, GTA — building compounding growth systems for local businesses and dental clinics." />
-  <link rel="canonical" href={canonicalUrl} />
+  <!-- Primary meta (Sanity-editable) -->
+  <title>{cms?.metaTitle ?? 'About CiCon Marketing | Boutique Digital Agency in Richmond Hill, GTA'}</title>
+  <meta name="description" content={cms?.metaDescription ?? 'CiCon is a boutique AI-augmented digital marketing studio in Richmond Hill, GTA — building compounding growth systems for local businesses and dental clinics.'} />
+  <link rel="canonical" href={cms?.canonical ?? canonicalUrl} />
   {isPreview
     ? <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
     : <meta name="robots" content="index, follow" />
@@ -204,11 +206,11 @@ const jsonLd = {
         id="about-h1"
         style="font-size:clamp(2rem,4.5vw,3.75rem);font-weight:900;color:#fff;line-height:1.08;letter-spacing:-0.025em;max-width:880px;margin:0 0 28px;"
       >
-        A boutique GTA marketing studio building AI-augmented growth systems for local businesses and dental clinics.
+        {cms?.heroHeadline ?? 'A boutique GTA marketing studio building AI-augmented growth systems for local businesses and dental clinics.'}
       </h1>
 
       <p style="font-size:clamp(1rem,1.8vw,1.2rem);color:rgba(255,255,255,0.65);line-height:1.65;max-width:600px;margin:0 0 44px;">
-        Operating across the Greater Toronto Area since [LEAVE_BRACKETED_FOR_REVIEW] — founded by a Google-certified strategist with a Master's in Engineering and 15+ years building data-driven growth systems.
+        {cms?.heroSubheadline ?? 'Operating across the Greater Toronto Area — founded by a Google-certified strategist with a Master\'s in Engineering and 15+ years building data-driven growth systems.'}
       </p>
 
       <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;">
@@ -254,10 +256,10 @@ const jsonLd = {
         Our reason for being
       </p>
       <h2 id="why-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 28px;">
-        Why CiCon exists
+        {cms?.whyWeExist?.sectionHeader ?? 'Why CiCon exists'}
       </h2>
       <p style="font-size:clamp(1.05rem,1.6vw,1.2rem);line-height:1.75;color:var(--charcoal);">
-        Most agencies sell hours and report on impressions. CiCon was built as a reaction to that model. We don't invoice for meetings; we build compounding visibility engines — local search infrastructure, content systems, and paid acquisition funnels that earn more over time, not less. The GTA is not a generic market, and "best practices" from a playbook written for nationwide brands will lose to a competitor who actually understands Richmond Hill, Markham, and the specific search behaviour of a GTA patient or homeowner looking for a local provider. We stay small on purpose so we can stay sharp on your account.
+        {cms?.whyWeExist?.paragraph ?? 'Most agencies sell hours and report on impressions. CiCon was built as a reaction to that model. We don\'t invoice for meetings; we build compounding visibility engines — local search infrastructure, content systems, and paid acquisition funnels that earn more over time, not less. The GTA is not a generic market, and "best practices" from a playbook written for nationwide brands will lose to a competitor who actually understands Richmond Hill, Markham, and the specific search behaviour of a GTA patient or homeowner looking for a local provider. We stay small on purpose so we can stay sharp on your account.'}
       </p>
     </div>
   </section>
@@ -648,7 +650,7 @@ const jsonLd = {
       </h2>
 
       <div style="display:flex;flex-direction:column;gap:8px;" role="list">
-        {faqs.map((faq, i) => (
+        {(cms?.faqBlock?.questions ?? faqs).map((faq, i) => (
           <details
             role="listitem"
             style="background:#fff;border:1px solid var(--alabaster);border-radius:12px;overflow:hidden;"

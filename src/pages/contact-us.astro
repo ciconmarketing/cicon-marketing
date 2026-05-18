@@ -2,8 +2,12 @@
 import Nav          from '../components/Nav.astro';
 import Footer       from '../components/Footer.astro';
 import ContactForm  from '../components/contact/ContactForm.astro';
+import { getContactPage } from '../lib/sanity';
 
 const isPreview = import.meta.env.VERCEL_ENV !== 'production';
+
+// ── Sanity fetch (graceful fallback) ─────────────────────────────────────────
+const cms = await getContactPage();
 
 // JSON-LD blocks
 const jsonLdContactPage = {
@@ -102,10 +106,10 @@ const jsonLdFaq = {
   })(window,document,'script','dataLayer','GTM-NH5ZSMKJ');</script>
   <!-- End Google Tag Manager -->
 
-  <!-- Primary Meta -->
-  <title>Contact CiCon Marketing | Senior Strategists for GTA Clinics &amp; Local Businesses</title>
-  <meta name="description" content="Talk to a senior marketing strategist about your clinic or local business. Based in Richmond Hill, serving the GTA. We reply within 1 business hour, Mon–Fri." />
-  <link rel="canonical" href="https://cicon.ca/contact-us/" />
+  <!-- Primary Meta (Sanity-editable) -->
+  <title>{cms?.metaTitle ?? 'Contact CiCon Marketing | Senior Strategists for GTA Clinics & Local Businesses'}</title>
+  <meta name="description" content={cms?.metaDescription ?? 'Talk to a senior marketing strategist about your clinic or local business. Based in Richmond Hill, serving the GTA. We reply within 1 business hour, Mon–Fri.'} />
+  <link rel="canonical" href={cms?.canonical ?? 'https://cicon.ca/contact-us/'} />
   {isPreview
     ? <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
     : <meta name="robots" content="index, follow" />
@@ -342,7 +346,10 @@ const jsonLdFaq = {
 
           <!-- Form column -->
           <div class="form-col">
-            <ContactForm />
+            <ContactForm
+              source={cms?.contactFormBlock?.sourceTag ?? 'Contact Page'}
+              submitLabel={cms?.contactFormBlock?.submitButtonLabel ?? 'Send it'}
+            />
           </div>
 
           <!-- Trust stack column -->

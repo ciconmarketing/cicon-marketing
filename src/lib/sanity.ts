@@ -312,6 +312,164 @@ export async function getServicesHub(): Promise<ServicesHubData | null> {
   }
 }
 
+// ── Singleton page GROQ queries ──────────────────────────────────────────────
+
+const ABOUT_PAGE_QUERY = `
+  *[_type == "aboutPage"][0]{
+    title, status,
+    metaTitle, metaDescription, canonical, ogImageUrl, ogTitle, ogDescription,
+    twitterCardType, robotsIndex, robotsFollow,
+    heroBadge, heroHeadline, heroSubheadline,
+    heroPrimaryCtaLabel, heroPrimaryCtaUrl, heroSecondaryCtaLabel, heroSecondaryCtaUrl,
+    whyWeExist{ sectionHeader, paragraph },
+    aiTransparencyBlock{ sectionHeader, introLine, aiAcceleratesColumn, humansOwnColumn, clientsGetBackColumn },
+    stackBlock{ sectionHeader, introLine, tools[]{ toolName, category, purpose, displayOrder } },
+    proofCluster{ sectionHeader, numericalResult, testimonial },
+    processBlock{ sectionHeader, stages[]{ stageNumber, stageName, duration, description } },
+    valuesBlock{ sectionHeader, values },
+    dentalCalloutBlock{ sectionHeader, body, microProofPoints, ctaLabel, ctaLink },
+    localAnchorBlock{ sectionHeader, body },
+    faqBlock{ sectionHeader, questions[]{ question, answer } },
+    finalCtaBlock{ sectionHeader, trustLine, primaryCtaLabel, primaryCtaUrl, secondaryCtaLabel, secondaryCtaUrl, displayPhone },
+    schemaType, customJsonLd
+  }
+`
+
+const CONTACT_PAGE_QUERY = `
+  *[_type == "contactPage"][0]{
+    title, status,
+    metaTitle, metaDescription, canonical, ogTitle, ogDescription,
+    twitterCardType, robotsIndex, robotsFollow,
+    heroBadge, heroHeadline, heroSubheadline,
+    introBlock{ sectionHeader, body },
+    contactFormBlock{ formHeader, formDescription, submitButtonLabel, successMessage, errorMessage, sourceTag },
+    contactMethodsBlock{ sectionHeader, methods[]{ methodType, label, value, clickAction, displayOrder } },
+    mapBlock{ showMap, embedUrl, address, mapHeight },
+    businessHoursBlock{ sectionHeader, hours[]{ dayName, openTime, closeTime, isClosed }, timezone, notes },
+    faqBlock{ sectionHeader, questions[]{ question, answer } },
+    finalCtaBlock{ sectionHeader, trustLine, primaryCtaLabel, primaryCtaUrl },
+    schemaType, customJsonLd
+  }
+`
+
+const MAP_CHECK_PAGE_QUERY = `
+  *[_type == "mapCheckPage"][0]{
+    title, status,
+    metaTitle, metaDescription, canonical, ogImageUrl, ogTitle, ogDescription,
+    twitterCardType, robotsIndex, robotsFollow,
+    heroBadge, heroHeadline, heroDescription1, heroDescription2,
+    heroImageUrl, heroImageAlt, showHeroCta,
+    scannerBlock{ sectionHeader, embedCode, loadingText, containerMaxWidth },
+    resultsExplainerBlock{ sectionHeader, leadLine, explainerItems[]{ dotColor, label, description } },
+    leadCaptureBlock{ sectionHeader, leadCopy, formSourceTag, formSubmitLabel, successMessage },
+    socialProofBlock{ useHomePageComponent, overrideSectionHeader },
+    faqBlock{ sectionHeader, questions[]{ question, answer, answerHtml } },
+    finalCtaBlock{ sectionHeader, trustLine, primaryCtaLabel, primaryCtaUrl, secondaryCtaLabel, secondaryCtaUrl },
+    schemaType, customJsonLd
+  }
+`
+
+// ── Types for singleton pages ─────────────────────────────────────────────────
+
+export type AboutPageData = {
+  title?: string
+  metaTitle?: string
+  metaDescription?: string
+  canonical?: string
+  heroBadge?: string
+  heroHeadline?: string
+  heroSubheadline?: string
+  heroPrimaryCtaLabel?: string
+  heroPrimaryCtaUrl?: string
+  heroSecondaryCtaLabel?: string
+  heroSecondaryCtaUrl?: string
+  whyWeExist?: { sectionHeader?: string; paragraph?: string }
+  aiTransparencyBlock?: {
+    sectionHeader?: string; introLine?: string
+    aiAcceleratesColumn?: { header?: string; body?: string }
+    humansOwnColumn?: { header?: string; body?: string }
+    clientsGetBackColumn?: { header?: string; body?: string }
+  }
+  stackBlock?: { sectionHeader?: string; introLine?: string; tools?: Array<{ toolName: string; category?: string; purpose?: string; displayOrder?: number }> }
+  processBlock?: { sectionHeader?: string; stages?: Array<{ stageNumber: number; stageName: string; duration?: string; description?: string }> }
+  valuesBlock?: { sectionHeader?: string; values?: string[] }
+  dentalCalloutBlock?: { sectionHeader?: string; body?: string; microProofPoints?: string[]; ctaLabel?: string; ctaLink?: string }
+  localAnchorBlock?: { sectionHeader?: string; body?: string }
+  faqBlock?: { sectionHeader?: string; questions?: Array<{ question: string; answer: string }> }
+  finalCtaBlock?: { sectionHeader?: string; trustLine?: string; primaryCtaLabel?: string; primaryCtaUrl?: string; secondaryCtaLabel?: string; secondaryCtaUrl?: string; displayPhone?: boolean }
+  schemaType?: string
+}
+
+export type ContactPageData = {
+  title?: string
+  metaTitle?: string
+  metaDescription?: string
+  canonical?: string
+  heroBadge?: string
+  heroHeadline?: string
+  heroSubheadline?: string
+  introBlock?: { sectionHeader?: string; body?: string }
+  contactFormBlock?: { formHeader?: string; formDescription?: string; submitButtonLabel?: string; successMessage?: string; errorMessage?: string; sourceTag?: string }
+  contactMethodsBlock?: { sectionHeader?: string; methods?: Array<{ methodType: string; label: string; value: string; clickAction?: string; displayOrder?: number }> }
+  mapBlock?: { showMap?: boolean; embedUrl?: string; address?: string; mapHeight?: number }
+  faqBlock?: { sectionHeader?: string; questions?: Array<{ question: string; answer: string }> }
+  finalCtaBlock?: { sectionHeader?: string; primaryCtaLabel?: string; primaryCtaUrl?: string }
+}
+
+export type MapCheckPageData = {
+  title?: string
+  metaTitle?: string
+  metaDescription?: string
+  canonical?: string
+  ogImageUrl?: string
+  heroBadge?: string
+  heroHeadline?: string
+  heroDescription1?: string
+  heroDescription2?: string
+  heroImageUrl?: string
+  heroImageAlt?: string
+  scannerBlock?: { embedCode?: string; containerMaxWidth?: number }
+  resultsExplainerBlock?: { sectionHeader?: string; leadLine?: string; explainerItems?: Array<{ dotColor: string; label: string; description?: string }> }
+  leadCaptureBlock?: { sectionHeader?: string; leadCopy?: string; formSourceTag?: string; formSubmitLabel?: string }
+  faqBlock?: { sectionHeader?: string; questions?: Array<{ question: string; answer: string; answerHtml?: boolean }> }
+  finalCtaBlock?: { sectionHeader?: string; primaryCtaLabel?: string; primaryCtaUrl?: string; secondaryCtaLabel?: string; secondaryCtaUrl?: string }
+}
+
+// ── Fetch functions ───────────────────────────────────────────────────────────
+
+export async function getAboutPage(): Promise<AboutPageData | null> {
+  const client = getSanityClient()
+  if (!client) return null
+  try {
+    return await client.fetch<AboutPageData>(ABOUT_PAGE_QUERY)
+  } catch (err) {
+    console.error('[Sanity] About page fetch failed:', err)
+    return null
+  }
+}
+
+export async function getContactPage(): Promise<ContactPageData | null> {
+  const client = getSanityClient()
+  if (!client) return null
+  try {
+    return await client.fetch<ContactPageData>(CONTACT_PAGE_QUERY)
+  } catch (err) {
+    console.error('[Sanity] Contact page fetch failed:', err)
+    return null
+  }
+}
+
+export async function getMapCheckPage(): Promise<MapCheckPageData | null> {
+  const client = getSanityClient()
+  if (!client) return null
+  try {
+    return await client.fetch<MapCheckPageData>(MAP_CHECK_PAGE_QUERY)
+  } catch (err) {
+    console.error('[Sanity] Map check page fetch failed:', err)
+    return null
+  }
+}
+
 export async function getHomepage(): Promise<HomepageData | null> {
   if (!projectId) {
     console.warn('[Sanity] No valid projectId — using fallback content.');

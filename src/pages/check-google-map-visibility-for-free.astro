@@ -10,7 +10,11 @@ import Footer         from '../components/Footer.astro';
 import ContactForm    from '../components/contact/ContactForm.astro';
 import GoogleReviews  from '../components/react/GoogleReviews.tsx';
 import { ORG_CICON, WEBSITE_CICON } from '../lib/schema-constants';
+import { getMapCheckPage } from '../lib/sanity';
 import '../styles/globals.css';
+
+// ── Sanity fetch (graceful fallback) ─────────────────────────────────────────
+const cms = await getMapCheckPage();
 
 const isPreview    = import.meta.env.VERCEL_ENV !== 'production';
 const canonicalUrl = 'https://cicon.ca/check-google-map-visibility-for-free/';
@@ -103,10 +107,10 @@ const jsonLd = {
   <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1299226945517753&ev=PageView&noscript=1" alt="" /></noscript>
   <!-- End Facebook Pixel -->
 
-  <!-- Primary meta — preserve exact SEO copy -->
-  <title>Free Google Maps Visibility Check | Local Ranking Heat Map</title>
-  <meta name="description" content="Is your business invisible on Google Maps? Use our free local ranking tool to see exactly where you rank. Get a real-time heat map today." />
-  <link rel="canonical" href={canonicalUrl} />
+  <!-- Primary meta (Sanity-editable — keep SEO copy stable) -->
+  <title>{cms?.metaTitle ?? 'Free Google Maps Visibility Check | Local Ranking Heat Map'}</title>
+  <meta name="description" content={cms?.metaDescription ?? 'Is your business invisible on Google Maps? Use our free local ranking tool to see exactly where you rank. Get a real-time heat map today.'} />
+  <link rel="canonical" href={cms?.canonical ?? canonicalUrl} />
   {isPreview
     ? <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
     : <meta name="robots" content="index, follow" />
@@ -179,7 +183,7 @@ const jsonLd = {
             id="page-h1"
             style="font-size:clamp(1.9rem,3.8vw,3rem);font-weight:900;color:#fff;line-height:1.1;letter-spacing:-0.02em;margin:0 0 24px;"
           >
-            Check Your Google Map Visibility for Free
+            {cms?.heroHeadline ?? 'Check Your Google Map Visibility for Free'}
           </h1>
 
           <p style="font-size:1.05rem;line-height:1.72;color:rgba(255,255,255,0.75);margin:0 0 16px;">
@@ -227,17 +231,22 @@ const jsonLd = {
         style="max-width:900px;margin:0 auto;background:var(--off-white);border-radius:20px;padding:8px;border:1px solid var(--alabaster);overflow:hidden;"
       >
         <!--
-          Localo public scanner widget — pulled from live page
-          src: https://app.localo.com/_demo/place-import
-          Original embed: <div id="free-tool"> containing an iframe
+          Localo scanner widget — embed code is now editable via Sanity Studio
+          (mapCheckPage → Content Blocks → Scanner Widget → Embed Code)
+          Falls back to hardcoded iframe if Sanity not configured.
         -->
-        <iframe
-          src="https://app.localo.com/_demo/place-import"
-          allow="geolocation"
-          loading="lazy"
-          title="Free Google Maps local ranking heat map scanner — enter your business name to see your visibility"
-          style="border:none;height:400px;width:100%;border-radius:16px;min-height:200px;display:block;"
-        ></iframe>
+        {cms?.scannerBlock?.embedCode
+          ? <Fragment set:html={cms.scannerBlock.embedCode} />
+          : (
+            <iframe
+              src="https://app.localo.com/_demo/place-import"
+              allow="geolocation"
+              loading="lazy"
+              title="Free Google Maps local ranking heat map scanner — enter your business name to see your visibility"
+              style="border:none;height:400px;width:100%;border-radius:16px;min-height:200px;display:block;"
+            ></iframe>
+          )
+        }
       </div>
     </div>
   </section>
@@ -332,8 +341,8 @@ const jsonLd = {
       <!-- Reuse ContactForm exactly — source tagged, submit label overridden -->
       <div style="max-width:680px;margin:0 auto;">
         <ContactForm
-          source="Google Map Visibility Audit"
-          submitLabel="Get My Free Audit"
+          source={cms?.leadCaptureBlock?.formSourceTag ?? 'Google Map Visibility Audit'}
+          submitLabel={cms?.leadCaptureBlock?.formSubmitLabel ?? 'Get My Free Audit'}
         />
       </div>
 
