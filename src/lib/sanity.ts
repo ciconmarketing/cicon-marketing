@@ -359,6 +359,12 @@ const ABOUT_PAGE_QUERY = `
     heroBadge, heroHeadline, heroSubheadline,
     heroPrimaryCtaLabel, heroPrimaryCtaUrl, heroSecondaryCtaLabel, heroSecondaryCtaUrl,
     whyWeExist{ sectionHeader, paragraph },
+    founderBlock{
+      sectionBadge, headline, bodyText,
+      founderName, founderTitle, founderImageUrl,
+      credentials, linkedInUrl,
+      stats[]{ value, label }
+    },
     aiTransparencyBlock{ sectionHeader, introLine, aiAcceleratesColumn, humansOwnColumn, clientsGetBackColumn },
     stackBlock{ sectionHeader, introLine, tools[]{ toolName, category, purpose, displayOrder } },
     proofCluster{ sectionHeader, numericalResult, testimonial },
@@ -421,6 +427,17 @@ export type AboutPageData = {
   heroSecondaryCtaLabel?: string
   heroSecondaryCtaUrl?: string
   whyWeExist?: { sectionHeader?: string; paragraph?: string }
+  founderBlock?: {
+    sectionBadge?: string
+    headline?: string
+    bodyText?: string
+    founderName?: string
+    founderTitle?: string
+    founderImageUrl?: string
+    credentials?: string[]
+    linkedInUrl?: string
+    stats?: Array<{ value: string; label: string }>
+  }
   aiTransparencyBlock?: {
     sectionHeader?: string; introLine?: string
     aiAcceleratesColumn?: { header?: string; body?: string }

@@ -242,10 +242,66 @@ export default defineType({
       ],
     }),
 
-    // 2. AI Transparency
+    // 2. Founder / EEAT block (Why CiCon — Senior strategist on every account)
+    defineField({
+      name: 'founderBlock',
+      title: '② Founder — "Why CiCon / Senior strategist"',
+      type: 'object',
+      group: 'content',
+      fields: [
+        defineField({ name: 'sectionBadge', title: 'Section Badge', type: 'string', initialValue: 'Why CiCon' }),
+        defineField({ name: 'headline',     title: 'Headline',      type: 'string', initialValue: 'Senior strategist on every account' }),
+        defineField({
+          name: 'bodyText',
+          title: 'Body (separate paragraphs with a blank line)',
+          type: 'text',
+          rows: 6,
+          initialValue: 'Every campaign at CiCon is run by Majid, our senior strategist with 14+ years in performance marketing. No junior account managers. No rotating points of contact. You get senior strategy on every call, every report, every decision.\n\nThat\'s what "boutique" actually means.',
+        }),
+        defineField({ name: 'founderName',     title: 'Founder Name',  type: 'string', initialValue: 'Majid Behzad' }),
+        defineField({ name: 'founderTitle',    title: 'Founder Title', type: 'string', initialValue: 'Founder & Senior Strategist' }),
+        defineField({
+          name: 'founderImageUrl',
+          title: 'Founder Photo URL',
+          type: 'url',
+          initialValue: 'https://cicon.ca/wp-content/uploads/majid-behzad-headshot.jpg',
+          description: 'Absolute URL to the headshot image.',
+        }),
+        defineField({
+          name: 'credentials',
+          title: 'Credential Bullet Points',
+          type: 'array',
+          of: [{ type: 'string' }],
+          initialValue: [
+            '14+ years in performance marketing',
+            "Google-certified, Master's in Engineering",
+            'Postgraduate in Marketing Management',
+            'Senior strategist on every account — no handoffs',
+            'Boutique model: limited client roster by design',
+          ],
+        }),
+        defineField({ name: 'linkedInUrl', title: 'LinkedIn Profile URL', type: 'url', initialValue: 'https://linkedin.com/in/majidlm/' }),
+        defineField({
+          name: 'stats',
+          title: 'Stats (optional)',
+          type: 'array',
+          of: [defineArrayMember({
+            type: 'object',
+            name: 'eeatStat',
+            fields: [
+              defineField({ name: 'value', title: 'Value', type: 'string' }),
+              defineField({ name: 'label', title: 'Label', type: 'string' }),
+            ],
+            preview: { select: { title: 'value', subtitle: 'label' } },
+          })],
+        }),
+      ],
+    }),
+
+    // 3. AI Transparency
     defineField({
       name: 'aiTransparencyBlock',
-      title: '② AI Transparency — "How we work"',
+      title: '③ AI Transparency — "How we work"',
       type: 'object',
       group: 'content',
       fields: [
@@ -284,7 +340,7 @@ export default defineType({
     // 3. Stack Block
     defineField({
       name: 'stackBlock',
-      title: '③ Our Stack',
+      title: '④ Our Stack',
       type: 'object',
       group: 'content',
       fields: [
@@ -325,7 +381,7 @@ export default defineType({
     // 4. Proof Cluster
     defineField({
       name: 'proofCluster',
-      title: '④ Proof Cluster',
+      title: '⑤ Proof Cluster',
       type: 'object',
       group: 'content',
       fields: [
@@ -371,7 +427,7 @@ export default defineType({
     // 5. Process Block
     defineField({
       name: 'processBlock',
-      title: '⑤ Process',
+      title: '⑥ Process',
       type: 'object',
       group: 'content',
       fields: [
@@ -405,7 +461,7 @@ export default defineType({
     // 6. Values Block
     defineField({
       name: 'valuesBlock',
-      title: '⑥ Values',
+      title: '⑦ Values',
       type: 'object',
       group: 'content',
       fields: [
@@ -428,7 +484,7 @@ export default defineType({
     // 7. Dental Callout
     defineField({
       name: 'dentalCalloutBlock',
-      title: '⑦ Dental Callout',
+      title: '⑧ Dental Callout',
       type: 'object',
       group: 'content',
       fields: [
@@ -460,7 +516,7 @@ export default defineType({
     // 8. Local Anchor Block
     defineField({
       name: 'localAnchorBlock',
-      title: '⑧ Local Anchor',
+      title: '⑨ Local Anchor',
       type: 'object',
       group: 'content',
       fields: [
@@ -479,7 +535,7 @@ export default defineType({
     // 9. FAQ Block
     defineField({
       name: 'faqBlock',
-      title: '⑨ FAQ',
+      title: '⑩ FAQ',
       type: 'object',
       group: 'content',
       fields: [

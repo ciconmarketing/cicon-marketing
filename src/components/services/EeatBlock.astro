@@ -1,18 +1,37 @@
 ---
 /**
- * EeatBlock — E-E-A-T proof section. Dark background.
- * Majid bio, senior-strategist callout, optional stats.
+ * EeatBlock — E-E-A-T proof section / Founder credibility block.
+ * Dark navy background. Used on About Us and Services Hub.
+ * All content driven from props; defaults match the hardcoded originals.
  */
 interface Stat { value: string; label: string }
 interface Props {
-  headline?: string
-  body?: string
-  stats?: Stat[]
+  sectionBadge?:    string
+  headline?:        string
+  bodyText?:        string   // paragraphs separated by \n\n
+  founderName?:     string
+  founderTitle?:    string
+  founderImageUrl?: string
+  credentials?:     string[]
+  linkedInUrl?:     string
+  stats?:           Stat[]
 }
 const {
-  headline = 'Senior strategist on every account',
-  body = `Every campaign at CiCon is run by Majid, our senior strategist with 14+ years in performance marketing. No junior account managers. No rotating points of contact. You get senior strategy on every call, every report, every decision.\n\nThat's what "boutique" actually means.`,
-  stats = [],
+  sectionBadge    = 'Why CiCon',
+  headline        = 'Senior strategist on every account',
+  bodyText        = `Every campaign at CiCon is run by Majid, our senior strategist with 14+ years in performance marketing. No junior account managers. No rotating points of contact. You get senior strategy on every call, every report, every decision.\n\nThat's what "boutique" actually means.`,
+  founderName     = 'Majid Behzad',
+  founderTitle    = 'Founder & Senior Strategist',
+  founderImageUrl = 'https://cicon.ca/wp-content/uploads/majid-behzad-headshot.jpg',
+  credentials     = [
+    '14+ years in performance marketing',
+    "Google-certified, Master's in Engineering",
+    'Postgraduate in Marketing Management',
+    'Senior strategist on every account — no handoffs',
+    'Boutique model: limited client roster by design',
+  ],
+  linkedInUrl     = 'https://linkedin.com/in/majidlm/',
+  stats           = [],
 } = Astro.props
 ---
 
@@ -20,14 +39,14 @@ const {
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
-      <!-- Text — avatar + headline/body in a flex row -->
+      <!-- Text column — avatar row + headline/body -->
       <div>
         <div class="eeat-author-row">
-          <!-- Circular Majid avatar -->
+          <!-- Circular founder avatar (left column, mobile-only) -->
           <div class="eeat-avatar-wrap flex-shrink-0">
             <img
-              src="https://cicon.ca/wp-content/uploads/majid-behzad-headshot.jpg"
-              alt="Majid Behzad, Founder & Senior Strategist, CiCon Marketing"
+              src={founderImageUrl}
+              alt={`${founderName}, ${founderTitle}, CiCon Marketing`}
               class="eeat-avatar"
               loading="lazy"
               width="100" height="100"
@@ -38,11 +57,11 @@ const {
           <div>
             <div class="flex items-center gap-2 mb-3">
               <span class="h-[1px] w-8" style="background:var(--accent)"></span>
-              <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Why CiCon</span>
+              <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">{sectionBadge}</span>
             </div>
             <h2 class="text-3xl font-extrabold text-white mb-6">{headline}</h2>
             <div class="space-y-4">
-              {body.split('\n\n').map((para) => (
+              {bodyText.split('\n\n').map((para) => (
                 <p class="text-base leading-relaxed" style="color:#b0b0bb">{para}</p>
               ))}
             </div>
@@ -61,36 +80,26 @@ const {
         </div>
       </div>
 
-      <!-- Majid bio card -->
+      <!-- Founder bio card (right column) -->
       <div class="rounded-2xl p-8 border" style="background:#1a1a20;border-color:#2a2a35">
-        <!-- Avatar placeholder -->
         <div class="flex items-center gap-4 mb-6">
-          <div
-            class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0"
-            style="background:var(--accent)"
-          >
+          <div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0" style="background:var(--accent)">
             <img
-              src="https://cicon.ca/wp-content/uploads/majid-behzad-headshot.jpg"
-              alt="Majid Behzad, CiCon Marketing founder"
+              src={founderImageUrl}
+              alt={`${founderName}, CiCon Marketing founder`}
               class="w-full h-full object-cover"
               loading="lazy"
               width="64" height="64"
             />
           </div>
           <div>
-            <p class="font-bold text-white">Majid Behzad</p>
-            <p class="text-sm" style="color:var(--accent)">Founder & Senior Strategist</p>
+            <p class="font-bold text-white">{founderName}</p>
+            <p class="text-sm" style="color:var(--accent)">{founderTitle}</p>
           </div>
         </div>
 
         <ul class="space-y-3">
-          {[
-            '14+ years in performance marketing',
-            "Google-certified, Master's in Engineering",
-            'Postgraduate in Marketing Management',
-            'Senior strategist on every account — no handoffs',
-            'Boutique model: limited client roster by design',
-          ].map((point) => (
+          {credentials.map((point) => (
             <li class="flex items-start gap-3 text-sm" style="color:#b0b0bb">
               <svg class="w-4 h-4 flex-shrink-0 mt-0.5" style="color:var(--action)" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
@@ -100,17 +109,19 @@ const {
           ))}
         </ul>
 
-        <div class="mt-6 pt-6 border-t" style="border-color:#2a2a35">
-          <a
-            href="https://linkedin.com/in/majidlm/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-sm font-medium hover:underline"
-            style="color:var(--accent)"
-          >
-            LinkedIn Profile →
-          </a>
-        </div>
+        {linkedInUrl && (
+          <div class="mt-6 pt-6 border-t" style="border-color:#2a2a35">
+            <a
+              href={linkedInUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-sm font-medium hover:underline"
+              style="color:var(--accent)"
+            >
+              LinkedIn Profile →
+            </a>
+          </div>
+        )}
       </div>
 
     </div>

@@ -3,8 +3,9 @@
  * /about-us/ — CiCon Marketing About page (2026, production-ready)
  * Content pulled from Sanity `aboutPage` singleton; falls back to hardcoded values.
  */
-import Nav    from '../components/Nav.astro';
-import Footer from '../components/Footer.astro';
+import Nav       from '../components/Nav.astro';
+import Footer    from '../components/Footer.astro';
+import EeatBlock from '../components/services/EeatBlock.astro';
 import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON } from '../lib/schema-constants';
 import { getAboutPage } from '../lib/sanity';
 import '../styles/globals.css';
@@ -263,6 +264,22 @@ const jsonLd = {
       </p>
     </div>
   </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       SECTION 2b — FOUNDER / WHY CICON (EEAT)
+       ═════════════════════════════════════════════════════════════════════ -->
+  <EeatBlock
+    sectionBadge={cms?.founderBlock?.sectionBadge}
+    headline={cms?.founderBlock?.headline}
+    bodyText={cms?.founderBlock?.bodyText}
+    founderName={cms?.founderBlock?.founderName}
+    founderTitle={cms?.founderBlock?.founderTitle}
+    founderImageUrl={cms?.founderBlock?.founderImageUrl}
+    credentials={cms?.founderBlock?.credentials}
+    linkedInUrl={cms?.founderBlock?.linkedInUrl}
+    stats={cms?.founderBlock?.stats}
+  />
 
 
   <!-- ══════════════════════════════════════════════════════════════════════
