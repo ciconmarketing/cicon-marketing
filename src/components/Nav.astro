@@ -56,6 +56,7 @@ import { SERVICES_NAV } from '../lib/services-nav'
 
         <!-- Other desktop nav links -->
         {[
+          { href: '/', label: 'Home' },
           { href: '/about-us/', label: 'About Us' },
           { href: '/blog/', label: 'Blog' },
           { href: '/check-google-map-visibility-for-free/', label: 'Free Map Check' },
@@ -110,6 +111,8 @@ import { SERVICES_NAV } from '../lib/services-nav'
     class="hidden md:hidden bg-white border-t border-gray-100 shadow-lg"
   >
     <div class="container-xl py-4 flex flex-col gap-1">
+
+      <a href="/" class="px-4 py-3 text-gray-700 hover:text-teal-600 hover:bg-teal-50 rounded-xl font-medium transition-colors">Home</a>
 
       <!-- Services accordion item (mobile) -->
       <div class="mobile-accordion-item" data-mobile-accordion>
