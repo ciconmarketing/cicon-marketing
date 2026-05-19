@@ -11,12 +11,16 @@
  */
 
 const TOOLS = [
-  { name: 'Google Ads',              file: 'google-ads.svg',    alt: 'Google Ads' },
-  { name: 'Meta Ads',                file: 'meta-ads.svg',      alt: 'Meta Ads (Facebook & Instagram)' },
-  { name: 'Google Business Profile', file: 'gbp.svg',           alt: 'Google Business Profile' },
-  { name: 'Google Analytics 4',      file: 'ga4.svg',           alt: 'Google Analytics 4' },
-  { name: 'WordPress',               file: 'wordpress.svg',     alt: 'WordPress' },
-  { name: 'GoHighLevel',             file: 'gohighlevel.svg',   alt: 'GoHighLevel' },
+  { name: 'Google Ads',              file: 'google-ads.svg',      alt: 'Google Ads' },
+  { name: 'Meta Ads',                file: 'meta-ads.svg',        alt: 'Meta Ads (Facebook & Instagram)' },
+  { name: 'Google Business Profile', file: 'gbp.svg',             alt: 'Google Business Profile' },
+  { name: 'Google Analytics 4',      file: 'ga4.svg',             alt: 'Google Analytics 4' },
+  { name: 'WordPress',               file: 'wordpress.svg',       alt: 'WordPress' },
+  { name: 'GoHighLevel',             file: 'gohighlevel.svg',     alt: 'GoHighLevel' },
+  { name: 'Shopify',                 file: 'shopify.svg',         alt: 'Shopify' },
+  { name: 'Ahrefs',                  file: 'ahrefs.svg',          alt: 'Ahrefs' },
+  { name: 'Bing Ads',                file: 'bing-ads.svg',        alt: 'Microsoft Bing Ads' },
+  { name: 'Final Cut Pro',           file: 'final-cut-pro.svg',   alt: 'Apple Final Cut Pro' },
 ];
 ---
 
@@ -40,8 +44,8 @@ const TOOLS = [
             src={`/logos/tools/${tool.file}`}
             alt={tool.alt}
             class="tools-strip__logo"
-            width="148"
-            height="40"
+            width="222"
+            height="60"
             loading="lazy"
             decoding="async"
           />
@@ -54,8 +58,8 @@ const TOOLS = [
             src={`/logos/tools/${tool.file}`}
             alt=""
             class="tools-strip__logo"
-            width="148"
-            height="40"
+            width="222"
+            height="60"
             loading="lazy"
             decoding="async"
           />
@@ -137,7 +141,7 @@ const TOOLS = [
   /* ── Scrolling track ───────────────────────────────────────── */
   .tools-strip__track {
     display: flex;
-    gap: 88px;
+    gap: 132px;
     align-items: center;
     flex-shrink: 0;
     /* translateX(-50%) lands exactly at the duplicate's start point — seamless loop */
@@ -165,7 +169,7 @@ const TOOLS = [
   }
 
   .tools-strip__logo {
-    height: 40px;
+    height: 60px;
     width: auto;
     display: block;
     /* Grayscale + subdued by default */
@@ -212,13 +216,13 @@ const TOOLS = [
     }
 
     .tools-strip__track {
-      gap: 56px;
+      gap: 84px;
       /* Slightly faster on mobile — less screen real estate to read from */
       animation-duration: 25s;
     }
 
     .tools-strip__logo {
-      height: 32px;
+      height: 48px;
     }
 
     .tools-strip__disclaimer {
