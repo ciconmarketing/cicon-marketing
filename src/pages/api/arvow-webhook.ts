@@ -114,21 +114,35 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     payload = JSON.parse(rawBody)
   } catch {
+    console.error('[arvow-webhook] JSON parse failed. Raw body (first 500):', rawBody.slice(0, 500))
     return json({ error: 'Invalid JSON body.' }, 400)
   }
+
+  // DIAGNOSTIC — log the incoming field names so we can verify Arvow's payload shape.
+  // REMOVE after confirming the field names are correct.
+  console.log('[arvow-webhook] DIAG incoming fields:', Object.keys(payload).sort().join(', '))
+  console.log('[arvow-webhook] DIAG slug value:', payload.slug ?? '(missing)')
+  console.log('[arvow-webhook] DIAG bodyMarkdown present:', typeof (payload as any).bodyMarkdown === 'string' ? 'yes' : 'no')
+  console.log('[arvow-webhook] DIAG raw field check — body:', typeof (payload as any).body)
+  console.log('[arvow-webhook] DIAG raw field check — content:', typeof (payload as any).content)
+  console.log('[arvow-webhook] DIAG raw field check — content_markdown:', typeof (payload as any).content_markdown)
 
   const { id, title, slug, bodyMarkdown } = payload
 
   if (!id || typeof id !== 'string') {
+    console.error('[arvow-webhook] Validation failed: missing field "id". Keys received:', Object.keys(payload).join(', '))
     return json({ error: 'Missing required field: id' }, 400)
   }
   if (!title || typeof title !== 'string') {
+    console.error('[arvow-webhook] Validation failed: missing field "title". Keys received:', Object.keys(payload).join(', '))
     return json({ error: 'Missing required field: title' }, 400)
   }
   if (!slug || typeof slug !== 'string' || !/^[a-z0-9-]+$/.test(slug)) {
+    console.error(`[arvow-webhook] Validation failed: slug="${slug}" — must match /^[a-z0-9-]+$/`)
     return json({ error: 'Missing or invalid field: slug (lowercase, hyphens only)' }, 400)
   }
   if (!bodyMarkdown || typeof bodyMarkdown !== 'string') {
+    console.error(`[arvow-webhook] Validation failed: bodyMarkdown missing or not a string. Type: ${typeof bodyMarkdown}. Keys received: ${Object.keys(payload).join(', ')}`)
     return json({ error: 'Missing required field: bodyMarkdown' }, 400)
   }
 
