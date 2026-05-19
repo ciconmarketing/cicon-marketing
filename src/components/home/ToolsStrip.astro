@@ -1,0 +1,250 @@
+---
+/**
+ * ToolsStrip — "Tools Mastery" trust strip below the homepage hero.
+ *
+ * Full-width band with a heading + pure-CSS auto-scrolling marquee of 6
+ * platform logos. No JS library — animation is entirely CSS.
+ *
+ * Logo assets live in /public/logos/tools/. Placeholder SVGs are included
+ * until MJ drops in official brand SVGs from each platform's brand page.
+ * See the MANUAL FLAGS section at the bottom of this file.
+ */
+
+const TOOLS = [
+  { name: 'Google Ads',              file: 'google-ads.svg',    alt: 'Google Ads' },
+  { name: 'Meta Ads',                file: 'meta-ads.svg',      alt: 'Meta Ads (Facebook & Instagram)' },
+  { name: 'Google Business Profile', file: 'gbp.svg',           alt: 'Google Business Profile' },
+  { name: 'Google Analytics 4',      file: 'ga4.svg',           alt: 'Google Analytics 4' },
+  { name: 'WordPress',               file: 'wordpress.svg',     alt: 'WordPress' },
+  { name: 'GoHighLevel',             file: 'gohighlevel.svg',   alt: 'GoHighLevel' },
+];
+---
+
+<section
+  class="tools-strip"
+  aria-label="Tools and platforms we use"
+  role="region"
+>
+  <!-- Heading -->
+  <div class="tools-strip__header">
+    <p class="tools-strip__eyebrow">The stack we run for GTA businesses</p>
+  </div>
+
+  <!-- Marquee -->
+  <div class="tools-strip__marquee" aria-hidden="true">
+    <!-- Track is duplicated so the seamless loop never shows a gap -->
+    <div class="tools-strip__track">
+      {TOOLS.map((tool) => (
+        <span class="tools-strip__item" title={tool.name}>
+          <img
+            src={`/logos/tools/${tool.file}`}
+            alt={tool.alt}
+            class="tools-strip__logo"
+            width="148"
+            height="40"
+            loading="lazy"
+            decoding="async"
+          />
+        </span>
+      ))}
+      {/* Duplicate set — makes the loop seamless (translateX(-50%) lands back at start) */}
+      {TOOLS.map((tool) => (
+        <span class="tools-strip__item" aria-hidden="true" title={tool.name}>
+          <img
+            src={`/logos/tools/${tool.file}`}
+            alt=""
+            class="tools-strip__logo"
+            width="148"
+            height="40"
+            loading="lazy"
+            decoding="async"
+          />
+        </span>
+      ))}
+    </div>
+  </div>
+
+  <!-- Disclaimer -->
+  <p class="tools-strip__disclaimer">
+    Logos shown are the property of their respective owners. CiCon Marketing is not affiliated with or
+    endorsed by these companies — we work with their platforms as part of our service delivery.
+  </p>
+</section>
+
+<style>
+  /* ── Section shell ─────────────────────────────────────────── */
+  .tools-strip {
+    background: #FAFAFA;
+    padding: 64px 0 48px;
+    overflow: hidden;
+    border-top: 1px solid #E7E7E7;
+    border-bottom: 1px solid #E7E7E7;
+  }
+
+  /* ── Heading ───────────────────────────────────────────────── */
+  .tools-strip__header {
+    text-align: center;
+    margin-bottom: 36px;
+    padding: 0 24px;
+  }
+
+  .tools-strip__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #888888;
+    margin: 0;
+  }
+
+  /* Gold accent dot — matches the badge pattern used on service pages */
+  .tools-strip__eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #9D833E;
+    flex-shrink: 0;
+  }
+
+  /* ── Marquee container ─────────────────────────────────────── */
+  .tools-strip__marquee {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+    /* Fade-out edges so logos don't pop in/out abruptly */
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%
+    );
+  }
+
+  /* ── Scrolling track ───────────────────────────────────────── */
+  .tools-strip__track {
+    display: flex;
+    gap: 88px;
+    align-items: center;
+    flex-shrink: 0;
+    /* translateX(-50%) lands exactly at the duplicate's start point — seamless loop */
+    animation: tools-scroll 35s linear infinite;
+    padding: 8px 0;
+  }
+
+  /* Pause the whole track on hover so users can read logos */
+  .tools-strip:hover .tools-strip__track {
+    animation-play-state: paused;
+  }
+
+  /* ── Individual logo item ──────────────────────────────────── */
+  .tools-strip__item {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 6px;
+    /* Hover state handled on the item, not the track, so only one logo lights up */
+    transition: transform 0.2s ease;
+  }
+
+  .tools-strip__item:hover {
+    transform: scale(1.05);
+  }
+
+  .tools-strip__logo {
+    height: 40px;
+    width: auto;
+    display: block;
+    /* Grayscale + subdued by default */
+    filter: grayscale(100%) opacity(0.55);
+    transition: filter 0.2s ease;
+    cursor: default;
+  }
+
+  .tools-strip__item:hover .tools-strip__logo {
+    /* Full color on item hover */
+    filter: none;
+    opacity: 1;
+  }
+
+  /* ── Keyframe ──────────────────────────────────────────────── */
+  @keyframes tools-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ── Disclaimer ────────────────────────────────────────────── */
+  .tools-strip__disclaimer {
+    text-align: center;
+    font-size: 11px;
+    line-height: 1.6;
+    color: #AAAAAA;
+    margin: 28px auto 0;
+    padding: 0 24px;
+    max-width: 680px;
+  }
+
+  /* ── Mobile ────────────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .tools-strip {
+      padding: 40px 0 32px;
+    }
+
+    .tools-strip__header {
+      margin-bottom: 28px;
+    }
+
+    .tools-strip__eyebrow {
+      font-size: 11px;
+    }
+
+    .tools-strip__track {
+      gap: 56px;
+      /* Slightly faster on mobile — less screen real estate to read from */
+      animation-duration: 25s;
+    }
+
+    .tools-strip__logo {
+      height: 32px;
+    }
+
+    .tools-strip__disclaimer {
+      font-size: 10px;
+      margin-top: 20px;
+    }
+  }
+
+  /* ── Reduced motion — convert to static centered grid ─────── */
+  @media (prefers-reduced-motion: reduce) {
+    .tools-strip__marquee {
+      mask-image: none;
+      -webkit-mask-image: none;
+    }
+
+    .tools-strip__track {
+      animation: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 32px;
+      padding: 0 24px;
+    }
+
+    /* Show only the first set (hide the aria-hidden duplicate) */
+    .tools-strip__item[aria-hidden="true"] {
+      display: none;
+    }
+  }
+</style>

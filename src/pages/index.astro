@@ -11,6 +11,7 @@ import GoogleReviews from '../components/react/GoogleReviews.tsx';
 import ReadyToGrow from '../components/ReadyToGrow.astro';
 import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
+import ToolsStrip from '../components/home/ToolsStrip.astro';
 import ScrollProgress from '../components/react/ScrollProgress.tsx';
 import '../styles/globals.css';
 
@@ -110,6 +111,7 @@ try {
 
   <main>
     <Hero           data={data.hero} />
+    <ToolsStrip />
     <WhyCiCon       data={data.whyCicon} />
     <ResultsShowcase client:visible />
     <Services       data={data.services} />
