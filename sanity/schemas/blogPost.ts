@@ -224,6 +224,22 @@ export default defineType({
       readOnly: true,
     }),
     defineField({
+      name: 'arvowCampaignId',
+      title: 'Arvow Campaign ID',
+      type: 'string',
+      group: 'workflow',
+      description: 'Arvow campaign_id field from the webhook payload.',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'arvowCampaignName',
+      title: 'Arvow Campaign Name',
+      type: 'string',
+      group: 'workflow',
+      description: 'Arvow campaign_name field from the webhook payload.',
+      readOnly: true,
+    }),
+    defineField({
       name: 'arvowReceivedAt',
       title: 'Arvow Received At',
       type: 'datetime',
