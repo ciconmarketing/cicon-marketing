@@ -16,10 +16,10 @@ const TOOLS = [
   { name: 'Google Business Profile', file: 'gbp.svg',             alt: 'Google Business Profile' },
   { name: 'Google Analytics 4',      file: 'ga4.svg',             alt: 'Google Analytics 4' },
   { name: 'WordPress',               file: 'wordpress.svg',       alt: 'WordPress' },
-  { name: 'GoHighLevel',             file: 'gohighlevel.svg',     alt: 'GoHighLevel' },
-  { name: 'Shopify',                 file: 'shopify.svg',         alt: 'Shopify' },
-  { name: 'Ahrefs',                  file: 'ahrefs.svg',          alt: 'Ahrefs' },
-  { name: 'Bing Ads',                file: 'bing-ads.svg',        alt: 'Microsoft Bing Ads' },
+  { name: 'GoHighLevel',             file: 'gohighlevel.svg',     alt: 'GoHighLevel',  small: true },
+  { name: 'Shopify',                 file: 'shopify.svg',         alt: 'Shopify',       small: true },
+  { name: 'Ahrefs',                  file: 'ahrefs.svg',          alt: 'Ahrefs',        small: true },
+  { name: 'Bing Ads',                file: 'bing-ads.svg',        alt: 'Microsoft Bing Ads', small: true },
 ];
 ---
 
@@ -42,9 +42,9 @@ const TOOLS = [
           <img
             src={`/logos/tools/${tool.file}`}
             alt={tool.alt}
-            class="tools-strip__logo"
-            width="155"
-            height="42"
+            class={`tools-strip__logo${tool.small ? ' tools-strip__logo--sm' : ''}`}
+            width={tool.small ? '116' : '155'}
+            height={tool.small ? '32' : '42'}
             loading="lazy"
             decoding="async"
           />
@@ -56,9 +56,9 @@ const TOOLS = [
           <img
             src={`/logos/tools/${tool.file}`}
             alt=""
-            class="tools-strip__logo"
-            width="155"
-            height="42"
+            class={`tools-strip__logo${tool.small ? ' tools-strip__logo--sm' : ''}`}
+            width={tool.small ? '116' : '155'}
+            height={tool.small ? '32' : '42'}
             loading="lazy"
             decoding="async"
           />
@@ -177,6 +177,11 @@ const TOOLS = [
     cursor: default;
   }
 
+  /* 25% smaller variant for logos that are naturally larger in canvas size */
+  .tools-strip__logo--sm {
+    height: 32px;
+  }
+
   .tools-strip__item:hover .tools-strip__logo {
     /* Full color on item hover */
     filter: none;
@@ -222,6 +227,10 @@ const TOOLS = [
 
     .tools-strip__logo {
       height: 34px;
+    }
+
+    .tools-strip__logo--sm {
+      height: 26px;
     }
 
     .tools-strip__disclaimer {
