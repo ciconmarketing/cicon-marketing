@@ -23,6 +23,13 @@ import { SERVICES_NAV } from '../lib/services-nav'
       <!-- Desktop Nav Links -->
       <ul class="hidden md:flex items-center gap-8" style="list-style:none;margin:0;padding:0;">
 
+        <!-- Home -->
+        <li>
+          <a href="/" class="text-gray-600 hover:text-teal-600 font-medium text-sm transition-colors duration-150 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-teal-600 after:transition-all hover:after:w-full">
+            Home
+          </a>
+        </li>
+
         <!-- Services dropdown item -->
         <li class="nav-item nav-item--has-dropdown" data-mobile-accordion>
           <a href="/services/" class="nav-link text-gray-600 hover:text-teal-600 font-medium text-sm transition-colors duration-150 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-teal-600 after:transition-all hover:after:w-full inline-flex items-center" aria-haspopup="true" aria-expanded="false">
@@ -56,7 +63,6 @@ import { SERVICES_NAV } from '../lib/services-nav'
 
         <!-- Other desktop nav links -->
         {[
-          { href: '/', label: 'Home' },
           { href: '/about-us/', label: 'About Us' },
           { href: '/blog/', label: 'Blog' },
           { href: '/check-google-map-visibility-for-free/', label: 'Free Map Check' },
