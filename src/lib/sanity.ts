@@ -339,7 +339,7 @@ export async function getHomepage(): Promise<HomepageData | null> {
 export const TRUSTED_BY_MARQUEE_QUERY = `
   *[_type == "trustedByMarquee"][0]{
     enabled, heading, subheading,
-    logos[]{ clientName, logoFilename, order } | order(order asc),
+    logos[]{ clientName, logoFilename, order, scale } | order(order asc),
     marqueeSpeed, direction
   }
 `

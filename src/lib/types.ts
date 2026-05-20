@@ -110,6 +110,8 @@ export interface TrustedByLogoItem {
   clientName: string;
   logoFilename: string;
   order?: number;
+  /** Optional per-logo scale override (default 1.0). Applied as CSS transform on the img. */
+  scale?: number;
 }
 
 export interface TrustedByMarqueeData {

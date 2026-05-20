@@ -7,9 +7,12 @@
  */
 import Nav    from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import TrustedByMarquee from '../components/home/TrustedByMarquee.astro';
 import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON } from '../lib/schema-constants';
 import '../styles/globals.css';
 import { getAboutPage, getWhyCiconCards, getTrustedByMarquee } from '../lib/sanity';
+import { defaultTrustedByMarquee } from '../lib/defaults';
+import type { TrustedByMarqueeData } from '../lib/types';
 
 const isPreview = import.meta.env.VERCEL_ENV !== 'production';
 const canonicalUrl = 'https://cicon.ca/about-us/';
@@ -196,24 +199,23 @@ try {
   if (cards?.heading) whyCiconCardsData = { ...whyCiconCardsData, ...cards };
 } catch {}
 
-// ── Trusted By logos ──────────────────────────────────────────────────────────
-let rosterLogos: Array<{ clientName: string; logoFilename: string; order: number }> = [
-  { clientName: 'Sparkle Light',            logoFilename: 'sparkle-light.png',            order: 1  },
-  { clientName: 'Bethel International',     logoFilename: 'bethel-international.jpg',     order: 2  },
-  { clientName: 'Joseph Kitchen and Bath',  logoFilename: 'joseph-kitchen-and-bath.png',  order: 3  },
-  { clientName: 'Dentistry on Guelph',      logoFilename: 'dentistry-on-guelph.png',      order: 4  },
-  { clientName: 'First Electrical Supply',  logoFilename: 'first-electrical-supply.png',  order: 5  },
-  { clientName: 'Smiles on Sparks',         logoFilename: 'smiles-on-sparks.png',         order: 6  },
-  { clientName: 'Smile Express',            logoFilename: 'smile-express.png',            order: 7  },
-  { clientName: 'AM Group Studio',          logoFilename: 'am-group-studio.jpg',          order: 8  },
-  { clientName: 'Direct Air Systems',       logoFilename: 'direct-air-systems.png',       order: 9  },
-  { clientName: 'Maison Opes',              logoFilename: 'maison-opes.png',              order: 10 },
-  { clientName: 'Nootk',                    logoFilename: 'nootk.svg',                    order: 11 },
-  { clientName: 'Venizzi Kitchen and Bath', logoFilename: 'venizzi-kitchen-and-bath.jpg', order: 12 },
-];
+// ── Trusted By marquee data (single source of truth from Sanity) ─────────────
+let rosterMarqueeData: TrustedByMarqueeData = {
+  ...defaultTrustedByMarquee,
+  // Override heading/subheading — About Us has its own section copy
+  heading:    aboutData.roster.heading,
+  subheading: aboutData.roster.body ?? defaultTrustedByMarquee.subheading,
+};
 try {
   const marquee = await getTrustedByMarquee();
-  if (marquee?.logos?.length) rosterLogos = marquee.logos;
+  if (marquee?.logos?.length) {
+    rosterMarqueeData = {
+      ...marquee,
+      // Keep About Us heading override; only logos/speed/direction come from Sanity
+      heading:    aboutData.roster.heading,
+      subheading: aboutData.roster.body ?? marquee.subheading,
+    };
+  }
 } catch {}
 ---
 
@@ -763,54 +765,16 @@ try {
 
 
   <!-- ══════════════════════════════════════════════════════════════════════
-       SECTION 10 — TRUSTED BY ROSTER
+       SECTION 10 — TRUSTED BY ROSTER (scrolling marquee)
+       Single source of truth: same TrustedByMarquee component as homepage,
+       reads from the same trustedByMarquee Sanity singleton.
        ═════════════════════════════════════════════════════════════════════ -->
-  <section aria-labelledby="roster-h2" style="padding:80px 0;background:var(--off-white);">
-    <div class="container-xl">
-
-      <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
-        {aboutData.roster.eyebrow}
-      </p>
-      <h2 id="roster-h2" style="font-size:clamp(1.5rem,2.8vw,2.25rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.15;margin:0 0 12px;">
-        {aboutData.roster.heading}
-      </h2>
-      {aboutData.roster.body && (
-        <p style="font-size:1rem;color:rgba(58,58,58,0.65);margin:0 0 48px;max-width:560px;line-height:1.6;">
-          {aboutData.roster.body}
-        </p>
-      )}
-      {!aboutData.roster.body && <div style="margin-bottom:48px;"></div>}
-
-      <!-- Logo grid: 4-col desktop, 3-col tablet, 2-col mobile -->
-      <div class="roster-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;">
-        {rosterLogos.map((logo: { clientName: string; logoFilename: string }) => (
-          <div
-            class="roster-logo"
-            style="background:#fff;border:1px solid var(--alabaster);border-radius:12px;padding:20px 24px;display:flex;align-items:center;justify-content:center;min-height:80px;transition:border-color .2s,box-shadow .2s,filter .2s;"
-          >
-            <img
-              src={`/clients-logo/${logo.logoFilename}`}
-              alt={`${logo.clientName} logo`}
-              loading="lazy"
-              style="max-width:120px;max-height:44px;width:auto;height:auto;object-fit:contain;filter:grayscale(100%) opacity(0.6);transition:filter .25s ease;"
-              onmouseover="this.style.filter='grayscale(0%) opacity(1)'"
-              onmouseout="this.style.filter='grayscale(100%) opacity(0.6)'"
-            />
-          </div>
-        ))}
-      </div>
-
-    </div>
-  </section>
-
-  <style>
-    @media (max-width: 1023px) {
-      .roster-grid { grid-template-columns: repeat(3,1fr) !important; }
-    }
-    @media (max-width: 599px) {
-      .roster-grid { grid-template-columns: repeat(2,1fr) !important; }
-    }
-  </style>
+  <TrustedByMarquee
+    data={rosterMarqueeData}
+    eyebrow={aboutData.roster.eyebrow}
+    overrideHeading={aboutData.roster.heading}
+    overrideSubheading={aboutData.roster.body ?? null}
+  />
 
 
   <!-- ══════════════════════════════════════════════════════════════════════

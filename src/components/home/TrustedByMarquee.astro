@@ -3,19 +3,30 @@
  * TrustedByMarquee — "Trusted By" client logo strip.
  *
  * Logos live in /public/clients-logo/. Each logo is placed inside a
- * fixed-size normalisation container (160×70 px desktop) with
+ * fixed-size normalisation container (140×90 px desktop) with
  * object-fit:contain so every aspect ratio looks optically balanced.
+ * Per-logo `scale` overrides allow fine-tuning square/tall logos that
+ * otherwise look too small inside the wide container.
  *
  * Data comes from Sanity `trustedByMarquee` singleton (with hard-coded
  * fallback). No JS animation library — pure CSS @keyframes.
+ *
+ * Optional override props let About Us render this component with its own
+ * eyebrow / heading / subheading instead of the Sanity heading fields.
  */
 import type { TrustedByMarqueeData } from '../../lib/types';
 
 interface Props {
   data: TrustedByMarqueeData;
+  /** Optional eyebrow label (e.g. "THE ROSTER"). Shown above the heading. */
+  eyebrow?: string;
+  /** Override the Sanity heading with a custom string. */
+  overrideHeading?: string;
+  /** Override the Sanity subheading with a custom string. Pass undefined to hide. */
+  overrideSubheading?: string | null;
 }
 
-const { data } = Astro.props;
+const { data, eyebrow, overrideHeading, overrideSubheading } = Astro.props;
 
 // Bail early if Studio has disabled the section
 if (!data.enabled) return;
@@ -23,17 +34,24 @@ if (!data.enabled) return;
 const speed: Record<string, string> = { slow: '60s', medium: '40s', fast: '25s' };
 const duration = speed[data.marqueeSpeed ?? 'medium'] ?? '40s';
 const reverse  = data.direction === 'right' ? 'reverse' : 'normal';
+
+const displayHeading    = overrideHeading    ?? data.heading;
+// undefined = use Sanity subheading; null = explicitly hidden
+const displaySubheading = overrideSubheading !== undefined ? overrideSubheading : data.subheading;
 ---
 
 <section
   class="trusted-by"
-  aria-label="Trusted by"
+  aria-label={eyebrow ?? 'Trusted by'}
 >
   <!-- Heading block -->
   <div class="trusted-by__header">
-    <h2 class="trusted-by__heading">{data.heading}</h2>
-    {data.subheading && (
-      <p class="trusted-by__subheading">{data.subheading}</p>
+    {eyebrow && (
+      <p class="trusted-by__eyebrow">{eyebrow}</p>
+    )}
+    <h2 class="trusted-by__heading">{displayHeading}</h2>
+    {displaySubheading && (
+      <p class="trusted-by__subheading">{displaySubheading}</p>
     )}
   </div>
 
@@ -52,6 +70,7 @@ const reverse  = data.direction === 'right' ? 'reverse' : 'normal';
             class="trusted-by__logo"
             loading="lazy"
             decoding="async"
+            style={logo.scale && logo.scale !== 1 ? `transform:scale(${logo.scale});transform-origin:center;` : undefined}
           />
         </span>
       ))}
@@ -64,6 +83,7 @@ const reverse  = data.direction === 'right' ? 'reverse' : 'normal';
             class="trusted-by__logo"
             loading="lazy"
             decoding="async"
+            style={logo.scale && logo.scale !== 1 ? `transform:scale(${logo.scale});transform-origin:center;` : undefined}
           />
         </span>
       ))}
@@ -84,6 +104,16 @@ const reverse  = data.direction === 'right' ? 'reverse' : 'normal';
     text-align: center;
     padding: 0 24px;
     margin-bottom: 40px;
+  }
+
+  .trusted-by__eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #9D833E;
+    margin: 0 0 14px;
   }
 
   .trusted-by__heading {
@@ -143,12 +173,15 @@ const reverse  = data.direction === 'right' ? 'reverse' : 'normal';
 
   /* ── Individual logo NORMALISATION container ─────────── */
   .trusted-by__item {
-    /* Fixed-footprint container: every logo occupies the same visual slot */
+    /*
+     * More square-ish container (140×90) gives square/tall logos equal
+     * optical weight compared to the previous wide 160×70 container.
+     */
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 160px;
-    height: 70px;
+    width: 140px;
+    height: 90px;
     flex-shrink: 0;
     transition: transform 0.2s ease;
   }
@@ -165,9 +198,13 @@ const reverse  = data.direction === 'right' ? 'reverse' : 'normal';
     height: auto;
     object-fit: contain;
     display: block;
-    /* Greyscale default → full colour on hover */
-    filter: grayscale(100%) opacity(0.6);
+    /*
+     * 0.75 opacity (was 0.6) keeps the restrained look while ensuring
+     * every logo remains clearly readable before hover.
+     */
+    filter: grayscale(100%) opacity(0.75);
     transition: filter 300ms ease;
+    /* NOTE: per-logo scale is applied via inline style on this element */
   }
 
   .trusted-by__item:hover .trusted-by__logo {
@@ -183,8 +220,8 @@ const reverse  = data.direction === 'right' ? 'reverse' : 'normal';
   /* ── Tablet ──────────────────────────────────────────── */
   @media (max-width: 1024px) {
     .trusted-by__item {
-      width: 140px;
-      height: 60px;
+      width: 120px;
+      height: 78px;
     }
     .trusted-by__track {
       gap: 3rem;
@@ -200,8 +237,8 @@ const reverse  = data.direction === 'right' ? 'reverse' : 'normal';
       margin-bottom: 32px;
     }
     .trusted-by__item {
-      width: 110px;
-      height: 50px;
+      width: 100px;
+      height: 65px;
     }
     .trusted-by__track {
       gap: 2rem;
