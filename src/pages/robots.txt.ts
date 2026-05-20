@@ -1,24 +1,25 @@
 /**
- * robots.txt — build-time conditional
+ * robots.txt — request-time, host-based gating
  *
- * Vercel sets VERCEL_ENV at build time:
- *   production → permissive (allows all crawlers, references sitemap)
- *   preview    → blocking  (Disallow: /)
- *   undefined  → blocking  (safe default for local dev)
+ * IMPORTANT: VERCEL_ENV is NOT a reliable signal here.
+ * cicon-marketing.vercel.app is Vercel's *production* deployment, so
+ * VERCEL_ENV === 'production' on staging — which would incorrectly open
+ * the crawl gate before domain cutover.
  *
- * NOTE: This site uses output:'static'. Astro generates this file at
- * build time using the env vars available during the Vercel build.
- * Each deployment therefore gets the correct robots.txt baked in:
- * the production build allows indexing; preview builds block it.
+ * Instead we check the Host header at request time:
+ *   Host === cicon.ca (or www.cicon.ca) → permissive robots.txt
+ *   Any other host (staging URL, Vercel preview, local dev) → Disallow: /
  *
- * The static public/robots.txt has been removed so this route owns /robots.txt.
+ * This is an API route (not prerendered), so `request` is available.
+ * After domain cutover nothing needs to change here — it auto-switches.
  */
 import type { APIRoute } from 'astro'
 
-export const GET: APIRoute = () => {
-  const isProduction = import.meta.env.VERCEL_ENV === 'production'
+export const GET: APIRoute = ({ request }) => {
+  const host = request.headers.get('host') ?? ''
+  const isLiveDomain = host === 'cicon.ca' || host === 'www.cicon.ca'
 
-  const body = isProduction
+  const body = isLiveDomain
     ? [
         'User-agent: *',
         'Allow: /',
@@ -32,9 +33,8 @@ export const GET: APIRoute = () => {
         'Sitemap: https://cicon.ca/sitemap-index.xml',
       ].join('\n')
     : [
-        '# Preview deployment — search engine indexing blocked.',
-        '# This file is generated at Vercel build time via VERCEL_ENV.',
-        '# Production build will contain the permissive version.',
+        '# Staging / preview deployment — search engine indexing blocked.',
+        '# Only cicon.ca serves the permissive version.',
         'User-agent: *',
         'Disallow: /',
       ].join('\n')
@@ -42,7 +42,8 @@ export const GET: APIRoute = () => {
   return new Response(body, {
     headers: {
       'Content-Type': 'text/plain; charset=utf-8',
-      'Cache-Control': 'public, max-age=300',
+      // Short cache so staging never gets stale-cached as "open"
+      'Cache-Control': 'public, max-age=60',
     },
   })
 }
