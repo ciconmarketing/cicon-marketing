@@ -24,6 +24,7 @@ import blogCategory from './blogCategory'
 import servicePage from './servicePage'
 import servicesHub from './servicesHub'
 import caseStudy from './caseStudy'
+import trustedByMarquee from './trustedByMarquee'
 
 // ── Shared sub-types ──────────────────────────────────────────────────────────
 
@@ -466,4 +467,6 @@ export const schemaTypes = [
   servicePage,
   servicesHub,
   caseStudy,
+  // Homepage modules
+  trustedByMarquee,
 ];

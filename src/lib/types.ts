@@ -103,3 +103,20 @@ export interface HomepageData {
   readyToGrow: ReadyToGrowData;
   contact: ContactData;
 }
+
+// ── Trusted By Marquee ────────────────────────────────────────────────────────
+
+export interface TrustedByLogoItem {
+  clientName: string;
+  logoFilename: string;
+  order?: number;
+}
+
+export interface TrustedByMarqueeData {
+  enabled: boolean;
+  heading: string;
+  subheading?: string;
+  logos: TrustedByLogoItem[];
+  marqueeSpeed: 'slow' | 'medium' | 'fast';
+  direction: 'left' | 'right';
+}

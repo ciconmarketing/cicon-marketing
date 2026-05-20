@@ -2,9 +2,9 @@
 /**
  * /services/[slug]/ — Service spoke page.
  * Dynamically renders one servicePage document from Sanity.
- * Section order is locked per brief: Hero → StickyBar → PAA → AntiPitch →
- * CaseStudy(top) → Capabilities → [Dental: CDCP + Channels] → Process →
- * EeatBlock → CaseStudy(bottom) → FAQ → RelatedServices → RelatedPosts → FinalCta
+ * Section order: Hero → StickyBar → PAA → AntiPitch →
+ * Capabilities → [Dental: CDCP + Channels] → Process →
+ * EeatBlock → FAQ → RelatedServices → RelatedPosts → FinalCta
  */
 import '../../styles/globals.css';
 import { getServicePage, ALL_SERVICE_SLUGS_QUERY } from '../../lib/sanity'
@@ -14,7 +14,6 @@ import Footer              from '../../components/Footer.astro'
 import ServiceHero         from '../../components/services/ServiceHero.astro'
 import PaaBlock            from '../../components/services/PaaBlock.astro'
 import AntiPitch           from '../../components/services/AntiPitch.astro'
-import MiniCaseStudy       from '../../components/services/MiniCaseStudy.astro'
 import CapabilitiesGrid    from '../../components/services/CapabilitiesGrid.astro'
 import ProcessStrip        from '../../components/services/ProcessStrip.astro'
 import EeatBlock           from '../../components/services/EeatBlock.astro'
@@ -175,8 +174,6 @@ const jsonLd = {
     />
   )}
 
-  <MiniCaseStudy caseStudy={page.caseStudyTop} position="top" />
-
   {page.capabilities?.length && (
     <CapabilitiesGrid
       headline={page.capabilitiesHeadline}
@@ -204,8 +201,6 @@ const jsonLd = {
     body={page.eeatBody}
     stats={page.eeatStats}
   />
-
-  <MiniCaseStudy caseStudy={page.caseStudyBottom} position="bottom" />
 
   {page.faqs?.length && (
     <ServiceFaq faqs={page.faqs} pageUrl={canonicalUrl} />

@@ -209,6 +209,7 @@ export default defineType({
     }),
 
     // ── Case Studies ──────────────────────────────────────────────────────────
+    // Hidden 2026-05 — case studies not publicly disclosed during growth stage
     defineField({
       name: 'caseStudyTop',
       title: 'Case Study (Top — proof near hero)',
@@ -216,6 +217,7 @@ export default defineType({
       group: 'content',
       to: [{ type: 'caseStudy' }],
       description: 'Social proof card shown near the top of the page',
+      hidden: true,
     }),
     defineField({
       name: 'caseStudyBottom',
@@ -224,6 +226,7 @@ export default defineType({
       group: 'content',
       to: [{ type: 'caseStudy' }],
       description: 'Social proof card shown near the bottom of the page',
+      hidden: true,
     }),
 
     // ── Capabilities ──────────────────────────────────────────────────────────

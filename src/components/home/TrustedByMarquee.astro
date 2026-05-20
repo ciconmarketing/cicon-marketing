@@ -1,0 +1,229 @@
+---
+/**
+ * TrustedByMarquee — "Trusted By" client logo strip.
+ *
+ * Logos live in /public/clients-logo/. Each logo is placed inside a
+ * fixed-size normalisation container (160×70 px desktop) with
+ * object-fit:contain so every aspect ratio looks optically balanced.
+ *
+ * Data comes from Sanity `trustedByMarquee` singleton (with hard-coded
+ * fallback). No JS animation library — pure CSS @keyframes.
+ */
+import type { TrustedByMarqueeData } from '../../lib/types';
+
+interface Props {
+  data: TrustedByMarqueeData;
+}
+
+const { data } = Astro.props;
+
+// Bail early if Studio has disabled the section
+if (!data.enabled) return;
+
+const speed: Record<string, string> = { slow: '60s', medium: '40s', fast: '25s' };
+const duration = speed[data.marqueeSpeed ?? 'medium'] ?? '40s';
+const reverse  = data.direction === 'right' ? 'reverse' : 'normal';
+---
+
+<section
+  class="trusted-by"
+  aria-label="Trusted by"
+>
+  <!-- Heading block -->
+  <div class="trusted-by__header">
+    <h2 class="trusted-by__heading">{data.heading}</h2>
+    {data.subheading && (
+      <p class="trusted-by__subheading">{data.subheading}</p>
+    )}
+  </div>
+
+  <!-- Marquee -->
+  <div class="trusted-by__marquee" aria-hidden="true">
+    <div
+      class="trusted-by__track"
+      style={`animation-duration:${duration};animation-direction:${reverse};`}
+    >
+      {/* First set */}
+      {data.logos.map((logo) => (
+        <span class="trusted-by__item" title={logo.clientName}>
+          <img
+            src={`/clients-logo/${logo.logoFilename}`}
+            alt={`${logo.clientName} logo`}
+            class="trusted-by__logo"
+            loading="lazy"
+            decoding="async"
+          />
+        </span>
+      ))}
+      {/* Duplicate — makes translateX(-50%) loop seamless */}
+      {data.logos.map((logo) => (
+        <span class="trusted-by__item" aria-hidden="true" title={logo.clientName}>
+          <img
+            src={`/clients-logo/${logo.logoFilename}`}
+            alt=""
+            class="trusted-by__logo"
+            loading="lazy"
+            decoding="async"
+          />
+        </span>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ── Section shell ───────────────────────────────────── */
+  .trusted-by {
+    background: #ffffff;
+    padding: 64px 0;
+    overflow: hidden;
+  }
+
+  /* ── Heading block ───────────────────────────────────── */
+  .trusted-by__header {
+    text-align: center;
+    padding: 0 24px;
+    margin-bottom: 40px;
+  }
+
+  .trusted-by__heading {
+    font-family: 'Montserrat', 'Inter', sans-serif;
+    font-size: clamp(1.35rem, 3vw, 1.875rem); /* text-3xl desktop */
+    font-weight: 600;
+    color: #212129;
+    margin: 0 0 12px;
+    line-height: 1.2;
+  }
+
+  .trusted-by__subheading {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(0.875rem, 1.5vw, 1rem);
+    color: #6B7280;
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ── Marquee container ───────────────────────────────── */
+  .trusted-by__marquee {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+    /* Edge fade */
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%
+    );
+  }
+
+  /* ── Scrolling track ─────────────────────────────────── */
+  .trusted-by__track {
+    display: flex;
+    align-items: center;
+    gap: 5rem;      /* generous gap between logo containers */
+    flex-shrink: 0;
+    animation: trusted-scroll 40s linear infinite; /* duration overridden inline */
+    padding: 8px 0;
+  }
+
+  /* Pause on container hover so users can inspect logos */
+  .trusted-by:hover .trusted-by__track {
+    animation-play-state: paused;
+  }
+
+  /* ── Individual logo NORMALISATION container ─────────── */
+  .trusted-by__item {
+    /* Fixed-footprint container: every logo occupies the same visual slot */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 160px;
+    height: 70px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  .trusted-by__item:hover {
+    transform: scale(1.05);
+  }
+
+  .trusted-by__logo {
+    /* Fill the container while respecting aspect ratio */
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    /* Greyscale default → full colour on hover */
+    filter: grayscale(100%) opacity(0.6);
+    transition: filter 300ms ease;
+  }
+
+  .trusted-by__item:hover .trusted-by__logo {
+    filter: grayscale(0%) opacity(1);
+  }
+
+  /* ── Keyframe ────────────────────────────────────────── */
+  @keyframes trusted-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ── Tablet ──────────────────────────────────────────── */
+  @media (max-width: 1024px) {
+    .trusted-by__item {
+      width: 140px;
+      height: 60px;
+    }
+    .trusted-by__track {
+      gap: 3rem;
+    }
+  }
+
+  /* ── Mobile ──────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .trusted-by {
+      padding: 48px 0;
+    }
+    .trusted-by__header {
+      margin-bottom: 32px;
+    }
+    .trusted-by__item {
+      width: 110px;
+      height: 50px;
+    }
+    .trusted-by__track {
+      gap: 2rem;
+    }
+  }
+
+  /* ── Reduced motion — static centered grid ───────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .trusted-by__marquee {
+      mask-image: none;
+      -webkit-mask-image: none;
+    }
+    .trusted-by__track {
+      animation: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      padding: 0 24px;
+    }
+    /* Hide the duplicate set */
+    .trusted-by__item[aria-hidden="true"] {
+      display: none;
+    }
+  }
+</style>

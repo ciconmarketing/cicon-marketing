@@ -4,6 +4,8 @@ export default defineType({
   name: 'caseStudy',
   title: 'Case Study',
   type: 'document',
+  // Hidden 2026-05 — case studies not publicly disclosed during growth stage
+  hidden: () => true,
   groups: [
     { name: 'content', title: 'Content', default: true },
     { name: 'workflow', title: 'Workflow' },

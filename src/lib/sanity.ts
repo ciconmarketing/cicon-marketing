@@ -1,5 +1,5 @@
 import { createClient } from '@sanity/client';
-import type { HomepageData } from './types';
+import type { HomepageData, TrustedByMarqueeData } from './types';
 
 // Trim whitespace to guard against copy-paste or env var newline issues
 const rawId  = (import.meta.env.PUBLIC_SANITY_PROJECT_ID ?? '').trim();
@@ -188,8 +188,6 @@ const SERVICE_PAGE_FIELDS = `
   heroImage{ asset->{ _id, url } },
   paaQuestions[]{ question, answer },
   antiPitchHeadline, antiPitchItems[]{ disqualifier, explanation },
-  caseStudyTop->{ clientName, serviceType, isPlaceholder, summary, heroStat{ value, label }, placeholderImage{ asset->{ _id, url } } },
-  caseStudyBottom->{ clientName, serviceType, isPlaceholder, summary, heroStat{ value, label }, placeholderImage{ asset->{ _id, url } } },
   capabilitiesHeadline, capabilitiesIntro,
   capabilities[]{ title, definition, description, icon },
   processSteps[]{ number, label, description },
@@ -249,8 +247,6 @@ export type ServicePageData = {
   paaQuestions?: Array<{ question: string; answer: string }>
   antiPitchHeadline?: string
   antiPitchItems?: Array<{ disqualifier: string; explanation?: string }>
-  caseStudyTop?: { clientName: string; isPlaceholder: boolean; summary: string; heroStat: { value: string; label: string }; placeholderImage?: any } | null
-  caseStudyBottom?: { clientName: string; isPlaceholder: boolean; summary: string; heroStat: { value: string; label: string }; placeholderImage?: any } | null
   capabilitiesHeadline?: string
   capabilitiesIntro?: string
   capabilities?: Array<{ title: string; definition?: string; description?: string; icon?: string }>
@@ -335,5 +331,25 @@ export async function getHomepage(): Promise<HomepageData | null> {
   } catch (err) {
     console.error('[Sanity] ❌ Fetch failed:', err);
     return null;
+  }
+}
+
+// ── Trusted By Marquee ────────────────────────────────────────────────────────
+
+export const TRUSTED_BY_MARQUEE_QUERY = `
+  *[_type == "trustedByMarquee"][0]{
+    enabled, heading, subheading,
+    logos[]{ clientName, logoFilename, order } | order(order asc),
+    marqueeSpeed, direction
+  }
+`
+
+export async function getTrustedByMarquee(): Promise<TrustedByMarqueeData | null> {
+  const client = getSanityClient()
+  if (!client) return null
+  try {
+    return await client.fetch<TrustedByMarqueeData>(TRUSTED_BY_MARQUEE_QUERY)
+  } catch {
+    return null
   }
 }

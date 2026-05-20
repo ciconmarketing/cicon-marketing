@@ -1,4 +1,4 @@
-import type { HomepageData } from './types';
+import type { HomepageData, TrustedByMarqueeData } from './types';
 
 export const CTA = {
   text: "Chat on WhatsApp",
@@ -203,4 +203,26 @@ export const defaultHomepageData: HomepageData = {
     phone: '+1 (905) 884-5060',
     address: 'Richmond Hill, ON, Canada',
   },
+};
+
+export const defaultTrustedByMarquee: TrustedByMarqueeData = {
+  enabled: true,
+  heading: 'Trusted by GTA businesses and dental clinics',
+  subheading: 'From single-location clinics to multi-location practices and growth-stage businesses across the Greater Toronto Area',
+  marqueeSpeed: 'medium',
+  direction: 'left',
+  logos: [
+    { clientName: 'Sparkle Light',            logoFilename: 'sparkle-light.png',            order: 1  },
+    { clientName: 'Bethel International',     logoFilename: 'bethel-international.jpg',     order: 2  },
+    { clientName: 'Joseph Kitchen and Bath',  logoFilename: 'joseph-kitchen-and-bath.png',  order: 3  },
+    { clientName: 'Dentistry on Guelph',      logoFilename: 'dentistry-on-guelph.png',      order: 4  },
+    { clientName: 'First Electrical Supply',  logoFilename: 'first-electrical-supply.png',  order: 5  },
+    { clientName: 'Smiles on Sparks',         logoFilename: 'smiles-on-sparks.png',         order: 6  },
+    { clientName: 'Smile Express',            logoFilename: 'smile-express.png',            order: 7  },
+    { clientName: 'AM Group Studio',          logoFilename: 'am-group-studio.jpg',          order: 8  },
+    { clientName: 'Direct Air Systems',       logoFilename: 'direct-air-systems.png',       order: 9  },
+    { clientName: 'Maison Opes',              logoFilename: 'maison-opes.png',              order: 10 },
+    { clientName: 'Nootk',                    logoFilename: 'nootk.svg',                    order: 11 },
+    { clientName: 'Venizzi Kitchen and Bath', logoFilename: 'venizzi-kitchen-and-bath.jpg', order: 12 },
+  ],
 };

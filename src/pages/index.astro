@@ -12,12 +12,13 @@ import ReadyToGrow from '../components/ReadyToGrow.astro';
 import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
 import ToolsStrip from '../components/home/ToolsStrip.astro';
+import TrustedByMarquee from '../components/home/TrustedByMarquee.astro';
 import ScrollProgress from '../components/react/ScrollProgress.tsx';
 import '../styles/globals.css';
 
-import { getHomepage } from '../lib/sanity';
-import { defaultHomepageData } from '../lib/defaults';
-import type { HomepageData } from '../lib/types';
+import { getHomepage, getTrustedByMarquee } from '../lib/sanity';
+import { defaultHomepageData, defaultTrustedByMarquee } from '../lib/defaults';
+import type { HomepageData, TrustedByMarqueeData } from '../lib/types';
 
 // Block indexing on Vercel preview builds; allow on production (cicon.ca).
 // Vercel sets VERCEL_ENV='production' for the production build only.
@@ -25,11 +26,14 @@ const isPreview = import.meta.env.VERCEL_ENV !== 'production'
 
 // Try Sanity first, fall back to hard-coded defaults
 let data: HomepageData = defaultHomepageData;
+let trustedBy: TrustedByMarqueeData = defaultTrustedByMarquee;
 try {
-  const sanityData = await getHomepage();
-  if (sanityData?.hero?.headline) {
-    data = sanityData;
-  }
+  const [sanityData, sanityTrustedBy] = await Promise.all([
+    getHomepage(),
+    getTrustedByMarquee(),
+  ]);
+  if (sanityData?.hero?.headline) data = sanityData;
+  if (sanityTrustedBy?.logos?.length) trustedBy = sanityTrustedBy;
 } catch {
   // Sanity not configured – using defaults is fine
 }
@@ -115,6 +119,7 @@ try {
     <WhyCiCon       data={data.whyCicon} />
     <ResultsShowcase client:visible />
     <Services       data={data.services} />
+    <TrustedByMarquee data={trustedBy} />
     <WhoWeServe     data={data.whoWeServe} />
     <HowItWorks     data={data.howItWorks} />
     <ProblemsSolved data={data.problemsSolved} />
