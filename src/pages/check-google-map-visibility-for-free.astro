@@ -11,6 +11,7 @@ import ContactForm    from '../components/contact/ContactForm.astro';
 import GoogleReviews  from '../components/react/GoogleReviews.tsx';
 import { ORG_CICON, WEBSITE_CICON } from '../lib/schema-constants';
 import '../styles/globals.css';
+import { getFreeMapCheckPage } from '../lib/sanity';
 
 const isPreview    = import.meta.env.VERCEL_ENV !== 'production';
 const canonicalUrl = 'https://cicon.ca/check-google-map-visibility-for-free/';
@@ -74,6 +75,32 @@ const jsonLd = {
     },
   ],
 };
+
+// ── Sanity-driven content with hardcoded fallbacks ────────────────────────────
+let mapCheckData = {
+  hero: {
+    headline: 'Check Your Google Map Visibility for Free',
+    badge: 'Free Local SEO Tool',
+    subheadline: "Check Your Google Map Visibility for Free and discover the truth about your local reach. Most businesses think they're #1 because they see themselves at the top when searching from their own office, but their customers often see something completely different.",
+    description: 'Don\'t let a "false positive" search result cost you sales. Enter your business name below to get a real-time heat map of your local rankings and see exactly how you appear to customers across every corner of your city.',
+  },
+  faqs: faqs,
+  finalCta: {
+    headline: 'Ready to grow with a boutique marketing partner?',
+    body: null as string | null,
+  },
+};
+try {
+  const sanity = await getFreeMapCheckPage();
+  if (sanity?.hero?.headline) {
+    mapCheckData = {
+      ...mapCheckData,
+      hero: sanity.hero ?? mapCheckData.hero,
+      faqs: sanity.faqs?.length ? sanity.faqs : faqs,
+      finalCta: sanity.finalCta ?? mapCheckData.finalCta,
+    };
+  }
+} catch {}
 ---
 
 <!DOCTYPE html>
@@ -173,21 +200,21 @@ const jsonLd = {
         <!-- Left: copy -->
         <div>
           <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--action);margin:0 0 16px;">
-            Free Local SEO Tool
+            {mapCheckData.hero.badge}
           </p>
           <h1
             id="page-h1"
             style="font-size:clamp(1.9rem,3.8vw,3rem);font-weight:900;color:#fff;line-height:1.1;letter-spacing:-0.02em;margin:0 0 24px;"
           >
-            Check Your Google Map Visibility for Free
+            {mapCheckData.hero.headline}
           </h1>
 
           <p style="font-size:1.05rem;line-height:1.72;color:rgba(255,255,255,0.75);margin:0 0 16px;">
-            Check Your Google Map Visibility for Free and discover the truth about your local reach. Most businesses think they're #1 because they see themselves at the top when searching from their own office, but their customers often see something completely different.
+            {mapCheckData.hero.subheadline}
           </p>
 
           <p style="font-size:1.05rem;line-height:1.72;color:rgba(255,255,255,0.75);margin:0;">
-            Don't let a "false positive" search result cost you sales. Enter your business name below to get a real-time heat map of your local rankings and see exactly how you appear to customers across every corner of your city.
+            {mapCheckData.hero.description}
           </p>
         </div>
 
@@ -369,77 +396,24 @@ const jsonLd = {
 
       <div style="display:flex;flex-direction:column;gap:8px;" role="list">
 
-        <!-- Q1 -->
-        <details role="listitem" style="background:var(--off-white);border:1px solid var(--alabaster);border-radius:12px;overflow:hidden;">
-          <summary
-            style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 24px;font-size:1rem;font-weight:700;color:#000;line-height:1.4;"
-            aria-expanded="false"
-          >
-            <span>Is this map check really free?</span>
-            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="flex-shrink:0;color:var(--accent);transition:transform .25s ease;">
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </summary>
-          <div style="padding:0 24px 22px;border-top:1px solid var(--alabaster);">
-            <p style="font-size:0.97rem;line-height:1.72;color:rgba(58,58,58,0.85);margin:16px 0 0;">
-              Yes, 100%. There is no cost to run the scan. If you request the follow-up manual audit and 90-day roadmap from our team, that initial consultation is also free.
-            </p>
-          </div>
-        </details>
-
-        <!-- Q2 -->
-        <details role="listitem" style="background:var(--off-white);border:1px solid var(--alabaster);border-radius:12px;overflow:hidden;">
-          <summary
-            style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 24px;font-size:1rem;font-weight:700;color:#000;line-height:1.4;"
-            aria-expanded="false"
-          >
-            <span>Why do my search results look different when I check on my phone at the office?</span>
-            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="flex-shrink:0;color:var(--accent);transition:transform .25s ease;">
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </summary>
-          <div style="padding:0 24px 22px;border-top:1px solid var(--alabaster);">
-            <p style="font-size:0.97rem;line-height:1.72;color:rgba(58,58,58,0.85);margin:16px 0 0;">
-              Google personalizes search results based on a user's exact location and search history. If you frequently search for your own business while standing <em>at</em> your business, Google learns to show it to you. This tool bypasses that bias to show you what an average customer sees from different points across the city.
-            </p>
-          </div>
-        </details>
-
-        <!-- Q3 -->
-        <details role="listitem" style="background:var(--off-white);border:1px solid var(--alabaster);border-radius:12px;overflow:hidden;">
-          <summary
-            style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 24px;font-size:1rem;font-weight:700;color:#000;line-height:1.4;"
-            aria-expanded="false"
-          >
-            <span>My map shows a lot of red and orange — is it too late to fix?</span>
-            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="flex-shrink:0;color:var(--accent);transition:transform .25s ease;">
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </summary>
-          <div style="padding:0 24px 22px;border-top:1px solid var(--alabaster);">
-            <p style="font-size:0.97rem;line-height:1.72;color:rgba(58,58,58,0.85);margin:16px 0 0;">
-              Absolutely not. In fact, that's why we built this tool. Red and orange simply mean your competitors are currently out-optimizing you. Knowing <em>where</em> you are losing is the first step. By optimizing your Google Business Profile, gathering reviews, and improving local relevance, you can expand your "Green Zone."
-            </p>
-          </div>
-        </details>
-
-        <!-- Q4 — internal link to Local SEO service page -->
-        <details role="listitem" style="background:var(--off-white);border:1px solid var(--alabaster);border-radius:12px;overflow:hidden;">
-          <summary
-            style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 24px;font-size:1rem;font-weight:700;color:#000;line-height:1.4;"
-            aria-expanded="false"
-          >
-            <span>What happens after I fill out the form for the "Dominance Strategy"?</span>
-            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="flex-shrink:0;color:var(--accent);transition:transform .25s ease;">
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </summary>
-          <div style="padding:0 24px 22px;border-top:1px solid var(--alabaster);">
-            <p style="font-size:0.97rem;line-height:1.72;color:rgba(58,58,58,0.85);margin:16px 0 0;">
-              We don't just send you a generic automated PDF. One of our <a href="/services/local-seo/" style="color:var(--accent);font-weight:600;text-decoration:underline;text-underline-offset:3px;">local SEO specialists</a> will manually review your heat map results, analyze your top three nearest competitors, and draft a specific 90-day roadmap with actionable steps. We will then email you to schedule a brief 15-minute call to review those findings together.
-            </p>
-          </div>
-        </details>
+        {mapCheckData.faqs.map((faq: { question: string; answer: string }) => (
+          <details role="listitem" style="background:var(--off-white);border:1px solid var(--alabaster);border-radius:12px;overflow:hidden;">
+            <summary
+              style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 24px;font-size:1rem;font-weight:700;color:#000;line-height:1.4;"
+              aria-expanded="false"
+            >
+              <span>{faq.question}</span>
+              <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="flex-shrink:0;color:var(--accent);transition:transform .25s ease;">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </summary>
+            <div style="padding:0 24px 22px;border-top:1px solid var(--alabaster);">
+              <p style="font-size:0.97rem;line-height:1.72;color:rgba(58,58,58,0.85);margin:16px 0 0;">
+                {faq.answer}
+              </p>
+            </div>
+          </details>
+        ))}
 
       </div>
     </div>
@@ -467,7 +441,7 @@ const jsonLd = {
         id="final-cta-h2"
         style="font-size:clamp(1.75rem,3.5vw,2.75rem);font-weight:900;color:#fff;letter-spacing:-0.025em;line-height:1.1;margin:0 0 32px;"
       >
-        Ready to grow with a boutique marketing partner?
+        {mapCheckData.finalCta.headline}
       </h2>
 
       <div class="cta-buttons" style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:14px;">

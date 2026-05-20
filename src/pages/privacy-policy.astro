@@ -3,9 +3,18 @@ import Nav    from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { ORG_CICON, WEBSITE_CICON } from '../lib/schema-constants';
 import '../styles/globals.css';
+import { getPrivacyPolicyPage } from '../lib/sanity';
+import { renderPortableText } from '../lib/portable-text';
 
 const isPreview    = import.meta.env.VERCEL_ENV !== 'production';
 const canonicalUrl = 'https://cicon.ca/privacy-policy/';
+
+let ppData = { pageTitle: 'Privacy Policy', lastReviewed: 'May 2026', content: null as any };
+try {
+  const sanity = await getPrivacyPolicyPage();
+  if (sanity?.pageTitle) ppData = sanity;
+} catch {}
+const ppContentHtml = ppData.content ? renderPortableText(ppData.content) : null;
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -77,8 +86,8 @@ const jsonLd = {
   <section style="background:var(--navy);padding:64px 24px 48px;">
     <div style="max-width:800px;margin:0 auto;">
       <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:#9D833E;margin:0 0 12px;">Legal</p>
-      <h1 style="font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:900;color:#fff;margin:0 0 12px;line-height:1.15;letter-spacing:-0.02em;">Privacy Policy</h1>
-      <p style="font-size:0.9rem;color:rgba(255,255,255,0.55);margin:0;">CiCon Marketing — Last reviewed May 2026</p>
+      <h1 style="font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:900;color:#fff;margin:0 0 12px;line-height:1.15;letter-spacing:-0.02em;">{ppData.pageTitle}</h1>
+      <p style="font-size:0.9rem;color:rgba(255,255,255,0.55);margin:0;">CiCon Marketing — Last reviewed {ppData.lastReviewed}</p>
     </div>
   </section>
 
@@ -86,70 +95,76 @@ const jsonLd = {
   <main style="padding:56px 24px 80px;">
     <div style="max-width:800px;margin:0 auto;" class="legal-body">
 
-      <p>CiCon Marketing ("we," "us," or "our") respects the privacy of our users ("you" or "your"). This Privacy Policy describes the types of information we collect through our lead capture forms on Meta Platforms (including Facebook, Instagram, and WhatsApp) and LinkedIn and how we use that information.</p>
+      {ppContentHtml ? (
+        <Fragment set:html={ppContentHtml} />
+      ) : (
+        <>
+          <p>CiCon Marketing ("we," "us," or "our") respects the privacy of our users ("you" or "your"). This Privacy Policy describes the types of information we collect through our lead capture forms on Meta Platforms (including Facebook, Instagram, and WhatsApp) and LinkedIn and how we use that information.</p>
 
-      <h2>Information We Collect</h2>
-      <p>We collect the following information when you submit a lead capture form on our website, Meta Platforms, Google Ads and LinkedIn campaigns:</p>
-      <ul>
-        <li>Full Name</li>
-        <li>Email Address</li>
-        <li>Phone Number</li>
-        <li>City</li>
-      </ul>
+          <h2>Information We Collect</h2>
+          <p>We collect the following information when you submit a lead capture form on our website, Meta Platforms, Google Ads and LinkedIn campaigns:</p>
+          <ul>
+            <li>Full Name</li>
+            <li>Email Address</li>
+            <li>Phone Number</li>
+            <li>City</li>
+          </ul>
 
-      <h2>SMS Message</h2>
-      <p>SMS messages will inform the recipient:</p>
-      <ul>
-        <li>They are consenting to receive messages from the business</li>
-        <li>Their personal info will not be shared with third parties for marketing purposes</li>
-        <li>Message frequency may vary but is generally limited to no more than 4–6 messages per month unless initiated by the user</li>
-        <li>They may reply STOP (or other keywords) to opt-out of future messaging</li>
-        <li>They may reply HELP for more information</li>
-        <li>Message and data rates may apply</li>
-      </ul>
-      <p>We collect your phone number when you opt in to receive appointment reminders and promotional SMS messages. You may withdraw this consent at any time by replying STOP or contacting us at <a href="mailto:info@cicon.ca">info@cicon.ca</a>.</p>
+          <h2>SMS Message</h2>
+          <p>SMS messages will inform the recipient:</p>
+          <ul>
+            <li>They are consenting to receive messages from the business</li>
+            <li>Their personal info will not be shared with third parties for marketing purposes</li>
+            <li>Message frequency may vary but is generally limited to no more than 4–6 messages per month unless initiated by the user</li>
+            <li>They may reply STOP (or other keywords) to opt-out of future messaging</li>
+            <li>They may reply HELP for more information</li>
+            <li>Message and data rates may apply</li>
+          </ul>
+          <p>We collect your phone number when you opt in to receive appointment reminders and promotional SMS messages. You may withdraw this consent at any time by replying STOP or contacting us at <a href="mailto:info@cicon.ca">info@cicon.ca</a>.</p>
 
-      <h2>Use of Information</h2>
-      <p>We use the information we collect to:</p>
-      <ul>
-        <li>Respond to your inquiries and requests about CiCon Marketing's services.</li>
-        <li>Send you information about CiCon Marketing's services, but only with your consent (you will have the option to opt-in or opt-out of receiving marketing communications).</li>
-        <li>Improve our marketing and advertising efforts on Meta Platforms and LinkedIn.</li>
-      </ul>
+          <h2>Use of Information</h2>
+          <p>We use the information we collect to:</p>
+          <ul>
+            <li>Respond to your inquiries and requests about CiCon Marketing's services.</li>
+            <li>Send you information about CiCon Marketing's services, but only with your consent (you will have the option to opt-in or opt-out of receiving marketing communications).</li>
+            <li>Improve our marketing and advertising efforts on Meta Platforms and LinkedIn.</li>
+          </ul>
 
-      <h2>Data Sharing</h2>
-      <p>We will not share your information with any third party without your consent, except for the following limited circumstances:</p>
-      <ul>
-        <li><strong>Service Providers:</strong> We may share your information with service providers who help us operate our business, such as email marketing providers. These service providers are obligated to protect your information according to strict confidentiality agreements.</li>
-      </ul>
+          <h2>Data Sharing</h2>
+          <p>We will not share your information with any third party without your consent, except for the following limited circumstances:</p>
+          <ul>
+            <li><strong>Service Providers:</strong> We may share your information with service providers who help us operate our business, such as email marketing providers. These service providers are obligated to protect your information according to strict confidentiality agreements.</li>
+          </ul>
 
-      <h2>Data Retention</h2>
-      <p>We will retain your information for as long as necessary to fulfill the purposes described in this Privacy Policy, unless a longer retention period is required or permitted by law (e.g., for tax or accounting purposes).</p>
+          <h2>Data Retention</h2>
+          <p>We will retain your information for as long as necessary to fulfill the purposes described in this Privacy Policy, unless a longer retention period is required or permitted by law (e.g., for tax or accounting purposes).</p>
 
-      <h2>Your Rights</h2>
-      <p>You have the following rights with respect to your information:</p>
-      <ul>
-        <li><strong>Access:</strong> You have the right to access your information and request a copy of it.</li>
-        <li><strong>Rectification:</strong> You have the right to request that we correct any inaccurate information about you.</li>
-        <li><strong>Erasure:</strong> You can request that we erase your information.</li>
-        <li><strong>Restriction of Processing:</strong> You can request that we restrict the processing of your information.</li>
-        <li><strong>Objection:</strong> You can object to the processing of your information, such as for marketing purposes.</li>
-      </ul>
-      <p>To exercise any of these rights, please contact our Privacy Officer at <a href="mailto:info@cicon.ca">info@cicon.ca</a> or by mail at:</p>
-      <p style="padding:16px 20px;background:#f5f5f5;border-radius:8px;font-size:0.9rem;line-height:1.8;">
-        <strong>CiCon Marketing</strong><br />
-        Attn: Privacy Officer<br />
-        69 Cartier Crescent, Richmond Hill, ON L4C 2N3, Canada
-      </p>
+          <h2>Your Rights</h2>
+          <p>You have the following rights with respect to your information:</p>
+          <ul>
+            <li><strong>Access:</strong> You have the right to access your information and request a copy of it.</li>
+            <li><strong>Rectification:</strong> You have the right to request that we correct any inaccurate information about you.</li>
+            <li><strong>Erasure:</strong> You can request that we erase your information.</li>
+            <li><strong>Restriction of Processing:</strong> You can request that we restrict the processing of your information.</li>
+            <li><strong>Objection:</strong> You can object to the processing of your information, such as for marketing purposes.</li>
+          </ul>
+          <p>To exercise any of these rights, please contact our Privacy Officer at <a href="mailto:info@cicon.ca">info@cicon.ca</a> or by mail at:</p>
+          <p style="padding:16px 20px;background:#f5f5f5;border-radius:8px;font-size:0.9rem;line-height:1.8;">
+            <strong>CiCon Marketing</strong><br />
+            Attn: Privacy Officer<br />
+            69 Cartier Crescent, Richmond Hill, ON L4C 2N3, Canada
+          </p>
 
-      <h2>Security</h2>
-      <p>We take reasonable steps to protect your information from unauthorized access, disclosure, alteration, or destruction. However, no internet transmission is completely secure, and we cannot guarantee the security of your information.</p>
+          <h2>Security</h2>
+          <p>We take reasonable steps to protect your information from unauthorized access, disclosure, alteration, or destruction. However, no internet transmission is completely secure, and we cannot guarantee the security of your information.</p>
 
-      <h2>Changes to this Privacy Policy</h2>
-      <p>We may update this Privacy Policy from time to time. We will post any changes on this webpage.</p>
+          <h2>Changes to this Privacy Policy</h2>
+          <p>We may update this Privacy Policy from time to time. We will post any changes on this webpage.</p>
 
-      <h2>Contact Us</h2>
-      <p>If you have any questions about this Privacy Policy, please contact our Privacy Officer at <a href="mailto:info@cicon.ca">info@cicon.ca</a> or by mail at the address provided above.</p>
+          <h2>Contact Us</h2>
+          <p>If you have any questions about this Privacy Policy, please contact our Privacy Officer at <a href="mailto:info@cicon.ca">info@cicon.ca</a> or by mail at the address provided above.</p>
+        </>
+      )}
 
       <p style="margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--gray);font-size:0.85rem;color:#888;">
         See also: <a href="/terms-and-conditions-sms/">SMS Terms &amp; Conditions</a>

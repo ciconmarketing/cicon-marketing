@@ -25,6 +25,12 @@ import servicePage from './servicePage'
 import servicesHub from './servicesHub'
 import caseStudy from './caseStudy'
 import trustedByMarquee from './trustedByMarquee'
+import contactPage from './contactPage'
+import aboutPage from './aboutPage'
+import freeMapCheckPage from './freeMapCheckPage'
+import thankYouPage from './thankYouPage'
+import privacyPolicyPage from './privacyPolicyPage'
+import smsTermsPage from './smsTermsPage'
 
 // ── Shared sub-types ──────────────────────────────────────────────────────────
 
@@ -469,4 +475,11 @@ export const schemaTypes = [
   caseStudy,
   // Homepage modules
   trustedByMarquee,
+  // Page schemas
+  contactPage,
+  aboutPage,
+  freeMapCheckPage,
+  thankYouPage,
+  privacyPolicyPage,
+  smsTermsPage,
 ];

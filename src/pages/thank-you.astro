@@ -2,6 +2,19 @@
 import '../styles/globals.css';
 import Nav    from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import { getThankYouPage } from '../lib/sanity';
+
+let tyData = {
+  headline: "Got it. Now it's our move.",
+  paragraph1: "Your submission is sitting in MJ's and Soroush's inboxes right now. One of us will reach out within the next business hour — by phone, email, or whichever you prefer.",
+  paragraph2: "In the meantime, if something urgent comes up, message us directly on WhatsApp. Same response window.",
+  nurtureLinkLabel: null as string | null,
+  nurtureLinkUrl: null as string | null,
+};
+try {
+  const sanity = await getThankYouPage();
+  if (sanity?.headline) tyData = { ...tyData, ...sanity };
+} catch {}
 ---
 
 <!DOCTYPE html>
@@ -74,17 +87,15 @@ import Footer from '../components/Footer.astro';
           id="ty-heading"
           style="font-size:clamp(28px,5vw,48px);font-weight:900;color:#fff;margin:0 0 20px;line-height:1.1;"
         >
-          Got it. Now it's our move.
+          {tyData.headline}
         </h1>
 
         <p style="font-size:clamp(16px,2vw,18px);color:#a0a0b0;line-height:1.7;margin:0 0 16px;">
-          Your submission is sitting in MJ's and Soroush's inboxes right now.
-          One of us will reach out within the next business hour — by phone, email, or whichever you prefer.
+          {tyData.paragraph1}
         </p>
 
         <p style="font-size:15px;color:#a0a0b0;line-height:1.7;margin:0 0 36px;">
-          In the meantime, if something urgent comes up, message us directly on WhatsApp.
-          Same response window.
+          {tyData.paragraph2}
         </p>
 
         <a
@@ -111,11 +122,15 @@ import Footer from '../components/Footer.astro';
           <p style="font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#9D833E;margin:0 0 14px;">
             While you wait
           </p>
-          <!-- PLACEHOLDER: MJ to specify nurture content URL and label.
-               Replace this comment with an <a href="URL">Label</a> link. -->
-          <p style="font-size:14px;color:#666;font-style:italic;">
-            Nurture content link coming soon — MJ to specify URL and label.
-          </p>
+            {tyData.nurtureLinkLabel && tyData.nurtureLinkUrl ? (
+            <a href={tyData.nurtureLinkUrl} style="font-size:14px;font-weight:600;color:#9D833E;text-decoration:none;display:inline-flex;align-items:center;gap:6px;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+              {tyData.nurtureLinkLabel} →
+            </a>
+          ) : (
+            <p style="font-size:14px;color:#666;font-style:italic;">
+              Nurture content link coming soon — update in Sanity Studio.
+            </p>
+          )}
         </div>
 
         <a

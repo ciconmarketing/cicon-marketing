@@ -1,0 +1,148 @@
+import { defineType, defineField, defineArrayMember } from 'sanity'
+
+export default defineType({
+  name: 'aboutPage',
+  title: 'About Us Page',
+  type: 'document',
+  icon: () => '👤',
+  __experimental_actions: ['update', 'publish'],
+  fields: [
+    defineField({
+      name: 'hero',
+      title: '① Hero Section',
+      type: 'object',
+      fields: [
+        defineField({ name: 'headline', title: 'Headline (H1)', type: 'text', rows: 2,
+          initialValue: 'A boutique GTA marketing studio building AI-augmented growth systems for local businesses and dental clinics.' }),
+        defineField({ name: 'subheadline', title: 'Subheadline', type: 'text', rows: 2,
+          initialValue: "Operating across the Greater Toronto Area since 2018 — founded by a Google-certified strategist with a Master's in Engineering and 15+ years building data-driven growth systems." }),
+      ],
+    }),
+    defineField({
+      name: 'whySection',
+      title: '② Why We Exist',
+      type: 'object',
+      fields: [
+        defineField({ name: 'headline', title: 'Section Headline', type: 'string', initialValue: 'Why CiCon exists' }),
+        defineField({ name: 'body', title: 'Body Text', type: 'text', rows: 6,
+          initialValue: "Most agencies sell hours and report on impressions. CiCon was built as a reaction to that model. We don't invoice for meetings; we build compounding visibility engines — local search infrastructure, content systems, and paid acquisition funnels that earn more over time, not less. The GTA is not a generic market, and \"best practices\" from a playbook written for nationwide brands will lose to a competitor who actually understands Richmond Hill, Markham, and the specific search behaviour of a GTA patient or homeowner looking for a local provider. We stay small on purpose so we can stay sharp on your account." }),
+      ],
+    }),
+    defineField({
+      name: 'stackTools',
+      title: '③ Tech Stack Tools',
+      type: 'array',
+      description: 'The tools shown in the "Stack behind every CiCon campaign" section.',
+      of: [
+        defineArrayMember({
+          type: 'object', name: 'tool', title: 'Tool',
+          fields: [
+            defineField({ name: 'name', title: 'Tool Name', type: 'string', validation: r => r.required() }),
+            defineField({ name: 'category', title: 'Category', type: 'string', validation: r => r.required() }),
+            defineField({ name: 'purpose', title: 'Description', type: 'text', rows: 2 }),
+          ],
+          preview: { select: { title: 'name', subtitle: 'category' } },
+        }),
+      ],
+      initialValue: [
+        { _key: 't1', name: 'Ahrefs', category: 'SEO Intelligence', purpose: 'Competitor analysis, backlink audits, and technical SEO depth' },
+        { _key: 't2', name: 'Surfer', category: 'On-page SEO', purpose: 'Content optimization scored against live SERP data' },
+        { _key: 't3', name: 'Ubersuggest', category: 'Keyword Research', purpose: 'Volume, difficulty, and intent mapping at scale' },
+        { _key: 't4', name: 'Arvow', category: 'AI Content Engine', purpose: 'Programmatic SEO content production with editorial QA' },
+        { _key: 't5', name: 'Localo', category: 'Local SEO', purpose: 'Google Business Profile ranking tracking and local visibility' },
+        { _key: 't6', name: 'RankPrompt', category: 'GEO / AI Search', purpose: 'Visibility tracking inside ChatGPT, Perplexity, and Gemini answers' },
+        { _key: 't7', name: 'GoHighLevel', category: 'CRM + Automation', purpose: 'Lead capture, nurture, and reporting in one platform' },
+        { _key: 't8', name: 'Claude · ChatGPT · Gemini', category: 'AI Models', purpose: 'Strategy research, copy ideation, content drafting, and prompt-engineered workflows across all three frontier models' },
+        { _key: 't9', name: 'Higgsfield', category: 'AI Video', purpose: 'AI-native video production for social and paid creative — at a fraction of traditional production cost' },
+      ],
+    }),
+    defineField({
+      name: 'proof',
+      title: '④ Proof Cluster (Results & Testimonial)',
+      type: 'object',
+      fields: [
+        defineField({ name: 'metricValue', title: 'Metric Value (e.g. "47%")', type: 'string', description: 'The large number shown in the results card.' }),
+        defineField({ name: 'metricLabel', title: 'Metric Description', type: 'text', rows: 2, description: 'Context for the metric (e.g. "increase in qualified leads for [Client] in 6 months").' }),
+        defineField({ name: 'testimonialQuote', title: 'Testimonial Quote', type: 'text', rows: 4, description: '2–3 sentences from a satisfied client.' }),
+        defineField({ name: 'testimonialAuthor', title: 'Client Name', type: 'string' }),
+        defineField({ name: 'testimonialBusiness', title: 'Business Name & City', type: 'string' }),
+      ],
+    }),
+    defineField({
+      name: 'values',
+      title: '⑤ Values (What We Stand Behind)',
+      type: 'array',
+      description: '3 short value statements.',
+      of: [
+        defineArrayMember({
+          type: 'object', name: 'value', title: 'Value',
+          fields: [
+            defineField({ name: 'text', title: 'Value Statement', type: 'string', validation: r => r.required() }),
+          ],
+          preview: { select: { title: 'text' } },
+        }),
+      ],
+      initialValue: [
+        { _key: 'v1', text: 'Build for scale, not for invoices' },
+        { _key: 'v2', text: "Show the data, even when it's ugly" },
+        { _key: 'v3', text: 'Local context beats global templates' },
+      ],
+    }),
+    defineField({
+      name: 'dentalSection',
+      title: '⑥ Dental Vertical Callout',
+      type: 'object',
+      fields: [
+        defineField({ name: 'headline', title: 'Section Headline', type: 'string',
+          initialValue: 'A dedicated practice for dental clinics across the GTA' }),
+        defineField({ name: 'body', title: 'Body Text', type: 'text', rows: 5,
+          initialValue: "Dental is not a vertical you can serve with a generic marketing playbook. Patient acquisition cycles are longer, Google Business Profile authority is disproportionately powerful compared to other local niches, review velocity drives ranking more than in almost any other service category, and the person searching \"dentist near me\" has local intent that expires in hours, not days. We built a dedicated dental practice because that specificity is the work." }),
+      ],
+    }),
+    defineField({
+      name: 'localSection',
+      title: '⑦ Local Anchor Section',
+      type: 'object',
+      fields: [
+        defineField({ name: 'headline', title: 'Section Headline', type: 'string',
+          initialValue: 'Built in Richmond Hill, working across the GTA' }),
+        defineField({ name: 'body', title: 'Body Text', type: 'text', rows: 4,
+          initialValue: "CiCon's base is Richmond Hill, Ontario — and that's not a coincidence. The GTA's suburban markets have their own search behaviour, competitive dynamics, and local authority signals that don't translate directly from downtown Toronto campaigns. We serve clients across Richmond Hill, Markham, Vaughan, North York, Mississauga, and the broader Greater Toronto Area. Proximity to the market we're optimizing for isn't optional — it's how the work stays sharp." }),
+      ],
+    }),
+    defineField({
+      name: 'faqs',
+      title: '⑧ FAQ Section',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'object', name: 'faqItem', title: 'FAQ',
+          fields: [
+            defineField({ name: 'question', title: 'Question', type: 'string', validation: r => r.required() }),
+            defineField({ name: 'answer', title: 'Answer', type: 'text', rows: 4, validation: r => r.required() }),
+          ],
+          preview: { select: { title: 'question' } },
+        }),
+      ],
+      initialValue: [
+        { _key: 'faq1', question: 'Why work with a boutique agency instead of a large one?', answer: "Large agencies spread attention across hundreds of accounts. At CiCon, every account gets a senior strategist — not a junior coordinator running templated playbooks. You're getting direct access to the people who built the systems, not an account manager reading from a dashboard. Smaller roster means faster pivots and real ownership of your results." },
+        { _key: 'faq2', question: 'How does CiCon use AI in client work?', answer: "We use AI where it compounds speed without sacrificing accuracy: keyword research, content production at scale, predictive analytics, and reporting automation. We're transparent about this because it's how we keep customer acquisition costs down for clients. Human judgment drives every strategy call, creative brief, and quarterly review — AI accelerates the groundwork." },
+        { _key: 'faq3', question: "What's included in your reporting?", answer: "Quarterly business reviews covering traffic, rankings, lead volume, cost per acquisition, and channel ROI — not vanity metrics. You'll see what moved, what didn't, and what the next 90 days look like. We don't hide underperformance in monthly micro-reports; we surface it, explain it, and fix it." },
+        { _key: 'faq4', question: 'Do you work with clinics and businesses outside the GTA?', answer: "Our core geography is the Greater Toronto Area — Richmond Hill, Toronto, Markham, Vaughan, Mississauga, and surrounding communities. Local context is central to how we build campaigns. For dental clinics specifically, we've worked with practices across Ontario; reach out and we'll tell you honestly if it's a fit." },
+        { _key: 'faq5', question: 'How quickly do you respond to clients?', answer: "Within the next business hour for anything urgent, and same business day for general questions. You'll have a direct WhatsApp line to your strategist — not a ticket queue. We built our response commitment into the engagement from day one because delayed communication kills momentum." },
+        { _key: 'faq6', question: 'What size businesses do you typically work with?', answer: "Local service businesses and professional practices doing between $500K and $10M in annual revenue who are serious about growth infrastructure. That includes dental clinics, healthcare practices, home services, and B2B service firms across the GTA. We're not set up for e-commerce or venture-backed startups — that's a different playbook." },
+      ],
+    }),
+    defineField({
+      name: 'finalCta',
+      title: '⑨ Final CTA Section',
+      type: 'object',
+      fields: [
+        defineField({ name: 'headline', title: 'Headline', type: 'string', initialValue: 'Ready to talk?' }),
+        defineField({ name: 'trustLine', title: 'Trust Line (below headline)', type: 'string',
+          description: 'One-line testimonial or result number. Leave empty to hide.' }),
+      ],
+    }),
+  ],
+  preview: { prepare() { return { title: 'About Us Page' } } },
+})

@@ -353,3 +353,90 @@ export async function getTrustedByMarquee(): Promise<TrustedByMarqueeData | null
     return null
   }
 }
+
+// ── Page schemas ─────────────────────────────────────────────────────────────
+
+export const CONTACT_PAGE_QUERY = `
+  *[_type == "contactPage"][0]{
+    hero{ headline, subheadline },
+    faqs[]{ question, answer },
+    seoCopy{ headline, body }
+  }
+`
+
+export const ABOUT_PAGE_QUERY = `
+  *[_type == "aboutPage"][0]{
+    hero{ headline, subheadline },
+    whySection{ headline, body },
+    stackTools[]{ name, category, purpose },
+    proof{ metricValue, metricLabel, testimonialQuote, testimonialAuthor, testimonialBusiness },
+    values[]{ text },
+    dentalSection{ headline, body },
+    localSection{ headline, body },
+    faqs[]{ question, answer },
+    finalCta{ headline, trustLine }
+  }
+`
+
+export const FREE_MAP_CHECK_PAGE_QUERY = `
+  *[_type == "freeMapCheckPage"][0]{
+    hero{ headline, badge, subheadline, description },
+    faqs[]{ question, answer },
+    finalCta{ headline, body }
+  }
+`
+
+export const THANK_YOU_PAGE_QUERY = `
+  *[_type == "thankYouPage"][0]{
+    headline, paragraph1, paragraph2,
+    nurtureLinkLabel, nurtureLinkUrl
+  }
+`
+
+export const PRIVACY_POLICY_PAGE_QUERY = `
+  *[_type == "privacyPolicyPage"][0]{
+    pageTitle, lastReviewed, content
+  }
+`
+
+export const SMS_TERMS_PAGE_QUERY = `
+  *[_type == "smsTermsPage"][0]{
+    pageTitle, lastReviewed, content
+  }
+`
+
+export async function getContactPage() {
+  const client = getSanityClient()
+  if (!client) return null
+  try { return await client.fetch(CONTACT_PAGE_QUERY) } catch { return null }
+}
+
+export async function getAboutPage() {
+  const client = getSanityClient()
+  if (!client) return null
+  try { return await client.fetch(ABOUT_PAGE_QUERY) } catch { return null }
+}
+
+export async function getFreeMapCheckPage() {
+  const client = getSanityClient()
+  if (!client) return null
+  try { return await client.fetch(FREE_MAP_CHECK_PAGE_QUERY) } catch { return null }
+}
+
+export async function getThankYouPage() {
+  const client = getSanityClient()
+  if (!client) return null
+  try { return await client.fetch(THANK_YOU_PAGE_QUERY) } catch { return null }
+}
+
+export async function getPrivacyPolicyPage() {
+  const client = getSanityClient()
+  if (!client) return null
+  try { return await client.fetch(PRIVACY_POLICY_PAGE_QUERY) } catch { return null }
+}
+
+export async function getSmsTermsPage() {
+  const client = getSanityClient()
+  if (!client) return null
+  try { return await client.fetch(SMS_TERMS_PAGE_QUERY) } catch { return null }
+}

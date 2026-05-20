@@ -9,6 +9,7 @@ import Nav    from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON } from '../lib/schema-constants';
 import '../styles/globals.css';
+import { getAboutPage } from '../lib/sanity';
 
 const isPreview = import.meta.env.VERCEL_ENV !== 'production';
 const canonicalUrl = 'https://cicon.ca/about-us/';
@@ -118,6 +119,51 @@ const jsonLd = {
     },
   ],
 };
+
+// ── Sanity-driven content with hardcoded fallbacks ────────────────────────────
+let aboutData = {
+  hero: {
+    headline: 'A boutique GTA marketing studio building AI-augmented growth systems for local businesses and dental clinics.',
+    subheadline: "Operating across the Greater Toronto Area since 2018 — founded by a Google-certified strategist with a Master's in Engineering and 15+ years building data-driven growth systems.",
+  },
+  whySection: {
+    headline: 'Why CiCon exists',
+    body: "Most agencies sell hours and report on impressions. CiCon was built as a reaction to that model. We don't invoice for meetings; we build compounding visibility engines — local search infrastructure, content systems, and paid acquisition funnels that earn more over time, not less. The GTA is not a generic market, and \"best practices\" from a playbook written for nationwide brands will lose to a competitor who actually understands Richmond Hill, Markham, and the specific search behaviour of a GTA patient or homeowner looking for a local provider. We stay small on purpose so we can stay sharp on your account.",
+  },
+  stackTools: [
+    { name: 'Ahrefs',        category: 'SEO Intelligence',    purpose: 'Competitor analysis, backlink audits, and technical SEO depth' },
+    { name: 'Surfer',        category: 'On-page SEO',         purpose: 'Content optimization scored against live SERP data' },
+    { name: 'Ubersuggest',   category: 'Keyword Research',    purpose: 'Volume, difficulty, and intent mapping at scale' },
+    { name: 'Arvow',         category: 'AI Content Engine',   purpose: 'Programmatic SEO content production with editorial QA' },
+    { name: 'Localo',        category: 'Local SEO',           purpose: 'Google Business Profile ranking tracking and local visibility' },
+    { name: 'RankPrompt',    category: 'GEO / AI Search',     purpose: 'Visibility tracking inside ChatGPT, Perplexity, and Gemini answers' },
+    { name: 'GoHighLevel',   category: 'CRM + Automation',    purpose: 'Lead capture, nurture, and reporting in one platform' },
+    { name: 'Claude · ChatGPT · Gemini', category: 'AI Models', purpose: 'Strategy research, copy ideation, content drafting, and prompt-engineered workflows across all three frontier models' },
+    { name: 'Higgsfield',    category: 'AI Video',            purpose: 'AI-native video production for social and paid creative — at a fraction of traditional production cost' },
+  ],
+  proof: { metricValue: null as string | null, metricLabel: null as string | null, testimonialQuote: null as string | null, testimonialAuthor: null as string | null, testimonialBusiness: null as string | null },
+  values: [
+    { text: 'Build for scale, not for invoices' },
+    { text: "Show the data, even when it's ugly" },
+    { text: 'Local context beats global templates' },
+  ],
+  dentalSection: {
+    headline: 'A dedicated practice for dental clinics across the GTA',
+    body: "Dental is not a vertical you can serve with a generic marketing playbook. Patient acquisition cycles are longer, Google Business Profile authority is disproportionately powerful compared to other local niches, review velocity drives ranking more than in almost any other service category, and the person searching \"dentist near me\" has local intent that expires in hours, not days. We built a dedicated dental practice because that specificity is the work.",
+  },
+  localSection: {
+    headline: 'Built in Richmond Hill, working across the GTA',
+    body: "CiCon's base is Richmond Hill, Ontario — and that's not a coincidence. The GTA's suburban markets have their own search behaviour, competitive dynamics, and local authority signals that don't translate directly from downtown Toronto campaigns. We serve clients across Richmond Hill, Markham, Vaughan, North York, Mississauga, and the broader Greater Toronto Area. Proximity to the market we're optimizing for isn't optional — it's how the work stays sharp.",
+  },
+  faqs: faqs,
+  finalCta: { headline: 'Ready to talk?', trustLine: null as string | null },
+};
+try {
+  const sanity = await getAboutPage();
+  if (sanity?.hero?.headline) {
+    aboutData = { ...aboutData, ...sanity };
+  }
+} catch {}
 ---
 
 <!DOCTYPE html>
@@ -204,11 +250,11 @@ const jsonLd = {
         id="about-h1"
         style="font-size:clamp(2rem,4.5vw,3.75rem);font-weight:900;color:#fff;line-height:1.08;letter-spacing:-0.025em;max-width:880px;margin:0 0 28px;"
       >
-        A boutique GTA marketing studio building AI-augmented growth systems for local businesses and dental clinics.
+        {aboutData.hero.headline}
       </h1>
 
       <p style="font-size:clamp(1rem,1.8vw,1.2rem);color:rgba(255,255,255,0.65);line-height:1.65;max-width:600px;margin:0 0 44px;">
-        Operating across the Greater Toronto Area since [LEAVE_BRACKETED_FOR_REVIEW] — founded by a Google-certified strategist with a Master's in Engineering and 15+ years building data-driven growth systems.
+        {aboutData.hero.subheadline}
       </p>
 
       <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;">
@@ -254,10 +300,10 @@ const jsonLd = {
         Our reason for being
       </p>
       <h2 id="why-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 28px;">
-        Why CiCon exists
+        {aboutData.whySection.headline}
       </h2>
       <p style="font-size:clamp(1.05rem,1.6vw,1.2rem);line-height:1.75;color:var(--charcoal);">
-        Most agencies sell hours and report on impressions. CiCon was built as a reaction to that model. We don't invoice for meetings; we build compounding visibility engines — local search infrastructure, content systems, and paid acquisition funnels that earn more over time, not less. The GTA is not a generic market, and "best practices" from a playbook written for nationwide brands will lose to a competitor who actually understands Richmond Hill, Markham, and the specific search behaviour of a GTA patient or homeowner looking for a local provider. We stay small on purpose so we can stay sharp on your account.
+        {aboutData.whySection.body}
       </p>
     </div>
   </section>
@@ -349,17 +395,7 @@ const jsonLd = {
       <!-- Tool cards grid: 3-col desktop, 2-col tablet, 1-col mobile -->
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;"
            class="stack-grid">
-        {[
-          { name: 'Ahrefs',        category: 'SEO Intelligence',    purpose: 'Competitor analysis, backlink audits, and technical SEO depth' },
-          { name: 'Surfer',        category: 'On-page SEO',         purpose: 'Content optimization scored against live SERP data' },
-          { name: 'Ubersuggest',   category: 'Keyword Research',    purpose: 'Volume, difficulty, and intent mapping at scale' },
-          { name: 'Arvow',         category: 'AI Content Engine',   purpose: 'Programmatic SEO content production with editorial QA' },
-          { name: 'Localo',        category: 'Local SEO',           purpose: 'Google Business Profile ranking tracking and local visibility' },
-          { name: 'RankPrompt',    category: 'GEO / AI Search',     purpose: 'Visibility tracking inside ChatGPT, Perplexity, and Gemini answers' },
-          { name: 'GoHighLevel',   category: 'CRM + Automation',    purpose: 'Lead capture, nurture, and reporting in one platform' },
-          { name: 'Claude · ChatGPT · Gemini', category: 'AI Models', purpose: 'Strategy research, copy ideation, content drafting, and prompt-engineered workflows across all three frontier models' },
-          { name: 'Higgsfield',    category: 'AI Video',            purpose: 'AI-native video production for social and paid creative — at a fraction of traditional production cost' },
-        ].map(tool => (
+        {aboutData.stackTools.map((tool: { name: string; category: string; purpose: string }) => (
           <div
             class="tool-card"
             style="background:var(--off-white);border:1px solid var(--alabaster);border-radius:12px;padding:24px 24px 22px;transition:border-color .15s,box-shadow .15s;"
@@ -517,11 +553,7 @@ const jsonLd = {
       </h2>
 
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;" class="values-grid">
-        {[
-          'Build for scale, not for invoices',
-          'Show the data, even when it\'s ugly',
-          'Local context beats global templates',
-        ].map((value, i) => (
+        {aboutData.values.map((v: { text: string }, i: number) => (
           <div style="position:relative;padding:32px 28px 28px;background:#fff;border:1px solid var(--alabaster);border-radius:12px;">
             <!-- Amber accent top-left line -->
             <div
@@ -532,7 +564,7 @@ const jsonLd = {
               0{i + 1}
             </p>
             <h3 style="font-size:1.15rem;font-weight:800;color:#000;line-height:1.35;margin:0;letter-spacing:-0.01em;">
-              {value}
+              {v.text}
             </h3>
           </div>
         ))}
@@ -557,10 +589,10 @@ const jsonLd = {
         Dental vertical
       </p>
       <h2 id="dental-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#fff;letter-spacing:-0.02em;line-height:1.12;max-width:760px;margin:0 0 24px;">
-        A dedicated practice for dental clinics across the GTA
+        {aboutData.dentalSection.headline}
       </h2>
       <p style="font-size:1.05rem;line-height:1.72;color:rgba(255,255,255,0.72);max-width:680px;margin:0 0 52px;">
-        Dental is not a vertical you can serve with a generic marketing playbook. Patient acquisition cycles are longer, Google Business Profile authority is disproportionately powerful compared to other local niches, review velocity drives ranking more than in almost any other service category, and the person searching "dentist near me" has local intent that expires in hours, not days. We built a dedicated dental practice because that specificity is the work.
+        {aboutData.dentalSection.body}
       </p>
 
       <!-- Micro-proof points -->
@@ -626,10 +658,10 @@ const jsonLd = {
         Where we operate
       </p>
       <h2 id="local-h2" style="font-size:clamp(1.5rem,2.8vw,2.25rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.15;margin:0 0 24px;">
-        Built in Richmond Hill, working across the GTA
+        {aboutData.localSection.headline}
       </h2>
       <p style="font-size:1.05rem;line-height:1.75;color:var(--charcoal);">
-        CiCon's base is Richmond Hill, Ontario — and that's not a coincidence. The GTA's suburban markets have their own search behaviour, competitive dynamics, and local authority signals that don't translate directly from downtown Toronto campaigns. We serve clients across Richmond Hill, Markham, Vaughan, North York, Mississauga, and the broader Greater Toronto Area. Proximity to the market we're optimizing for isn't optional — it's how the work stays sharp.
+        {aboutData.localSection.body}
       </p>
     </div>
   </section>
@@ -648,7 +680,7 @@ const jsonLd = {
       </h2>
 
       <div style="display:flex;flex-direction:column;gap:8px;" role="list">
-        {faqs.map((faq, i) => (
+        {aboutData.faqs.map((faq: { question: string; answer: string }, i: number) => (
           <details
             role="listitem"
             style="background:#fff;border:1px solid var(--alabaster);border-radius:12px;overflow:hidden;"
@@ -710,13 +742,18 @@ const jsonLd = {
         Let's talk
       </p>
       <h2 id="cta-h2" style="font-size:clamp(2rem,4vw,3.25rem);font-weight:900;color:#fff;letter-spacing:-0.025em;line-height:1.1;margin:0 0 20px;">
-        Ready to talk?
+        {aboutData.finalCta.headline}
       </h2>
 
-      <!-- PLACEHOLDER: MJ to replace with real trust line -->
-      <p style="font-size:1rem;line-height:1.65;color:rgba(255,255,255,0.6);margin:0 0 40px;font-style:italic;">
-        [FINAL CTA TRUST LINE: one-line testimonial or result number — MJ to fill in]
-      </p>
+      {aboutData.finalCta.trustLine ? (
+        <p style="font-size:1rem;line-height:1.65;color:rgba(255,255,255,0.6);margin:0 0 40px;font-style:italic;">
+          {aboutData.finalCta.trustLine}
+        </p>
+      ) : (
+        <p style="font-size:1rem;line-height:1.65;color:rgba(255,255,255,0.6);margin:0 0 40px;font-style:italic;">
+          Update this trust line in Sanity Studio — add a client quote or key result.
+        </p>
+      )}
 
       <div style="display:flex;flex-direction:column;align-items:center;gap:16px;">
         <!-- WhatsApp CTA -->

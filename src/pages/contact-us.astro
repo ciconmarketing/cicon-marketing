@@ -3,8 +3,31 @@ import '../styles/globals.css';
 import Nav          from '../components/Nav.astro';
 import Footer       from '../components/Footer.astro';
 import ContactForm  from '../components/contact/ContactForm.astro';
+import { getContactPage } from '../lib/sanity';
 
 const isPreview = import.meta.env.VERCEL_ENV !== 'production';
+
+// ── Sanity-driven content with hardcoded fallbacks ────────────────────────────
+let contactHero = {
+  headline: "Talk to a senior strategist — not a sales funnel.",
+  subheadline: "Tell us about your clinic or local business and you'll hear back within 1 business hour, Monday to Friday. No discovery-call gauntlet. No junior account manager.",
+};
+let contactFaqs = [
+  { question: 'How fast do you actually respond?', answer: 'Within 1 business hour, Monday to Friday, 9am – 6pm ET. Submissions after hours or on weekends get a reply first thing the next business day. No exceptions, no auto-replies pretending to be us.' },
+  { question: "What's your minimum engagement?", answer: "Our smallest engagements start around $1,500/month for focused work like Google Business Profile management or local SEO. Full-service builds — paid ads, SEO, content, creative — typically start at $3,000–$5,000/month. We'd rather under-promise than oversell a retainer you don't need yet." },
+  { question: 'Do you work with businesses outside the GTA?', answer: "Most of our clients are GTA-based because local SEO and Google Business Profile work benefit from us knowing the territory. We do take on remote clients for paid ads, SEO, and content — but if you need physical photo/video production or in-person strategy, GTA-only." },
+  { question: "What if I'm already working with another agency?", answer: "Two options. We can run a no-strings audit of what they're doing — sometimes the answer is 'they're doing fine, stay put.' Or, if you're already decided to switch, we handle the offboarding so you don't have to fight for assets and access. Either way, no awkwardness — we've been on both sides of that conversation." },
+];
+let contactSeoCopy = {
+  headline: 'Marketing that earns its keep — for clinics and local businesses across the GTA',
+  body: 'CiCon Marketing is a boutique digital agency based in Richmond Hill, Ontario. We work with dental clinics, local service businesses, and retail across the Greater Toronto Area on Google Ads, Meta Ads, local SEO, Google Business Profile management, social media, and professional photo and video production. Every engagement is run by a senior strategist — no junior handoff, no template playbook. Reach out using the form above, by phone at +1 (289) 807-1020, or on WhatsApp.',
+};
+try {
+  const sanity = await getContactPage();
+  if (sanity?.hero?.headline) contactHero = sanity.hero;
+  if (sanity?.faqs?.length) contactFaqs = sanity.faqs;
+  if (sanity?.seoCopy?.headline) contactSeoCopy = sanity.seoCopy;
+} catch {}
 
 // JSON-LD blocks
 const jsonLdContactPage = {
@@ -305,12 +328,11 @@ const jsonLdFaq = {
           id="contact-hero-heading"
           style="font-family:'Inter',sans-serif;font-size:clamp(28px,5vw,52px);font-weight:900;color:#fff;line-height:1.1;margin:0 0 20px;max-width:760px;margin-left:auto;margin-right:auto;"
         >
-          Talk to a senior strategist —<br />not a sales funnel.
+          {contactHero.headline}
         </h1>
 
         <p style="font-size:clamp(16px,2vw,19px);color:#a0a0b0;max-width:580px;margin:0 auto 36px;line-height:1.6;">
-          Tell us about your clinic or local business and you'll hear back within 1 business hour, Monday to Friday.
-          No discovery-call gauntlet. No junior account manager.
+          {contactHero.subheadline}
         </p>
 
         <!-- Path buttons -->
@@ -454,53 +476,17 @@ const jsonLdFaq = {
 
         <div style="border-top:1px solid #E7E7E7;">
 
-          <details class="faq-item">
-            <summary>
-              How fast do you actually respond?
-              <span class="faq-icon" aria-hidden="true">+</span>
-            </summary>
-            <p class="faq-answer">
-              Within 1 business hour, Monday to Friday, 9am – 6pm ET. Submissions after hours or on weekends get
-              a reply first thing the next business day. No exceptions, no auto-replies pretending to be us.
-            </p>
-          </details>
-
-          <details class="faq-item">
-            <summary>
-              What's your minimum engagement?
-              <span class="faq-icon" aria-hidden="true">+</span>
-            </summary>
-            <p class="faq-answer">
-              Our smallest engagements start around $1,500/month for focused work like Google Business Profile
-              management or local SEO. Full-service builds — paid ads, SEO, content, creative — typically start
-              at $3,000–$5,000/month. We'd rather under-promise than oversell a retainer you don't need yet.
-            </p>
-          </details>
-
-          <details class="faq-item">
-            <summary>
-              Do you work with businesses outside the GTA?
-              <span class="faq-icon" aria-hidden="true">+</span>
-            </summary>
-            <p class="faq-answer">
-              Most of our clients are GTA-based because local SEO and Google Business Profile work benefit from
-              us knowing the territory. We do take on remote clients for paid ads, SEO, and content — but if you
-              need physical photo/video production or in-person strategy, GTA-only.
-            </p>
-          </details>
-
-          <details class="faq-item">
-            <summary>
-              What if I'm already working with another agency?
-              <span class="faq-icon" aria-hidden="true">+</span>
-            </summary>
-            <p class="faq-answer">
-              Two options. We can run a no-strings audit of what they're doing — sometimes the answer is
-              "they're doing fine, stay put." Or, if you're already decided to switch, we handle the offboarding
-              so you don't have to fight for assets and access. Either way, no awkwardness — we've been on both
-              sides of that conversation.
-            </p>
-          </details>
+          {contactFaqs.map((faq) => (
+            <details class="faq-item">
+              <summary>
+                {faq.question}
+                <span class="faq-icon" aria-hidden="true">+</span>
+              </summary>
+              <p class="faq-answer">
+                {faq.answer}
+              </p>
+            </details>
+          ))}
 
         </div>
       </div>
@@ -563,16 +549,10 @@ const jsonLdFaq = {
     <section style="background:#fff;padding:56px 0 64px;border-top:1px solid #E7E7E7;" aria-label="About CiCon Marketing">
       <div class="container-xl" style="max-width:860px;">
         <h2 style="font-family:'Inter',sans-serif;font-size:clamp(20px,3vw,28px);font-weight:800;color:#212129;margin:0 0 18px;line-height:1.25;">
-          Marketing that earns its keep — for clinics and local businesses across the GTA
+          {contactSeoCopy.headline}
         </h2>
         <p style="font-size:15px;line-height:1.8;color:#555;margin:0;">
-          CiCon Marketing is a boutique digital agency based in Richmond Hill, Ontario.
-          We work with dental clinics, local service businesses, and retail across the Greater Toronto Area
-          on Google Ads, Meta Ads, local SEO, Google Business Profile management, social media, and
-          professional photo and video production. Every engagement is run by a senior strategist —
-          no junior handoff, no template playbook. Reach out using the form above, by phone at
-          <a href="tel:+12898071020" style="color:#9D833E;text-decoration:none;font-weight:600;">+1 (289) 807-1020</a>,
-          or on WhatsApp.
+          {contactSeoCopy.body}
         </p>
       </div>
     </section>
