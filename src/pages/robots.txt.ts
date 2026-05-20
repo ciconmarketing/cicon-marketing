@@ -23,6 +23,12 @@ export const GET: APIRoute = () => {
         'User-agent: *',
         'Allow: /',
         '',
+        '# Exclude utility / legal pages from crawl',
+        'Disallow: /thank-you/',
+        'Disallow: /privacy-policy/',
+        'Disallow: /terms-and-conditions-sms/',
+        '',
+        '# Sitemap',
         'Sitemap: https://cicon.ca/sitemap-index.xml',
       ].join('\n')
     : [

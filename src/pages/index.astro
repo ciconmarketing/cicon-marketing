@@ -17,6 +17,7 @@ import ScrollProgress from '../components/react/ScrollProgress.tsx';
 import '../styles/globals.css';
 
 import { getHomepage, getTrustedByMarquee, getWhyCiconCards } from '../lib/sanity';
+import { ORG_CICON, WEBSITE_CICON } from '../lib/schema-constants';
 import { defaultHomepageData, defaultTrustedByMarquee } from '../lib/defaults';
 import type { HomepageData, TrustedByMarqueeData } from '../lib/types';
 
@@ -57,21 +58,22 @@ try {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Primary Meta -->
-  <title>CiCon Marketing – Boutique Digital Marketing Agency in Richmond Hill, GTA</title>
-  <meta name="description" content="CiCon Marketing is a boutique digital marketing agency delivering measurable growth across the GTA—turning ad spend into real leads, calls, and customers." />
+  <title>CiCon Marketing | Digital Marketing Agency, Richmond Hill GTA</title>
+  <meta name="description" content="Boutique digital marketing agency in Richmond Hill. Turning ad spend into real leads for GTA businesses and dental clinics. 14+ years." />
   <meta name="keywords" content="digital marketing agency Richmond Hill, GTA marketing agency, Google Ads, SEO, dental marketing, social media marketing" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://cicon.ca/" />
-  <meta property="og:title" content="CiCon Marketing – Boutique Digital Marketing Agency in Richmond Hill" />
-  <meta property="og:description" content="Boutique digital marketing agency delivering measurable growth across the GTA—turning ad spend into real leads, calls, and customers." />
-  <meta property="og:image" content="https://cicon.ca/og-image.jpg" />
+  <meta property="og:title" content="CiCon Marketing | Digital Marketing Agency, Richmond Hill GTA" />
+  <meta property="og:description" content="Boutique digital marketing agency in Richmond Hill. Turning ad spend into real leads for GTA businesses and dental clinics." />
+  <meta property="og:image" content="https://cicon.ca/logo-cicon.jpg" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="CiCon Marketing – Digital Marketing Agency GTA" />
-  <meta name="twitter:description" content="Boutique digital marketing agency delivering measurable growth across the GTA." />
+  <meta name="twitter:title" content="CiCon Marketing | Digital Marketing Agency, Richmond Hill GTA" />
+  <meta name="twitter:description" content="Boutique digital marketing agency in Richmond Hill. Turning ad spend into real leads for GTA businesses and dental clinics. 14+ years." />
+  <meta name="twitter:image" content="https://cicon.ca/logo-cicon.jpg" />
 
   <!-- Canonical -->
   <link rel="canonical" href="https://cicon.ca/" />
@@ -92,29 +94,47 @@ try {
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
   <!-- Schema.org structured data -->
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "MarketingAgency",
-      "name": "CiCon Marketing",
-      "url": "https://cicon.ca",
-      "logo": "https://cicon.ca/logo.png",
-      "description": "Boutique digital marketing agency in Richmond Hill, Ontario. Delivering measurable growth for GTA businesses since 2010.",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Richmond Hill",
-        "addressRegion": "ON",
-        "addressCountry": "CA"
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@graph': [
+      ORG_CICON,
+      WEBSITE_CICON,
+      {
+        '@type': 'LocalBusiness',
+        '@id': 'https://cicon.ca/#local-business',
+        name: 'CiCon Marketing',
+        url: 'https://cicon.ca/',
+        telephone: '+1-289-807-1020',
+        email: 'hello@cicon.ca',
+        logo: { '@type': 'ImageObject', url: 'https://cicon.ca/logo-cicon.jpg' },
+        image: 'https://cicon.ca/logo-cicon.jpg',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: '131 Golf Club Ct',
+          addressLocality: 'Richmond Hill',
+          addressRegion: 'ON',
+          postalCode: 'L4C 5E1',
+          addressCountry: 'CA',
+        },
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: 43.8828,
+          longitude: -79.4403,
+        },
+        openingHoursSpecification: [
+          {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday'],
+            opens: '08:00',
+            closes: '17:00',
+          },
+        ],
+        priceRange: '$$',
+        areaServed: { '@type': 'AdministrativeArea', name: 'Greater Toronto Area' },
+        sameAs: ORG_CICON.sameAs,
       },
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "contactType": "customer service",
-        "email": "hello@cicon.ca"
-      },
-      "areaServed": "Greater Toronto Area",
-      "foundingDate": "2010"
-    }
-  </script>
+    ],
+  })} />
 </head>
 
 <body class="font-sans bg-white text-gray-900 antialiased">

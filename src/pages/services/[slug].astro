@@ -123,6 +123,22 @@ const jsonLd = {
     : <meta name="robots" content="index, follow" />
   }
 
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:title" content={page.metaTitle ?? `${page.title} | CiCon Marketing`} />
+  <meta property="og:description" content={page.metaDescription ?? page.heroDescription ?? ''} />
+  <meta property="og:image" content={page.heroImage?.asset?.url ?? 'https://cicon.ca/logo-cicon.jpg'} />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={page.metaTitle ?? `${page.title} | CiCon Marketing`} />
+  <meta name="twitter:description" content={page.metaDescription ?? page.heroDescription ?? ''} />
+  <meta name="twitter:image" content={page.heroImage?.asset?.url ?? 'https://cicon.ca/logo-cicon.jpg'} />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
   <!-- Schema.org JSON-LD -->
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 

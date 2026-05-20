@@ -226,9 +226,9 @@ try {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Primary meta -->
-  <title>About CiCon Marketing | Boutique Digital Agency in Richmond Hill, GTA</title>
-  <meta name="description" content="CiCon is a boutique AI-augmented digital marketing studio in Richmond Hill, GTA — building compounding growth systems for local businesses and dental clinics." />
-  <link rel="canonical" href={canonicalUrl} />
+  <title>{aboutData?.seoTitle ?? 'About CiCon Marketing | Boutique Agency, Richmond Hill GTA'}</title>
+  <meta name="description" content={aboutData?.seoDescription ?? 'Meet the boutique GTA agency behind 14+ years of real growth. Senior-led, AI-augmented marketing for local businesses and dental clinics.'} />
+  <link rel="canonical" href={aboutData?.canonicalOverride ?? canonicalUrl} />
   {isPreview
     ? <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
     : <meta name="robots" content="index, follow" />
@@ -236,10 +236,16 @@ try {
 
   <!-- Open Graph -->
   <meta property="og:type"        content="website" />
-  <meta property="og:url"         content={canonicalUrl} />
-  <meta property="og:title"       content="About CiCon Marketing | Boutique Digital Agency in Richmond Hill, GTA" />
-  <meta property="og:description" content="Boutique AI-augmented marketing studio in Richmond Hill building compounding growth systems for GTA businesses and dental clinics." />
-  <meta property="og:image"       content="https://cicon.ca/og-image.jpg" />
+  <meta property="og:url"         content={aboutData?.canonicalOverride ?? canonicalUrl} />
+  <meta property="og:title"       content={aboutData?.seoTitle ?? 'About CiCon Marketing | Boutique Agency, Richmond Hill GTA'} />
+  <meta property="og:description" content={aboutData?.seoDescription ?? 'Meet the boutique GTA agency behind 14+ years of real growth. Senior-led, AI-augmented marketing for local businesses and dental clinics.'} />
+  <meta property="og:image"       content={aboutData?.ogImageUrl ?? 'https://cicon.ca/logo-cicon.jpg'} />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={aboutData?.seoTitle ?? 'About CiCon Marketing | Boutique Agency, Richmond Hill GTA'} />
+  <meta name="twitter:description" content={aboutData?.seoDescription ?? 'Meet the boutique GTA agency behind 14+ years of real growth. Senior-led marketing for local businesses and dental clinics in the GTA.'} />
+  <meta name="twitter:image" content={aboutData?.ogImageUrl ?? 'https://cicon.ca/logo-cicon.jpg'} />
 
   <!-- JSON-LD -->
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

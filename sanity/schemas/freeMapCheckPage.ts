@@ -53,6 +53,28 @@ export default defineType({
         defineField({ name: 'body', title: 'Body Text', type: 'text', rows: 3 }),
       ],
     }),
+    defineField({
+      name: 'seoTitle',
+      title: 'SEO Title',
+      type: 'string',
+      description: 'Page title for search engines. 50–60 characters recommended.',
+      validation: (Rule) => Rule.max(60).warning('Keep under 60 characters for best SEO'),
+    }),
+    defineField({
+      name: 'seoDescription',
+      title: 'SEO Meta Description',
+      type: 'text',
+      rows: 3,
+      description: '135–145 characters recommended.',
+      validation: (Rule) => Rule.max(155).warning('Keep under 155 characters'),
+    }),
+    defineField({
+      name: 'ogImage',
+      title: 'Social Share Image (og:image)',
+      type: 'image',
+      description: 'Optional. Falls back to site-wide default (logo-cicon.jpg). Recommended: 1200×630px.',
+      options: { hotspot: true },
+    }),
   ],
   preview: { prepare() { return { title: 'Free Map Check Page' } } },
 })

@@ -22,11 +22,16 @@ let contactSeoCopy = {
   headline: 'Marketing that earns its keep — for clinics and local businesses across the GTA',
   body: 'CiCon Marketing is a boutique digital agency based in Richmond Hill, Ontario. We work with dental clinics, local service businesses, and retail across the Greater Toronto Area on Google Ads, Meta Ads, local SEO, Google Business Profile management, social media, and professional photo and video production. Every engagement is run by a senior strategist — no junior handoff, no template playbook. Reach out using the form above, by phone at +1 (289) 807-1020, or on WhatsApp.',
 };
+let contactSeoOverrides: { seoTitle?: string; seoDescription?: string; ogImageUrl?: string; canonicalOverride?: string } = {};
 try {
   const sanity = await getContactPage();
   if (sanity?.hero?.headline) contactHero = sanity.hero;
   if (sanity?.faqs?.length) contactFaqs = sanity.faqs;
   if (sanity?.seoCopy?.headline) contactSeoCopy = sanity.seoCopy;
+  if (sanity?.seoTitle) contactSeoOverrides.seoTitle = sanity.seoTitle;
+  if (sanity?.seoDescription) contactSeoOverrides.seoDescription = sanity.seoDescription;
+  if (sanity?.ogImageUrl) contactSeoOverrides.ogImageUrl = sanity.ogImageUrl;
+  if (sanity?.canonicalOverride) contactSeoOverrides.canonicalOverride = sanity.canonicalOverride;
 } catch {}
 
 // JSON-LD blocks
@@ -127,9 +132,9 @@ const jsonLdFaq = {
   <!-- End Google Tag Manager -->
 
   <!-- Primary Meta -->
-  <title>Contact CiCon Marketing | Senior Strategists for GTA Clinics &amp; Local Businesses</title>
-  <meta name="description" content="Talk to a senior marketing strategist about your clinic or local business. Based in Richmond Hill, serving the GTA. We reply within 1 business hour, Mon–Fri." />
-  <link rel="canonical" href="https://cicon.ca/contact-us/" />
+  <title>{contactSeoOverrides.seoTitle ?? 'Contact CiCon Marketing | GTA Agency, Richmond Hill ON'}</title>
+  <meta name="description" content={contactSeoOverrides.seoDescription ?? 'Reach a senior marketing strategist in Richmond Hill. Serving GTA businesses and dental clinics. Response within 1 business hour, Mon–Fri.'} />
+  <link rel="canonical" href={contactSeoOverrides.canonicalOverride ?? 'https://cicon.ca/contact-us/'} />
   {isPreview
     ? <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
     : <meta name="robots" content="index, follow" />
@@ -137,15 +142,16 @@ const jsonLdFaq = {
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://cicon.ca/contact-us/" />
-  <meta property="og:title" content="Contact CiCon Marketing | Senior Strategists for GTA Clinics & Local Businesses" />
-  <meta property="og:description" content="Talk to a senior marketing strategist about your clinic or local business. Based in Richmond Hill, serving the GTA." />
-  <meta property="og:image" content="https://cicon.ca/og-image.jpg" />
+  <meta property="og:url" content={contactSeoOverrides.canonicalOverride ?? 'https://cicon.ca/contact-us/'} />
+  <meta property="og:title" content={contactSeoOverrides.seoTitle ?? 'Contact CiCon Marketing | GTA Agency, Richmond Hill ON'} />
+  <meta property="og:description" content={contactSeoOverrides.seoDescription ?? 'Reach a senior marketing strategist in Richmond Hill. Serving GTA businesses and dental clinics. Same-business-hour response, Mon–Fri.'} />
+  <meta property="og:image" content={contactSeoOverrides.ogImageUrl ?? 'https://cicon.ca/logo-cicon.jpg'} />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Contact CiCon Marketing | GTA Clinics & Local Businesses" />
-  <meta name="twitter:description" content="Talk to a senior marketing strategist about your clinic or local business. Based in Richmond Hill, serving the GTA." />
+  <meta name="twitter:title" content={contactSeoOverrides.seoTitle ?? 'Contact CiCon Marketing | GTA Agency, Richmond Hill ON'} />
+  <meta name="twitter:description" content={contactSeoOverrides.seoDescription ?? 'Reach a senior marketing strategist in Richmond Hill. Serving GTA businesses and dental clinics. Same-business-hour response, Mon–Fri.'} />
+  <meta name="twitter:image" content={contactSeoOverrides.ogImageUrl ?? 'https://cicon.ca/logo-cicon.jpg'} />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />

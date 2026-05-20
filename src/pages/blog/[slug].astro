@@ -236,6 +236,12 @@ const schema: any = {
   <meta property="article:modified_time" content={dateModifiedISO} />
   <meta property="article:author" content="Majid Behzad" />
 
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={metaTitle} />
+  <meta name="twitter:description" content={metaDesc} />
+  {post.heroImage?.url && <meta name="twitter:image" content={post.heroImage.url} />}
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

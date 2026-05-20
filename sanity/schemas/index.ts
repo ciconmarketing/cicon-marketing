@@ -32,6 +32,7 @@ import thankYouPage from './thankYouPage'
 import privacyPolicyPage from './privacyPolicyPage'
 import smsTermsPage from './smsTermsPage'
 import whyCiconCards from './whyCiconCards'
+import siteSettings from './siteSettings'
 
 // ── Shared sub-types ──────────────────────────────────────────────────────────
 
@@ -484,4 +485,6 @@ export const schemaTypes = [
   thankYouPage,
   privacyPolicyPage,
   smsTermsPage,
+  // Global
+  siteSettings,
 ];

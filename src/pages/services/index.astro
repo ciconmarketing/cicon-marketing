@@ -84,13 +84,27 @@ const jsonLd = {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{hub?.heroHeadline ?? 'Digital Marketing Services'} | CiCon Marketing — GTA</title>
-  <meta name="description" content={hub?.heroDescription ?? 'Boutique digital marketing services for GTA businesses and dental clinics. Paid ads, SEO, social media, web development, and more.'} />
+  <title>{hub?.seoTitle ?? hub?.heroHeadline ?? 'Digital Marketing Services'} | CiCon Marketing — GTA</title>
+  <meta name="description" content={hub?.seoDescription ?? hub?.heroDescription ?? 'Boutique digital marketing services for GTA businesses and dental clinics. Paid ads, SEO, social media, web development, and more.'} />
   <link rel="canonical" href="https://cicon.ca/services/" />
   {isPreview
     ? <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
     : <meta name="robots" content="index, follow" />
   }
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://cicon.ca/services/" />
+  <meta property="og:title" content={hub?.seoTitle ?? `${hub?.heroHeadline ?? 'Digital Marketing Services'} | CiCon Marketing`} />
+  <meta property="og:description" content={hub?.seoDescription ?? hub?.heroDescription ?? 'Boutique digital marketing services for GTA businesses and dental clinics. Paid ads, SEO, social media, web development, and more.'} />
+  <meta property="og:image" content={hub?.ogImageUrl ?? 'https://cicon.ca/logo-cicon.jpg'} />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={hub?.seoTitle ?? `${hub?.heroHeadline ?? 'Digital Marketing Services'} | CiCon Marketing`} />
+  <meta name="twitter:description" content={hub?.seoDescription ?? hub?.heroDescription ?? 'Boutique digital marketing services for GTA businesses and dental clinics. Paid ads, SEO, social media, web development, and more.'} />
+  <meta name="twitter:image" content={hub?.ogImageUrl ?? 'https://cicon.ca/logo-cicon.jpg'} />
+
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <style>
     :root {

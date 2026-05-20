@@ -225,7 +225,8 @@ export const SERVICES_HUB_QUERY = `
     heroImage{ asset->{ _id, url } },
     antiPitchHeadline, antiPitchItems[]{ disqualifier, explanation },
     routerHeadline, routerIntro,
-    finalCtaHeadline, finalCtaBody
+    finalCtaHeadline, finalCtaBody,
+    seoTitle, seoDescription, "ogImageUrl": ogImage.asset->url
   }
 `
 
@@ -275,6 +276,9 @@ export type ServicesHubData = {
   routerIntro?: string
   finalCtaHeadline?: string
   finalCtaBody?: string
+  seoTitle?: string
+  seoDescription?: string
+  ogImageUrl?: string
 }
 
 export async function getServicePage(slug: string): Promise<ServicePageData | null> {
@@ -360,7 +364,8 @@ export const CONTACT_PAGE_QUERY = `
   *[_type == "contactPage"][0]{
     hero{ headline, subheadline },
     faqs[]{ question, answer },
-    seoCopy{ headline, body }
+    seoCopy{ headline, body },
+    seoTitle, seoDescription, "ogImageUrl": ogImage.asset->url, canonicalOverride
   }
 `
 
@@ -375,7 +380,8 @@ export const ABOUT_PAGE_QUERY = `
     localSection{ headline, body },
     roster{ eyebrow, heading, body },
     faqs[]{ question, answer },
-    finalCta{ headline, trustLine }
+    finalCta{ headline, trustLine },
+    seoTitle, seoDescription, "ogImageUrl": ogImage.asset->url, canonicalOverride
   }
 `
 
@@ -390,7 +396,8 @@ export const FREE_MAP_CHECK_PAGE_QUERY = `
   *[_type == "freeMapCheckPage"][0]{
     hero{ headline, badge, subheadline, description },
     faqs[]{ question, answer },
-    finalCta{ headline, body }
+    finalCta{ headline, body },
+    seoTitle, seoDescription, "ogImageUrl": ogImage.asset->url
   }
 `
 
