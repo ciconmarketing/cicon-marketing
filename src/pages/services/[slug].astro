@@ -21,6 +21,7 @@ import ServiceFaq          from '../../components/services/ServiceFaq.astro'
 import RelatedServices     from '../../components/services/RelatedServices.astro'
 import RelatedPosts        from '../../components/services/RelatedPosts.astro'
 import FinalCta            from '../../components/services/FinalCta.astro'
+import GoogleReviews       from '../../components/react/GoogleReviews.tsx'
 import CdcpBlock           from '../../components/services/dental/CdcpBlock.astro'
 import PatientChannels     from '../../components/services/dental/PatientChannels.astro'
 
@@ -213,6 +214,8 @@ const jsonLd = {
   {page.relatedPosts?.length && (
     <RelatedPosts posts={page.relatedPosts} />
   )}
+
+  <GoogleReviews client:visible />
 
   <FinalCta
     headline={page.finalCtaHeadline}

@@ -14,6 +14,7 @@ import AntiPitch        from '../../components/services/AntiPitch.astro'
 import ProcessStrip     from '../../components/services/ProcessStrip.astro'
 import EeatBlock        from '../../components/services/EeatBlock.astro'
 import FinalCta         from '../../components/services/FinalCta.astro'
+import GoogleReviews    from '../../components/react/GoogleReviews.tsx'
 import PlaceholderImage from '../../components/PlaceholderImage.astro'
 
 // ── Data ──────────────────────────────────────────────────────────────────────
@@ -322,22 +323,8 @@ const jsonLd = {
 
   <EeatBlock />
 
-  <!-- Testimonials placeholder (Trustindex integration — separate ticket) -->
-  <section class="py-20" style="background:#fff">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <div class="flex items-center justify-center gap-2 mb-3">
-        <span class="h-[1px] w-8" style="background:var(--accent)"></span>
-        <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Reviews</span>
-        <span class="h-[1px] w-8" style="background:var(--accent)"></span>
-      </div>
-      <h2 class="text-3xl font-extrabold mb-4" style="color:var(--black)">5.0 stars across {REVIEW_COUNT}+ reviews</h2>
-      <p class="text-base mb-8" style="color:var(--charcoal)">Trustindex widget — integrated separately.</p>
-      <!-- Trustindex widget slot -->
-      <div id="trustindex-widget" class="min-h-[200px] rounded-2xl border flex items-center justify-center" style="border-color:var(--alabaster);background:var(--off-white)">
-        <p class="text-sm" style="color:#999">Reviews load here via Trustindex embed</p>
-      </div>
-    </div>
-  </section>
+  <!-- Social proof — same "What our clients say" component as homepage -->
+  <GoogleReviews client:visible />
 
   <FinalCta
     headline={hub?.finalCtaHeadline}

@@ -7,7 +7,7 @@ export const PERSON_MAJID = {
   jobTitle: 'Founder & Senior Digital Marketing Strategist',
   description: "Over 15 years building data-driven marketing systems for GTA businesses. Google-certified, Master's in Engineering, Postgraduate in Marketing Management.",
   url: 'https://cicon.ca/about-us/',
-  image: 'https://cicon.ca/wp-content/uploads/majid-behzad-headshot.jpg',
+  image: 'https://cicon.ca/majid-behzad.jpg',
   worksFor: { '@id': 'https://cicon.ca/#organization' },
   knowsAbout: ['Local Search Engine Optimization','Google Business Profile Optimization','Pay-Per-Click Advertising','Conversion Rate Optimization','Dental Marketing Strategy'],
   alumniOf: [{ '@type': 'EducationalOrganization', name: "Master's in Engineering" },{ '@type': 'EducationalOrganization', name: 'Postgraduate Diploma in Marketing Management' }],
