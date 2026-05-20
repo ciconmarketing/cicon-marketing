@@ -9,7 +9,7 @@ import Nav    from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON } from '../lib/schema-constants';
 import '../styles/globals.css';
-import { getAboutPage } from '../lib/sanity';
+import { getAboutPage, getWhyCiconCards, getTrustedByMarquee } from '../lib/sanity';
 
 const isPreview = import.meta.env.VERCEL_ENV !== 'production';
 const canonicalUrl = 'https://cicon.ca/about-us/';
@@ -124,7 +124,8 @@ const jsonLd = {
 let aboutData = {
   hero: {
     headline: 'A boutique GTA marketing studio building AI-augmented growth systems for local businesses and dental clinics.',
-    subheadline: "Operating across the Greater Toronto Area since 2018 — founded by a Google-certified strategist with a Master's in Engineering and 15+ years building data-driven growth systems.",
+    subheadline: "Operating across the Greater Toronto Area since 2018 — founded by a Google-certified strategist with a Master's in Engineering and 14+ years building data-driven growth systems.",
+    foundingYear: '2018' as string,
   },
   whySection: {
     headline: 'Why CiCon exists',
@@ -141,11 +142,10 @@ let aboutData = {
     { name: 'Claude · ChatGPT · Gemini', category: 'AI Models', purpose: 'Strategy research, copy ideation, content drafting, and prompt-engineered workflows across all three frontier models' },
     { name: 'Higgsfield',    category: 'AI Video',            purpose: 'AI-native video production for social and paid creative — at a fraction of traditional production cost' },
   ],
-  proof: { metricValue: null as string | null, metricLabel: null as string | null, testimonialQuote: null as string | null, testimonialAuthor: null as string | null, testimonialBusiness: null as string | null },
   values: [
-    { text: 'Build for scale, not for invoices' },
-    { text: "Show the data, even when it's ugly" },
-    { text: 'Local context beats global templates' },
+    { text: 'Build for scale, not for invoices', body: "We don't build what we can bill. We build what compounds. Every system is designed to earn more for you over time — not to justify next month's retainer." },
+    { text: "Show the data, even when it's ugly", body: "If a channel underperforms, you hear it from us first — with the root cause and the fix. We don't dress up bad news in vanity metrics." },
+    { text: 'Local context beats global templates', body: "A playbook written for a national brand will lose to a local operator who actually knows GTA search behaviour, seasonal cycles, and which neighbourhoods convert." },
   ],
   dentalSection: {
     headline: 'A dedicated practice for dental clinics across the GTA',
@@ -155,6 +155,11 @@ let aboutData = {
     headline: 'Built in Richmond Hill, working across the GTA',
     body: "CiCon's base is Richmond Hill, Ontario — and that's not a coincidence. The GTA's suburban markets have their own search behaviour, competitive dynamics, and local authority signals that don't translate directly from downtown Toronto campaigns. We serve clients across Richmond Hill, Markham, Vaughan, North York, Mississauga, and the broader Greater Toronto Area. Proximity to the market we're optimizing for isn't optional — it's how the work stays sharp.",
   },
+  roster: {
+    eyebrow: 'THE ROSTER',
+    heading: 'The businesses behind the boutique',
+    body: null as string | null,
+  },
   faqs: faqs,
   finalCta: { headline: 'Ready to talk?', trustLine: null as string | null },
 };
@@ -163,6 +168,52 @@ try {
   if (sanity?.hero?.headline) {
     aboutData = { ...aboutData, ...sanity };
   }
+} catch {}
+
+// ── Founder defaults ──────────────────────────────────────────────────────────
+let founderData = {
+  eyebrow: 'FOUNDER',
+  heading: 'Meet Majid',
+  subheading: 'Founder & Senior Strategist',
+  body: "CiCon was built as a direct reaction to what I kept seeing: agencies that optimized for retainer renewal, not client results. After 14+ years building growth systems — first for enterprise clients, then for the GTA's local businesses and dental clinics — I started CiCon to do this work at a level of specificity that large agencies structurally can't.\n\nI hold a Master's in Engineering and a Postgraduate Diploma in Marketing Management. I'm Google-certified and I run every account personally. That's not a selling point — it's a constraint I set deliberately. The moment you stop doing the work yourself is the moment the work gets generic.",
+  linkedinUrl: 'https://linkedin.com/in/majidlm/',
+};
+// Merge Sanity founder data if available
+if (aboutData.founder) founderData = { ...founderData, ...aboutData.founder };
+
+// ── Why CiCon cards ───────────────────────────────────────────────────────────
+let whyCiconCardsData = {
+  eyebrow: 'WHY CICON',
+  heading: 'Three things every account gets',
+  cards: [
+    { label: 'THE OPERATOR', heading: 'Senior strategy on every account', body: "You get direct access to the strategist who built your system — not an account coordinator reading dashboards. Senior-level thinking, every call, every quarter." },
+    { label: 'THE METHOD',   heading: 'A documented 90-day system',        body: "Every engagement runs on a documented 90-day cycle: audit, roadmap, build, and quarterly business review. No guesswork, no scope creep, no surprises." },
+    { label: 'THE FOOTPRINT',heading: 'Local GTA market knowledge',        body: "14+ years operating in GTA markets means the campaigns we build reflect real local search behaviour — not borrowed playbooks written for other cities." },
+  ],
+};
+try {
+  const cards = await getWhyCiconCards();
+  if (cards?.heading) whyCiconCardsData = { ...whyCiconCardsData, ...cards };
+} catch {}
+
+// ── Trusted By logos ──────────────────────────────────────────────────────────
+let rosterLogos: Array<{ clientName: string; logoFilename: string; order: number }> = [
+  { clientName: 'Sparkle Light',            logoFilename: 'sparkle-light.png',            order: 1  },
+  { clientName: 'Bethel International',     logoFilename: 'bethel-international.jpg',     order: 2  },
+  { clientName: 'Joseph Kitchen and Bath',  logoFilename: 'joseph-kitchen-and-bath.png',  order: 3  },
+  { clientName: 'Dentistry on Guelph',      logoFilename: 'dentistry-on-guelph.png',      order: 4  },
+  { clientName: 'First Electrical Supply',  logoFilename: 'first-electrical-supply.png',  order: 5  },
+  { clientName: 'Smiles on Sparks',         logoFilename: 'smiles-on-sparks.png',         order: 6  },
+  { clientName: 'Smile Express',            logoFilename: 'smile-express.png',            order: 7  },
+  { clientName: 'AM Group Studio',          logoFilename: 'am-group-studio.jpg',          order: 8  },
+  { clientName: 'Direct Air Systems',       logoFilename: 'direct-air-systems.png',       order: 9  },
+  { clientName: 'Maison Opes',              logoFilename: 'maison-opes.png',              order: 10 },
+  { clientName: 'Nootk',                    logoFilename: 'nootk.svg',                    order: 11 },
+  { clientName: 'Venizzi Kitchen and Bath', logoFilename: 'venizzi-kitchen-and-bath.jpg', order: 12 },
+];
+try {
+  const marquee = await getTrustedByMarquee();
+  if (marquee?.logos?.length) rosterLogos = marquee.logos;
 } catch {}
 ---
 
@@ -310,6 +361,75 @@ try {
 
 
   <!-- ══════════════════════════════════════════════════════════════════════
+       SECTION 2B — MEET MAJID (FOUNDER)
+       ═════════════════════════════════════════════════════════════════════ -->
+  <section aria-labelledby="founder-h2" style="padding:96px 0;background:var(--off-white);">
+    <div class="container-xl">
+
+      <div class="founder-grid" style="display:grid;grid-template-columns:340px 1fr;gap:64px;align-items:start;">
+
+        <!-- LEFT: headshot -->
+        <div style="text-align:center;">
+          <div style="display:inline-block;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(33,33,41,0.18);border:3px solid var(--action);">
+            <img
+              src="/majid-behzad.jpg"
+              alt="Majid Behzad — Founder of CiCon Marketing"
+              width="320"
+              height="320"
+              loading="lazy"
+              style="width:320px;height:320px;object-fit:cover;display:block;"
+            />
+          </div>
+          <div style="margin-top:20px;">
+            <p style="font-size:1.05rem;font-weight:800;color:var(--shadow);margin:0 0 4px;">{founderData.heading}</p>
+            <p style="font-size:0.9rem;color:var(--accent);margin:0 0 14px;font-weight:600;">{founderData.subheading}</p>
+            <!-- LinkedIn -->
+            <a
+              href={founderData.linkedinUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style="display:inline-flex;align-items:center;gap:8px;font-size:0.9rem;font-weight:600;color:var(--accent);text-decoration:none;transition:color .15s;"
+              onmouseover="this.style.color='#0a66c2'"
+              onmouseout="this.style.color='var(--accent)'"
+              aria-label="Connect with Majid Behzad on LinkedIn"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+              Connect on LinkedIn
+            </a>
+          </div>
+        </div>
+
+        <!-- RIGHT: copy -->
+        <div>
+          <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
+            {founderData.eyebrow}
+          </p>
+          <h2 id="founder-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 24px;">
+            {founderData.heading}
+          </h2>
+
+          {founderData.body.split('\n\n').map((para: string) => (
+            <p style="font-size:clamp(1rem,1.6vw,1.1rem);line-height:1.8;color:var(--charcoal);margin:0 0 20px;">
+              {para}
+            </p>
+          ))}
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <style>
+    @media (max-width: 899px) {
+      .founder-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+      .founder-grid > div:first-child { max-width: 280px; margin: 0 auto; }
+    }
+  </style>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════
        SECTION 3 — AI TRANSPARENCY
        ═════════════════════════════════════════════════════════════════════ -->
   <section aria-labelledby="ai-h2" style="padding:96px 0;background:var(--off-white);">
@@ -383,7 +503,7 @@ try {
   <section aria-labelledby="stack-h2" style="padding:96px 0;background:#fff;">
     <div class="container-xl">
       <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
-        Transparency
+        The Stack
       </p>
       <h2 id="stack-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 14px;">
         The stack behind every CiCon campaign
@@ -422,70 +542,40 @@ try {
 
 
   <!-- ══════════════════════════════════════════════════════════════════════
-       SECTION 5 — PROOF CLUSTER
+       SECTION 5 — WHY CICON (THREE THINGS EVERY ACCOUNT GETS)
        ═════════════════════════════════════════════════════════════════════ -->
-  <section aria-labelledby="proof-h2" style="padding:96px 0;background:var(--off-white);">
+  <section aria-labelledby="why-cicon-h2" style="padding:96px 0;background:var(--off-white);">
     <div class="container-xl">
       <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
-        Track record
+        {whyCiconCardsData.eyebrow}
       </p>
-      <h2 id="proof-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 48px;">
-        Results, not promises
+      <h2 id="why-cicon-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 52px;">
+        {whyCiconCardsData.heading}
       </h2>
 
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;align-items:start;">
-
-        <!-- Element 1: Numerical result -->
-        <div style="background:#fff;border:1px solid var(--alabaster);border-radius:16px;padding:36px 32px;">
-          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin:0 0 20px;">By the numbers</p>
-          <!-- PLACEHOLDER: MJ to replace with real metric -->
-          <p style="font-size:clamp(2.5rem,5vw,4rem);font-weight:900;color:var(--shadow);letter-spacing:-0.04em;line-height:1;margin:0 0 12px;">
-            [METRIC]
-          </p>
-          <p style="font-size:0.95rem;line-height:1.6;color:rgba(58,58,58,0.75);margin:0;font-style:italic;">
-            [METRIC: e.g. 47% increase in qualified leads for [Client] in 6 months — MJ to fill in]
-          </p>
-        </div>
-
-        <!-- Element 2: Testimonial -->
-        <div style="background:var(--shadow);border-radius:16px;padding:36px 32px;position:relative;">
-          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--action);margin:0 0 20px;">Client voice</p>
-          <svg width="28" height="20" viewBox="0 0 28 20" fill="none" aria-hidden="true" focusable="false" style="margin-bottom:16px;">
-            <path d="M0 20V12.5C0 5.596 3.9 1.833 11.7 0l1.4 2.5C9.567 3.583 7.533 5.25 6.5 7.5H11V20H0zm16 0V12.5C16 5.596 19.9 1.833 27.7 0l1.4 2.5C25.567 3.583 23.533 5.25 22.5 7.5H27V20H16z" fill="rgba(255,207,0,0.35)"/>
-          </svg>
-          <!-- PLACEHOLDER: MJ to replace with real testimonial -->
-          <blockquote style="margin:0 0 20px;padding:0;">
-            <p style="font-size:1rem;line-height:1.65;color:rgba(255,255,255,0.85);margin:0;font-style:italic;">
-              [TESTIMONIAL: 2-3 sentence quote from a satisfied client — MJ to fill in]
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;" class="why-cards-grid">
+        {whyCiconCardsData.cards.map((card: { label: string; heading: string; body: string }, i: number) => (
+          <div style={`background:#fff;border:1px solid var(--alabaster);border-top:3px solid ${i === 0 ? 'var(--action)' : i === 1 ? 'var(--accent)' : 'var(--shadow)'};border-radius:12px;padding:32px 28px 28px;`}>
+            <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--accent);margin:0 0 14px;">
+              {card.label}
             </p>
-          </blockquote>
-          <footer>
-            <p style="font-size:0.9rem;font-weight:700;color:#fff;margin:0;">[Client Name]</p>
-            <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin:4px 0 0;">[Business Name, City]</p>
-          </footer>
-        </div>
-
-        <!-- Element 3: Client logo strip -->
-        <div style="background:#fff;border:1px solid var(--alabaster);border-radius:16px;padding:36px 32px;">
-          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin:0 0 24px;">GTA clients</p>
-          <!-- PLACEHOLDER: MJ to supply real client logos; these are placeholder rectangles -->
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;" aria-label="Client logo grid — placeholder">
-            {[1,2,3,4,5,6].map(n => (
-              <div
-                style="height:48px;background:var(--alabaster);border-radius:6px;display:flex;align-items:center;justify-content:center;"
-                role="img"
-                aria-label={`Client ${n} logo — placeholder`}
-              >
-                <span style="font-size:9px;font-weight:600;color:rgba(58,58,58,0.4);text-transform:uppercase;letter-spacing:0.08em;">Client {n}</span>
-              </div>
-            ))}
+            <h3 style="font-size:1.1rem;font-weight:800;color:#000;line-height:1.35;margin:0 0 14px;letter-spacing:-0.01em;">
+              {card.heading}
+            </h3>
+            <p style="font-size:0.95rem;line-height:1.7;color:rgba(58,58,58,0.8);margin:0;">
+              {card.body}
+            </p>
           </div>
-          <p style="font-size:11px;color:rgba(58,58,58,0.4);margin:16px 0 0;font-style:italic;">MJ: replace placeholders with real client logos (SVG preferred)</p>
-        </div>
-
+        ))}
       </div>
     </div>
   </section>
+
+  <style>
+    @media (max-width: 767px) {
+      .why-cards-grid { grid-template-columns: 1fr !important; }
+    }
+  </style>
 
 
   <!-- ══════════════════════════════════════════════════════════════════════
@@ -553,7 +643,7 @@ try {
       </h2>
 
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;" class="values-grid">
-        {aboutData.values.map((v: { text: string }, i: number) => (
+        {aboutData.values.map((v: { text: string; body?: string }, i: number) => (
           <div style="position:relative;padding:32px 28px 28px;background:#fff;border:1px solid var(--alabaster);border-radius:12px;">
             <!-- Amber accent top-left line -->
             <div
@@ -563,9 +653,14 @@ try {
             <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin:0 0 16px;">
               0{i + 1}
             </p>
-            <h3 style="font-size:1.15rem;font-weight:800;color:#000;line-height:1.35;margin:0;letter-spacing:-0.01em;">
+            <h3 style="font-size:1.15rem;font-weight:800;color:#000;line-height:1.35;margin:0 0 14px;letter-spacing:-0.01em;">
               {v.text}
             </h3>
+            {v.body && (
+              <p style="font-size:0.92rem;line-height:1.7;color:rgba(58,58,58,0.75);margin:0;">
+                {v.body}
+              </p>
+            )}
           </div>
         ))}
       </div>
@@ -598,7 +693,7 @@ try {
       <!-- Micro-proof points -->
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-bottom:48px;" class="dental-proof-grid">
         {[
-          { num: '[X]',      label: 'active dental clinic clients across the GTA', sub: 'MJ: replace with real count' },
+          { num: 'Growing',  label: 'active dental clinic clients across the GTA', sub: 'GTA-wide dental practice' },
           { num: '100%',     label: 'specialized in GBP, local SEO, and patient acquisition funnels', sub: 'Dental-first methodology' },
           { num: 'Q/Q',      label: 'quarterly reporting tailored to clinic ownership', sub: 'Not monthly noise — quarterly signal' },
         ].map(pt => (
@@ -612,7 +707,7 @@ try {
 
       <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;">
         <a
-          href="https://dental.cicon.ca"
+          href="/services/dental/"
           style="display:inline-flex;align-items:center;gap:8px;padding:15px 32px;background:var(--wa-deep);color:#fff;font-weight:700;font-size:15px;border-radius:12px;text-decoration:none;transition:background .15s;font-family:'Inter',sans-serif;"
           onmouseover="this.style.background='var(--wa-deep-h)'"
           onmouseout="this.style.background='var(--wa-deep)'"
@@ -668,7 +763,58 @@ try {
 
 
   <!-- ══════════════════════════════════════════════════════════════════════
-       SECTION 10 — FAQ
+       SECTION 10 — TRUSTED BY ROSTER
+       ═════════════════════════════════════════════════════════════════════ -->
+  <section aria-labelledby="roster-h2" style="padding:80px 0;background:var(--off-white);">
+    <div class="container-xl">
+
+      <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
+        {aboutData.roster.eyebrow}
+      </p>
+      <h2 id="roster-h2" style="font-size:clamp(1.5rem,2.8vw,2.25rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.15;margin:0 0 12px;">
+        {aboutData.roster.heading}
+      </h2>
+      {aboutData.roster.body && (
+        <p style="font-size:1rem;color:rgba(58,58,58,0.65);margin:0 0 48px;max-width:560px;line-height:1.6;">
+          {aboutData.roster.body}
+        </p>
+      )}
+      {!aboutData.roster.body && <div style="margin-bottom:48px;"></div>}
+
+      <!-- Logo grid: 4-col desktop, 3-col tablet, 2-col mobile -->
+      <div class="roster-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;">
+        {rosterLogos.map((logo: { clientName: string; logoFilename: string }) => (
+          <div
+            class="roster-logo"
+            style="background:#fff;border:1px solid var(--alabaster);border-radius:12px;padding:20px 24px;display:flex;align-items:center;justify-content:center;min-height:80px;transition:border-color .2s,box-shadow .2s,filter .2s;"
+          >
+            <img
+              src={`/clients-logo/${logo.logoFilename}`}
+              alt={`${logo.clientName} logo`}
+              loading="lazy"
+              style="max-width:120px;max-height:44px;width:auto;height:auto;object-fit:contain;filter:grayscale(100%) opacity(0.6);transition:filter .25s ease;"
+              onmouseover="this.style.filter='grayscale(0%) opacity(1)'"
+              onmouseout="this.style.filter='grayscale(100%) opacity(0.6)'"
+            />
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </section>
+
+  <style>
+    @media (max-width: 1023px) {
+      .roster-grid { grid-template-columns: repeat(3,1fr) !important; }
+    }
+    @media (max-width: 599px) {
+      .roster-grid { grid-template-columns: repeat(2,1fr) !important; }
+    }
+  </style>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       SECTION 12 — FAQ
        ═════════════════════════════════════════════════════════════════════ -->
   <section aria-labelledby="faq-h2" style="padding:96px 0;background:var(--off-white);">
     <div class="container-xl" style="max-width:840px;">
@@ -745,15 +891,9 @@ try {
         {aboutData.finalCta.headline}
       </h2>
 
-      {aboutData.finalCta.trustLine ? (
-        <p style="font-size:1rem;line-height:1.65;color:rgba(255,255,255,0.6);margin:0 0 40px;font-style:italic;">
-          {aboutData.finalCta.trustLine}
-        </p>
-      ) : (
-        <p style="font-size:1rem;line-height:1.65;color:rgba(255,255,255,0.6);margin:0 0 40px;font-style:italic;">
-          Update this trust line in Sanity Studio — add a client quote or key result.
-        </p>
-      )}
+      <p style="font-size:1rem;line-height:1.65;color:rgba(255,255,255,0.6);margin:0 0 40px;font-style:italic;">
+        {aboutData.finalCta.trustLine ?? '14+ years building GTA growth systems — limited new accounts each quarter.'}
+      </p>
 
       <div style="display:flex;flex-direction:column;align-items:center;gap:16px;">
         <!-- WhatsApp CTA -->

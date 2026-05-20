@@ -366,15 +366,23 @@ export const CONTACT_PAGE_QUERY = `
 
 export const ABOUT_PAGE_QUERY = `
   *[_type == "aboutPage"][0]{
-    hero{ headline, subheadline },
+    hero{ headline, subheadline, foundingYear },
     whySection{ headline, body },
+    founder{ eyebrow, heading, subheading, body, linkedinUrl },
     stackTools[]{ name, category, purpose },
-    proof{ metricValue, metricLabel, testimonialQuote, testimonialAuthor, testimonialBusiness },
-    values[]{ text },
+    values[]{ text, body },
     dentalSection{ headline, body },
     localSection{ headline, body },
+    roster{ eyebrow, heading, body },
     faqs[]{ question, answer },
     finalCta{ headline, trustLine }
+  }
+`
+
+export const WHY_CICON_CARDS_QUERY = `
+  *[_type == "whyCiconCards"][0]{
+    eyebrow, heading,
+    cards[]{ label, heading, body }
   }
 `
 
@@ -415,6 +423,12 @@ export async function getAboutPage() {
   const client = getSanityClient()
   if (!client) return null
   try { return await client.fetch(ABOUT_PAGE_QUERY) } catch { return null }
+}
+
+export async function getWhyCiconCards() {
+  const client = getSanityClient()
+  if (!client) return null
+  try { return await client.fetch(WHY_CICON_CARDS_QUERY) } catch { return null }
 }
 
 export async function getFreeMapCheckPage() {

@@ -31,6 +31,7 @@ import freeMapCheckPage from './freeMapCheckPage'
 import thankYouPage from './thankYouPage'
 import privacyPolicyPage from './privacyPolicyPage'
 import smsTermsPage from './smsTermsPage'
+import whyCiconCards from './whyCiconCards'
 
 // ── Shared sub-types ──────────────────────────────────────────────────────────
 
@@ -475,6 +476,7 @@ export const schemaTypes = [
   caseStudy,
   // Homepage modules
   trustedByMarquee,
+  whyCiconCards,
   // Page schemas
   contactPage,
   aboutPage,

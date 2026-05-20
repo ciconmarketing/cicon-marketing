@@ -15,7 +15,10 @@ export default defineType({
         defineField({ name: 'headline', title: 'Headline (H1)', type: 'text', rows: 2,
           initialValue: 'A boutique GTA marketing studio building AI-augmented growth systems for local businesses and dental clinics.' }),
         defineField({ name: 'subheadline', title: 'Subheadline', type: 'text', rows: 2,
-          initialValue: "Operating across the Greater Toronto Area since 2018 — founded by a Google-certified strategist with a Master's in Engineering and 15+ years building data-driven growth systems." }),
+          initialValue: "Operating across the Greater Toronto Area since 2018 — founded by a Google-certified strategist with a Master's in Engineering and 14+ years building data-driven growth systems." }),
+        defineField({ name: 'foundingYear', title: 'Founding Year (e.g. "2018")', type: 'string',
+          description: 'Used in "Operating since {year}" copy. Defaults to 2018 if left empty.',
+          initialValue: '2018' }),
       ],
     }),
     defineField({
@@ -26,6 +29,21 @@ export default defineType({
         defineField({ name: 'headline', title: 'Section Headline', type: 'string', initialValue: 'Why CiCon exists' }),
         defineField({ name: 'body', title: 'Body Text', type: 'text', rows: 6,
           initialValue: "Most agencies sell hours and report on impressions. CiCon was built as a reaction to that model. We don't invoice for meetings; we build compounding visibility engines — local search infrastructure, content systems, and paid acquisition funnels that earn more over time, not less. The GTA is not a generic market, and \"best practices\" from a playbook written for nationwide brands will lose to a competitor who actually understands Richmond Hill, Markham, and the specific search behaviour of a GTA patient or homeowner looking for a local provider. We stay small on purpose so we can stay sharp on your account." }),
+      ],
+    }),
+    defineField({
+      name: 'founder',
+      title: '② Founder Section (Meet Majid)',
+      type: 'object',
+      description: 'Displayed between "Why we exist" and "AI transparency" sections.',
+      fields: [
+        defineField({ name: 'eyebrow', title: 'Eyebrow', type: 'string', initialValue: 'FOUNDER' }),
+        defineField({ name: 'heading', title: 'Heading', type: 'string', initialValue: 'Meet Majid' }),
+        defineField({ name: 'subheading', title: 'Subheading', type: 'string', initialValue: 'Founder & Senior Strategist' }),
+        defineField({ name: 'body', title: 'Body Copy (paragraphs)', type: 'text', rows: 8,
+          description: 'Use double line-break to separate paragraphs.',
+          initialValue: "CiCon was built as a direct reaction to what I kept seeing: agencies that optimized for retainer renewal, not client results. After 14+ years building growth systems — first for enterprise clients, then for the GTA's local businesses and dental clinics — I started CiCon to do this work at a level of specificity that large agencies structurally can't.\n\nI hold a Master's in Engineering and a Postgraduate Diploma in Marketing Management. I'm Google-certified and I run every account personally. That's not a selling point — it's a constraint I set deliberately. The moment you stop doing the work yourself is the moment the work gets generic." }),
+        defineField({ name: 'linkedinUrl', title: 'LinkedIn URL', type: 'url', initialValue: 'https://linkedin.com/in/majidlm/' }),
       ],
     }),
     defineField({
@@ -72,20 +90,21 @@ export default defineType({
       name: 'values',
       title: '⑤ Values (What We Stand Behind)',
       type: 'array',
-      description: '3 short value statements.',
+      description: '3 value statements, each with a short supporting body.',
       of: [
         defineArrayMember({
           type: 'object', name: 'value', title: 'Value',
           fields: [
-            defineField({ name: 'text', title: 'Value Statement', type: 'string', validation: r => r.required() }),
+            defineField({ name: 'text', title: 'Value Statement (heading)', type: 'string', validation: r => r.required() }),
+            defineField({ name: 'body', title: 'Supporting Copy (1–2 sentences)', type: 'text', rows: 2 }),
           ],
           preview: { select: { title: 'text' } },
         }),
       ],
       initialValue: [
-        { _key: 'v1', text: 'Build for scale, not for invoices' },
-        { _key: 'v2', text: "Show the data, even when it's ugly" },
-        { _key: 'v3', text: 'Local context beats global templates' },
+        { _key: 'v1', text: 'Build for scale, not for invoices', body: "We don't build what we can bill. We build what compounds. Every system is designed to earn more for you over time — not to justify next month's retainer." },
+        { _key: 'v2', text: "Show the data, even when it's ugly", body: "If a channel underperforms, you hear it from us first — with the root cause and the fix. We don't dress up bad news in vanity metrics." },
+        { _key: 'v3', text: 'Local context beats global templates', body: "A playbook written for a national brand will lose to a local operator who actually knows GTA search behaviour, seasonal cycles, and which neighbourhoods convert." },
       ],
     }),
     defineField({
@@ -111,8 +130,20 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'roster',
+      title: '⑧ Trusted By Roster Section',
+      type: 'object',
+      description: 'Displayed after the Local section, before FAQ. Logos are pulled automatically from the Trusted By Marquee singleton — no need to re-enter them here.',
+      fields: [
+        defineField({ name: 'eyebrow', title: 'Eyebrow', type: 'string', initialValue: 'THE ROSTER' }),
+        defineField({ name: 'heading', title: 'Heading', type: 'string', initialValue: 'The businesses behind the boutique' }),
+        defineField({ name: 'body', title: 'Body Copy (optional)', type: 'string',
+          description: 'Optional one-line subtext under the heading.' }),
+      ],
+    }),
+    defineField({
       name: 'faqs',
-      title: '⑧ FAQ Section',
+      title: '⑨ FAQ Section',
       type: 'array',
       of: [
         defineArrayMember({
@@ -135,7 +166,7 @@ export default defineType({
     }),
     defineField({
       name: 'finalCta',
-      title: '⑨ Final CTA Section',
+      title: '⑩ Final CTA Section',
       type: 'object',
       fields: [
         defineField({ name: 'headline', title: 'Headline', type: 'string', initialValue: 'Ready to talk?' }),

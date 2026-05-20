@@ -5,7 +5,7 @@ export const PERSON_MAJID = {
   givenName: 'Majid',
   familyName: 'Behzad',
   jobTitle: 'Founder & Senior Digital Marketing Strategist',
-  description: "Over 15 years building data-driven marketing systems for GTA businesses. Google-certified, Master's in Engineering, Postgraduate in Marketing Management.",
+  description: "14+ years building data-driven marketing systems for GTA businesses. Google-certified, Master's in Engineering, Postgraduate in Marketing Management.",
   url: 'https://cicon.ca/about-us/',
   image: 'https://cicon.ca/majid-behzad.jpg',
   worksFor: { '@id': 'https://cicon.ca/#organization' },

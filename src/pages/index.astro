@@ -16,7 +16,7 @@ import TrustedByMarquee from '../components/home/TrustedByMarquee.astro';
 import ScrollProgress from '../components/react/ScrollProgress.tsx';
 import '../styles/globals.css';
 
-import { getHomepage, getTrustedByMarquee } from '../lib/sanity';
+import { getHomepage, getTrustedByMarquee, getWhyCiconCards } from '../lib/sanity';
 import { defaultHomepageData, defaultTrustedByMarquee } from '../lib/defaults';
 import type { HomepageData, TrustedByMarqueeData } from '../lib/types';
 
@@ -27,13 +27,24 @@ const isPreview = import.meta.env.VERCEL_ENV !== 'production'
 // Try Sanity first, fall back to hard-coded defaults
 let data: HomepageData = defaultHomepageData;
 let trustedBy: TrustedByMarqueeData = defaultTrustedByMarquee;
+let whyCiconCards = {
+  eyebrow: 'WHY CICON',
+  heading: 'Three things every account gets',
+  cards: [
+    { label: 'THE OPERATOR', heading: 'Senior strategy on every account', body: "You get direct access to the strategist who built your system — not an account coordinator reading dashboards. Senior-level thinking, every call, every quarter." },
+    { label: 'THE METHOD',   heading: 'A documented 90-day system',        body: "Every engagement runs on a documented 90-day cycle: audit, roadmap, build, and quarterly business review. No guesswork, no scope creep, no surprises." },
+    { label: 'THE FOOTPRINT',heading: 'Local GTA market knowledge',        body: "14+ years operating in GTA markets means the campaigns we build reflect real local search behaviour — not borrowed playbooks written for other cities." },
+  ],
+};
 try {
-  const [sanityData, sanityTrustedBy] = await Promise.all([
+  const [sanityData, sanityTrustedBy, sanityWhyCards] = await Promise.all([
     getHomepage(),
     getTrustedByMarquee(),
+    getWhyCiconCards(),
   ]);
   if (sanityData?.hero?.headline) data = sanityData;
   if (sanityTrustedBy?.logos?.length) trustedBy = sanityTrustedBy;
+  if (sanityWhyCards?.heading) whyCiconCards = { ...whyCiconCards, ...sanityWhyCards };
 } catch {
   // Sanity not configured – using defaults is fine
 }
@@ -118,6 +129,39 @@ try {
     <ToolsStrip />
     <WhyCiCon       data={data.whyCicon} />
     <ResultsShowcase client:visible />
+
+    <!-- ── WHY CICON CARDS — Three things every account gets ── -->
+    <section aria-labelledby="why-cicon-cards-h2" style="padding:80px 0 96px;background:#fff;">
+      <div class="container-xl">
+        <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:#9D833E;margin:0 0 14px;">
+          {whyCiconCards.eyebrow}
+        </p>
+        <h2 id="why-cicon-cards-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#212129;letter-spacing:-0.02em;line-height:1.12;margin:0 0 52px;">
+          {whyCiconCards.heading}
+        </h2>
+        <div class="hp-why-cards-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;">
+          {whyCiconCards.cards.map((card: { label: string; heading: string; body: string }, i: number) => (
+            <div style={`background:#FAFAFA;border:1px solid #E7E7E7;border-top:3px solid ${i === 0 ? '#FFCF00' : i === 1 ? '#9D833E' : '#212129'};border-radius:12px;padding:32px 28px 28px;`}>
+              <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:#9D833E;margin:0 0 14px;">
+                {card.label}
+              </p>
+              <h3 style="font-size:1.1rem;font-weight:800;color:#212129;line-height:1.35;margin:0 0 14px;letter-spacing:-0.01em;">
+                {card.heading}
+              </h3>
+              <p style="font-size:0.95rem;line-height:1.7;color:rgba(58,58,58,0.8);margin:0;">
+                {card.body}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+    <style>
+      @media (max-width: 767px) {
+        .hp-why-cards-grid { grid-template-columns: 1fr !important; }
+      }
+    </style>
+
     <Services       data={data.services} />
     <TrustedByMarquee data={trustedBy} />
     <WhoWeServe     data={data.whoWeServe} />
