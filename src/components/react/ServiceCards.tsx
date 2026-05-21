@@ -69,19 +69,34 @@ export default function ServiceCards({ items }: Props) {
             <GlowingEffect spread={40} glow={true} disabled={false} proximity={64} inactiveZone={0.01} borderWidth={2} />
             <a
               href={href}
-              className="group relative bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-xl hover:border-teal-200 transition-shadow duration-300 flex flex-col cursor-pointer h-full no-underline"
+              className="group relative rounded-2xl p-6 flex flex-col cursor-pointer h-full no-underline transition-all duration-300"
+              style={{
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.08)',
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)';
+                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(157,131,62,0.45)';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)';
+                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.08)';
+              }}
               aria-label={`Learn more about ${service.title}`}
             >
-              <div className="w-12 h-12 rounded-xl bg-teal-50 group-hover:bg-teal-600 flex items-center justify-center mb-5 transition-colors duration-200 flex-shrink-0">
-                <IconComponent className="w-6 h-6 text-teal-600 group-hover:text-white transition-colors duration-200" />
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 flex-shrink-0 transition-colors duration-200 group-hover:[background:rgba(157,131,62,0.25)]"
+                style={{ background: 'rgba(157,131,62,0.12)' }}
+              >
+                <IconComponent className="w-6 h-6 transition-colors duration-200" style={{ color: '#FFCF00' } as React.CSSProperties} />
               </div>
-              <h3 className="text-base font-bold text-navy-900 mb-2 leading-snug">
+              <h3 className="text-base font-bold mb-2 leading-snug" style={{ color: '#ffffff' }}>
                 {service.title}
               </h3>
-              <p className="text-sm text-gray-500 leading-relaxed flex-grow">
+              <p className="text-sm leading-relaxed flex-grow" style={{ color: '#a0a0b0' }}>
                 {service.description}
               </p>
-              <span className="mt-4 text-xs font-semibold text-teal-600 group-hover:text-teal-700 transition-colors duration-200 flex items-center gap-1">
+              <span className="mt-4 text-xs font-semibold flex items-center gap-1 transition-colors duration-200" style={{ color: '#9D833E' }}>
                 Learn more
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                   <path d="M2.5 6h7M6.5 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>

@@ -5,13 +5,13 @@ interface Props { data: ServicesData }
 const { data } = Astro.props;
 ---
 
-<section id="services" class="py-20 lg:py-28 bg-gray-50">
+<section id="services" class="py-20 lg:py-28" style="background:var(--shadow)">
   <div class="container-xl">
 
     <div class="text-center mb-14">
-      <span class="section-label" data-aos="fade-up">Our Expertise</span>
-      <h2 class="section-heading" data-aos="fade-up" data-aos-delay="100">{data.headline}</h2>
-      <p class="section-subheading mx-auto mt-4" data-aos="fade-up" data-aos-delay="200">
+      <span class="section-label" data-aos="fade-up" style="color:var(--action)">Our Expertise</span>
+      <h2 class="section-heading" data-aos="fade-up" data-aos-delay="100" style="color:#fff">{data.headline}</h2>
+      <p class="section-subheading mx-auto mt-4" data-aos="fade-up" data-aos-delay="200" style="color:#a0a0b0">
         End-to-end digital marketing solutions built to generate leads, grow revenue, and dominate your local market.
       </p>
     </div>
@@ -20,7 +20,7 @@ const { data } = Astro.props;
 
     <!-- Bottom CTA -->
     <div class="mt-14 text-center" data-aos="fade-up">
-      <p class="text-gray-500 mb-6">Not sure which services are right for you?</p>
+      <p class="mb-6" style="color:#a0a0b0">Not sure which services are right for you?</p>
       <a
         href="https://wa.me/16475840800"
         target="_blank"
