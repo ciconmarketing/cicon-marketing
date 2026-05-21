@@ -16,6 +16,17 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   video: Video,
 };
 
+const slugMap: Record<string, string> = {
+  megaphone: '/services/paid-advertising/',
+  search:    '/services/ai-seo/',
+  tooth:     '/services/dental/',
+  social:    '/services/social-media-marketing/',
+  code:      '/services/website-development/',
+  crm:       '/services/crm-integration/',
+  map:       '/services/local-seo/',
+  video:     '/services/media-production/',
+};
+
 interface ServiceItem {
   icon: string;
   title: string;
@@ -47,6 +58,7 @@ export default function ServiceCards({ items }: Props) {
     >
       {items.map((service, i) => {
         const IconComponent = iconMap[service.icon] ?? Star;
+        const href = slugMap[service.icon] ?? '/services/';
         return (
           <motion.div
             key={i}
@@ -55,7 +67,11 @@ export default function ServiceCards({ items }: Props) {
             className="relative rounded-2xl"
           >
             <GlowingEffect spread={40} glow={true} disabled={false} proximity={64} inactiveZone={0.01} borderWidth={2} />
-            <div className="group relative bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-xl hover:border-teal-200 transition-shadow duration-300 flex flex-col cursor-default h-full">
+            <a
+              href={href}
+              className="group relative bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-xl hover:border-teal-200 transition-shadow duration-300 flex flex-col cursor-pointer h-full no-underline"
+              aria-label={`Learn more about ${service.title}`}
+            >
               <div className="w-12 h-12 rounded-xl bg-teal-50 group-hover:bg-teal-600 flex items-center justify-center mb-5 transition-colors duration-200 flex-shrink-0">
                 <IconComponent className="w-6 h-6 text-teal-600 group-hover:text-white transition-colors duration-200" />
               </div>
@@ -65,7 +81,13 @@ export default function ServiceCards({ items }: Props) {
               <p className="text-sm text-gray-500 leading-relaxed flex-grow">
                 {service.description}
               </p>
-            </div>
+              <span className="mt-4 text-xs font-semibold text-teal-600 group-hover:text-teal-700 transition-colors duration-200 flex items-center gap-1">
+                Learn more
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <path d="M2.5 6h7M6.5 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </span>
+            </a>
           </motion.div>
         );
       })}
