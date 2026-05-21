@@ -190,13 +190,67 @@ const homepage = defineType({
   title: 'Homepage',
   type: 'document',
   icon: () => '🏠',
+
+  groups: [
+    { name: 'identity', title: 'Identity & Workflow', default: true },
+    { name: 'seo',      title: 'SEO & Meta' },
+    { name: 'hero',     title: 'Hero' },
+    { name: 'content',  title: 'Content Blocks' },
+    { name: 'contact',  title: 'Contact' },
+  ],
+
   fields: [
+
+    // ── IDENTITY & WORKFLOW ───────────────────────────────────────────────────
+    defineField({
+      name: 'internalNotes',
+      title: 'Internal Notes',
+      type: 'text',
+      rows: 3,
+      group: 'identity',
+      description: 'Private editorial notes — not published to the website.',
+    }),
+
+    // ── SEO & META ────────────────────────────────────────────────────────────
+    defineField({
+      name: 'seoTitle',
+      title: 'SEO Title',
+      type: 'string',
+      group: 'seo',
+      description: 'Overrides the default <title> tag. Keep under 60 characters.',
+      validation: r => r.max(60),
+    }),
+    defineField({
+      name: 'seoDescription',
+      title: 'Meta Description',
+      type: 'text',
+      rows: 3,
+      group: 'seo',
+      description: 'Overrides the default meta description. 120–155 characters recommended.',
+      validation: r => r.max(155),
+    }),
+    defineField({
+      name: 'ogImage',
+      title: 'OG / Social Share Image',
+      type: 'image',
+      group: 'seo',
+      description: 'Overrides the default social preview image. Recommended: 1200 × 630 px.',
+      options: { hotspot: true },
+    }),
+    defineField({
+      name: 'canonicalOverride',
+      title: 'Canonical URL Override',
+      type: 'url',
+      group: 'seo',
+      description: 'Leave blank to use the default canonical (https://cicon.ca/). Only set if you need to point canonicals elsewhere.',
+    }),
 
     // ── HERO ─────────────────────────────────────────────────────────────────
     defineField({
       name: 'hero',
       title: '① Hero Section',
       type: 'object',
+      group: 'hero',
       fields: [
         defineField({
           name: 'headline',
@@ -245,6 +299,7 @@ const homepage = defineType({
       name: 'whyCicon',
       title: '② Why CiCon Section',
       type: 'object',
+      group: 'content',
       fields: [
         defineField({ name: 'headline', title: 'Section Headline', type: 'string', initialValue: 'Why Businesses in the GTA Trust CiCon Marketing' }),
         defineField({
@@ -293,6 +348,7 @@ const homepage = defineType({
       name: 'services',
       title: '③ Services Section',
       type: 'object',
+      group: 'content',
       fields: [
         defineField({ name: 'headline', title: 'Section Headline', type: 'string', initialValue: 'What We Do' }),
         defineField({
@@ -319,6 +375,7 @@ const homepage = defineType({
       name: 'whoWeServe',
       title: '④ Who We Serve Section',
       type: 'object',
+      group: 'content',
       fields: [
         defineField({ name: 'headline', type: 'string', title: 'Section Headline', initialValue: 'Who We Serve' }),
         defineField({ name: 'subheadline', type: 'string', title: 'Subheadline', initialValue: 'We partner with growth-minded businesses across the GTA who are serious about results.' }),
@@ -343,6 +400,7 @@ const homepage = defineType({
       name: 'howItWorks',
       title: '⑤ How It Works Section',
       type: 'object',
+      group: 'content',
       fields: [
         defineField({ name: 'headline', type: 'string', title: 'Section Headline', initialValue: 'How It Works' }),
         defineField({ name: 'subheadline', type: 'string', title: 'Subheadline', initialValue: 'A clear, proven process designed to deliver results from day one.' }),
@@ -366,6 +424,7 @@ const homepage = defineType({
       name: 'problemsSolved',
       title: '⑥ Problems We Solve Section',
       type: 'object',
+      group: 'content',
       fields: [
         defineField({ name: 'headline', type: 'string', title: 'Section Headline', initialValue: 'Problems We Solve' }),
         defineField({ name: 'subheadline', type: 'string', title: 'Subheadline', initialValue: 'Sound familiar? We solve these every single day.' }),
@@ -391,6 +450,7 @@ const homepage = defineType({
       name: 'readyToGrow',
       title: '⑦ Ready to Grow CTA Section',
       type: 'object',
+      group: 'content',
       fields: [
         defineField({ name: 'headline',    type: 'string', title: 'Headline',     initialValue: 'Ready to Grow Your Business?' }),
         defineField({ name: 'subheadline', type: 'text',   title: 'Subheadline', rows: 3, initialValue: "Let's build a marketing strategy that actually works for your business. Book a free strategy call and see exactly how CiCon Marketing can help you grow." }),
@@ -425,6 +485,7 @@ const homepage = defineType({
       name: 'contact',
       title: '⑧ Contact Section',
       type: 'object',
+      group: 'contact',
       fields: [
         defineField({ name: 'headline', type: 'string', title: 'Section Headline', initialValue: 'Get In Touch' }),
         defineField({ name: 'email',    type: 'string', title: 'Email Address',    initialValue: 'info@cicon.ca' }),
