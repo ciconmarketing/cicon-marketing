@@ -6,4 +6,7 @@ export default defineCliConfig({
     dataset: 'cicon-marketing',
   },
   studioHost: 'cicon-marketing',
+  deployment: {
+    appId: 'f8rfw0tr6s4mj9o008mjl760',
+  },
 });
