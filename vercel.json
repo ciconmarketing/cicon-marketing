@@ -1,11 +1,20 @@
 {
   "headers": [
     {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
+    {
       "source": "/robots.txt",
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=300, must-revalidate"
+          "value": "public, max-age=60, must-revalidate"
         }
       ]
     }
