@@ -310,7 +310,7 @@ const homepage = defineType({
           initialValue: [
             { _key: 'stat1', value: '250+', label: 'Projects Completed' },
             { _key: 'stat2', value: '100+', label: 'Happy Clients' },
-            { _key: 'stat3', value: '15+',  label: 'Years of Experience' },
+            { _key: 'stat3', value: '14+',  label: 'Years of Experience' },
           ],
         }),
         defineField({
