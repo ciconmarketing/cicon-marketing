@@ -82,13 +82,10 @@ try {
     : <meta name="robots" content="index, follow" />
   }
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-
-  <!-- AOS – Animate On Scroll -->
-  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+  <!-- AOS – Animate On Scroll (non-blocking: preload as style, swap rel on load) -->
+  <link rel="preload" href="https://unpkg.com/aos@2.3.4/dist/aos.css" as="style"
+        onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" /></noscript>
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -139,8 +136,8 @@ try {
 
 <body class="font-sans bg-white text-gray-900 antialiased">
 
-  <!-- Scroll progress bar -->
-  <ScrollProgress client:load />
+  <!-- Scroll progress bar — client:idle defers until after first paint -->
+  <ScrollProgress client:idle />
 
   <Nav />
 

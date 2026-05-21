@@ -1,0 +1,262 @@
+---
+/**
+ * HeroStatic — server-rendered hero with CSS animations.
+ * Replaces the React/Framer-Motion HeroClient island so the H1 is visible
+ * immediately in HTML, eliminating the client:load LCP penalty.
+ */
+import type { HeroData } from '../lib/types';
+interface Props { data: HeroData }
+const { data } = Astro.props;
+
+// Split headline on newline — matches original HeroClient logic
+const [headlineLine1, headlineLine2] = data.headline.split('\n');
+const leakIdx = headlineLine2?.indexOf('leaking.') ?? -1;
+const headlinePrefix = leakIdx > -1 ? headlineLine2.slice(0, leakIdx) : (headlineLine2 ?? '');
+---
+
+<section
+  id="hero"
+  style="position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden;background:linear-gradient(135deg,#212129 0%,#1a1a22 50%,#0e1a1a 100%);"
+>
+  <!-- Ambient glow -->
+  <div style="position:absolute;inset:0;background:linear-gradient(to bottom right,rgba(17,94,89,0.25),transparent,rgba(120,53,15,0.15));pointer-events:none;" aria-hidden="true"></div>
+
+  <!-- Floating decorative shapes (CSS-animated, no JS) -->
+  <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none;" aria-hidden="true">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+    <div class="shape shape-5"></div>
+    <div class="shape shape-6"></div>
+  </div>
+
+  <!-- ── Main content ── -->
+  <div class="container-xl" style="position:relative;z-index:10;padding-top:6rem;padding-bottom:6rem;width:100%;">
+    <div style="max-width:48rem;">
+
+      <!-- Eyebrow badge — fades in after H1 renders -->
+      <div class="hero-fade hero-fade-0"
+        style="display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:9999px;font-size:14px;font-weight:600;margin-bottom:2rem;background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.35);color:#5eead4;">
+        <span class="hero-pulse" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#34d399;flex-shrink:0;"></span>
+        For GTA Service Businesses
+      </div>
+
+      <!--
+        H1 — CRITICAL LCP ELEMENT.
+        NO fade-in, opacity:1 from first paint so Lighthouse registers it immediately.
+        Font-display:swap means it renders instantly with system font, swaps to Inter when loaded.
+      -->
+      <h1 style="font-size:clamp(2.25rem,7vw,4.5rem);font-weight:900;color:#fff;line-height:1.1;margin:0 0 1.5rem;letter-spacing:-0.02em;">
+        {headlineLine1 && (
+          <span style="display:block;">{headlineLine1}</span>
+        )}
+        <span style="display:block;">
+          {headlinePrefix && <span>{headlinePrefix}</span>}
+          <!-- Rotating word — vanilla JS swap, starts with "leaking." pre-rendered -->
+          <span id="hero-rotating-word"
+            style="color:#ffcf00;display:inline-block;min-width:11ch;vertical-align:bottom;transition:opacity 0.22s ease,transform 0.22s ease;">leaking.</span>
+        </span>
+      </h1>
+
+      <!-- Subheadline — fades in -->
+      <p class="hero-fade hero-fade-1"
+        style="font-size:clamp(1.05rem,2.5vw,1.4rem);color:#d1d5db;line-height:1.7;margin:0 0 2.5rem;max-width:42rem;">
+        {data.subheadline}
+      </p>
+
+      <!-- CTA buttons — fades in -->
+      <div class="hero-fade hero-fade-2" style="display:flex;flex-wrap:wrap;gap:1rem;">
+
+        <a href="#services"
+          class="hero-btn-explore"
+          style="display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:1rem 2rem;border:2px solid rgba(255,255,255,0.3);color:#fff;font-weight:600;font-size:1.125rem;border-radius:12px;text-decoration:none;transition:border-color 0.2s,background 0.2s,transform 0.2s;">
+          Explore Services
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </a>
+
+        <a href="https://wa.me/16475840800" target="_blank" rel="noopener noreferrer"
+          class="hero-btn-wa"
+          style="display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:1rem 2rem;font-weight:600;font-size:1.125rem;border-radius:12px;text-decoration:none;color:#fff;background:rgba(37,211,102,0.18);border:1.5px solid rgba(37,211,102,0.35);transition:background 0.2s,transform 0.2s;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          Chat on WhatsApp
+        </a>
+      </div>
+
+      <!-- Trust micro-copy — fades in -->
+      <p class="hero-fade hero-fade-3"
+        style="margin:2rem 0 0;font-size:0.875rem;color:#9ca3af;display:flex;flex-wrap:wrap;align-items:center;gap:1rem;">
+        {["Free consultation", "No long-term contracts", "Measurable results"].map((item) => (
+          <span style="display:flex;align-items:center;gap:6px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="#34d399" aria-hidden="true">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+            </svg>
+            {item}
+          </span>
+        ))}
+      </p>
+
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="hero-scroll-indicator" aria-hidden="true"
+    style="position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;color:#6b7280;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+    </svg>
+  </div>
+
+  <!-- Bottom fade to page background -->
+  <div style="position:absolute;bottom:0;left:0;right:0;height:6rem;background:linear-gradient(to top,#f9fafb,transparent);pointer-events:none;" aria-hidden="true"></div>
+</section>
+
+<style>
+/* ──────────────────────────────────────────────────────
+   Fade-in stagger for non-LCP hero content
+   H1 is NOT in this list — it renders at full opacity from first paint.
+────────────────────────────────────────────────────── */
+.hero-fade {
+  opacity: 0;
+  transform: translateY(28px);
+  animation: hero-fade-up 0.9s ease forwards;
+}
+.hero-fade-0 { animation-delay: 0.15s; }
+.hero-fade-1 { animation-delay: 0.28s; }
+.hero-fade-2 { animation-delay: 0.42s; }
+.hero-fade-3 { animation-delay: 0.56s; }
+
+@keyframes hero-fade-up {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Pulse dot */
+@keyframes hero-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}
+.hero-pulse { animation: hero-pulse 2s ease-in-out infinite; }
+
+/* Scroll indicator bounce */
+@keyframes hero-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(8px); }
+}
+.hero-scroll-indicator { animation: hero-bounce 1.4s ease-in-out infinite; }
+
+/* Button hover states */
+.hero-btn-explore:hover {
+  border-color: rgba(255,255,255,0.6) !important;
+  background: rgba(255,255,255,0.1) !important;
+  transform: translateY(-2px) !important;
+}
+.hero-btn-wa:hover {
+  background: rgba(37,211,102,0.28) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* ──────────────────────────────────────────────────────
+   Floating decorative shapes — entry + continuous float
+   Two animations comma-separated: enter once, float forever.
+────────────────────────────────────────────────────── */
+.shape {
+  position: absolute;
+  border-radius: 9999px;
+  border: 2px solid rgba(255,255,255,0.12);
+  box-shadow: 0 8px 32px rgba(255,255,255,0.06);
+}
+.shape::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15), transparent 70%);
+}
+
+/* Entry keyframe — fade in from above */
+@keyframes shape-enter {
+  from { opacity: 0; transform: rotate(var(--deg)) translateY(-60px); }
+  to   { opacity: 1; transform: rotate(var(--deg)) translateY(0); }
+}
+
+/* Continuous gentle float */
+@keyframes shape-float {
+  0%, 100% { transform: rotate(var(--deg)) translateY(0);   }
+  50%       { transform: rotate(var(--deg)) translateY(15px); }
+}
+
+.shape-1 {
+  width: 620px; height: 145px;
+  left: -8%; top: 18%;
+  background: linear-gradient(to right, rgba(20,184,166,0.18), transparent);
+  --deg: 12deg;
+  animation: shape-enter 2.4s 0.3s ease both, shape-float 12s 0.3s ease-in-out infinite;
+}
+.shape-2 {
+  width: 490px; height: 115px;
+  right: -4%; top: 62%;
+  background: linear-gradient(to right, rgba(251,191,36,0.12), transparent);
+  --deg: -16deg;
+  animation: shape-enter 2.4s 0.5s ease both, shape-float 12s 0.5s ease-in-out infinite;
+}
+.shape-3 {
+  width: 290px; height: 72px;
+  left: 6%; bottom: 14%;
+  background: linear-gradient(to right, rgba(45,212,191,0.14), transparent);
+  --deg: -8deg;
+  animation: shape-enter 2.4s 0.4s ease both, shape-float 12s 0.4s ease-in-out infinite;
+}
+.shape-4 {
+  width: 210px; height: 58px;
+  right: 16%; top: 10%;
+  background: linear-gradient(to right, rgba(234,179,8,0.10), transparent);
+  --deg: 22deg;
+  animation: shape-enter 2.4s 0.6s ease both, shape-float 12s 0.6s ease-in-out infinite;
+}
+.shape-5 {
+  width: 145px; height: 40px;
+  left: 24%; top: 7%;
+  background: linear-gradient(to right, rgba(6,182,212,0.09), transparent);
+  --deg: -26deg;
+  animation: shape-enter 2.4s 0.7s ease both, shape-float 12s 0.7s ease-in-out infinite;
+}
+.shape-6 {
+  width: 170px; height: 48px;
+  right: 36%; bottom: 18%;
+  background: linear-gradient(to right, rgba(13,148,136,0.11), transparent);
+  --deg: 18deg;
+  animation: shape-enter 2.4s 0.8s ease both, shape-float 12s 0.8s ease-in-out infinite;
+}
+
+/* ── Reduced motion — disable all animations, show content immediately ── */
+@media (prefers-reduced-motion: reduce) {
+  .hero-fade   { opacity: 1; transform: none; animation: none; }
+  .hero-pulse  { animation: none; }
+  .hero-scroll-indicator { animation: none; }
+  .shape       { animation: none; opacity: 0.6; transform: rotate(var(--deg)); }
+}
+</style>
+
+<!-- Rotating words — tiny vanilla JS, no framework -->
+<script is:inline>
+(function () {
+  var words = ["leaking.", "fixable.", "blocking growth.", "costing you leads.", "yours to fix."];
+  var idx = 0;
+  var el = document.getElementById('hero-rotating-word');
+  if (!el) return;
+  setInterval(function () {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(-16px)';
+    setTimeout(function () {
+      idx = (idx + 1) % words.length;
+      el.textContent = words[idx];
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    }, 240);
+  }, 2200);
+})();
+</script>

@@ -1,8 +1,8 @@
 ---
 import type { HeroData } from '../lib/types';
-import HeroClient from './react/HeroClient.tsx';
+import HeroStatic from './HeroStatic.astro';
 interface Props { data: HeroData }
 const { data } = Astro.props;
 ---
 
-<HeroClient data={data} client:load />
+<HeroStatic data={data} />
