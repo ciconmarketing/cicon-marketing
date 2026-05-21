@@ -4,6 +4,10 @@
 
 @layer base {
   :root {
+    --shadow:  #212129;
+    --action:  #FFCF00;
+    --accent:  #9D833E;
+    --alabaster: #E8E4DC;
     --whatsapp-bright: #25D366;
     --whatsapp-deep: #128C7E;
     --whatsapp-bright-hover: #1FB855;
