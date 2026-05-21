@@ -26,6 +26,14 @@ export default defineType({
       rows: 3,
     }),
     defineField({
+      name: 'heroImage',
+      title: 'Hero Image',
+      type: 'image',
+      description: 'Main image displayed on the right side of the Services Hub hero. Recommended: 16:9, at least 1200×675px.',
+      options: { hotspot: true },
+    }),
+
+    defineField({
       name: 'heroStats',
       title: 'Hero Stats',
       type: 'array',

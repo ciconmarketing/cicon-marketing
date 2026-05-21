@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "@sanity/vision": "^3.66.0",
+    "motion": "^12.39.0",
+    "motion-utils": "^12.39.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "sanity": "^5.26.0",
