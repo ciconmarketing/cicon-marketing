@@ -42,11 +42,11 @@ const { slug } = Astro.params
 const page = await getServicePage(slug)
 
 if (!page) {
-  return Astro.redirect('/services/', 307)
+  return Astro.redirect('/marketing-services/', 307)
 }
 
 const isPreview = import.meta.env.VERCEL_ENV !== 'production'
-const canonicalUrl = page.canonical ?? `https://cicon.ca/services/${slug}/`
+const canonicalUrl = page.canonical ?? `https://cicon.ca/marketing-services/${slug}/`
 const isDental = page.serviceType === 'dental'
 
 // ── Schema.org ────────────────────────────────────────────────────────────────
@@ -94,7 +94,7 @@ const jsonLd = {
       '@type': 'BreadcrumbList',
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Home',     item: 'https://cicon.ca/' },
-        { '@type': 'ListItem', position: 2, name: 'Services', item: 'https://cicon.ca/services/' },
+        { '@type': 'ListItem', position: 2, name: 'Services', item: 'https://cicon.ca/marketing-services/' },
         { '@type': 'ListItem', position: 3, name: page.title },
       ],
     },

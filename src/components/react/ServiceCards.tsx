@@ -17,14 +17,14 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 const slugMap: Record<string, string> = {
-  megaphone: '/services/paid-advertising/',
-  search:    '/services/ai-seo/',
-  tooth:     '/services/dental/',
-  social:    '/services/social-media-marketing/',
-  code:      '/services/website-development/',
-  crm:       '/services/crm-integration/',
-  map:       '/services/local-seo/',
-  video:     '/services/media-production/',
+  megaphone: '/marketing-services/paid-advertising-services/',
+  search:    '/marketing-services/ai-seo-and-seo/',
+  tooth:     '/marketing-services/dental-marketing-services/',
+  social:    '/marketing-services/social-media-marketing-services/',
+  code:      '/marketing-services/website-development/',
+  crm:       '/marketing-services/crm-integration/',
+  map:       '/marketing-services/local-seo-optimization/',
+  video:     '/marketing-services/media-content-production/',
 };
 
 interface ServiceItem {
@@ -58,7 +58,7 @@ export default function ServiceCards({ items }: Props) {
     >
       {items.map((service, i) => {
         const IconComponent = iconMap[service.icon] ?? Star;
-        const href = slugMap[service.icon] ?? '/services/';
+        const href = slugMap[service.icon] ?? '/marketing-services/';
         return (
           <motion.div
             key={i}

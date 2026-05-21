@@ -32,7 +32,7 @@ import { SERVICES_NAV } from '../lib/services-nav'
 
         <!-- Services dropdown item -->
         <li class="nav-item nav-item--has-dropdown" data-mobile-accordion>
-          <a href="/services/" class="nav-link text-gray-600 hover:text-teal-600 font-medium text-sm transition-colors duration-150 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-teal-600 after:transition-all hover:after:w-full inline-flex items-center" aria-haspopup="true" aria-expanded="false">
+          <a href="/marketing-services/" class="nav-link text-gray-600 hover:text-teal-600 font-medium text-sm transition-colors duration-150 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-teal-600 after:transition-all hover:after:w-full inline-flex items-center" aria-haspopup="true" aria-expanded="false">
             Services
             <svg class="nav-caret" width="12" height="12" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
@@ -44,7 +44,7 @@ import { SERVICES_NAV } from '../lib/services-nav'
             <ul class="nav-dropdown-list" style="list-style:none;margin:0;padding:0;">
               {SERVICES_NAV.map((service) => (
                 <li role="none">
-                  <a href={`/services/${service.slug}/`} class="nav-dropdown-item" role="menuitem">
+                  <a href={`/marketing-services/${service.slug}/`} class="nav-dropdown-item" role="menuitem">
                     <span class="nav-dropdown-icon" aria-hidden="true">{service.icon}</span>
                     <span class="nav-dropdown-label">{service.title}</span>
                     {service.isFlagship && <span class="nav-dropdown-badge">Flagship</span>}
@@ -53,7 +53,7 @@ import { SERVICES_NAV } from '../lib/services-nav'
               ))}
               <li role="separator" class="nav-dropdown-divider"></li>
               <li role="none">
-                <a href="/services/" class="nav-dropdown-viewall" role="menuitem">
+                <a href="/marketing-services/" class="nav-dropdown-viewall" role="menuitem">
                   View all services →
                 </a>
               </li>
@@ -139,7 +139,7 @@ import { SERVICES_NAV } from '../lib/services-nav'
 
       <!-- Services accordion item (mobile) -->
       <div class="mobile-accordion-item" data-mobile-accordion>
-        <a href="/services/" class="nav-link mobile-services-link px-4 py-3 text-gray-700 hover:text-teal-600 hover:bg-teal-50 rounded-xl font-medium transition-colors flex items-center justify-between" aria-haspopup="true" aria-expanded="false">
+        <a href="/marketing-services/" class="nav-link mobile-services-link px-4 py-3 text-gray-700 hover:text-teal-600 hover:bg-teal-50 rounded-xl font-medium transition-colors flex items-center justify-between" aria-haspopup="true" aria-expanded="false">
           Services
           <svg class="nav-caret w-4 h-4" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
@@ -149,14 +149,14 @@ import { SERVICES_NAV } from '../lib/services-nav'
         </a>
         <div class="mobile-services-dropdown" role="menu" aria-label="Services menu">
           {SERVICES_NAV.map((service) => (
-            <a href={`/services/${service.slug}/`} class="mobile-dropdown-item" role="menuitem">
+            <a href={`/marketing-services/${service.slug}/`} class="mobile-dropdown-item" role="menuitem">
               <span aria-hidden="true">{service.icon}</span>
               <span>{service.title}</span>
               {service.isFlagship && <span class="nav-dropdown-badge">Flagship</span>}
             </a>
           ))}
           <div class="nav-dropdown-divider" style="margin:6px 8px;"></div>
-          <a href="/services/" class="nav-dropdown-viewall mobile-viewall" role="menuitem">
+          <a href="/marketing-services/" class="nav-dropdown-viewall mobile-viewall" role="menuitem">
             View all services →
           </a>
         </div>

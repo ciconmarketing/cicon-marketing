@@ -13,7 +13,10 @@ export default defineConfig({
       filter: (page) =>
         !page.includes('/thank-you') &&
         !page.includes('/privacy-policy') &&
-        !page.includes('/terms-and-conditions-sms'),
+        !page.includes('/terms-and-conditions-sms') &&
+        !page.includes('/faq') &&
+        !page.includes('/book-a-strategy-call-with-cicon-marketing') &&
+        !page.includes('/services/'),
     }),
   ],
   // In Astro 5, 'hybrid' was merged into 'static' (the default).
