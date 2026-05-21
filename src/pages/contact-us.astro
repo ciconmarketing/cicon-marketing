@@ -153,10 +153,7 @@ const jsonLdFaq = {
   <meta name="twitter:description" content={contactSeoOverrides.seoDescription ?? 'Reach a senior marketing strategist in Richmond Hill. Serving GTA businesses and dental clinics. Same-business-hour response, Mon–Fri.'} />
   <meta name="twitter:image" content={contactSeoOverrides.ogImageUrl ?? 'https://cicon.ca/logo-cicon.jpg'} />
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <!-- Fonts: self-hosted via @fontsource-variable/inter in globals.css (no CDN, no render-block) -->
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -532,18 +529,49 @@ const jsonLdFaq = {
             </a>
           </div>
 
-          <div>
-            <iframe
-              src="https://www.google.com/maps?q=131+Golf+Club+Ct,+Richmond+Hill,+ON+L4C+5E1&output=embed"
-              width="100%"
-              height="300"
-              style="border:0;border-radius:12px;display:block;"
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
-              title="CiCon Marketing office — 131 Golf Club Ct, Richmond Hill, ON"
-              allowfullscreen
-            ></iframe>
+          <!-- Click-to-load map: loads zero Maps JS until user clicks — key LCP/TBT fix -->
+          <div id="map-placeholder"
+            role="button"
+            tabindex="0"
+            aria-label="Click to load interactive map showing CiCon Marketing office location"
+            style="background:#f3f4f6;border-radius:12px;height:300px;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;border:2px dashed #d1d5db;cursor:pointer;box-sizing:border-box;text-align:center;padding:24px;transition:border-color .2s,background .2s;"
+            onmouseover="this.style.borderColor='#9D833E';this.style.background='#fdfaf3'"
+            onmouseout="this.style.borderColor='#d1d5db';this.style.background='#f3f4f6'"
+            onclick="ciconLoadMap()"
+            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();ciconLoadMap();}"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="#9D833E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+            <div>
+              <p style="margin:0 0 4px;font-weight:700;color:#212129;font-size:15px;">CiCon Marketing</p>
+              <p style="margin:0 0 12px;font-size:13px;color:#555;line-height:1.5;">131 Golf Club Ct, Richmond Hill, ON L4C 5E1</p>
+              <span style="display:inline-block;padding:8px 18px;background:#212129;color:#fff;border-radius:8px;font-size:13px;font-weight:600;">
+                View interactive map →
+              </span>
+            </div>
           </div>
+
+          <div id="map-container" style="display:none;border-radius:12px;overflow:hidden;height:300px;"></div>
+
+          <script is:inline>
+            function ciconLoadMap() {
+              var ph = document.getElementById('map-placeholder');
+              var mc = document.getElementById('map-container');
+              if (!ph || !mc) return;
+              ph.style.display = 'none';
+              mc.style.display = 'block';
+              var iframe = document.createElement('iframe');
+              iframe.src = 'https://www.google.com/maps?q=131+Golf+Club+Ct,+Richmond+Hill,+ON+L4C+5E1&output=embed';
+              iframe.width = '100%';
+              iframe.height = '300';
+              iframe.style.cssText = 'border:0;display:block;width:100%;height:300px;';
+              iframe.setAttribute('allowfullscreen', '');
+              iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+              iframe.setAttribute('title', 'CiCon Marketing office — 131 Golf Club Ct, Richmond Hill, ON');
+              mc.appendChild(iframe);
+            }
+          </script>
 
         </div>
       </div>

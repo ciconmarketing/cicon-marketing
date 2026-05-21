@@ -13,7 +13,7 @@ const year = new Date().getFullYear();
 
         <!-- Logo + Tagline -->
         <a href="/" style="display:inline-flex;margin-bottom:16px;background:#fff;border-radius:12px;padding:8px;text-decoration:none;">
-          <img src="/logo-cicon.jpg" alt="CiCon Digital Marketing" style="height:40px;width:auto;object-fit:contain;" />
+          <img src="/logo-cicon.jpg" alt="CiCon Digital Marketing" width="144" height="40" style="height:40px;width:auto;object-fit:contain;" loading="lazy" />
         </a>
         <p style="font-size:14px;line-height:1.6;max-width:360px;margin:0 0 20px;color:#a0a0b0;">
           Boutique digital marketing and media production for GTA businesses and dental clinics.
@@ -57,19 +57,7 @@ const year = new Date().getFullYear();
           <div>Sun: Closed</div>
         </div>
 
-        <!-- Google Maps embed -->
-        <div aria-label="Office location map" style="border-radius:8px;overflow:hidden;height:180px;margin-bottom:8px;" class="footer-map">
-          <iframe
-            src="https://www.google.com/maps?q=131+Golf+Club+Ct,+Richmond+Hill,+ON+L4C+5E1&output=embed"
-            width="100%"
-            height="100%"
-            style="border:0;border-radius:8px;"
-            allowfullscreen=""
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            title="CiCon Marketing office location at 131 Golf Club Ct, Richmond Hill, ON"
-          ></iframe>
-        </div>
+        <!-- Maps link only — iframe removed to eliminate ~400KB Maps JS on every page load -->
         <a
           href="https://www.google.com/maps/dir/?api=1&destination=131+Golf+Club+Ct,+Richmond+Hill,+ON+L4C+5E1"
           target="_blank"
@@ -77,7 +65,7 @@ const year = new Date().getFullYear();
           style="font-size:13px;color:#9D833E;text-decoration:none;display:inline-block;margin-bottom:8px;"
           onmouseover="this.style.color='#5eead4'"
           onmouseout="this.style.color='#9D833E'"
-        >Get Directions &rarr;</a>
+        >📍 Get Directions &rarr;</a>
 
       </div>
 
