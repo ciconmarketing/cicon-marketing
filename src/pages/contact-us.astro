@@ -10,10 +10,10 @@ const isPreview = import.meta.env.VERCEL_ENV !== 'production';
 // ── Sanity-driven content with hardcoded fallbacks ────────────────────────────
 let contactHero = {
   headline: "Talk to a senior strategist — not a sales funnel.",
-  subheadline: "Tell us about your clinic or local business and you'll hear back within 1 business hour, Monday to Friday. No discovery-call gauntlet. No junior account manager.",
+  subheadline: "Tell us about your clinic or local business and you'll hear back within 1 business hour, Monday to Saturday. No discovery-call gauntlet. No junior account manager.",
 };
 let contactFaqs = [
-  { question: 'How fast do you actually respond?', answer: 'Within 1 business hour, Monday to Friday, 9am – 6pm ET. Submissions after hours or on weekends get a reply first thing the next business day. No exceptions, no auto-replies pretending to be us.' },
+  { question: 'How fast do you actually respond?', answer: 'Within 1 business hour, Monday to Saturday, 9am – 6pm ET. Submissions after hours or on Sundays get a reply first thing the next business day. No exceptions, no auto-replies pretending to be us.' },
   { question: "What's your minimum engagement?", answer: "Our smallest engagements start around $1,500/month for focused work like Google Business Profile management or local SEO. Full-service builds — paid ads, SEO, content, creative — typically start at $3,000–$5,000/month. We'd rather under-promise than oversell a retainer you don't need yet." },
   { question: 'Do you work with businesses outside the GTA?', answer: "Most of our clients are GTA-based because local SEO and Google Business Profile work benefit from us knowing the territory. We do take on remote clients for paid ads, SEO, and content — but if you need physical photo/video production or in-person strategy, GTA-only." },
   { question: "What if I'm already working with another agency?", answer: "Two options. We can run a no-strings audit of what they're doing — sometimes the answer is 'they're doing fine, stay put.' Or, if you're already decided to switch, we handle the offboarding so you don't have to fight for assets and access. Either way, no awkwardness — we've been on both sides of that conversation." },
@@ -64,7 +64,7 @@ const jsonLdLocalBusiness = {
   "geo": { "@type": "GeoCoordinates", "latitude": 43.8801, "longitude": -79.4392 },
   "openingHoursSpecification": {
     "@type": "OpeningHoursSpecification",
-    "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+    "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
     "opens": "09:00",
     "closes": "18:00"
   },
@@ -86,7 +86,7 @@ const jsonLdFaq = {
       "name": "How fast do you actually respond?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Within 1 business hour, Monday to Friday, 9am – 6pm ET. Submissions after hours or on weekends get a reply first thing the next business day. No exceptions, no auto-replies pretending to be us."
+        "text": "Within 1 business hour, Monday to Saturday, 9am – 6pm ET. Submissions after hours or on Sundays get a reply first thing the next business day. No exceptions, no auto-replies pretending to be us."
       }
     },
     {
@@ -387,7 +387,7 @@ const jsonLdFaq = {
               </div>
               <p style="font-size:14px;line-height:1.7;color:#555;margin:0;">
                 Every form goes straight to MJ (founder) and Soroush (senior strategist).
-                One of us replies inside an hour, Monday to Friday — usually faster.
+                One of us replies inside an hour, Monday to Saturday — usually faster.
                 No ticketing system. No automated reply.
               </p>
             </div>
@@ -518,8 +518,8 @@ const jsonLdFaq = {
               Richmond Hill, ON L4C 5E1<br />
               Canada
             </address>
-            <p style="font-size:14px;color:#555;margin:0 0 4px;"><strong style="color:#212129;">Monday–Friday:</strong> 9:00 AM – 6:00 PM ET</p>
-            <p style="font-size:14px;color:#555;margin:0 0 20px;"><strong style="color:#212129;">Saturday–Sunday:</strong> Closed</p>
+            <p style="font-size:14px;color:#555;margin:0 0 4px;"><strong style="color:#212129;">Monday–Saturday:</strong> 9:00 AM – 6:00 PM ET</p>
+            <p style="font-size:14px;color:#555;margin:0 0 20px;"><strong style="color:#212129;">Sunday:</strong> Closed</p>
             <a
               href="https://www.google.com/maps/dir/?api=1&destination=131+Golf+Club+Ct,+Richmond+Hill,+ON+L4C+5E1"
               target="_blank"
