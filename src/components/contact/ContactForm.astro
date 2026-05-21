@@ -631,11 +631,15 @@ const { source = '', submitLabel = 'Send it' } = Astro.props;
       }
 
       // Collect step 4 data
-      formData.full_name = (document.getElementById('full_name')).value.trim();
-      formData.email     = (document.getElementById('email')).value.trim();
-      formData.phone     = (document.getElementById('phone')).value.trim();
-      formData.website   = (document.getElementById('website')).value.trim();
-      formData.message   = (document.getElementById('message')).value.trim();
+      var rawName = (document.getElementById('full_name')).value.trim();
+      var nameParts = rawName.split(' ');
+      formData.full_name  = rawName;
+      formData.firstName  = nameParts[0] || '';
+      formData.lastName   = nameParts.slice(1).join(' ') || '';
+      formData.email      = (document.getElementById('email')).value.trim();
+      formData.phone      = (document.getElementById('phone')).value.trim();
+      formData.website    = (document.getElementById('website')).value.trim();
+      formData.message    = (document.getElementById('message')).value.trim();
       // Source tag (set via hidden field from ContactForm prop)
       var sourceField = document.querySelector('input[name="source"]');
       if (sourceField) formData.source = sourceField.value;
