@@ -34,12 +34,18 @@ const paddingBottom = ratioPadding[aspectRatio] ?? '56.25%'
 
 // Build Sanity image URL if src is a valid object with asset ref
 function getSanityImageUrl(image: any): string | null {
-  if (!image?.asset?._ref && !image?.asset?._id) return null
-  const ref: string = image.asset._ref ?? image.asset._id
+  if (!image) return null
+  // 1. Direct URL — present when GROQ query uses asset->{ url, ... }
+  if (image?.asset?.url) return image.asset.url
+  // 2. Reconstruct from _ref (non-dereferenced asset) or _id
+  const ref: string | undefined = image.asset?._ref ?? image.asset?._id
+  if (!ref) return null
   // Parse Sanity ref: image-{id}-{dimensions}-{format}
   const parts = ref.replace(/^image-/, '').split('-')
   if (parts.length < 3) return null
-  const [id, dimensions, fmt] = [parts.slice(0, parts.length - 2).join('-'), parts[parts.length - 2], parts[parts.length - 1]]
+  const id = parts.slice(0, parts.length - 2).join('-')
+  const dimensions = parts[parts.length - 2]
+  const fmt = parts[parts.length - 1]
   return `https://cdn.sanity.io/images/26ol0sqj/cicon-marketing/${id}-${dimensions}.${fmt}`
 }
 
