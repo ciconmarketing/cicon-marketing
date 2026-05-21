@@ -630,12 +630,12 @@ const { source = '', submitLabel = 'Send it' } = Astro.props;
         submitBtn.textContent = 'Sending…';
       }
 
-      // Collect step 4 data
+      // Collect step 4 data — field names match GHL inbound_webhook variable names
       var rawName = (document.getElementById('full_name')).value.trim();
       var nameParts = rawName.split(' ');
-      formData.full_name  = rawName;
-      formData.firstName  = nameParts[0] || '';
-      formData.lastName   = nameParts.slice(1).join(' ') || '';
+      formData.fullName   = rawName;                          // {{inbound_webhook.fullName}}
+      formData.firstName  = nameParts[0] || '';               // {{inbound_webhook.firstName}}
+      formData.lastName   = nameParts.slice(1).join(' ') || ''; // {{inbound_webhook.lastName}}
       formData.email      = (document.getElementById('email')).value.trim();
       formData.phone      = (document.getElementById('phone')).value.trim();
       formData.website    = (document.getElementById('website')).value.trim();
