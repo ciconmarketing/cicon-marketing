@@ -13,15 +13,19 @@ import { SERVICES_NAV } from '../lib/services-nav'
 
       <!-- Logo -->
       <a href="/" class="flex items-center group" aria-label="CiCon Marketing Home">
-        <img
-          src="/logo-cicon.jpg"
-          alt="CiCon Digital Marketing"
-          width="800"
-          height="800"
-          class="h-12 md:h-[60px] w-auto object-contain transition-opacity duration-200 group-hover:opacity-80"
-          style="mix-blend-mode:multiply;"
-          loading="eager"
-        />
+        <picture>
+          <source srcset="/logo-cicon-120.webp" type="image/webp" />
+          <img
+            src="/logo-cicon-120.png"
+            alt="CiCon Digital Marketing"
+            width="120"
+            height="120"
+            class="h-12 md:h-[60px] w-auto object-contain transition-opacity duration-200 group-hover:opacity-80"
+            style="mix-blend-mode:multiply;"
+            loading="eager"
+            decoding="sync"
+          />
+        </picture>
       </a>
 
       <!-- Desktop Nav Links -->

@@ -253,31 +253,30 @@ try {
     document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
   </script>
 
-  <!-- AOS init — is:inline keeps Vite/Astro from bundling these, preserving execution order -->
-  <script is:inline src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <!-- AOS — loaded idle so it never forces a layout reflow during LCP -->
   <script is:inline>
     (function () {
-      function initAOS() {
-        if (typeof AOS !== 'undefined') {
-          AOS.init({
-            duration: 650,
-            easing: 'ease-out-cubic',
-            once: true,
-            offset: 60,
-            delay: 0,
-          });
-        } else {
-          // Failsafe: if AOS never loaded, make all data-aos elements visible
+      function loadAOS() {
+        var s = document.createElement('script');
+        s.src = 'https://unpkg.com/aos@2.3.4/dist/aos.js';
+        s.onload = function () {
+          if (typeof AOS !== 'undefined') {
+            AOS.init({ duration: 650, easing: 'ease-out-cubic', once: true, offset: 60, delay: 0 });
+          }
+        };
+        s.onerror = function () {
           document.querySelectorAll('[data-aos]').forEach(function (el) {
             el.removeAttribute('data-aos');
             el.removeAttribute('data-aos-delay');
           });
-        }
+        };
+        document.head.appendChild(s);
       }
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initAOS);
+      // Defer until browser is idle — prevents forced reflow impacting LCP/TBT
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadAOS, { timeout: 3000 });
       } else {
-        initAOS();
+        setTimeout(loadAOS, 300);
       }
     })();
   </script>
