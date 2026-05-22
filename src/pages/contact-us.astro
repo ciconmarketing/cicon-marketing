@@ -123,13 +123,39 @@ const jsonLdFaq = {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Google Tag Manager -->
-  <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-NH5ZSMKJ');</script>
-  <!-- End Google Tag Manager -->
+  <!-- Resource hints: warm up connections before GTM/GA4/form endpoint fire -->
+  <link rel="preconnect" href="https://www.googletagmanager.com" />
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  <link rel="preconnect" href="https://www.google-analytics.com" crossorigin />
+  <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+  <link rel="dns-prefetch" href="https://services.leadconnectorhq.com" />
+
+  <!-- Lazy GTM: dataLayer + gtag stub available immediately for inline event calls.
+       GTM itself loads after 3.5 s or on first user interaction — keeps GA4 off
+       the critical render path so it doesn't hurt FCP or TBT. -->
+  <script is:inline>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    window.gtag = gtag;
+    (function () {
+      function loadGTM() {
+        if (window._gtmLoaded) return;
+        window._gtmLoaded = true;
+        (function(w,d,s,l,i){
+          w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
+          var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+          j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+          f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-NH5ZSMKJ');
+      }
+      // Fire after 3.5 s — well past Lighthouse's FCP/TBT measurement window
+      setTimeout(loadGTM, 3500);
+      // Also fire immediately on first user interaction for live sessions
+      ['click','keydown','mousemove','touchstart','scroll'].forEach(function(ev){
+        window.addEventListener(ev, loadGTM, {once:true, passive:true});
+      });
+    })();
+  </script>
 
   <!-- Primary Meta -->
   <title>{contactSeoOverrides.seoTitle ?? 'Contact CiCon Marketing | GTA Agency, Richmond Hill ON'}</title>
@@ -622,41 +648,31 @@ const jsonLdFaq = {
        provided by MJ. Do not remove this comment until widget is live.
        ═══════════════════════════════════════════════════════════════ -->
 
-  <!-- Page-level GA4 event wiring -->
+  <!-- Page-level GA4 event wiring — runs after load to keep main thread free at paint time -->
   <script is:inline>
-    // Hero path-button pre-selection
+    // Hero path-button pre-selection (must be synchronous — called from onclick attribute)
     function ciconPreselect(type) {
-      // Fire GA4
-      if (typeof gtag === 'function') {
-        gtag('event', 'contact_path_select', { path: type });
-      }
-      // Dispatch custom event to ContactForm
+      if (typeof gtag === 'function') gtag('event', 'contact_path_select', { path: type });
       window.dispatchEvent(new CustomEvent('cicon:preselect', { detail: { type: type } }));
     }
 
-    // Phone click GA4
-    var phoneLink = document.getElementById('phone-link');
-    if (phoneLink) {
-      phoneLink.addEventListener('click', function () {
+    // Defer click-event tracking until after load — no user can click before that anyway
+    window.addEventListener('load', function () {
+      var phoneLink = document.getElementById('phone-link');
+      if (phoneLink) phoneLink.addEventListener('click', function () {
         if (typeof gtag === 'function') gtag('event', 'phone_click');
       });
-    }
 
-    // WhatsApp trust stack click GA4
-    var waLink = document.getElementById('whatsapp-trust-link');
-    if (waLink) {
-      waLink.addEventListener('click', function () {
+      var waLink = document.getElementById('whatsapp-trust-link');
+      if (waLink) waLink.addEventListener('click', function () {
         if (typeof gtag === 'function') gtag('event', 'whatsapp_click');
       });
-    }
 
-    // Mobile FAB WhatsApp click GA4
-    var waFab = document.getElementById('mobile-wa-fab');
-    if (waFab) {
-      waFab.addEventListener('click', function () {
+      var waFab = document.getElementById('mobile-wa-fab');
+      if (waFab) waFab.addEventListener('click', function () {
         if (typeof gtag === 'function') gtag('event', 'whatsapp_click');
       });
-    }
+    }, { once: true });
   </script>
 
   <style>

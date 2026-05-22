@@ -121,7 +121,7 @@ function getSanityClient() {
   const dataset = (import.meta.env.PUBLIC_SANITY_DATASET ?? 'production').trim()
   const isValid = /^[a-z0-9-]+$/.test(rawId)
   if (!isValid) return null
-  return createClient({ projectId: rawId, dataset, useCdn: false, apiVersion: '2024-01-01' })
+  return createClient({ projectId: rawId, dataset, useCdn: true, apiVersion: '2024-01-01' })
 }
 
 export type BlogPost = {
@@ -321,7 +321,7 @@ export async function getHomepage(): Promise<HomepageData | null> {
     const client = createClient({
       projectId,
       dataset,
-      useCdn: false, // disable CDN for build-time fetches to get latest data
+      useCdn: true, // use Sanity CDN for fast cached responses (~50–150 ms globally)
       apiVersion: '2024-01-01',
     });
     console.log('[Sanity] Fetching homepage...');
