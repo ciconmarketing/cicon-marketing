@@ -78,13 +78,27 @@ const smsContentHtml = smsData.content ? renderPortableText(smsData.content) : n
     .legal-body a:hover { text-decoration: underline; }
   </style>
 
-  <!-- Google Tag Manager -->
+  <!-- Google Tag Manager (lazy: loads after 3.5 s or first user interaction) -->
   <script is:inline>
-  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-NH5ZSMKJ');
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    window.gtag = gtag;
+    (function () {
+      function loadGTM() {
+        if (window._gtmLoaded) return;
+        window._gtmLoaded = true;
+        (function(w,d,s,l,i){
+          w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
+          var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+          j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+          f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-NH5ZSMKJ');
+      }
+      setTimeout(loadGTM, 3500);
+      ['click','keydown','mousemove','touchstart','scroll'].forEach(function(ev){
+        window.addEventListener(ev, loadGTM, {once:true, passive:true});
+      });
+    })();
   </script>
   <!-- End Google Tag Manager -->
   <!-- Meta Pixel Code -->
