@@ -80,7 +80,7 @@ const schema = {
   ],
 };
 
-const ogImage = featured?.heroImage?.url ?? 'https://cicon.ca/wp-content/uploads/2026/05/journalist2Fa6c9972a-093d-40f0-a397-a8e4d4795e602Fthumbnail-1024x576.jpeg';
+const ogImage = featured?.heroImage?.url ?? 'https://cicon.ca/logo-cicon.jpg';
 ---
 
 <!DOCTYPE html>
@@ -104,9 +104,8 @@ const ogImage = featured?.heroImage?.url ?? 'https://cicon.ca/wp-content/uploads
     ? <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
     : <meta name="robots" content="index, follow" />
   }
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <!-- Fonts: self-hosted via @fontsource-variable/inter in globals.css (no CDN, no render-block) -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 </head>

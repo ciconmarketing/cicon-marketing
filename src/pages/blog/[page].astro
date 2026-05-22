@@ -12,47 +12,45 @@ import { WEBSITE_CICON, ORG_CICON } from '../../lib/schema-constants';
 import type { BlogPost, BlogCategory } from '../../lib/sanity';
 import '../../styles/globals.css';
 
-const isPreview = import.meta.env.VERCEL_ENV !== 'production'
+// SSR — rendered at request time so page count always matches live Sanity data.
+// getStaticPaths was removed because it ran at build time with a stale post count,
+// causing page/2/ to 404 whenever posts were added between deploys.
+export const prerender = false;
 
-export async function getStaticPaths() {
-  // Try to get total posts from Sanity; fall back to fallback count
-  let totalPosts = 4; // default
-  try {
-    const { createClient } = await import('@sanity/client');
-    const rawId = (import.meta.env.PUBLIC_SANITY_PROJECT_ID ?? '').trim();
-    if (/^[a-z0-9-]+$/.test(rawId)) {
-      const client = createClient({ projectId: rawId, dataset: (import.meta.env.PUBLIC_SANITY_DATASET ?? 'production').trim(), useCdn: false, apiVersion: '2024-01-01' });
-      totalPosts = await client.fetch<number>('count(*[_type == "blogPost" && status == "published"])');
-    }
-  } catch {}
+const isPreview = import.meta.env.VERCEL_ENV !== 'production';
 
-  const PER_PAGE = 12;
-  const totalPages = Math.max(1, Math.ceil(totalPosts / PER_PAGE));
-  // pages 2 and beyond — page 1 is handled by index.astro
-  return Array.from({ length: Math.max(0, totalPages - 1) }, (_, i) => ({
-    params: { page: String(i + 2) },
-    props: { pageNum: i + 2, totalPages },
-  }));
+const { page } = Astro.params;
+const pageNum = parseInt(page ?? '2', 10);
+
+// Reject non-numeric or page 1 (handled by index.astro)
+if (isNaN(pageNum) || pageNum < 2) {
+  return Astro.redirect('/blog/', 301);
 }
 
-const { pageNum, totalPages } = Astro.props;
 const PER_PAGE = 12;
 
 let posts: BlogPost[] = [];
 let categories: BlogCategory[] = [];
+let totalPosts = 0;
 
 try {
   const data = await getBlogIndexData(pageNum, PER_PAGE);
+  totalPosts = data.totalPosts;
   if (data.posts.length > 0) {
     posts = data.posts;
     categories = data.categories;
   } else {
-    posts = [];
     categories = FALLBACK_CATEGORIES;
   }
 } catch {
-  posts = [];
   categories = FALLBACK_CATEGORIES;
+}
+
+const totalPages = Math.max(1, Math.ceil(totalPosts / PER_PAGE));
+
+// Redirect out-of-bounds pages to /blog/ rather than rendering an empty grid
+if (pageNum > totalPages) {
+  return Astro.redirect('/blog/', 301);
 }
 
 const pageUrl = `https://cicon.ca/blog/page/${pageNum}/`;
@@ -79,10 +77,9 @@ const schema = {
     ? <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
     : <meta name="robots" content="index, follow" />
   }
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <!-- Fonts: self-hosted via @fontsource-variable/inter in globals.css (no CDN, no render-block) -->
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 </head>
 <body class="font-sans bg-gray-50 text-gray-900 antialiased">
