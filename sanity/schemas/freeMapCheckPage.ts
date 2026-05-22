@@ -20,6 +20,23 @@ export default defineType({
           initialValue: "Check Your Google Map Visibility for Free and discover the truth about your local reach. Most businesses think they're #1 because they see themselves at the top when searching from their own office, but their customers often see something completely different." }),
         defineField({ name: 'description', title: 'Second Description Paragraph', type: 'text', rows: 3,
           initialValue: 'Don\'t let a "false positive" search result cost you sales. Enter your business name below to get a real-time heat map of your local rankings and see exactly how you appear to customers across every corner of your city.' }),
+        defineField({
+          name: 'heroImage',
+          title: 'Hero Image',
+          type: 'image',
+          description: 'Hero illustration shown on the right side of the hero section. Recommended: 1600×900px, WebP, under 200 KB.',
+          options: { hotspot: true },
+          validation: (Rule) => Rule.required(),
+          fields: [
+            defineField({
+              name: 'alt',
+              title: 'Alt Text',
+              type: 'string',
+              description: 'Describe the image for screen readers and SEO.',
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+        }),
       ],
     }),
     defineField({

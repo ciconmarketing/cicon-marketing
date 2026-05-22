@@ -394,7 +394,10 @@ export const WHY_CICON_CARDS_QUERY = `
 
 export const FREE_MAP_CHECK_PAGE_QUERY = `
   *[_type == "freeMapCheckPage"][0]{
-    hero{ headline, badge, subheadline, description },
+    hero{
+      headline, badge, subheadline, description,
+      heroImage{ asset->{ _id, url }, alt }
+    },
     faqs[]{ question, answer },
     finalCta{ headline, body },
     seoTitle, seoDescription, "ogImageUrl": ogImage.asset->url

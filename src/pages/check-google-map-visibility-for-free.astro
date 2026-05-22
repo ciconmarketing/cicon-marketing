@@ -83,6 +83,7 @@ let mapCheckData = {
     badge: 'Free Local SEO Tool',
     subheadline: "Check Your Google Map Visibility for Free and discover the truth about your local reach. Most businesses think they're #1 because they see themselves at the top when searching from their own office, but their customers often see something completely different.",
     description: 'Don\'t let a "false positive" search result cost you sales. Enter your business name below to get a real-time heat map of your local rankings and see exactly how you appear to customers across every corner of your city.',
+    heroImage: null as { asset?: { url?: string }; alt?: string } | null,
   },
   faqs: faqs,
   finalCta: {
@@ -95,12 +96,15 @@ try {
   if (sanity?.hero?.headline) {
     mapCheckData = {
       ...mapCheckData,
-      hero: sanity.hero ?? mapCheckData.hero,
+      hero: { ...mapCheckData.hero, ...sanity.hero },
       faqs: sanity.faqs?.length ? sanity.faqs : faqs,
       finalCta: sanity.finalCta ?? mapCheckData.finalCta,
     };
   }
 } catch {}
+
+const heroImageUrl = mapCheckData.hero.heroImage?.asset?.url ?? null;
+const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility heat map audit interface showing local ranking positions across a city area';
 ---
 
 <!DOCTYPE html>
@@ -109,13 +113,33 @@ try {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Google Tag Manager -->
-  <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-NH5ZSMKJ');</script>
-  <!-- End Google Tag Manager -->
+  <!-- Resource hints for GTM/GA4 -->
+  <link rel="preconnect" href="https://www.googletagmanager.com" />
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  <link rel="preconnect" href="https://www.google-analytics.com" crossorigin />
+
+  <!-- Lazy GTM: fires after 3.5 s or first user interaction -->
+  <script is:inline>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    window.gtag = gtag;
+    (function () {
+      function loadGTM() {
+        if (window._gtmLoaded) return;
+        window._gtmLoaded = true;
+        (function(w,d,s,l,i){
+          w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
+          var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+          j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+          f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-NH5ZSMKJ');
+      }
+      setTimeout(loadGTM, 3500);
+      ['click','keydown','mousemove','touchstart','scroll'].forEach(function(ev){
+        window.addEventListener(ev, loadGTM, {once:true, passive:true});
+      });
+    })();
+  </script>
 
   <!-- Facebook Pixel -->
   <script is:inline>
@@ -139,16 +163,16 @@ try {
     : <meta name="robots" content="index, follow" />
   }
 
-  <!-- Open Graph — OG image stays as Google-Map-Visibility-for-Free-3-3.jpg (not used on page) -->
+  <!-- Open Graph -->
   <meta property="og:type"        content="website" />
   <meta property="og:url"         content={canonicalUrl} />
   <meta property="og:title"       content="Free Google Maps Visibility Check | Local Ranking Heat Map" />
   <meta property="og:description" content="Is your business invisible on Google Maps? Use our free local ranking tool to see exactly where you rank. Get a real-time heat map today." />
-  <meta property="og:image"       content="https://cicon.ca/wp-content/uploads/2026/03/Google-Map-Visibility-for-Free-3-3.jpg" />
+  <meta property="og:image"       content={heroImageUrl ?? 'https://cicon.ca/logo-cicon.jpg'} />
   <meta name="twitter:card"       content="summary_large_image" />
   <meta name="twitter:title"      content="Free Google Maps Visibility Check | Local Ranking Heat Map" />
   <meta name="twitter:description" content="Is your business invisible on Google Maps? Use our free local ranking tool to see exactly where you rank. Get a real-time heat map today." />
-  <meta name="twitter:image"      content="https://cicon.ca/wp-content/uploads/2026/03/Google-Map-Visibility-for-Free-3-3.jpg" />
+  <meta name="twitter:image"      content={heroImageUrl ?? 'https://cicon.ca/logo-cicon.jpg'} />
 
   <!-- JSON-LD -->
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
@@ -156,10 +180,7 @@ try {
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <!-- Fonts: self-hosted via @fontsource-variable/inter in globals.css (no CDN, no render-block) -->
 
   <!-- Brand tokens -->
   <style>
@@ -221,17 +242,26 @@ try {
           </p>
         </div>
 
-        <!-- Right: illustration -->
+        <!-- Right: illustration — sourced from Sanity Studio → Free Map Check Page → Hero Image -->
         <div style="display:flex;align-items:center;justify-content:center;">
-          <img
-            src="https://cicon.ca/wp-content/uploads/2026/03/google-maps-visibility-heat-map-audit-1-768x355.jpg"
-            alt="Dashboard interface of a local SEO rank tracking tool showing a geographical Position Map with circular heat map markers in green and orange, indicating search ranking positions across a city area."
-            width="768"
-            height="355"
-            loading="eager"
-            fetchpriority="high"
-            style="width:100%;height:auto;border-radius:12px;box-shadow:0 24px 48px rgba(0,0,0,0.3);"
-          />
+          {heroImageUrl ? (
+            <img
+              src={heroImageUrl}
+              alt={heroImageAlt}
+              width="1600"
+              height="900"
+              loading="eager"
+              fetchpriority="high"
+              style="width:100%;height:auto;border-radius:12px;box-shadow:0 24px 48px rgba(0,0,0,0.3);"
+            />
+          ) : (
+            <!-- Placeholder shown until image is uploaded in Sanity Studio -->
+            <div style="width:100%;aspect-ratio:16/9;border-radius:12px;background:rgba(255,255,255,0.06);border:2px dashed rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;">
+              <p style="color:rgba(255,255,255,0.3);font-size:13px;font-family:'Inter',sans-serif;text-align:center;padding:16px;">
+                Upload hero image in<br/>Sanity Studio → Free Map Check Page → Hero Image
+              </p>
+            </div>
+          )}
         </div>
 
       </div>
