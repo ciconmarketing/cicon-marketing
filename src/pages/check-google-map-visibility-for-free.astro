@@ -286,18 +286,20 @@ const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility
       <div
         style="max-width:900px;margin:0 auto;background:var(--off-white);border-radius:20px;padding:8px;border:1px solid var(--alabaster);overflow:hidden;"
       >
-        <!--
-          Localo public scanner widget — pulled from live page
-          src: https://app.localo.com/_demo/place-import
-          Original embed: <div id="free-tool"> containing an iframe
-        -->
-        <iframe
-          src="https://app.localo.com/_demo/place-import"
-          allow="geolocation"
-          loading="lazy"
-          title="Free Google Maps local ranking heat map scanner — enter your business name to see your visibility"
-          style="border:none;height:400px;width:100%;border-radius:16px;min-height:200px;display:block;"
-        ></iframe>
+        <!-- Localo Local Rank Checker widget
+             is:inline on both scripts prevents Astro from hoisting/bundling them,
+             which would break the window.LOCALO_FREE_TOOL global assignment.
+             Config script MUST precede freetool.js so the token exists on window
+             before the library initialises. -->
+        <script is:inline>
+          window.LOCALO_FREE_TOOL = {
+            container: "#free-tool",
+            token: "fZbYFB16Tex919WferyoqZSqjwJGcutPy265taFBWno"
+          };
+        </script>
+        <script src="https://jstools.localo.app/scripts/freetool.js" async defer is:inline></script>
+
+        <div id="free-tool">Loading...</div>
       </div>
     </div>
   </section>
