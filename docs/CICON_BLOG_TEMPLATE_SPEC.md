@@ -774,7 +774,7 @@ export const PERSON_MAJID = {
   jobTitle: 'Founder & Senior Digital Marketing Strategist',
   description: "Over 15 years building data-driven marketing systems for GTA businesses. Google-certified, Master's in Engineering, Postgraduate in Marketing Management.",
   url: 'https://cicon.ca/about-us/',
-  image: 'https://cicon.ca/wp-content/uploads/majid-behzad-headshot.jpg',
+  image: 'https://cicon.ca/majid-behzad.jpg',
   worksFor: { '@id': 'https://cicon.ca/#organization' },
   knowsAbout: [
     'Local Search Engine Optimization',
@@ -801,9 +801,9 @@ export const ORG_CICON = {
   url: 'https://cicon.ca/',
   logo: {
     '@type': 'ImageObject',
-    url: 'https://cicon.ca/wp-content/uploads/2025/12/primary-color-icon.svg',
-    width: 512,
-    height: 512,
+    url: 'https://cicon.ca/logo-cicon.jpg',
+    width: 800,
+    height: 800,
   },
   description: 'Boutique digital marketing and media production agency based in Richmond Hill, Ontario, serving businesses and dental clinics across the Greater Toronto Area.',
   foundingDate: '2018',
