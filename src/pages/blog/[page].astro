@@ -32,10 +32,12 @@ const PER_PAGE = 12;
 let posts: BlogPost[] = [];
 let categories: BlogCategory[] = [];
 let totalPosts = 0;
+let hasFeatured = false;
 
 try {
   const data = await getBlogIndexData(pageNum, PER_PAGE);
   totalPosts = data.totalPosts;
+  hasFeatured = !!data.featured;
   if (data.posts.length > 0) {
     posts = data.posts;
     categories = data.categories;
@@ -46,7 +48,10 @@ try {
   categories = FALLBACK_CATEGORIES;
 }
 
-const totalPages = Math.max(1, Math.ceil(totalPosts / PER_PAGE));
+// Mirror the same logic as index.astro: featured post is outside the grid,
+// so only non-featured posts are paginated.
+const nonFeaturedCount = hasFeatured ? Math.max(0, totalPosts - 1) : totalPosts;
+const totalPages = Math.max(1, Math.ceil(nonFeaturedCount / PER_PAGE));
 
 // Redirect out-of-bounds pages to /blog/ rather than rendering an empty grid
 if (pageNum > totalPages) {

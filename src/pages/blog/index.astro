@@ -39,7 +39,10 @@ try {
   totalPosts = FALLBACK_POSTS.length;
 }
 
-const totalPages = Math.ceil(totalPosts / PER_PAGE);
+// Featured post occupies a dedicated slot outside the grid, so pagination
+// is over non-featured posts only. Subtract 1 when a featured post exists.
+const nonFeaturedCount = featured ? Math.max(0, totalPosts - 1) : totalPosts;
+const totalPages = Math.max(1, Math.ceil(nonFeaturedCount / PER_PAGE));
 const allPostsForPage = featured ? [featured, ...posts] : posts;
 
 // Build Connected Graph schema for CollectionPage
