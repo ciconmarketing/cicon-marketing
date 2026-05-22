@@ -168,6 +168,8 @@ const headlinePrefix = leakIdx > -1 ? headlineLine2.slice(0, leakIdx) : (headlin
   border-radius: 9999px;
   border: 2px solid rgba(255,255,255,0.12);
   box-shadow: 0 8px 32px rgba(255,255,255,0.06);
+  will-change: transform;
+  backface-visibility: hidden;
 }
 .shape::after {
   content: '';
