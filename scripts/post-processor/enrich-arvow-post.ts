@@ -365,7 +365,7 @@ interface BlogPostDoc {
 }
 
 async function enrich(docId: string, opts: { dryRun: boolean; force: boolean }) {
-  const client = getSanityWriteClient()
+  // Write client is only initialised for live runs — keeps dry-run token-free
   const readClient = getSanityClient(false)
 
   // Fetch the document
@@ -395,11 +395,13 @@ async function enrich(docId: string, opts: { dryRun: boolean; force: boolean }) 
   }
 
   // Extract raw markdown from arvowRawPayload
+  // Arvow's actual field name is content_markdown (not bodyMarkdown).
   let rawMarkdown: string
   if (doc.arvowRawPayload) {
     try {
       const payload = JSON.parse(doc.arvowRawPayload)
-      rawMarkdown = payload.bodyMarkdown ?? ''
+      // content_markdown is Arvow's canonical field; bodyMarkdown is the legacy/README alias
+      rawMarkdown = payload.content_markdown ?? payload.bodyMarkdown ?? ''
     } catch {
       // payload stored as truncated string or non-JSON; treat as raw markdown
       rawMarkdown = doc.arvowRawPayload
@@ -410,7 +412,7 @@ async function enrich(docId: string, opts: { dryRun: boolean; force: boolean }) 
   }
 
   if (!rawMarkdown.trim()) {
-    console.error('\n✗ arvowRawPayload contains empty bodyMarkdown.')
+    console.error('\n✗ arvowRawPayload contains empty content_markdown / bodyMarkdown.')
     process.exit(1)
   }
 
@@ -465,6 +467,7 @@ async function enrich(docId: string, opts: { dryRun: boolean; force: boolean }) 
 
   // ── Apply patch ────────────────────────────────────────────────────────────
   console.log('\n📝 Writing to Sanity...')
+  const client = getSanityWriteClient()
   await client.patch(docId).set(patch).commit()
 
   console.log(`\n✅ Done! Post is now status="ready-for-review".`)

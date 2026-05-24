@@ -219,9 +219,10 @@ export const POST: APIRoute = async ({ request }) => {
     ...(payload.keyword_seed    && { keywords: [payload.keyword_seed] }),
     ...(payload.tags?.length    && { tags: payload.tags }),
 
-    // Raw markdown body — enrich-arvow converts this to Portable Text
-    arvowRawPayload: rawBody.length > 8000
-      ? rawBody.slice(0, 8000) + '\n… [truncated — full payload exceeds 8 KB]'
+    // Raw payload — enrich-arvow converts content_markdown to Portable Text.
+    // 100 KB limit covers any realistic Arvow article (typical: 15–25 KB).
+    arvowRawPayload: rawBody.length > 100_000
+      ? rawBody.slice(0, 100_000) + '\n… [truncated — payload exceeds 100 KB]'
       : rawBody,
 
     // Arvow metadata
