@@ -8,11 +8,12 @@
  */
 export const SERVICE_PAIRINGS: Record<string, [string, string]> = {
   'dental':               ['local-seo',    'paid-advertising'],
-  'paid-advertising':     ['ai-seo',        'website-development'],
+  'paid-advertising':     ['ai-seo',       'marketing-consultant'],
   'ai-seo':               ['local-seo',    'paid-advertising'],
-  'local-seo':            ['dental',        'ai-seo'],
+  'local-seo':            ['dental',       'ai-seo'],
   'social-media-marketing': ['media-production', 'paid-advertising'],
   'website-development':  ['paid-advertising', 'crm-integration'],
   'media-production':     ['social-media-marketing', 'dental'],
-  'crm-integration':      ['paid-advertising', 'website-development'],
+  'crm-integration':      ['paid-advertising', 'marketing-consultant'],
+  'marketing-consultant': ['website-development', 'ai-seo'],
 }

@@ -8,6 +8,7 @@ export const SERVICES_NAV = [
   { slug: 'ai-seo-and-seo',                   title: 'AI SEO',                 icon: '🔍', isFlagship: false },
   { slug: 'crm-integration',                  title: 'CRM Integration',        icon: '🔗', isFlagship: false },
   { slug: 'local-seo-optimization',           title: 'Local SEO',              icon: '📍', isFlagship: false },
+  { slug: 'marketing-consultant',             title: 'Marketing Consultant',   icon: '🧭', isFlagship: false },
   { slug: 'media-content-production',         title: 'Media Production',       icon: '🎥', isFlagship: false },
   { slug: 'paid-advertising-services',        title: 'Paid Advertising',       icon: '📢', isFlagship: false },
   { slug: 'social-media-marketing-services',  title: 'Social Media Marketing', icon: '💬', isFlagship: false },
