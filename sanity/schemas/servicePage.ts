@@ -163,6 +163,15 @@ export default defineType({
       group: 'hero',
       description: 'PLACEHOLDER — MJ replaces in Sanity Studio later',
       options: { hotspot: true },
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Alt Text',
+          type: 'string',
+          description: 'Describe the image for screen readers and SEO',
+          validation: (Rule) => Rule.required().error('Alt text is required for accessibility and SEO'),
+        }),
+      ],
     }),
 
     // ── PAA Block ─────────────────────────────────────────────────────────────
