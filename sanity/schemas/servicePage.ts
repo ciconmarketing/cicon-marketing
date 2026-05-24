@@ -55,6 +55,7 @@ export default defineType({
           { title: 'Paid Advertising',             value: 'paid-ads' },
           { title: 'AI SEO',                       value: 'seo' },
           { title: 'Local SEO',                    value: 'local-seo' },
+          { title: 'Marketing Consultant',         value: 'marketing-consultant' },
           { title: 'Social Media Marketing',       value: 'social' },
           { title: 'Website Development',          value: 'web-dev' },
           { title: 'Media Production',             value: 'media' },
