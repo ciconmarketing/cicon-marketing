@@ -61,6 +61,7 @@ export default defineType({
           { title: 'Website Development',            value: 'web-dev' },
           { title: 'Media Production',               value: 'media' },
           { title: 'CRM Integration',                value: 'crm' },
+          { title: 'Marketing Technology Setup',     value: 'marketing-technology-setup' },
         ],
       },
       validation: (Rule) => Rule.required(),

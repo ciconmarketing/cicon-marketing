@@ -9,6 +9,7 @@ export const SERVICES_NAV = [
   { slug: 'conversion-rate-optimization',     title: 'Conversion Rate Optimization',   icon: '📈', isFlagship: false },
   { slug: 'crm-integration',                  title: 'CRM Integration',                icon: '🔗', isFlagship: false },
   { slug: 'local-seo-optimization',           title: 'Local SEO',              icon: '📍', isFlagship: false },
+  { slug: 'marketing-technology-setup',       title: 'Marketing Technology Setup', icon: '⚙️', isFlagship: false },
   { slug: 'marketing-consultant',             title: 'Marketing Consultant',   icon: '🧭', isFlagship: false },
   { slug: 'media-content-production',         title: 'Media Production',       icon: '🎥', isFlagship: false },
   { slug: 'paid-advertising-services',        title: 'Paid Advertising',       icon: '📢', isFlagship: false },
