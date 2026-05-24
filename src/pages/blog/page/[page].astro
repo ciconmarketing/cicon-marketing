@@ -1,16 +1,16 @@
 ---
-import Nav from '../../components/Nav.astro';
-import Footer from '../../components/Footer.astro';
-import BlogHero from '../../components/blog/index/BlogHero.astro';
-import CategoryFilter from '../../components/blog/index/CategoryFilter.astro';
-import PostGrid from '../../components/blog/index/PostGrid.astro';
-import Pagination from '../../components/blog/index/Pagination.astro';
-import EndCtaIndex from '../../components/blog/index/EndCtaIndex.astro';
-import { getBlogIndexData } from '../../lib/sanity';
-import { FALLBACK_CATEGORIES } from '../../lib/blog-fallback';
-import { WEBSITE_CICON, ORG_CICON } from '../../lib/schema-constants';
-import type { BlogPost, BlogCategory } from '../../lib/sanity';
-import '../../styles/globals.css';
+import Nav from '../../../components/Nav.astro';
+import Footer from '../../../components/Footer.astro';
+import BlogHero from '../../../components/blog/index/BlogHero.astro';
+import CategoryFilter from '../../../components/blog/index/CategoryFilter.astro';
+import PostGrid from '../../../components/blog/index/PostGrid.astro';
+import Pagination from '../../../components/blog/index/Pagination.astro';
+import EndCtaIndex from '../../../components/blog/index/EndCtaIndex.astro';
+import { getBlogIndexData } from '../../../lib/sanity';
+import { FALLBACK_CATEGORIES } from '../../../lib/blog-fallback';
+import { WEBSITE_CICON, ORG_CICON } from '../../../lib/schema-constants';
+import type { BlogPost, BlogCategory } from '../../../lib/sanity';
+import '../../../styles/globals.css';
 
 // SSR — rendered at request time so page count always matches live Sanity data.
 // getStaticPaths was removed because it ran at build time with a stale post count,
