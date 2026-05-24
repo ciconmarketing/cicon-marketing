@@ -6,6 +6,7 @@
 export const SERVICES_NAV = [
   { slug: 'dental-marketing-services',        title: 'Dental Marketing',       icon: '🦷', isFlagship: true  },
   { slug: 'ai-seo-and-seo',                   title: 'AI SEO',                         icon: '🔍', isFlagship: false },
+  { slug: 'content-marketing',                title: 'Content Marketing',              icon: '✍️', isFlagship: false },
   { slug: 'conversion-rate-optimization',     title: 'Conversion Rate Optimization',   icon: '📈', isFlagship: false },
   { slug: 'crm-integration',                  title: 'CRM Integration',                icon: '🔗', isFlagship: false },
   { slug: 'local-seo-optimization',           title: 'Local SEO',              icon: '📍', isFlagship: false },

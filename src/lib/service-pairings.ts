@@ -18,4 +18,5 @@ export const SERVICE_PAIRINGS: Record<string, [string, string]> = {
   'marketing-consultant':          ['website-development', 'ai-seo'],
   'conversion-rate-optimization':  ['website-development', 'ai-seo'],
   'marketing-technology-setup':    ['crm-integration', 'paid-advertising'],
+  'content-marketing':             ['ai-seo', 'social-media-marketing'],
 }

@@ -60,6 +60,7 @@ export default defineType({
           { title: 'Social Media Marketing',         value: 'social' },
           { title: 'Website Development',            value: 'web-dev' },
           { title: 'Media Production',               value: 'media' },
+          { title: 'Content Marketing',              value: 'content-marketing' },
           { title: 'CRM Integration',                value: 'crm' },
           { title: 'Marketing Technology Setup',     value: 'marketing-technology-setup' },
         ],
