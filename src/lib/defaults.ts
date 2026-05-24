@@ -80,6 +80,30 @@ export const defaultHomepageData: HomepageData = {
           'Tell your brand story with professional brand videos, commercial photo shoots, and creative content that stops the scroll and drives action.',
         icon: 'video',
       },
+      {
+        title: 'Content Marketing',
+        description:
+          'Strategic blog writing, long-form articles, and video content that builds topical authority — so GTA businesses get cited, ranked, and trusted.',
+        icon: 'content',
+      },
+      {
+        title: 'Conversion Rate Optimization',
+        description:
+          'Turn more of your existing traffic into leads. Audit, test, and optimize your conversion path so every ad dollar and organic visit works harder.',
+        icon: 'cro',
+      },
+      {
+        title: 'Marketing Consultant',
+        description:
+          'Senior-level marketing strategy without the agency overhead. A dedicated consultant who knows your numbers and drives decisions that move the needle.',
+        icon: 'consultant',
+      },
+      {
+        title: 'Marketing Technology Setup',
+        description:
+          'GA4, GTM, pixel tracking, and CRM integrations that connect your tools and attribute every lead to its source — measurement infrastructure that scales.',
+        icon: 'martech',
+      },
     ],
   },
 

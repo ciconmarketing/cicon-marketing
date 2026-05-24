@@ -1,30 +1,39 @@
 import { motion } from 'framer-motion';
 import {
   Megaphone, Search, Stethoscope, MessageSquare,
-  Code2, Users, MapPin, Video, Star
+  Code2, Users, MapPin, Video, Star,
+  PenTool, TrendingUp, Compass, Settings
 } from 'lucide-react';
 import { GlowingEffect } from './GlowingEffect';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  megaphone: Megaphone,
-  search: Search,
-  tooth: Stethoscope,
-  social: MessageSquare,
-  code: Code2,
-  crm: Users,
-  map: MapPin,
-  video: Video,
+  megaphone:  Megaphone,
+  search:     Search,
+  tooth:      Stethoscope,
+  social:     MessageSquare,
+  code:       Code2,
+  crm:        Users,
+  map:        MapPin,
+  video:      Video,
+  content:    PenTool,
+  cro:        TrendingUp,
+  consultant: Compass,
+  martech:    Settings,
 };
 
 const slugMap: Record<string, string> = {
-  megaphone: '/marketing-services/paid-advertising-services/',
-  search:    '/marketing-services/ai-seo-and-seo/',
-  tooth:     '/marketing-services/dental-marketing-services/',
-  social:    '/marketing-services/social-media-marketing-services/',
-  code:      '/marketing-services/website-development/',
-  crm:       '/marketing-services/crm-integration/',
-  map:       '/marketing-services/local-seo-optimization/',
-  video:     '/marketing-services/media-content-production/',
+  megaphone:  '/marketing-services/paid-advertising-services/',
+  search:     '/marketing-services/ai-seo-and-seo/',
+  tooth:      '/marketing-services/dental-marketing-services/',
+  social:     '/marketing-services/social-media-marketing-services/',
+  code:       '/marketing-services/website-development/',
+  crm:        '/marketing-services/crm-integration/',
+  map:        '/marketing-services/local-seo-optimization/',
+  video:      '/marketing-services/media-content-production/',
+  content:    '/marketing-services/content-marketing/',
+  cro:        '/marketing-services/conversion-rate-optimization/',
+  consultant: '/marketing-services/marketing-consultant/',
+  martech:    '/marketing-services/marketing-technology-setup/',
 };
 
 interface ServiceItem {
