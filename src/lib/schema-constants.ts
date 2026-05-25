@@ -22,7 +22,7 @@ export const ORG_CICON = {
   url: 'https://cicon.ca/',
   logo: { '@type': 'ImageObject', url: 'https://cicon.ca/logo-cicon.jpg', width: 800, height: 800 },
   description: 'Boutique digital marketing and media production agency based in Richmond Hill, Ontario, serving businesses and dental clinics across the Greater Toronto Area.',
-  foundingDate: '2018',
+  foundingDate: '2023',
   founder: { '@id': 'https://cicon.ca/#majid-behzad' },
   areaServed: { '@type': 'AdministrativeArea', name: 'Greater Toronto Area' },
   address: {
