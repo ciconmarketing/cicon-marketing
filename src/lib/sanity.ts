@@ -79,7 +79,7 @@ const HOMEPAGE_QUERY = `
 
 export const FEATURED_POST_QUERY = `
   *[_type == "blogPost" && status == "published"] | order(publishedAt desc)[0] {
-    _id, title, "slug": slug.current, dek,
+    _id, title, "slug": slug.current, "dek": coalesce(dek, metaDescription),
     heroImage{ url, alt, caption },
     readTime, publishedAt,
     "category": category->{ name, "slug": slug.current }
@@ -89,7 +89,7 @@ export const FEATURED_POST_QUERY = `
 export const BLOG_INDEX_POSTS_QUERY = `
   *[_type == "blogPost" && status == "published" && _id != $featuredId]
   | order(publishedAt desc) [$start...$end] {
-    _id, title, "slug": slug.current, dek,
+    _id, title, "slug": slug.current, "dek": coalesce(dek, metaDescription),
     heroImage{ url, alt, caption },
     readTime, publishedAt,
     "category": category->{ name, "slug": slug.current }
@@ -109,7 +109,7 @@ export const ALL_CATEGORIES_QUERY = `
 
 export const ALL_POSTS_SEARCH_QUERY = `
   *[_type == "blogPost" && status == "published"] {
-    _id, title, "slug": slug.current, dek,
+    _id, title, "slug": slug.current, "dek": coalesce(dek, metaDescription),
     "category": category->slug.current,
     keywords
   }
