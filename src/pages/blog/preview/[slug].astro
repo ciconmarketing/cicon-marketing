@@ -1,0 +1,478 @@
+---
+/**
+ * /blog/preview/[slug] — Draft preview for blog posts
+ *
+ * SSR route (never pre-rendered). Uses Sanity's `previewDrafts` perspective so
+ * draft documents are visible before publishing. Hard noindex — never appears
+ * in search results.
+ *
+ * Usage:
+ *   Local:   npm run dev  →  http://localhost:4321/blog/preview/<slug>
+ *   Vercel:  any preview deployment URL + /blog/preview/<slug>
+ */
+
+export const prerender = false
+
+import { createClient } from '@sanity/client'
+import { renderPortableText, extractH2s } from '../../../lib/portable-text'
+import type { PTNode } from '../../../lib/portable-text'
+import Nav from '../../../components/Nav.astro'
+import Footer from '../../../components/Footer.astro'
+import '../../../styles/globals.css'
+
+// ── Sanity client (previewDrafts perspective — sees unpublished drafts) ─────────
+
+function getPreviewClient() {
+  const rawId = (import.meta.env.PUBLIC_SANITY_PROJECT_ID ?? '').trim()
+  const dataset = (import.meta.env.PUBLIC_SANITY_DATASET ?? 'production').trim()
+  if (!/^[a-z0-9-]+$/.test(rawId)) return null
+  return createClient({
+    projectId: rawId,
+    dataset,
+    useCdn: false,
+    apiVersion: '2024-01-01',
+    perspective: 'previewDrafts', // overlays draft on top of published
+  })
+}
+
+// ── Query — no status filter, no draft exclusion ────────────────────────────────
+
+const PREVIEW_QUERY = `
+  *[_type == "blogPost" && slug.current == $slug][0] {
+    _id, _createdAt, _updatedAt,
+    title,
+    "slug": slug.current,
+    status,
+    dek,
+    heroImage{ url, alt, caption },
+    readTime,
+    publishedAt,
+    quickAnswer,
+    body[]{
+      _key, _type,
+      style, listItem, level,
+      children[]{ _key, _type, text, marks },
+      markDefs[]{ _key, _type, href },
+      number, label, source,
+      quote, attribution,
+      url, alt, caption, tilt,
+      heading,
+      tabs[]{ _key, title, body[]{ _key, _type, style, listItem, level, children[]{ _key, _type, text, marks }, markDefs[]{ _key, _type, href } } },
+      title, whyItMatters,
+      "body": body[]{ _key, _type, style, listItem, level, children[]{ _key, _type, text, marks }, markDefs[]{ _key, _type, href } }
+    },
+    faqs[]{ _key, question, answer },
+    endCtaStat{ number, context, source },
+    "category": category->{ name, "slug": slug.current },
+    "relatedPosts": relatedPosts[0..2]->{
+      _id, title, "slug": slug.current, "dek": coalesce(dek, metaDescription),
+      heroImage{ url, alt, caption },
+      readTime, publishedAt,
+      "category": category->{ name, "slug": slug.current }
+    },
+    metaTitle, metaDescription, keywords,
+    "aboutEntities": aboutEntities[]{ name, type, sameAs },
+    "mentionsEntities": mentionsEntities[]{ name, type, sameAs }
+  }
+`
+
+// ── Fetch ───────────────────────────────────────────────────────────────────────
+
+const { slug } = Astro.params
+const client = getPreviewClient()
+
+let post: any = null
+if (client && slug) {
+  try {
+    post = await client.fetch(PREVIEW_QUERY, { slug })
+  } catch (err) {
+    console.error(`[Preview] Failed to fetch post "${slug}":`, err)
+  }
+}
+
+if (!post) {
+  return new Response(
+    `<h1 style="font-family:sans-serif;padding:2rem">No post found for slug: <code>${slug}</code></h1>
+     <p style="font-family:sans-serif;padding:0 2rem">Make sure the slug is correct and the document exists in Sanity (any status).</p>`,
+    { status: 404, headers: { 'Content-Type': 'text/html' } }
+  )
+}
+
+// ── Derived data ────────────────────────────────────────────────────────────────
+
+const bodyHtml  = renderPortableText((post.body ?? []) as PTNode[])
+const tocHeadings = extractH2s((post.body ?? []) as PTNode[])
+
+const datePublished  = post.publishedAt ?? post._createdAt?.slice(0, 10) ?? ''
+const formattedDate  = datePublished
+  ? new Date(datePublished).toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' })
+  : 'Unpublished'
+
+const statusLabel: Record<string, string> = {
+  'arvow-imported':  '⬇ Arvow Imported',
+  'processing':      '⚙ Processing',
+  'ready-for-review': '👁 Ready for Review',
+  'published':       '✅ Published',
+}
+const statusBadge = statusLabel[post.status] ?? post.status ?? 'Unknown'
+
+const metaTitle = post.metaTitle || `${post.title} | CiCon Marketing`
+const metaDesc  = post.metaDescription || post.dek || ''
+---
+
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PREVIEW: {post.title}</title>
+  <!-- Hard noindex — never surface in search -->
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Preview banner ─────────────────────────────────────── */
+    .preview-banner {
+      position: sticky;
+      top: 0;
+      z-index: 9999;
+      background: #f59e0b;
+      color: #1c1917;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .preview-banner__left { display: flex; align-items: center; gap: 10px; }
+    .preview-banner__label {
+      background: #1c1917;
+      color: #f59e0b;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .preview-banner__status {
+      background: rgba(0,0,0,.12);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+    }
+    .preview-banner__links { display: flex; gap: 10px; }
+    .preview-banner__links a {
+      color: #1c1917;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(0,0,0,.3);
+      font-size: 12px;
+    }
+    .preview-banner__links a:hover { border-color: #1c1917; }
+
+    /* ── Meta panel ─────────────────────────────────────────── */
+    .preview-meta {
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      padding: 16px 24px;
+      margin: 0;
+    }
+    .preview-meta table { border-collapse: collapse; width: 100%; max-width: 860px; margin: 0 auto; }
+    .preview-meta td { padding: 4px 12px 4px 0; vertical-align: top; }
+    .preview-meta td:first-child { font-weight: 600; color: #92400e; white-space: nowrap; }
+    .preview-meta td:last-child { color: #1c1917; word-break: break-word; }
+    .char-count { font-size: 11px; color: #78716c; margin-left: 6px; }
+    .char-ok  { color: #15803d; }
+    .char-err { color: #dc2626; }
+  </style>
+</head>
+<body>
+
+  <!-- ① Preview banner -->
+  <div class="preview-banner">
+    <div class="preview-banner__left">
+      <span class="preview-banner__label">Preview</span>
+      <span>This page is not indexed and will not appear in search results.</span>
+      <span class="preview-banner__status">{statusBadge}</span>
+    </div>
+    <div class="preview-banner__links">
+      <a href={`https://cicon-marketing.sanity.studio/structure/blogPost;drafts.${post._id.replace('drafts.','')}`} target="_blank">Edit in Studio ↗</a>
+      <a href={`/blog/${post.slug}/`}>View published URL ↗</a>
+      <a href="/blog/preview/">Back</a>
+    </div>
+  </div>
+
+  <!-- ② Meta summary panel -->
+  <div class="preview-meta">
+    <table>
+      <tr>
+        <td>Title</td>
+        <td>{post.title}</td>
+      </tr>
+      <tr>
+        <td>Slug</td>
+        <td><code>{post.slug}</code></td>
+      </tr>
+      <tr>
+        <td>metaTitle</td>
+        <td>
+          {metaTitle}
+          <span class={`char-count ${metaTitle.length >= 55 && metaTitle.length <= 62 ? 'char-ok' : 'char-err'}`}>
+            ({metaTitle.length} chars {metaTitle.length >= 55 && metaTitle.length <= 62 ? '✓' : '✗ — target 55–62'})
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td>metaDescription</td>
+        <td>
+          {metaDesc}
+          <span class={`char-count ${metaDesc.length >= 130 && metaDesc.length <= 160 ? 'char-ok' : 'char-err'}`}>
+            ({metaDesc.length} chars {metaDesc.length >= 130 && metaDesc.length <= 160 ? '✓' : '✗ — target 130–160'})
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td>dek</td>
+        <td>{post.dek ?? <em style="color:#78716c">— not set —</em>}</td>
+      </tr>
+      <tr>
+        <td>Category</td>
+        <td>{post.category?.name ?? '—'}</td>
+      </tr>
+      <tr>
+        <td>Read time</td>
+        <td>{post.readTime ? `${post.readTime} min` : '—'}</td>
+      </tr>
+      <tr>
+        <td>Published At</td>
+        <td>{formattedDate}</td>
+      </tr>
+      <tr>
+        <td>FAQs</td>
+        <td>{post.faqs?.length ?? 0} / 6</td>
+      </tr>
+      <tr>
+        <td>Body blocks</td>
+        <td>{post.body?.length ?? 0}</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ③ Full page render (identical to production) -->
+  <Nav />
+
+  <main>
+
+    <!-- Hero image -->
+    {post.heroImage?.url ? (
+      <div style="width:100%;max-height:520px;overflow:hidden;">
+        <img
+          src={post.heroImage.url}
+          alt={post.heroImage.alt ?? post.title}
+          style="width:100%;height:520px;object-fit:cover;display:block;"
+        />
+      </div>
+    ) : (
+      <div style="width:100%;height:180px;background:#f5f0eb;display:flex;align-items:center;justify-content:center;font-family:sans-serif;color:#78716c;font-size:14px;">
+        No hero image set — upload one in Studio
+      </div>
+    )}
+
+    <!-- Article wrapper — reuses production stylesheet classes -->
+    <article style="max-width:860px;margin:0 auto;padding:48px 24px;">
+
+      <!-- Category + date pill -->
+      {post.category && (
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px;font-family:'Inter',sans-serif;font-size:13px;">
+          <span style="background:#f5f0eb;border-radius:20px;padding:4px 12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#57534e;">
+            {post.category.name}
+          </span>
+          <span style="color:#78716c;">{formattedDate}</span>
+          {post.readTime && <span style="color:#78716c;">{post.readTime} min read</span>}
+        </div>
+      )}
+
+      <!-- H1 -->
+      <h1 style="font-family:'Inter',sans-serif;font-size:clamp(28px,4vw,44px);font-weight:800;line-height:1.15;color:#1c1917;margin:0 0 20px;">{post.title}</h1>
+
+      <!-- Dek -->
+      {post.dek && (
+        <p style="font-family:'Inter',sans-serif;font-size:18px;color:#57534e;line-height:1.6;margin:0 0 32px;border-left:3px solid #f59e0b;padding-left:16px;">{post.dek}</p>
+      )}
+
+      <!-- Quick Answer -->
+      {post.quickAnswer && (
+        <div style="background:#fef9ef;border:1px solid #fde68a;border-radius:12px;padding:20px 24px;margin:0 0 36px;font-family:'Inter',sans-serif;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#b45309;margin-bottom:8px;">Quick Answer</div>
+          <p style="margin:0;font-size:15px;color:#1c1917;line-height:1.65;" class="quick-answer__body">{post.quickAnswer}</p>
+        </div>
+      )}
+
+      <!-- TOC -->
+      {tocHeadings.length > 0 && (
+        <nav style="background:#f5f0eb;border-radius:10px;padding:16px 20px;margin:0 0 36px;font-family:'Inter',sans-serif;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#78716c;margin-bottom:10px;">In this article</div>
+          <ol style="margin:0;padding-left:18px;">
+            {tocHeadings.map((h: { text: string; anchor: string }) => (
+              <li style="margin-bottom:4px;">
+                <a href={`#${h.anchor}`} style="color:#1c1917;font-size:14px;text-decoration:none;border-bottom:1px solid transparent;" onmouseover="this.style.borderColor='#f59e0b'" onmouseout="this.style.borderColor='transparent'">{h.text}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )}
+
+      <!-- Body -->
+      <div class="prose" set:html={bodyHtml} />
+
+      <!-- FAQs -->
+      {post.faqs && post.faqs.length > 0 && (
+        <section style="margin-top:48px;border-top:1px solid #e7e5e4;padding-top:36px;font-family:'Inter',sans-serif;">
+          <h2 style="font-size:22px;font-weight:700;color:#1c1917;margin:0 0 24px;">Frequently Asked Questions</h2>
+          {post.faqs.map((faq: any) => (
+            <div style="margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #f5f5f4;">
+              <h3 style="font-size:16px;font-weight:700;color:#1c1917;margin:0 0 8px;">{faq.question}</h3>
+              <p style="font-size:15px;color:#57534e;line-height:1.65;margin:0;">{faq.answer}</p>
+            </div>
+          ))}
+        </section>
+      )}
+
+      <!-- End CTA stat -->
+      {post.endCtaStat?.number && (
+        <div style="margin-top:48px;background:#1c1917;border-radius:16px;padding:32px;text-align:center;font-family:'Inter',sans-serif;">
+          <div class="end-cta__stat-number" style="font-size:48px;font-weight:900;color:#f59e0b;line-height:1;">{post.endCtaStat.number}</div>
+          <p class="end-cta__stat-context" style="font-size:15px;color:#e7e5e4;margin:8px 0 4px;">{post.endCtaStat.context}</p>
+          <p style="font-size:12px;color:#78716c;margin:0;">Source: {post.endCtaStat.source}</p>
+        </div>
+      )}
+
+      <!-- Related posts -->
+      {post.relatedPosts && post.relatedPosts.length > 0 && (
+        <section style="margin-top:48px;border-top:1px solid #e7e5e4;padding-top:36px;font-family:'Inter',sans-serif;">
+          <h2 style="font-size:18px;font-weight:700;color:#1c1917;margin:0 0 20px;">Related Posts</h2>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;">
+            {post.relatedPosts.map((r: any) => (
+              <a href={`/blog/preview/${r.slug}`} style="display:block;padding:16px;background:#f5f0eb;border-radius:10px;text-decoration:none;color:inherit;">
+                <div style="font-size:11px;font-weight:600;color:#b45309;text-transform:uppercase;margin-bottom:6px;">{r.category?.name}</div>
+                <div style="font-size:14px;font-weight:700;color:#1c1917;line-height:1.4;">{r.title}</div>
+                {r.dek && <p style="font-size:13px;color:#78716c;margin:6px 0 0;line-height:1.5;">{r.dek.slice(0, 80)}…</p>}
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+    </article>
+  </main>
+
+  <Footer />
+
+  <style is:global>
+    /* Portable text rendering — mirrors production prose styles */
+    .prose h2 {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(20px, 2.5vw, 26px);
+      font-weight: 800;
+      color: #1c1917;
+      margin: 2.5rem 0 1rem;
+      scroll-margin-top: 80px;
+    }
+    .prose h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #1c1917;
+      margin: 2rem 0 .75rem;
+    }
+    .prose p {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      color: #3a3530;
+      line-height: 1.8;
+      margin: 0 0 1.25rem;
+    }
+    .prose ul, .prose ol {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      color: #3a3530;
+      line-height: 1.8;
+      margin: 0 0 1.25rem;
+      padding-left: 1.5rem;
+    }
+    .prose li { margin-bottom: .5rem; }
+    .prose a { color: #b45309; text-decoration: underline; }
+    .prose strong { font-weight: 700; color: #1c1917; }
+
+    /* stat-callout */
+    .stat-callout {
+      background: #fef9ef;
+      border-left: 4px solid #f59e0b;
+      border-radius: 0 10px 10px 0;
+      padding: 16px 20px;
+      margin: 1.5rem 0;
+      font-family: 'Inter', sans-serif;
+    }
+    .stat-callout__number {
+      font-size: 36px;
+      font-weight: 900;
+      color: #b45309;
+      line-height: 1;
+    }
+    .stat-callout__label {
+      font-size: 14px;
+      color: #57534e;
+      margin: 4px 0 0;
+      line-height: 1.5;
+    }
+    .stat-callout__source {
+      font-size: 11px;
+      color: #a8a29e;
+      margin-top: 4px;
+    }
+
+    /* pull-quote */
+    .pull-quote {
+      border-left: 4px solid #f59e0b;
+      margin: 2rem 0;
+      padding: 12px 20px;
+      font-family: 'Inter', sans-serif;
+    }
+    .pull-quote__text {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1c1917;
+      line-height: 1.45;
+      font-style: italic;
+      margin: 0 0 8px;
+    }
+    .pull-quote__attribution {
+      font-size: 13px;
+      color: #78716c;
+    }
+
+    /* inline-image */
+    .inline-image {
+      margin: 2rem 0;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .inline-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 12px;
+    }
+  </style>
+
+</body>
+</html>
