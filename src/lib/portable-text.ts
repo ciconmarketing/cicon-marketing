@@ -321,47 +321,64 @@ function renderSimpleTable(node: PTSimpleTable): string {
   const rows = node.rows ?? []
   const caption = node.caption ?? ''
 
+  const borderColor = '#d4d4d0'
+  const headerBg   = '#efefec'
+  const evenRowBg  = '#ffffff'
+  const oddRowBg   = '#f7f7f5'
+
   const thStyle = [
-    'padding:0.65rem 1rem',
+    'padding:0.7rem 1.1rem',
     'text-align:left',
     'vertical-align:middle',
-    'font-size:0.875rem',
+    'font-size:0.8125rem',
     'font-weight:700',
-    'letter-spacing:0.01em',
-    'color:var(--charcoal)',
-    'background:var(--off-white,#f5f5f3)',
-    'border-bottom:2px solid var(--hairline,#e0e0e0)',
+    'letter-spacing:0.04em',
+    'text-transform:uppercase',
+    'color:#3a3a3a',
+    `background:${headerBg}`,
+    `border-bottom:2px solid ${borderColor}`,
+    `border-right:1px solid ${borderColor}`,
     'white-space:nowrap',
   ].join(';')
 
-  const tdBaseStyle = [
-    'padding:0.65rem 1rem',
+  const thLastStyle = thStyle.replace(`border-right:1px solid ${borderColor}`, 'border-right:none')
+
+  const tdBase = [
+    'padding:0.7rem 1.1rem',
     'text-align:left',
     'vertical-align:top',
     'font-size:0.9375rem',
-    'line-height:1.55',
-    'color:var(--charcoal)',
-    'border-bottom:1px solid var(--hairline,#e0e0e0)',
+    'line-height:1.6',
+    'color:#3a3a3a',
+    `border-right:1px solid ${borderColor}`,
   ].join(';')
 
-  const tdFirstStyle = tdBaseStyle + ';font-weight:600;white-space:nowrap;min-width:9rem'
+  const tdLastCol = tdBase.replace(`border-right:1px solid ${borderColor}`, 'border-right:none')
+  const tdFirstCol = tdBase + ';font-weight:600;white-space:nowrap;min-width:9rem'
 
   const headerRow = headers.length > 0
-    ? `<thead><tr>${headers.map(h => `<th style="${thStyle}">${esc(h)}</th>`).join('')}</tr></thead>`
+    ? `<thead><tr>${headers.map((h, i) =>
+        `<th style="${i === headers.length - 1 ? thLastStyle : thStyle}">${esc(h)}</th>`
+      ).join('')}</tr></thead>`
     : ''
 
   const bodyRows = rows.map((row, ri) => {
     const cells = row.cells ?? []
-    const rowBg = ri % 2 === 1 ? ' background:rgba(245,245,243,0.5)' : ''
-    return `<tr style="${rowBg}">${cells.map((c, i) =>
-      `<td style="${i === 0 ? tdFirstStyle : tdBaseStyle}${ri === rows.length - 1 ? ';border-bottom:none' : ''}">${esc(c)}</td>`
-    ).join('')}</tr>`
+    const rowBg = ri % 2 === 0 ? evenRowBg : oddRowBg
+    const isLast = ri === rows.length - 1
+    const borderBottom = isLast ? 'none' : `1px solid ${borderColor}`
+    return `<tr style="background:${rowBg}">${cells.map((c, i) => {
+      const isLastCol = i === cells.length - 1
+      let style = i === 0 ? tdFirstCol : (isLastCol ? tdLastCol : tdBase)
+      style += `;border-bottom:${borderBottom}`
+      return `<td style="${style}">${esc(c)}</td>`
+    }).join('')}</tr>`
   }).join('')
 
   return `
-<div style="overflow-x:auto;margin:2rem 0;border-radius:0.75rem;border:1px solid var(--hairline,#e0e0e0)">
+<div style="overflow-x:auto;margin:2rem 0;border-radius:0.75rem;border:1px solid ${borderColor};box-shadow:0 1px 4px rgba(0,0,0,0.06)">
   <table style="width:100%;border-collapse:collapse;font-family:inherit">
-    ${caption ? `<caption style="caption-side:top;text-align:left;padding:0.75rem 1rem 0.25rem;font-size:0.875rem;font-weight:600;color:var(--charcoal);opacity:0.65;letter-spacing:0.01em">${esc(caption)}</caption>` : ''}
+    ${caption ? `<caption style="caption-side:top;text-align:left;padding:0.65rem 1.1rem 0.4rem;font-size:0.8125rem;font-weight:600;color:#3a3a3a;opacity:0.55;letter-spacing:0.02em">${esc(caption)}</caption>` : ''}
     ${headerRow}
     <tbody>${bodyRows}</tbody>
   </table>
