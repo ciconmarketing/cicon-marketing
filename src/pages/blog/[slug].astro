@@ -832,38 +832,6 @@ const schema: any = {
     color: var(--goldenrod);
   }
 
-  /* ── Simple Table ───────────────────────────────────────────────────────── */
-  .simple-table th,
-  .simple-table td {
-    padding: 0.65rem 1rem;
-    text-align: left;
-    border-bottom: 1px solid var(--hairline);
-    vertical-align: top;
-    font-size: 0.9375rem;
-    line-height: 1.5;
-  }
-  .simple-table th {
-    background: var(--off-white);
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 0.875rem;
-    color: var(--charcoal);
-    letter-spacing: 0.01em;
-    border-bottom: 2px solid var(--hairline);
-  }
-  .simple-table tr:last-child td {
-    border-bottom: none;
-  }
-  .simple-table td:first-child {
-    font-weight: 600;
-    color: var(--charcoal);
-    white-space: nowrap;
-    min-width: 10rem;
-  }
-  .simple-table tbody tr:hover {
-    background: color-mix(in srgb, var(--goldenrod) 4%, transparent);
-  }
-
   /* ── Reduced motion ────────────────────────────────────────────────────── */
   @media (prefers-reduced-motion: reduce) {
     .deep-dive-body,

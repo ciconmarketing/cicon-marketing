@@ -321,19 +321,47 @@ function renderSimpleTable(node: PTSimpleTable): string {
   const rows = node.rows ?? []
   const caption = node.caption ?? ''
 
+  const thStyle = [
+    'padding:0.65rem 1rem',
+    'text-align:left',
+    'vertical-align:middle',
+    'font-size:0.875rem',
+    'font-weight:700',
+    'letter-spacing:0.01em',
+    'color:var(--charcoal)',
+    'background:var(--off-white,#f5f5f3)',
+    'border-bottom:2px solid var(--hairline,#e0e0e0)',
+    'white-space:nowrap',
+  ].join(';')
+
+  const tdBaseStyle = [
+    'padding:0.65rem 1rem',
+    'text-align:left',
+    'vertical-align:top',
+    'font-size:0.9375rem',
+    'line-height:1.55',
+    'color:var(--charcoal)',
+    'border-bottom:1px solid var(--hairline,#e0e0e0)',
+  ].join(';')
+
+  const tdFirstStyle = tdBaseStyle + ';font-weight:600;white-space:nowrap;min-width:9rem'
+
   const headerRow = headers.length > 0
-    ? `<thead><tr>${headers.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead>`
+    ? `<thead><tr>${headers.map(h => `<th style="${thStyle}">${esc(h)}</th>`).join('')}</tr></thead>`
     : ''
 
-  const bodyRows = rows.map(row => {
+  const bodyRows = rows.map((row, ri) => {
     const cells = row.cells ?? []
-    return `<tr>${cells.map((c, i) => i === 0 ? `<td><strong>${esc(c)}</strong></td>` : `<td>${esc(c)}</td>`).join('')}</tr>`
+    const rowBg = ri % 2 === 1 ? ' background:rgba(245,245,243,0.5)' : ''
+    return `<tr style="${rowBg}">${cells.map((c, i) =>
+      `<td style="${i === 0 ? tdFirstStyle : tdBaseStyle}${ri === rows.length - 1 ? ';border-bottom:none' : ''}">${esc(c)}</td>`
+    ).join('')}</tr>`
   }).join('')
 
   return `
-<div class="table-wrapper overflow-x-auto my-8 rounded-xl border border-[var(--hairline)]">
-  ${caption ? `<p class="table-caption text-sm text-[var(--muted)] px-4 pt-3 pb-1 font-medium">${esc(caption)}</p>` : ''}
-  <table class="simple-table w-full text-[0.9375rem] leading-normal border-collapse">
+<div style="overflow-x:auto;margin:2rem 0;border-radius:0.75rem;border:1px solid var(--hairline,#e0e0e0)">
+  <table style="width:100%;border-collapse:collapse;font-family:inherit">
+    ${caption ? `<caption style="caption-side:top;text-align:left;padding:0.75rem 1rem 0.25rem;font-size:0.875rem;font-weight:600;color:var(--charcoal);opacity:0.65;letter-spacing:0.01em">${esc(caption)}</caption>` : ''}
     ${headerRow}
     <tbody>${bodyRows}</tbody>
   </table>
