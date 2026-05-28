@@ -49,7 +49,9 @@ const POST_QUERY = `
       heading,
       tabs[]{ _key, title, body[]{ _key, _type, style, listItem, level, children[]{ _key, _type, text, marks }, markDefs[]{ _key, _type, href } } },
       title, whyItMatters,
-      "body": body[]{ _key, _type, style, listItem, level, children[]{ _key, _type, text, marks }, markDefs[]{ _key, _type, href } }
+      "body": body[]{ _key, _type, style, listItem, level, children[]{ _key, _type, text, marks }, markDefs[]{ _key, _type, href } },
+      headers,
+      rows[]{ _key, _type, cells }
     },
     faqs[]{ _key, question, answer },
     endCtaStat{ number, context, source },
