@@ -18,6 +18,7 @@ import blogPost, {
   pullQuoteType,
   inlineImageType,
   comparisonTabsType,
+  simpleTableType,
   deepDiveType,
 } from './blogPost'
 import blogCategory from './blogCategory'
@@ -531,6 +532,7 @@ export const schemaTypes = [
   pullQuoteType,
   inlineImageType,
   comparisonTabsType,
+  simpleTableType,
   deepDiveType,
   // Service pages system
   servicePage,

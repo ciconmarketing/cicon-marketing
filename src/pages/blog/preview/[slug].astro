@@ -21,10 +21,12 @@ import Footer from '../../../components/Footer.astro'
 import '../../../styles/globals.css'
 
 // ── Sanity client (previewDrafts perspective — sees unpublished drafts) ─────────
+// Requires SANITY_API_READ_TOKEN in .env.local to read true draft documents.
 
 function getPreviewClient() {
   const rawId = (import.meta.env.PUBLIC_SANITY_PROJECT_ID ?? '').trim()
   const dataset = (import.meta.env.PUBLIC_SANITY_DATASET ?? 'production').trim()
+  const token = (import.meta.env.SANITY_API_READ_TOKEN ?? '').trim()
   if (!/^[a-z0-9-]+$/.test(rawId)) return null
   return createClient({
     projectId: rawId,
@@ -32,6 +34,7 @@ function getPreviewClient() {
     useCdn: false,
     apiVersion: '2024-01-01',
     perspective: 'previewDrafts', // overlays draft on top of published
+    ...(token ? { token } : {}),  // token required to read drafts. prefix IDs
   })
 }
 
@@ -472,6 +475,36 @@ const metaDesc  = post.metaDescription || post.dek || ''
       display: block;
       border-radius: 12px;
     }
+
+    /* simple-table */
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 2rem 0;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+    }
+    .simple-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9375rem;
+    }
+    .simple-table th, .simple-table td {
+      padding: 0.65rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .simple-table th {
+      background: #f9fafb;
+      font-weight: 700;
+      font-size: 0.875rem;
+      color: #1c1917;
+      border-bottom: 2px solid #e5e7eb;
+    }
+    .simple-table tr:last-child td { border-bottom: none; }
+    .simple-table td:first-child { font-weight: 600; color: #1c1917; white-space: nowrap; min-width: 10rem; }
+    .simple-table tbody tr:hover { background: #fffbeb; }
   </style>
 
 </body>

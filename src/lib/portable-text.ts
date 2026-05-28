@@ -74,7 +74,20 @@ export interface PTDeepDive {
   whyItMatters?: string
 }
 
-export type PTNode = PTBlock | PTStatCallout | PTPullQuote | PTInlineImage | PTComparisonTabs | PTDeepDive
+export interface PTTableRow {
+  _key?: string
+  cells?: string[]
+}
+
+export interface PTSimpleTable {
+  _key?: string
+  _type: 'simpleTable'
+  caption?: string
+  headers?: string[]
+  rows?: PTTableRow[]
+}
+
+export type PTNode = PTBlock | PTStatCallout | PTPullQuote | PTInlineImage | PTComparisonTabs | PTDeepDive | PTSimpleTable
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -301,6 +314,32 @@ function renderDeepDive(block: PTDeepDive): string {
 </div>`
 }
 
+// ── Simple Table ──────────────────────────────────────────────────────────────
+
+function renderSimpleTable(node: PTSimpleTable): string {
+  const headers = node.headers ?? []
+  const rows = node.rows ?? []
+  const caption = node.caption ?? ''
+
+  const headerRow = headers.length > 0
+    ? `<thead><tr>${headers.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead>`
+    : ''
+
+  const bodyRows = rows.map(row => {
+    const cells = row.cells ?? []
+    return `<tr>${cells.map((c, i) => i === 0 ? `<td><strong>${esc(c)}</strong></td>` : `<td>${esc(c)}</td>`).join('')}</tr>`
+  }).join('')
+
+  return `
+<div class="table-wrapper overflow-x-auto my-8 rounded-xl border border-[var(--hairline)]">
+  ${caption ? `<p class="table-caption text-sm text-[var(--muted)] px-4 pt-3 pb-1 font-medium">${esc(caption)}</p>` : ''}
+  <table class="simple-table w-full text-[0.9375rem] leading-normal border-collapse">
+    ${headerRow}
+    <tbody>${bodyRows}</tbody>
+  </table>
+</div>`
+}
+
 // ── Main export ───────────────────────────────────────────────────────────────
 
 export function renderPortableText(nodes: PTNode[]): string {
@@ -334,6 +373,9 @@ export function renderPortableText(nodes: PTNode[]): string {
           break
         case 'inlineImage':
           result.push(renderInlineImage(node as PTInlineImage, inlineImgIndex++))
+          break
+        case 'simpleTable':
+          result.push(renderSimpleTable(node as PTSimpleTable))
           break
         case 'comparisonTabs':
           result.push(renderComparisonTabs(node as PTComparisonTabs))

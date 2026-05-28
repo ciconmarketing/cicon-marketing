@@ -135,6 +135,40 @@ export const comparisonTabsType = defineType({
   },
 })
 
+export const simpleTableType = defineType({
+  name: 'simpleTable',
+  title: 'Comparison Table',
+  type: 'object',
+  fields: [
+    defineField({ name: 'caption', title: 'Caption (optional)', type: 'string' }),
+    defineField({
+      name: 'headers',
+      title: 'Column Headers',
+      type: 'array',
+      of: [{ type: 'string' }],
+    }),
+    defineField({
+      name: 'rows',
+      title: 'Rows',
+      type: 'array',
+      of: [defineArrayMember({
+        type: 'object',
+        name: 'tableRow',
+        fields: [
+          defineField({ name: 'cells', title: 'Cells', type: 'array', of: [{ type: 'string' }] }),
+        ],
+        preview: { select: { title: 'cells' } },
+      })],
+    }),
+  ],
+  preview: {
+    select: { title: 'caption', subtitle: 'headers' },
+    prepare({ title, subtitle }) {
+      return { title: title || 'Comparison Table', subtitle: Array.isArray(subtitle) ? subtitle.join(' | ') : '' }
+    },
+  },
+})
+
 export const deepDiveType = defineType({
   name: 'deepDive',
   title: 'Deep Dive Accordion',
@@ -314,6 +348,7 @@ export default defineType({
           ],
         },
         { type: 'statCallout' },
+        { type: 'simpleTable' },
         { type: 'comparisonTabs' },
         { type: 'deepDive' },
         { type: 'pullQuote' },
@@ -353,8 +388,27 @@ export default defineType({
     }),
 
     // ── SEO & Meta ────────────────────────────────────────────────────────────
-    defineField({ name: 'metaTitle', title: 'Meta Title', type: 'string', group: 'meta', validation: (Rule) => Rule.max(60) }),
-    defineField({ name: 'metaDescription', title: 'Meta Description', type: 'text', rows: 2, group: 'meta', validation: (Rule) => Rule.max(160) }),
+    defineField({
+      name: 'metaTitle',
+      title: 'Meta Title',
+      type: 'string',
+      group: 'meta',
+      description: 'Target: 55-62 characters. Current length appears in real-time.',
+      validation: (Rule) => Rule.required()
+        .min(55).max(62)
+        .error('Meta title must be 55-62 characters for Google SERP. Current length will be shown in Studio.'),
+    }),
+    defineField({
+      name: 'metaDescription',
+      title: 'Meta Description',
+      type: 'text',
+      rows: 2,
+      group: 'meta',
+      description: 'Target: 130-160 characters. Current length appears in real-time.',
+      validation: (Rule) => Rule.required()
+        .min(130).max(160)
+        .error('Meta description must be 130-160 characters for Google SERP.'),
+    }),
     defineField({ name: 'keywords', title: 'Target Keywords', type: 'array', group: 'meta', of: [{ type: 'string' }] }),
 
     // ── Schema enrichment ─────────────────────────────────────────────────────
