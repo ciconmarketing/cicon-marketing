@@ -81,6 +81,9 @@
     { "source": "/marketing-for-dental-clinics-a-practical-growth-playbook/",                     "destination": "/blog/marketing-for-dental-clinics-a-practical-growth-playbook/",                     "permanent": true },
 
     { "source": "/faq/",                                       "destination": "/contact-us/",   "permanent": true },
-    { "source": "/book-a-strategy-call-with-cicon-marketing/", "destination": "/contact-us/",   "permanent": true }
+    { "source": "/book-a-strategy-call-with-cicon-marketing/", "destination": "/contact-us/",   "permanent": true },
+
+    { "source": "/blog/best-website-development-for-small-businesses-in-toronto-2026/", "destination": "/blog/website-development-toronto-small-businesses-2026/", "permanent": true },
+    { "source": "/marketing-services/paid-advertising/",                                "destination": "/marketing-services/paid-advertising-services/",            "permanent": true }
   ]
 }
