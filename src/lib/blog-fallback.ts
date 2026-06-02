@@ -49,4 +49,5 @@ export const FALLBACK_CATEGORIES: BlogCategory[] = [
   { _id: 'cat-3', name: 'Dental Marketing', slug: 'dental-marketing', description: 'Patient acquisition and practice growth strategies for Canadian dental clinics.', postCount: 1 },
   { _id: 'cat-4', name: 'Content & SEO', slug: 'content-seo', description: 'Content strategy and technical SEO for authority building.', postCount: 0 },
   { _id: 'cat-5', name: 'Strategy & Growth', slug: 'strategy-growth', description: 'Marketing systems and growth frameworks for GTA service businesses.', postCount: 0 },
+  { _id: 'cat-6', name: 'AI SEO', slug: 'ai-seo', description: 'AI-powered SEO strategies, tools, and local search optimization for GTA businesses.', postCount: 1 },
 ]
