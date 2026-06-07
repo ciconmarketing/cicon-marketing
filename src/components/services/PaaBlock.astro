@@ -18,20 +18,17 @@ if (!questions.length) return
     </div>
     <h2 class="text-3xl font-extrabold mb-10" style="color:var(--black)">Quick Answers</h2>
 
-    <div class="space-y-3" itemscope itemtype="https://schema.org/FAQPage">
+    <div class="space-y-3">
       {questions.map((q, i) => (
         <details
           class="group rounded-xl border overflow-hidden"
           style="border-color:var(--alabaster)"
-          itemscope
-          itemprop="mainEntity"
-          itemtype="https://schema.org/Question"
         >
           <summary
             class="flex items-center justify-between px-6 py-4 cursor-pointer select-none font-semibold list-none"
             style="color:var(--black);background:#fff"
           >
-            <span itemprop="name">{q.question}</span>
+            <span>{q.question}</span>
             <svg
               class="w-5 h-5 flex-shrink-0 ml-4 transition-transform duration-200 group-open:rotate-45"
               style="color:var(--accent)"
@@ -43,11 +40,8 @@ if (!questions.length) return
           <div
             class="px-6 pb-5 pt-1"
             style="background:#fff;border-top:1px solid var(--alabaster)"
-            itemscope
-            itemprop="acceptedAnswer"
-            itemtype="https://schema.org/Answer"
           >
-            <p class="leading-relaxed" style="color:var(--charcoal)" itemprop="text">{q.answer}</p>
+            <p class="leading-relaxed" style="color:var(--charcoal)">{q.answer}</p>
           </div>
         </details>
       ))}
