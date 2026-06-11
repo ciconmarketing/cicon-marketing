@@ -338,7 +338,6 @@ function renderSimpleTable(node: PTSimpleTable): string {
     `background:${headerBg}`,
     `border-bottom:2px solid ${borderColor}`,
     `border-right:1px solid ${borderColor}`,
-    'white-space:nowrap',
   ].join(';')
 
   const thLastStyle = thStyle.replace(`border-right:1px solid ${borderColor}`, 'border-right:none')
@@ -354,7 +353,7 @@ function renderSimpleTable(node: PTSimpleTable): string {
   ].join(';')
 
   const tdLastCol = tdBase.replace(`border-right:1px solid ${borderColor}`, 'border-right:none')
-  const tdFirstCol = tdBase + ';font-weight:600;white-space:nowrap;min-width:9rem'
+  const tdFirstCol = tdBase + ';font-weight:600;min-width:7rem'
 
   const headerRow = headers.length > 0
     ? `<thead><tr>${headers.map((h, i) =>
