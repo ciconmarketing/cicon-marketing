@@ -58,12 +58,12 @@ const { source = '', submitLabel = 'Send it' } = Astro.props;
       <fieldset style="border:none;padding:0;margin:0 0 28px;">
         <legend id="legend-step1" style="font-size:14px;font-weight:600;color:#3A3A3A;margin-bottom:12px;">I run a:</legend>
         <div role="radiogroup" aria-labelledby="legend-step1" style="display:flex;flex-direction:column;gap:12px;">
-          <label class="radio-option" data-step-field aria-checked="false">
+          <label class="radio-option" data-step-field tabindex="0">
             <input type="radio" name="business_type" value="dental" style="display:none;" />
             <span class="radio-custom" aria-hidden="true"></span>
             <span style="font-size:15px;font-weight:600;color:#212129;">Dental clinic</span>
           </label>
-          <label class="radio-option" data-step-field aria-checked="false">
+          <label class="radio-option" data-step-field tabindex="0">
             <input type="radio" name="business_type" value="local" style="display:none;" />
             <span class="radio-custom" aria-hidden="true"></span>
             <span style="font-size:15px;font-weight:600;color:#212129;">Local business</span>
@@ -86,22 +86,22 @@ const { source = '', submitLabel = 'Send it' } = Astro.props;
       <fieldset style="border:none;padding:0;margin:0 0 28px;">
         <legend id="legend-step2" class="sr-only">90-day goal</legend>
         <div role="radiogroup" aria-labelledby="legend-step2" style="display:flex;flex-direction:column;gap:12px;">
-          <label class="radio-option" data-step-field aria-checked="false">
+          <label class="radio-option" data-step-field tabindex="0">
             <input type="radio" name="goal" value="more_patients" style="display:none;" />
             <span class="radio-custom" aria-hidden="true"></span>
             <span style="font-size:15px;font-weight:600;color:#212129;">More qualified patients/customers walking in the door</span>
           </label>
-          <label class="radio-option" data-step-field aria-checked="false">
+          <label class="radio-option" data-step-field tabindex="0">
             <input type="radio" name="goal" value="more_leads" style="display:none;" />
             <span class="radio-custom" aria-hidden="true"></span>
             <span style="font-size:15px;font-weight:600;color:#212129;">More leads from Google, Meta, or local search</span>
           </label>
-          <label class="radio-option" data-step-field aria-checked="false">
+          <label class="radio-option" data-step-field tabindex="0">
             <input type="radio" name="goal" value="gbp_visibility" style="display:none;" />
             <span class="radio-custom" aria-hidden="true"></span>
             <span style="font-size:15px;font-weight:600;color:#212129;">Better visibility on Google Business Profile and Maps</span>
           </label>
-          <label class="radio-option" data-step-field aria-checked="false">
+          <label class="radio-option" data-step-field tabindex="0">
             <input type="radio" name="goal" value="other" style="display:none;" />
             <span class="radio-custom" aria-hidden="true"></span>
             <span style="font-size:15px;font-weight:600;color:#212129;">Something else — I'll explain</span>
@@ -127,27 +127,27 @@ const { source = '', submitLabel = 'Send it' } = Astro.props;
       <fieldset style="border:none;padding:0;margin:0 0 28px;">
         <legend id="legend-step3" class="sr-only">Monthly budget</legend>
         <div role="radiogroup" aria-labelledby="legend-step3" style="display:flex;flex-direction:column;gap:12px;">
-          <label class="radio-option" data-step-field aria-checked="false">
+          <label class="radio-option" data-step-field tabindex="0">
             <input type="radio" name="budget" value="1k_2k" style="display:none;" />
             <span class="radio-custom" aria-hidden="true"></span>
             <span style="font-size:15px;font-weight:600;color:#212129;">$1,000 – $2,000</span>
           </label>
-          <label class="radio-option" data-step-field aria-checked="false">
+          <label class="radio-option" data-step-field tabindex="0">
             <input type="radio" name="budget" value="2k_5k" style="display:none;" />
             <span class="radio-custom" aria-hidden="true"></span>
             <span style="font-size:15px;font-weight:600;color:#212129;">$2,000 – $5,000</span>
           </label>
-          <label class="radio-option" data-step-field aria-checked="false">
+          <label class="radio-option" data-step-field tabindex="0">
             <input type="radio" name="budget" value="5k_10k" style="display:none;" />
             <span class="radio-custom" aria-hidden="true"></span>
             <span style="font-size:15px;font-weight:600;color:#212129;">$5,000 – $10,000</span>
           </label>
-          <label class="radio-option" data-step-field aria-checked="false">
+          <label class="radio-option" data-step-field tabindex="0">
             <input type="radio" name="budget" value="10k_plus" style="display:none;" />
             <span class="radio-custom" aria-hidden="true"></span>
             <span style="font-size:15px;font-weight:600;color:#212129;">$10,000+</span>
           </label>
-          <label class="radio-option" data-step-field aria-checked="false">
+          <label class="radio-option" data-step-field tabindex="0">
             <input type="radio" name="budget" value="not_sure" style="display:none;" />
             <span class="radio-custom" aria-hidden="true"></span>
             <span style="font-size:15px;font-weight:600;color:#212129;">Not sure yet — let's talk</span>
@@ -535,12 +535,10 @@ const { source = '', submitLabel = 'Send it' } = Astro.props;
         var sibLabel = sibling.closest('.radio-option');
         if (sibLabel) {
           sibLabel.classList.remove('is-selected');
-          sibLabel.setAttribute('aria-checked', 'false');
         }
       });
       input.checked = true;
       label.classList.add('is-selected');
-      label.setAttribute('aria-checked', 'true');
       // Store
       formData[name] = input.value;
       // Determine which step we're in from input name
@@ -556,8 +554,6 @@ const { source = '', submitLabel = 'Send it' } = Astro.props;
         label.click();
       }
     });
-    label.setAttribute('tabindex', '0');
-    label.setAttribute('role', 'radio');
   });
 
   // ── next buttons ──────────────────────────────────────────────────────────
@@ -680,12 +676,10 @@ const { source = '', submitLabel = 'Send it' } = Astro.props;
         var l = r.closest('.radio-option');
         if (l) {
           l.classList.remove('is-selected');
-          l.setAttribute('aria-checked', 'false');
         }
       });
       radio.checked = true;
       label.classList.add('is-selected');
-      label.setAttribute('aria-checked', 'true');
       formData['business_type'] = val;
       setNextBtnState(1);
     }
