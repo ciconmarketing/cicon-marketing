@@ -111,6 +111,20 @@ const footerServices = [...SERVICES_NAV].sort((a, b) => a.title.localeCompare(b.
         </ul>
       </div>
 
+      <!-- Column 4: Service Areas -->
+      <div class="footer-col-areas">
+        <p style="color:#fff;font-weight:600;margin:0 0 20px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;">Service Areas</p>
+        <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;font-size:13px;color:#a0a0b0;">
+          <li>Richmond Hill</li>
+          <li>North York</li>
+          <li>Thornhill</li>
+          <li>Markham</li>
+          <li>Vaughan</li>
+          <li>Aurora</li>
+          <li>Newmarket</li>
+        </ul>
+      </div>
+
     </div>
   </div>
 
@@ -162,10 +176,10 @@ const footerServices = [...SERVICES_NAV].sort((a, b) => a.title.localeCompare(b.
 </footer>
 
 <style>
-  /* Desktop: 3-column grid */
+  /* Desktop: 4-column grid */
   @media (min-width: 1024px) {
     .footer-grid {
-      grid-template-columns: 2fr 1fr 1fr !important;
+      grid-template-columns: 2fr 1fr 1fr 1fr !important;
       gap: 60px !important;
     }
     .footer-map {
@@ -176,10 +190,10 @@ const footerServices = [...SERVICES_NAV].sort((a, b) => a.title.localeCompare(b.
       justify-content: space-between !important;
     }
   }
-  /* Tablet: 2+1 grid */
+  /* Tablet: brand full-width + 3 equal columns */
   @media (min-width: 640px) and (max-width: 1023px) {
     .footer-grid {
-      grid-template-columns: 1fr 1fr !important;
+      grid-template-columns: 1fr 1fr 1fr !important;
     }
     .footer-col-brand {
       grid-column: 1 / -1;
