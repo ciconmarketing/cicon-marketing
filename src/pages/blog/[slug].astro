@@ -38,6 +38,7 @@ const POST_QUERY = `
     readTime,
     publishedAt,
     quickAnswer,
+    keyTakeaways,
     body[]{
       _key, _type,
       style, listItem, level,
@@ -375,13 +376,13 @@ const schema: any = {
   )}
 </section>
 
-<!-- ══ SECTION 3: QUICK ANSWER CARD ══════════════════════════════════════════ -->
-{post.quickAnswer && (
+<!-- ══ SECTION 3: KEY TAKEAWAYS / QUICK ANSWER CARD ═══════════════════════════ -->
+{(post.keyTakeaways?.length > 0 || post.quickAnswer) && (
   <section id="quick-answer" class="max-w-[880px] mx-auto px-6" style="padding-top:calc(80px + 80px);padding-bottom:0">
     <div class="quick-answer-card relative rounded-xl p-8 md:p-10" style="background:var(--glass-bg);backdrop-filter:blur(16px);border:1px solid var(--glass-border);border-left:4px solid var(--goldenrod);box-shadow:0 0 0 1px rgba(157,131,63,0.25),0 20px 40px -20px rgba(33,33,41,0.18)">
       <!-- Header row -->
       <div class="flex items-start justify-between gap-4 mb-4">
-        <span class="font-display font-semibold uppercase text-[11px] tracking-[0.15em]" style="color:var(--goldenrod)">Quick Answer</span>
+        <span class="font-display font-semibold uppercase text-[11px] tracking-[0.15em]" style="color:var(--goldenrod)">{post.keyTakeaways?.length > 0 ? 'Key Takeaways' : 'Quick Answer'}</span>
         <button
           id="copy-answer-btn"
           class="flex-shrink-0 p-1 rounded transition-colors duration-200 group"
@@ -397,9 +398,17 @@ const schema: any = {
         </button>
       </div>
       <!-- Answer -->
-      <p id="quick-answer-text" class="quick-answer__body font-body font-medium leading-relaxed" style="font-size:1.125rem;color:var(--charcoal);line-height:1.6">
-        {post.quickAnswer}
-      </p>
+      {post.keyTakeaways?.length > 0 ? (
+        <ul id="quick-answer-text" class="quick-answer__body font-body font-medium leading-relaxed" style="font-size:1.125rem;color:var(--charcoal);line-height:1.6;margin:0;padding-left:1.25em;list-style:disc">
+          {post.keyTakeaways.map((point: string) => (
+            <li style="margin-bottom:0.5em">{point}</li>
+          ))}
+        </ul>
+      ) : (
+        <p id="quick-answer-text" class="quick-answer__body font-body font-medium leading-relaxed" style="font-size:1.125rem;color:var(--charcoal);line-height:1.6">
+          {post.quickAnswer}
+        </p>
+      )}
       <!-- Copied tooltip -->
       <span id="copy-tooltip" class="hidden absolute top-4 right-10 text-xs font-display font-semibold text-white px-2 py-1 rounded" style="background:var(--goldenrod)">Copied!</span>
     </div>
@@ -407,7 +416,7 @@ const schema: any = {
 )}
 
 <!-- ══ SECTION 4 + 5 + 6: ANTI-GRID BODY + TOC SIDEBAR + ARTICLE ════════════ -->
-<main id="article-main" class="max-w-[1280px] mx-auto px-6" style={`padding-top:${post.quickAnswer ? '64px' : '80px'};padding-bottom:80px`}>
+<main id="article-main" class="max-w-[1280px] mx-auto px-6" style={`padding-top:${(post.keyTakeaways?.length > 0 || post.quickAnswer) ? '64px' : '80px'};padding-bottom:80px`}>
   <div class="article-grid">
 
     <!-- LEFT GUTTER (desktop-only pull quotes via CSS grid) -->

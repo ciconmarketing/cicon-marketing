@@ -307,14 +307,24 @@ export default defineType({
       group: 'content',
     }),
 
-    // ── Quick Answer card ─────────────────────────────────────────────────────
+    // ── Quick Answer card (legacy — superseded by Key Takeaways below) ────────
     defineField({
       name: 'quickAnswer',
-      title: 'Quick Answer (Glassmorphism Card)',
+      title: 'Quick Answer (Legacy — use Key Takeaways for new posts)',
       type: 'text',
       rows: 4,
       group: 'content',
       validation: (Rule) => Rule.max(500),
+    }),
+
+    // ── Key Takeaways card (bulleted list, replaces Quick Answer going forward) ─
+    defineField({
+      name: 'keyTakeaways',
+      title: 'Key Takeaways (Bulleted List)',
+      type: 'array',
+      group: 'content',
+      of: [{ type: 'string' }],
+      validation: (Rule) => Rule.max(6),
     }),
 
     // ── Article body (Portable Text + custom blocks) ──────────────────────────
