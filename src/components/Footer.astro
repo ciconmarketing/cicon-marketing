@@ -1,5 +1,14 @@
 ---
 import { SERVICES_NAV } from '../lib/services-nav';
+import { LOCAL_BUSINESS_CICON } from '../lib/schema-constants';
+
+interface Props {
+  // Set to false on pages that already render their own page-specific
+  // LocalBusiness block (home, about-us, contact-us) to avoid a duplicate.
+  includeLocalBusinessSchema?: boolean;
+}
+const { includeLocalBusinessSchema = true } = Astro.props;
+
 const year = new Date().getFullYear();
 // Sort alphabetically, matching nav dropdown convention
 const footerServices = [...SERVICES_NAV].sort((a, b) => a.title.localeCompare(b.title));
@@ -209,3 +218,10 @@ const footerServices = [...SERVICES_NAV].sort((a, b) => a.title.localeCompare(b.
     }
   }
 </style>
+
+{includeLocalBusinessSchema && (
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    ...LOCAL_BUSINESS_CICON,
+  })} />
+)}
