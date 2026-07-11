@@ -1,0 +1,29 @@
+---
+/**
+ * RThreeThings — dark editorial cards for "Three things every account gets"
+ * (Operator / Method / Footprint). Copy flows through unchanged.
+ */
+interface Card { label: string; heading: string; body: string }
+interface Props { data: { eyebrow: string; heading: string; cards: Card[] } }
+const { data } = Astro.props;
+---
+
+<section class="rd-section" aria-labelledby="rd-why-cards-h2">
+  <div class="container-xl">
+    <p class="rd-eyebrow rd-r">{data.eyebrow}</p>
+    <h2 id="rd-why-cards-h2" class="font-heading rd-h2" style="max-width:20ch;margin-bottom:56px;">
+      <span class="rd-k"><span class="rd-k-in">{data.heading}</span></span>
+    </h2>
+
+    <div class="rd-cards-3">
+      {data.cards.map((card, i) => (
+        <div class="rd-card rd-r">
+          <span class="rd-card-index">{String(i + 1).padStart(2, '0')} /</span>
+          <span class="rd-card-label">{card.label}</span>
+          <h3 class="font-heading rd-h3">{card.heading}</h3>
+          <p>{card.body}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

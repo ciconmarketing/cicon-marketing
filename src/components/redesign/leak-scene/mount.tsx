@@ -29,7 +29,7 @@ import {
 } from 'three';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Lenis from 'lenis';
+import { getLenis } from '../motion/lenis-shared';
 
 const COUNT = 6000;
 const FOV = 50;
@@ -318,9 +318,9 @@ export function mountHeroScene() {
   const ro = new ResizeObserver(onResize);
   ro.observe(section);
 
-  /* Lenis smooth scroll — scoped to this preview page only */
-  const lenis = new Lenis({ duration: 1.15 });
-  lenis.on('scroll', ScrollTrigger.update);
+  /* Lenis smooth scroll — page-wide singleton shared with the Tier 2
+     motion runtime (whichever module loads first creates it) */
+  getLenis();
 
   /* scroll choreography */
   const st = ScrollTrigger.create({
@@ -355,14 +355,11 @@ export function mountHeroScene() {
   );
   io.observe(section);
 
-  /* one ticker drives everything: Lenis first, then the WebGL frame */
-  const tickLenis = (time: number) => {
-    lenis.raf(time * 1000);
-  };
+  /* GSAP's ticker drives the WebGL frame (Lenis rides the same ticker via
+     the shared singleton) */
   const tickRender = () => {
     if (inView && !document.hidden) advance(performance.now());
   };
-  gsap.ticker.add(tickLenis);
   gsap.ticker.add(tickRender);
   gsap.ticker.lagSmoothing(0);
 
@@ -373,10 +370,8 @@ export function mountHeroScene() {
   });
 
   const destroy = () => {
-    gsap.ticker.remove(tickLenis);
     gsap.ticker.remove(tickRender);
     st.kill();
-    lenis.destroy();
     io.disconnect();
     ro.disconnect();
     window.removeEventListener('pointermove', onPointerMove);

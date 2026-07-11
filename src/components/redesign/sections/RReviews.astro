@@ -1,0 +1,142 @@
+---
+/**
+ * RReviews — dark re-skin of the Google reviews carousel.
+ * Review copy and rotation behaviour match the live island: auto-rotate
+ * every 7s, dot navigation, "N of M reviews" counter. Re-implemented as
+ * server-rendered DOM + a small vanilla script (no React needed here).
+ * Auto-rotation is disabled under prefers-reduced-motion; dots still work.
+ */
+const REVIEWS = [
+  {
+    id: 1,
+    name: 'Sparkle Light',
+    role: 'Business Owner',
+    company: 'Sparkle Light',
+    rating: 5,
+    content:
+      "Majid and his team brought an incredible level of creativity, expertise, and genuine dedication — handling everything from content creation to our full digital strategy across Instagram, Facebook, YouTube, and TikTok. What makes CiCon truly stand out is their personalized approach. We've seen measurable improvements in brand awareness, engagement, and most importantly — sales. I truly believe Sparkle Light would not be where it is today without their continued support.",
+  },
+  {
+    id: 2,
+    name: 'Ashkan Pourshaban',
+    role: 'Local Guide',
+    company: '',
+    rating: 5,
+    content:
+      "We've been working with CiCon for our social media marketing and advertising, and the experience has been fantastic from day one. Their team is creative, responsive, and truly understands how to position our brand online. Since partnering with them, we've seen a noticeable increase in engagement, followers, and overall brand awareness. They regularly provide insights and updates, making it easy to track progress and results. Highly recommend CiCon to any business looking to grow their digital presence with a reliable and professional marketing team!",
+  },
+  {
+    id: 3,
+    name: 'NickNuts GTA',
+    role: 'Local Business Owner',
+    company: '',
+    rating: 5,
+    content:
+      'Creative, responsive, and results-driven. CiCon helped elevate our brand with smart strategy and great execution. From the very first meeting they understood exactly what we needed and delivered beyond expectations.',
+  },
+  {
+    id: 4,
+    name: 'Alex',
+    role: 'Small Business Owner',
+    company: '',
+    rating: 5,
+    content:
+      'Exceeded expectations with strong support, great communication, and a real partnership approach. The team genuinely cares about your success and treats your business like their own.',
+  },
+  {
+    id: 5,
+    name: 'Soroush',
+    role: 'Entrepreneur',
+    company: '',
+    rating: 5,
+    content:
+      'Professional, fast, and reliable. CiCon built a beautiful website and delivered strong SEO results that have made a real difference to our online visibility and lead generation.',
+  },
+];
+
+const STAR = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>';
+---
+
+<section id="testimonials" class="rd-section rd-section--deep">
+  <div class="container-xl">
+    <div class="rd-reviews">
+
+      <div>
+        <p class="rd-eyebrow rd-r">5-Star Google Reviews</p>
+        <h2 class="font-heading rd-h2">
+          <span class="rd-k"><span class="rd-k-in">What our clients say</span></span>
+        </h2>
+        <p class="rd-sub rd-r">
+          Real results from real GTA businesses who trusted CiCon Marketing to grow their brand.
+        </p>
+
+        <div class="rd-dots rd-r" role="tablist" aria-label="Reviews">
+          {REVIEWS.map((r, i) => (
+            <button
+              class={`rd-dot${i === 0 ? ' is-active' : ''}`}
+              data-rd-review-dot={i}
+              aria-label={`View testimonial ${i + 1}`}
+            ></button>
+          ))}
+        </div>
+        <p class="rd-review-count rd-r"><span id="rd-review-idx">1</span> of {REVIEWS.length} reviews</p>
+      </div>
+
+      <div class="rd-review-stage rd-r" id="rd-review-stage">
+        {REVIEWS.map((r, i) => (
+          <article class={`rd-review${i === 0 ? ' is-active' : ''}`} data-rd-review={i}>
+            <div class="rd-review-quote" aria-hidden="true">"</div>
+            <div class="rd-stars" aria-label={`${r.rating} out of 5 stars`}>
+              {Array(r.rating).fill(0).map(() => <span set:html={STAR} />)}
+            </div>
+            <p class="rd-review-text">"{r.content}"</p>
+            <div class="rd-review-meta">
+              <span class="rd-review-avatar" aria-hidden="true">{r.name.charAt(0).toUpperCase()}</span>
+              <span style="flex:1;">
+                <strong>{r.name}</strong>
+                <span>{r.role}{r.company ? `, ${r.company}` : ''}</span>
+              </span>
+              <svg viewBox="0 0 24 24" width="22" height="22" aria-label="Google review" style="opacity:.7;flex-shrink:0;">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+            </div>
+          </article>
+        ))}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  // Same rotation behaviour as the live carousel: 7s auto-advance + dot nav.
+  const cards = [...document.querySelectorAll<HTMLElement>('[data-rd-review]')];
+  const dots = [...document.querySelectorAll<HTMLButtonElement>('[data-rd-review-dot]')];
+  const idxEl = document.getElementById('rd-review-idx');
+  if (cards.length > 1) {
+    let active = 0;
+    let timer = 0;
+    const show = (i: number) => {
+      active = (i + cards.length) % cards.length;
+      cards.forEach((c, k) => c.classList.toggle('is-active', k === active));
+      dots.forEach((d, k) => d.classList.toggle('is-active', k === active));
+      if (idxEl) idxEl.textContent = String(active + 1);
+    };
+    const motionOK = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+    const start = () => {
+      if (!motionOK) return;
+      window.clearInterval(timer);
+      timer = window.setInterval(() => show(active + 1), 7000);
+    };
+    dots.forEach((d, k) =>
+      d.addEventListener('click', () => {
+        show(k);
+        start(); // restart the clock after manual navigation
+      }),
+    );
+    start();
+  }
+</script>

@@ -1,0 +1,32 @@
+---
+/**
+ * RProblems — pain-point grid as dark cards with a clear Problem → Fix
+ * hierarchy (amber accent on the fix side). Copy flows through unchanged.
+ */
+import type { ProblemsSolvedData } from '../../../lib/types';
+interface Props { data: ProblemsSolvedData }
+const { data } = Astro.props;
+---
+
+<section id="problems-solved" class="rd-section">
+  <div class="container-xl">
+
+    <p class="rd-eyebrow rd-r">Pain Points We Fix</p>
+    <div class="rd-split" style="align-items:end;margin-bottom:56px;gap:40px;">
+      <h2 class="font-heading rd-h2" style="margin-bottom:0;">
+        <span class="rd-k"><span class="rd-k-in">{data.headline}</span></span>
+      </h2>
+      <p class="rd-sub rd-r">{data.subheadline}</p>
+    </div>
+
+    <div class="rd-problems">
+      {data.problems.map((item) => (
+        <div class="rd-prob rd-r">
+          <h3 class="rd-prob-q font-heading">{item.problem}</h3>
+          <p class="rd-prob-fix">{item.solution}</p>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>

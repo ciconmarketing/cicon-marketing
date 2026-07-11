@@ -56,13 +56,14 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        // NOTE for the hero-redesign Tier 2 rollout: do NOT register Clash
-        // Display under the key `display`. The class `font-display` is already
-        // used throughout the blog (portable-text.ts, blog/[slug].astro) where
-        // it currently resolves to Inter via a local rule — adding the theme
-        // key would silently restyle those pages. Use a fresh key such as
-        // `heading` (font-heading) instead. The POC (/redesign-preview)
-        // declares its families in its own styles + /public/fonts/fonts.css.
+        // Redesign (Tier 2): Clash Display for headings, registered under a
+        // FRESH key. Do NOT use the key `display` — the class `font-display`
+        // is already used throughout the blog (portable-text.ts,
+        // blog/[slug].astro) where it resolves to Inter via a local rule, and
+        // registering `display` here would silently restyle those live pages.
+        // Font files are self-hosted; @font-face lives in
+        // /public/fonts/fonts.css (loaded only by pages that opt in).
+        heading: ['"Clash Display"', 'Inter', 'system-ui', 'sans-serif'],
       },
       backgroundImage: {
         'hero-pattern': "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",

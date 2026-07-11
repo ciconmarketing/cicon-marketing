@@ -1,0 +1,52 @@
+---
+/**
+ * RClientLogos — dark re-skin of TrustedByMarquee. Same Sanity data (heading,
+ * subheading, logo files, per-logo scale, speed, direction); logos sit on
+ * light legibility chips, grayscale at rest → colour on hover.
+ */
+import type { TrustedByMarqueeData } from '../../../lib/types';
+interface Props { data: TrustedByMarqueeData }
+const { data } = Astro.props;
+
+const speed: Record<string, string> = { slow: '60s', medium: '40s', fast: '25s' };
+const duration = speed[data.marqueeSpeed ?? 'medium'] ?? '40s';
+const direction = data.direction === 'right' ? 'reverse' : 'normal';
+---
+
+{data.enabled && (
+  <section class="rd-section rd-section--tight rd-section--deep" aria-label="Trusted by">
+    <div class="container-xl" style="text-align:center;margin-bottom:44px;">
+      <h2 class="font-heading rd-h2" style="font-size:clamp(1.5rem,2.6vw,2rem);margin-left:auto;margin-right:auto;">
+        <span class="rd-k"><span class="rd-k-in">{data.heading}</span></span>
+      </h2>
+      {data.subheading && <p class="rd-sub rd-r" style="margin:0 auto;font-size:0.95rem;">{data.subheading}</p>}
+    </div>
+
+    <div class="rd-marquee" aria-hidden="true">
+      <div class="rd-mq-track" style={`--rd-mq-dur:${duration};--rd-mq-dir:${direction};`}>
+        {data.logos.map((logo) => (
+          <span class="rd-chip rd-chip--logo" title={logo.clientName}>
+            <img
+              src={`/clients-logo/${logo.logoFilename}`}
+              alt={`${logo.clientName} logo`}
+              loading="lazy"
+              decoding="async"
+              style={logo.scale && logo.scale !== 1 ? `transform:scale(${logo.scale});transform-origin:center;` : undefined}
+            />
+          </span>
+        ))}
+        {data.logos.map((logo) => (
+          <span class="rd-chip rd-chip--logo" aria-hidden="true" title={logo.clientName}>
+            <img
+              src={`/clients-logo/${logo.logoFilename}`}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              style={logo.scale && logo.scale !== 1 ? `transform:scale(${logo.scale});transform-origin:center;` : undefined}
+            />
+          </span>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
