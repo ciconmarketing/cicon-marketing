@@ -1,0 +1,67 @@
+---
+/**
+ * /redesign-preview — localhost POC for the "Leak, Sealed" hero redesign.
+ *
+ * Presentation-layer experiment only: real Nav + Footer for context, new hero,
+ * a short explainer strip. No CMS reads, no analytics, permanently noindex.
+ * The live homepage (/) is untouched.
+ */
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import HeroLeakSealed from '../components/redesign/HeroLeakSealed.astro';
+import '../styles/globals.css';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hero Redesign POC — The Leak, Sealed | CiCon Marketing</title>
+  <meta name="description" content="Internal design experiment. Not a public page." />
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+  <link rel="icon" type="image/png" sizes="120x120" href="/logo-cicon-120.png" />
+
+  <!-- Hero heading weight — preloaded so Clash Display paints without a flash -->
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/ClashDisplay-Semibold.woff2" />
+
+  <!-- Self-hosted @font-face declarations (Clash Display 600, Space Mono 700).
+       Served from /public so they stay outside the Tailwind content scan and
+       Vite's CSS chunk graph — live pages' compiled CSS cannot be perturbed. -->
+  <link rel="stylesheet" href="/fonts/fonts.css" />
+</head>
+
+<body class="font-sans bg-white text-gray-900 antialiased">
+  <Nav />
+
+  <main>
+    <HeroLeakSealed />
+
+    <!-- POC context strip — also demonstrates Clash Display on section headings
+         and that the page scrolls on normally after the hero unpins -->
+    <section style="background:#ffffff;padding:96px 0;">
+      <div class="container-xl">
+        <p style="font-family:'Space Mono',ui-monospace,monospace;font-weight:700;font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;color:#9D833E;margin:0 0 14px;">
+          Redesign POC · internal preview
+        </p>
+        <h2 style="font-family:'Clash Display','Inter',system-ui,sans-serif;font-weight:600;font-size:clamp(1.9rem,3.4vw,2.8rem);letter-spacing:-0.015em;line-height:1.1;color:#212129;margin:0 0 20px;">
+          What you just scrolled through
+        </h2>
+        <p style="font-size:1.02rem;line-height:1.75;color:rgba(58,58,58,0.85);max-width:46rem;margin:0 0 28px;">
+          The hero pins for about 1.75 extra viewports while the particle field tells the core story
+          in three beats: scattered points drifting and leaking off the edges (the broken lead system),
+          then pulled into an ordered pipeline (the engineered fix), then resolving into a rising amber
+          stream with a growth metric (the measurable result). On phones and for anyone with reduced
+          motion enabled, the hero ships as a plain server-rendered composition with a CSS glow — no
+          WebGL, no pinning.
+        </p>
+        <p style="font-family:'Space Mono',ui-monospace,monospace;font-weight:700;font-size:0.78rem;letter-spacing:0.06em;color:rgba(33,33,41,0.55);margin:0;">
+          Tip: append ?static to the URL to force the no-motion fallback on desktop.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <Footer includeLocalBusinessSchema={false} />
+</body>
+</html>
