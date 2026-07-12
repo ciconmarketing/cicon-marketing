@@ -1,0 +1,48 @@
+---
+/**
+ * CH/02 — THE DIAGNOSIS. "Problems We Solve" recast as a fault log.
+ * Copy verbatim from the live homepage. Each fault row carries a status
+ * chip that flips LEAKING → SEALED as it enters the viewport (runtime);
+ * the static / reduced-motion / no-JS state is SEALED.
+ */
+import type { ProblemsSolvedData } from '../../../lib/types';
+interface Props { data: ProblemsSolvedData }
+const { data } = Astro.props;
+---
+
+<section id="ch-02" class="x-ch" data-ch="02" data-chname="THE DIAGNOSIS" aria-label="Chapter 02 — The Diagnosis">
+  <div class="x-grid-bg" aria-hidden="true"></div>
+  <div class="x-ghost" aria-hidden="true">02</div>
+
+  <div class="x-wrap">
+    <div class="x-slate">
+      <p class="x-index">CH/<b>02</b> — The Diagnosis</p>
+      <p class="rd-eyebrow rd-r">Pain Points We Fix</p>
+      <h2 class="x-h2">
+        <span class="rd-k"><span class="rd-k-in">{data.headline}</span></span>
+      </h2>
+      <p class="x-sub rd-r">{data.subheadline}</p>
+    </div>
+
+    <ol class="x-faults">
+      {data.problems.map((item, i) => (
+        <li class="x-fault">
+          <div class="x-fault-in">
+            <span class="x-fault-code" aria-hidden="true">FAULT/{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <h3>{item.problem}</h3>
+              <div class="x-fault-fix">
+                <span class="x-fault-fixlabel">Our Fix</span>
+                <p>{item.solution}</p>
+              </div>
+            </div>
+            <span class="x-fault-status" aria-hidden="true">
+              <span class="x-status-leak">Leaking</span>
+              <span class="x-status-seal">Sealed</span>
+            </span>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

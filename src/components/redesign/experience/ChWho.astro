@@ -1,0 +1,53 @@
+---
+/**
+ * CH/05 — WHO IT'S FOR. The four industry segments, duotone-treated.
+ * Copy verbatim; images come from Sanity when set. No stock: when an image
+ * is missing the panel renders a coded schematic placeholder instead.
+ */
+import type { WhoWeServeData } from '../../../lib/types';
+interface Props { data: WhoWeServeData }
+const { data } = Astro.props;
+---
+
+<section id="ch-05" class="x-ch" data-ch="05" data-chname="WHO IT’S FOR" aria-label="Chapter 05 — Who It's For">
+  <div class="x-ghost" aria-hidden="true">05</div>
+
+  <div class="x-wrap">
+    <div class="x-slate">
+      <p class="x-index">CH/<b>05</b> — Who It’s For</p>
+      <p class="rd-eyebrow rd-r">Industries We Serve</p>
+      <h2 class="x-h2">
+        <span class="rd-k"><span class="rd-k-in">{data.headline}</span></span>
+      </h2>
+      <p class="x-sub rd-r">{data.subheadline}</p>
+    </div>
+
+    <div class="x-who-grid">
+      {data.industries.map((industry, i) => (
+        <article class={`x-seg rd-r${industry.imageUrl ? '' : ' x-seg--ph'}`}>
+          {industry.imageUrl && (
+            <img
+              src={industry.imageUrl}
+              alt={industry.imageAlt ?? industry.title}
+              loading="lazy"
+              decoding="async"
+            />
+          )}
+          <div class="x-seg-body">
+            <p class="x-seg-tag" aria-hidden="true">SEG/{String(i + 1).padStart(2, '0')}</p>
+            <h3>{industry.title}</h3>
+            <p>{industry.description}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="x-strip rd-r">
+      <div>
+        <h3>Don't see your industry?</h3>
+        <p>We work with any growth-focused local business in the GTA. Let's talk.</p>
+      </div>
+      <a class="rd-btn rd-btn-wa rd-mag" href="https://wa.me/16475840800" target="_blank" rel="noopener noreferrer" style="white-space:nowrap;">Chat on WhatsApp</a>
+    </div>
+  </div>
+</section>

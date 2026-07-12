@@ -1,0 +1,36 @@
+---
+/**
+ * XSpine — fixed chapter rail (desktop ≥1200px only).
+ * A vertical instrument: hairline track, amber progress fill (scroll-driven),
+ * one diamond node per chapter (anchor links). The bottom-left readout shows
+ * the active chapter name + system pressure %, both updated by the runtime.
+ * Decorative for smaller viewports; anchors remain reachable via content.
+ */
+const CHAPTERS = [
+  { id: 'ch-01', num: '01', name: 'The Leak' },
+  { id: 'ch-02', num: '02', name: 'The Diagnosis' },
+  { id: 'ch-03', num: '03', name: 'The System' },
+  { id: 'ch-04', num: '04', name: 'The Method' },
+  { id: 'ch-05', num: '05', name: 'Who It’s For' },
+  { id: 'ch-06', num: '06', name: 'The Proof' },
+  { id: 'ch-07', num: '07', name: 'The Seal' },
+];
+---
+
+<nav class="x-spine" aria-label="Chapters">
+  <div class="x-spine-track" aria-hidden="true">
+    <div class="x-spine-fill" id="x-spine-fill"></div>
+  </div>
+  <ol class="x-spine-nodes">
+    {CHAPTERS.map((c, i) => (
+      <li class={`x-spine-node${i === 0 ? ' is-active' : ''}`} data-spine={c.id}>
+        <a href={`#${c.id}`} aria-label={`Chapter ${c.num} — ${c.name}`}>{c.num}</a>
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<p class="x-readout" id="x-readout" aria-hidden="true">
+  <span id="x-readout-ch">CH/01 — THE LEAK</span>
+  &nbsp;·&nbsp; SYS.PRESSURE <b id="x-readout-pct">000%</b>
+</p>

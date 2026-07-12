@@ -1,0 +1,194 @@
+---
+/**
+ * CH/06 — THE PROOF. Four instruments in one chapter, all copy verbatim:
+ *   1. trust stats as count-up gauges + "What Sets Us Apart"
+ *   2. client-logo marquee ("Trusted by GTA businesses and dental clinics")
+ *   3. five Google reviews as a scroll-snap signal log
+ *   4. the media showreel ("Premium video, built for the brands behind it.")
+ */
+import type { WhyCiConData, TrustedByMarqueeData } from '../../../lib/types';
+interface Props { data: WhyCiConData; trustedBy: TrustedByMarqueeData }
+const { data, trustedBy } = Astro.props;
+
+const logos = [...trustedBy.logos].sort((a, b) => a.order - b.order);
+
+/* Verbatim from the live homepage reviews carousel */
+const REVIEWS = [
+  {
+    quote:
+      "Majid and his team brought an incredible level of creativity, expertise, and genuine dedication — handling everything from content creation to our full digital strategy across Instagram, Facebook, YouTube, and TikTok. What makes CiCon truly stand out is their personalized approach. We've seen measurable improvements in brand awareness, engagement, and most importantly — sales. I truly believe Sparkle Light would not be where it is today without their continued support.",
+    name: 'Sparkle Light',
+    role: 'Business Owner, Sparkle Light',
+  },
+  {
+    quote:
+      "We've been working with CiCon for our social media marketing and advertising, and the experience has been fantastic from day one. Their team is creative, responsive, and truly understands how to position our brand online. Since partnering with them, we've seen a noticeable increase in engagement, followers, and overall brand awareness. They regularly provide insights and updates, making it easy to track progress and results. Highly recommend CiCon to any business looking to grow their digital presence with a reliable and professional marketing team!",
+    name: 'Ashkan Pourshaban',
+    role: 'Local Guide',
+  },
+  {
+    quote:
+      'Creative, responsive, and results-driven. CiCon helped elevate our brand with smart strategy and great execution. From the very first meeting they understood exactly what we needed and delivered beyond expectations.',
+    name: 'NickNuts GTA',
+    role: 'Local Business Owner',
+  },
+  {
+    quote:
+      'Exceeded expectations with strong support, great communication, and a real partnership approach. The team genuinely cares about your success and treats your business like their own.',
+    name: 'Alex',
+    role: 'Small Business Owner',
+  },
+  {
+    quote:
+      'Professional, fast, and reliable. CiCon built a beautiful website and delivered strong SEO results that have made a real difference to our online visibility and lead generation.',
+    name: 'Soroush',
+    role: 'Entrepreneur',
+  },
+];
+
+/* "250+" → target 250, suffix "+" for the runtime count-up */
+const parseStat = (v: string) => {
+  const m = v.match(/^([\d.]+)(.*)$/);
+  return m ? { target: m[1], suffix: m[2] } : null;
+};
+---
+
+<section id="ch-06" class="x-ch" data-ch="06" data-chname="THE PROOF" aria-label="Chapter 06 — The Proof">
+  <div class="x-grid-bg" aria-hidden="true"></div>
+  <div class="x-ghost" aria-hidden="true">06</div>
+
+  <div class="x-wrap">
+    <div class="x-slate" style="margin-bottom:0;">
+      <p class="x-index">CH/<b>06</b> — The Proof</p>
+      <p class="rd-eyebrow rd-r">Trusted Since 2010</p>
+      <h2 class="x-h2" style="max-width:24ch;">
+        <span class="rd-k"><span class="rd-k-in">{data.headline}</span></span>
+      </h2>
+    </div>
+
+    <div class="x-gauges">
+      {data.stats.map((stat) => {
+        const parsed = parseStat(stat.value);
+        return (
+          <div class="x-gauge rd-r">
+            {parsed ? (
+              <span class="x-gauge-val rd-count" data-rd-target={parsed.target} data-rd-suffix={parsed.suffix}>{stat.value}</span>
+            ) : (
+              <span class="x-gauge-val">{stat.value}</span>
+            )}
+            <span class="x-gauge-label">{stat.label}</span>
+          </div>
+        );
+      })}
+    </div>
+
+    <div class="x-proof-body">
+      <div>
+        <p class="rd-r">{data.description}</p>
+        <a class="rd-btn rd-btn-wa rd-mag rd-r" href="https://wa.me/16475840800" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a>
+      </div>
+      <div class="x-apart rd-r">
+        <h3>What Sets Us Apart</h3>
+        <ul>
+          <li>Boutique agency — you work with the actual strategists, not account managers</li>
+          <li>Full-funnel approach from awareness to conversion to retention</li>
+          <li>Transparent, jargon-free reporting every month</li>
+          <li>Local GTA market expertise with hyper-targeted campaigns</li>
+          <li>No long-term contracts — we earn your business every month</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="x-logos">
+      <h3 class="x-h2" style="font-size:clamp(1.7rem,3vw,2.5rem);">
+        <span class="rd-k"><span class="rd-k-in">{trustedBy.heading}</span></span>
+      </h3>
+      <p class="x-sub rd-r">{trustedBy.subheading}</p>
+      <div class="rd-marquee" style="--rd-mq-dur: 52s; margin-top:clamp(28px,4vw,40px);">
+        <div class="rd-mq-track">
+          {logos.map((logo) => (
+            <span class="rd-chip rd-chip--logo"><img src={`/clients-logo/${logo.logoFilename}`} alt={`${logo.clientName} logo`} loading="lazy" decoding="async" style={`transform:scale(${logo.scale ?? 1});`} /></span>
+          ))}
+        </div>
+        <div class="rd-mq-track" aria-hidden="true">
+          {logos.map((logo) => (
+            <span class="rd-chip rd-chip--logo"><img src={`/clients-logo/${logo.logoFilename}`} alt="" loading="lazy" decoding="async" style={`transform:scale(${logo.scale ?? 1});`} /></span>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div class="x-reviews">
+      <p class="rd-eyebrow rd-r">5-Star Google Reviews</p>
+      <h3 class="x-h2" style="font-size:clamp(1.7rem,3vw,2.5rem);">
+        <span class="rd-k"><span class="rd-k-in">What our clients say</span></span>
+      </h3>
+      <p class="x-sub rd-r">Real results from real GTA businesses who trusted CiCon Marketing to grow their brand.</p>
+
+      <div class="x-rev-rail" role="list" aria-label="Client reviews">
+        {REVIEWS.map((review, i) => (
+          <figure class="x-rev rd-r" role="listitem">
+            <div class="x-rev-head" aria-hidden="true">
+              <span class="x-rev-code">REC/{String(i + 1).padStart(2, '0')}</span>
+              <span class="x-rev-stars" aria-hidden="true">★★★★★</span>
+            </div>
+            <blockquote>"{review.quote}"</blockquote>
+            <figcaption>
+              <span class="x-rev-name">{review.name}</span>
+              <span class="x-rev-role">{review.role}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+
+    <div class="x-media">
+      <p class="rd-eyebrow rd-r">What We Capture</p>
+      <h3 class="x-h2" style="font-size:clamp(1.7rem,3.4vw,2.7rem);max-width:22ch;">
+        <span class="rd-k"><span class="rd-k-in">Premium video, built for</span></span>
+        <span class="rd-k"><span class="rd-k-in">the brands behind it.</span></span>
+      </h3>
+      <p class="x-sub rd-r">From custom homes to luxury dental clinics — we produce the cinematic content that makes premium businesses look the part.</p>
+
+      <div class="x-media-frame rd-r">
+        <span class="x-media-tag" aria-hidden="true">REEL/01 — CLIENT RESULTS</span>
+        <video
+          id="x-showreel"
+          src="/real-client-results.mp4"
+          poster="/real-client-results-poster.jpg"
+          aria-label="Showreel of CiCon Marketing client video production"
+          muted
+          loop
+          playsinline
+          preload="none"
+        ></video>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Poster-first, autoplay only in view and only when motion is allowed.
+  // Reduced-motion users keep the poster unless they interact natively.
+  const video = document.getElementById('x-showreel') as HTMLVideoElement | null;
+  if (video) {
+    if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              if (video.preload === 'none') video.preload = 'metadata';
+              video.play().catch(() => {});
+            } else {
+              video.pause();
+            }
+          }
+        },
+        { rootMargin: '80px' },
+      );
+      io.observe(video);
+    } else {
+      video.controls = true;
+    }
+  }
+</script>

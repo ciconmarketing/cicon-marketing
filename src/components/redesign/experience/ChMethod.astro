@@ -1,0 +1,66 @@
+---
+/**
+ * CH/04 — THE METHOD. "How It Works" on a drawn conduit rail, followed by
+ * "Three things every account gets" as schematic cards. Copy verbatim via
+ * the same Sanity/defaults pipeline the live page uses.
+ */
+import type { HowItWorksData } from '../../../lib/types';
+
+interface WhyCards {
+  eyebrow: string;
+  heading: string;
+  cards: { label: string; heading: string; body: string }[];
+}
+interface Props { data: HowItWorksData; whyCards: WhyCards }
+const { data, whyCards } = Astro.props;
+---
+
+<section id="ch-04" class="x-ch" data-ch="04" data-chname="THE METHOD" aria-label="Chapter 04 — The Method">
+  <div class="x-grid-bg" aria-hidden="true"></div>
+  <div class="x-ghost" aria-hidden="true">04</div>
+
+  <div class="x-wrap">
+    <div class="x-slate">
+      <p class="x-index">CH/<b>04</b> — The Method</p>
+      <p class="rd-eyebrow rd-r">Our Process</p>
+      <h2 class="x-h2">
+        <span class="rd-k"><span class="rd-k-in">{data.headline}</span></span>
+      </h2>
+      <p class="x-sub rd-r">{data.subheadline}</p>
+    </div>
+
+    <div class="x-rail">
+      <div class="x-rail-line" aria-hidden="true"><div class="x-rail-fill" id="x-rail-fill"></div></div>
+      <ol class="x-steps">
+        {data.steps.map((step) => (
+          <li class="x-step rd-r">
+            <span class="x-step-num" aria-hidden="true">{step.stepNumber}</span>
+            <div>
+              <h3>{step.title}</h3>
+              <p>{step.description}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <div class="x-three">
+      <p class="rd-eyebrow rd-r">{whyCards.eyebrow}</p>
+      <h2 class="x-h2" style="font-size:clamp(1.9rem,3.6vw,3rem);">
+        <span class="rd-k"><span class="rd-k-in">{whyCards.heading}</span></span>
+      </h2>
+      <div class="x-three-grid">
+        {whyCards.cards.map((card) => (
+          <article class="x-card rd-r">
+            <p class="x-card-label">{card.label}</p>
+            <h3>{card.heading}</h3>
+            <p>{card.body}</p>
+          </article>
+        ))}
+      </div>
+      <div style="margin-top:clamp(32px,4vw,48px);">
+        <a class="rd-btn rd-btn-wa rd-mag rd-r" href="https://wa.me/16475840800" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</section>

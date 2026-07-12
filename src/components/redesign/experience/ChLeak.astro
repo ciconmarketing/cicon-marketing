@@ -1,0 +1,365 @@
+---
+/**
+ * CH/01 — THE LEAK. Hero chapter of "The System, Sealed".
+ *
+ * Server-rendered shell: complete, real DOM before any JS (index, eyebrow,
+ * headline, subline, CTAs, trust line on the void). This is the LCP layer and
+ * works with JS disabled.
+ *
+ * The WebGL particle scene (../leak-scene/mount) is lazy-loaded after first
+ * paint on capable desktops only — never on touch devices, never under
+ * prefers-reduced-motion. Element IDs are the scene's mount contract.
+ */
+---
+
+<section id="ch-01" class="hls x-hero" data-ch="01" data-chname="THE LEAK" aria-label="Chapter 01 — The Leak">
+
+  <!-- Decorative backdrop: generated particle-leak poster (Higgsfield ·
+       GPT Image 2, see ASSET_MANIFEST.md) under an amber-on-void glow.
+       Always present; doubles as the reduced-motion / touch / no-JS
+       fallback composition. The glow lives on ::after so the composition
+       survives even if the poster fails to load. -->
+  <div class="hls-bg" aria-hidden="true">
+    <img class="hls-poster" src="/redesign/hero-poster.jpg" alt="" loading="lazy" decoding="async" />
+  </div>
+  <div class="x-grid-bg" aria-hidden="true" style="mask-image:radial-gradient(80% 80% at 40% 40%, black, transparent 85%);-webkit-mask-image:radial-gradient(80% 80% at 40% 40%, black, transparent 85%);"></div>
+
+  <!-- Particle stage — decorative, never intercepts input. -->
+  <div id="hls-stage" class="hls-stage" aria-hidden="true">
+    <canvas id="hls-canvas" class="hls-canvas"></canvas>
+  </div>
+
+  <!-- corner ticks — schematic frame -->
+  <div class="x-ticks" aria-hidden="true">
+    <i></i><i></i><i></i><i></i>
+  </div>
+
+  <!-- ── Content (real DOM, server-rendered) ── -->
+  <div class="x-wrap hls-content">
+
+    <p class="x-index">CH/<b>01</b> — The Leak</p>
+
+    <p class="hls-eyebrow">For GTA Service Businesses</p>
+
+    <h1 class="hls-h1">
+      <span class="hls-line">Your marketing isn't broken.</span>
+      <span class="hls-line">Your lead system is <span class="hls-leak">leaking</span>.</span>
+    </h1>
+
+    <p class="hls-sub">
+      CiCon Marketing helps GTA businesses fix the hidden gaps between ads, landing pages, calls, CRM, and reporting — so more traffic turns into real customers.
+    </p>
+
+    <div class="hls-ctas">
+      <a class="hls-btn hls-btn-wa rd-mag" href="https://wa.me/16475840800" target="_blank" rel="noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+        </svg>
+        Chat on WhatsApp
+      </a>
+
+      <a class="hls-btn hls-btn-outline rd-mag" href="#ch-03">
+        Explore Services
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
+    </div>
+
+    <p class="hls-trust">Free consultation&ensp;·&ensp;No long-term contracts&ensp;·&ensp;Measurable results</p>
+
+  </div>
+
+  <!-- Phase-C metric — decorative counter, driven by scroll progress -->
+  <div class="hls-metric" id="hls-metric" aria-hidden="true">
+    <span class="hls-metric-value" id="hls-metric-value">+0%</span>
+    <span class="hls-metric-label">lead capture ↑</span>
+  </div>
+
+  <!-- Scroll hint — fades out as the choreography begins -->
+  <div class="hls-hint" id="hls-hint" aria-hidden="true">
+    <span class="hls-hint-label">Scroll to seal the system</span>
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+    </svg>
+  </div>
+
+</section>
+
+<!-- is:inline keeps the LCP-critical hero rules embedded in this page's HTML.
+     All selectors are .hls-* / .x- prefixed, so global scope is safe. -->
+<style is:inline>
+  .hls {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: #0E0E14; /* the void */
+  }
+
+  .hls-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .hls-poster {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.2;
+    mask-image: linear-gradient(100deg, transparent 26%, black 62%);
+    -webkit-mask-image: linear-gradient(100deg, transparent 26%, black 62%);
+  }
+  .hls-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(52% 44% at 68% 38%, rgba(255, 207, 0, 0.11), transparent 62%),
+      radial-gradient(64% 54% at 26% 76%, rgba(157, 131, 62, 0.14), transparent 66%),
+      radial-gradient(120% 90% at 50% 118%, rgba(0, 0, 0, 0.55), transparent 60%);
+  }
+
+  .hls-stage {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    pointer-events: none;
+  }
+  .hls-stage.is-live { opacity: 1; }
+  .hls-canvas { width: 100%; height: 100%; display: block; }
+
+  /* schematic corner ticks */
+  .x-ticks i {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 1px solid rgba(236, 236, 236, 0.22);
+  }
+  .x-ticks i:nth-child(1) { top: 92px; left: 26px; border-width: 1px 0 0 1px; }
+  .x-ticks i:nth-child(2) { top: 92px; right: 26px; border-width: 1px 1px 0 0; }
+  .x-ticks i:nth-child(3) { bottom: 26px; left: 26px; border-width: 0 0 1px 1px; }
+  .x-ticks i:nth-child(4) { bottom: 26px; right: 26px; border-width: 0 1px 1px 0; }
+  @media (max-width: 1199px) { .x-ticks { display: none; } }
+
+  .hls-content {
+    position: relative;
+    z-index: 10;
+    padding-top: 6.5rem;
+    padding-bottom: 5rem;
+  }
+
+  .hls-eyebrow {
+    font-family: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: rgba(236, 236, 236, 0.6);
+    margin: 0 0 1.9rem;
+  }
+  .hls-eyebrow::before {
+    content: '// ';
+    color: rgba(157, 131, 62, 0.95);
+  }
+
+  .hls-h1 {
+    font-family: 'Clash Display', 'Inter', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: clamp(2.3rem, 4.9vw, 4.9rem);
+    line-height: 1.03;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin: 0 0 1.9rem;
+  }
+  .hls-line { display: block; }
+  .hls-leak {
+    color: #FFCF00;
+    text-shadow: 0 0 30px rgba(255, 207, 0, 0.35);
+  }
+
+  .hls-sub {
+    font-size: clamp(1.02rem, 1.6vw, 1.25rem);
+    line-height: 1.7;
+    color: rgba(236, 236, 236, 0.76);
+    max-width: 40rem;
+    margin: 0 0 2.6rem;
+  }
+
+  .hls-ctas { display: flex; flex-wrap: wrap; gap: 1rem; }
+  .hls-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0.98rem 1.95rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1.05rem;
+    text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+  .hls-btn:focus-visible { outline: 2px solid #ECECEC; outline-offset: 3px; }
+  .hls-btn-outline {
+    color: #ffffff;
+    border: 2px solid rgba(236, 236, 236, 0.28);
+    background: rgba(255, 255, 255, 0.02);
+  }
+  .hls-btn-outline:hover {
+    border-color: rgba(236, 236, 236, 0.62);
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+  }
+  .hls-btn-wa { background: #25D366; color: #10231A; }
+  .hls-btn-wa:hover { background: #1FB855; transform: translateY(-2px); }
+
+  .hls-trust {
+    margin: 2.1rem 0 0;
+    font-family: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-weight: 700;
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(236, 236, 236, 0.5);
+  }
+
+  .hls-metric {
+    position: absolute;
+    left: 67%;
+    top: 16%;
+    transform: translate(-50%, 12px);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    font-family: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    opacity: 0;
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    pointer-events: none;
+  }
+  .hls-metric.is-on { opacity: 1; transform: translate(-50%, 0); }
+  .hls-metric-value { font-weight: 700; font-size: 1.55rem; color: #ECECEC; }
+  .hls-metric-label {
+    font-weight: 700;
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(236, 236, 236, 0.55);
+  }
+
+  .hls-hint {
+    position: absolute;
+    bottom: 1.8rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: rgba(236, 236, 236, 0.42);
+    animation: hls-bounce 1.6s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .hls-hint-label {
+    font-family: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-weight: 700;
+    font-size: 0.58rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  @keyframes hls-bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%      { transform: translateX(-50%) translateY(7px); }
+  }
+
+  @media (max-width: 767px) {
+    .hls-hint { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hls-hint { animation: none; }
+    .hls-stage { transition: none; }
+  }
+</style>
+
+<script>
+  /**
+   * Gate + lazy boot for the particle scene. Loads Three/GSAP/Lenis ONLY when
+   * all of these hold: fine pointer + hover, no prefers-reduced-motion,
+   * viewport ≥ 768px, WebGL available, no ?static override. Otherwise nothing
+   * is imported — the server-rendered shell above is the final state.
+   */
+  const section = document.getElementById('ch-01');
+  const forceFallback = new URLSearchParams(window.location.search).has('static');
+  const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const motionOK = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+  const hasWebGL = (() => {
+    try {
+      const c = document.createElement('canvas');
+      return !!(c.getContext('webgl2') || c.getContext('webgl'));
+    } catch {
+      return false;
+    }
+  })();
+
+  const boot = async () => {
+    try {
+      if (import.meta.env.DEV && !(window as any).__vite_plugin_react_preamble_installed__) {
+        // Dev-only: Vite installs the React fast-refresh preamble via React
+        // islands, and this page has none — install it before importing the
+        // R3F scene. Dead code in production builds.
+        const RefreshRuntime = await import(/* @vite-ignore */ '/@react-refresh');
+        RefreshRuntime.default.injectIntoGlobalHook(window);
+        (window as any).$RefreshReg$ = () => {};
+        (window as any).$RefreshSig$ = () => (type: unknown) => type;
+        (window as any).__vite_plugin_react_preamble_installed__ = true;
+      }
+      const m = await import('../leak-scene/mount');
+      m.mountHeroScene();
+    } catch (err) {
+      console.warn('[hls] scene failed to boot, keeping CSS fallback', err);
+      section?.classList.add('hls-static');
+    }
+  };
+
+  // Width is measured lazily: background / pre-rendered tabs can report a
+  // 0-size layout viewport at script-eval time. Returns false while the
+  // viewport is unmeasurable.
+  const tryDecide = (): boolean => {
+    const w = Math.max(
+      document.documentElement.clientWidth || 0,
+      window.innerWidth || 0,
+      section?.getBoundingClientRect().width || 0,
+    );
+    if (w === 0) return false;
+    if (w < 768) {
+      section?.classList.add('hls-static');
+    } else if ('requestIdleCallback' in window) {
+      requestIdleCallback(boot, { timeout: 2000 });
+    } else {
+      setTimeout(boot, 300);
+    }
+    return true;
+  };
+
+  if (!forceFallback && finePointer && motionOK && hasWebGL) {
+    if (!tryDecide()) {
+      let iv = 0;
+      const retry = () => {
+        if (!tryDecide()) return;
+        window.clearInterval(iv);
+        document.removeEventListener('visibilitychange', retry);
+        window.removeEventListener('resize', retry);
+      };
+      iv = window.setInterval(retry, 400);
+      document.addEventListener('visibilitychange', retry);
+      window.addEventListener('resize', retry);
+    }
+  } else {
+    section?.classList.add('hls-static');
+  }
+</script>

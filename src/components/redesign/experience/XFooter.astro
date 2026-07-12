@@ -1,0 +1,97 @@
+---
+/**
+ * XFooter — experience footer. All copy verbatim from the live cicon.ca
+ * footer (captured 2026-07-12). Phone display and WhatsApp URL are fixed
+ * brand facts and must never change.
+ */
+const SERVICES = [
+  { label: 'AI SEO', slug: 'ai-seo-and-seo' },
+  { label: 'Content Marketing', slug: 'content-marketing' },
+  { label: 'Conversion Rate Optimization', slug: 'conversion-rate-optimization' },
+  { label: 'CRM Integration', slug: 'crm-integration' },
+  { label: 'Dental Marketing', slug: 'dental-marketing-services' },
+  { label: 'Local SEO', slug: 'local-seo-optimization' },
+  { label: 'Marketing Consultant', slug: 'marketing-consultant' },
+  { label: 'Marketing Technology Setup', slug: 'marketing-technology-setup' },
+  { label: 'Media Production', slug: 'media-content-production' },
+  { label: 'Paid Advertising', slug: 'paid-advertising-services' },
+  { label: 'Social Media Marketing', slug: 'social-media-marketing-services' },
+  { label: 'Website Development', slug: 'website-development' },
+];
+const COMPANY = [
+  { label: 'About Us', href: '/about-us/' },
+  { label: 'Blog', href: '/blog/' },
+  { label: 'Contact', href: '/contact-us/' },
+  { label: 'Free Map Check', href: '/check-google-map-visibility-for-free/' },
+];
+const AREAS = ['Richmond Hill', 'North York', 'Thornhill', 'Markham', 'Vaughan', 'Aurora', 'Newmarket'];
+---
+
+<footer class="x-footer">
+  <div class="x-wrap">
+    <div class="x-footer-grid">
+
+      <div class="x-footer-brand">
+        <a href="/" aria-label="CiCon Marketing — home">
+          <img src="/logo-cicon-120.webp" alt="CiCon Digital Marketing" width="44" height="44" loading="lazy" />
+        </a>
+        <p>Boutique digital marketing and media production for GTA businesses and dental clinics.</p>
+        <a class="rd-btn rd-btn-wa rd-mag" href="https://wa.me/16475840800" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a>
+        <address style="margin-top:24px;">
+          131 Golf Club Ct, Richmond Hill, ON L4C 5E1, Canada<br />
+          <a href="tel:+12898071020">+1 (289) 807-1020</a><br />
+          <a href="mailto:info@cicon.ca">info@cicon.ca</a>
+        </address>
+        <p class="x-f-h" style="margin:24px 0 8px;">Hours</p>
+        <p style="margin:0;color:var(--x-ink-dim);font-size:0.92rem;">
+          Mon – Sat: 9:00 AM – 6:00 PM EST<br />Sun: Closed
+        </p>
+        <p style="margin:14px 0 0;">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=131+Golf+Club+Ct,+Richmond+Hill,+ON+L4C+5E1" target="_blank" rel="noopener noreferrer">📍 Get Directions →</a>
+        </p>
+      </div>
+
+      <div>
+        <h2 class="x-f-h">Services</h2>
+        <ul>
+          {SERVICES.map((s) => (
+            <li><a href={`/marketing-services/${s.slug}/`}>{s.label}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="x-f-h">Company</h2>
+        <ul>
+          {COMPANY.map((c) => (
+            <li><a href={c.href}>{c.label}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="x-f-h">Service Areas</h2>
+        <ul>
+          {AREAS.map((a) => (
+            <li>{a}</li>
+          ))}
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="x-footer-meta">
+      <p style="margin:0;">
+        © 2026 CiCon Marketing. All rights reserved. ·
+        <a href="/privacy-policy/">Privacy Policy</a> ·
+        <a href="/terms-and-conditions-sms/">SMS Terms</a>
+      </p>
+      <nav aria-label="Social media">
+        <a href="https://www.instagram.com/ciconmktg/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://linkedin.com/company/cicon-marketing/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="https://www.facebook.com/ciconmarketing/" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="https://www.youtube.com/@CiConMarketing" target="_blank" rel="noopener noreferrer">YouTube</a>
+      </nav>
+    </div>
+  </div>
+</footer>

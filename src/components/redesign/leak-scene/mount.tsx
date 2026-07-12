@@ -238,7 +238,7 @@ function Scene({ driver }: { driver: Driver }) {
 /* ── Mount / teardown ────────────────────────────────────────────────── */
 
 export function mountHeroScene() {
-  const section = document.getElementById('hls');
+  const section = document.getElementById('ch-01') ?? document.getElementById('hls');
   const canvas = document.getElementById('hls-canvas') as HTMLCanvasElement | null;
   const stage = document.getElementById('hls-stage');
   const metric = document.getElementById('hls-metric');

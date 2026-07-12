@@ -1,0 +1,102 @@
+---
+/**
+ * CH/03 — THE SYSTEM. "What We Do" recast as a module index: sticky chapter
+ * slate + live module counter on the left, twelve numbered modules on the
+ * right, each linking to its live service page. The tool-stack marquee
+ * (verbatim heading + legal line) closes the chapter.
+ * All service titles/descriptions flow through the same Sanity/defaults
+ * pipeline the live page uses.
+ */
+import type { ServicesData } from '../../../lib/types';
+interface Props { data: ServicesData }
+const { data } = Astro.props;
+
+/* Live service-page routes, in the same order the live services grid links them */
+const SLUGS = [
+  'paid-advertising-services',
+  'ai-seo-and-seo',
+  'dental-marketing-services',
+  'social-media-marketing-services',
+  'website-development',
+  'crm-integration',
+  'local-seo-optimization',
+  'media-content-production',
+  'content-marketing',
+  'conversion-rate-optimization',
+  'marketing-consultant',
+  'marketing-technology-setup',
+];
+
+const TOOLS = [
+  { file: 'google-ads.svg', alt: 'Google Ads' },
+  { file: 'meta-ads.svg', alt: 'Meta Ads (Facebook & Instagram)' },
+  { file: 'gbp.svg', alt: 'Google Business Profile' },
+  { file: 'ga4.svg', alt: 'Google Analytics 4' },
+  { file: 'wordpress.svg', alt: 'WordPress' },
+  { file: 'gohighlevel.svg', alt: 'GoHighLevel' },
+  { file: 'shopify.svg', alt: 'Shopify' },
+  { file: 'ahrefs.svg', alt: 'Ahrefs' },
+  { file: 'bing-ads.svg', alt: 'Microsoft Bing Ads' },
+];
+---
+
+<section id="ch-03" class="x-ch" data-ch="03" data-chname="THE SYSTEM" aria-label="Chapter 03 — The System">
+  <div class="x-ghost" aria-hidden="true">03</div>
+
+  <div class="x-wrap">
+    <div class="x-sys">
+
+      <div class="x-sys-left">
+        <div class="x-sys-sticky">
+          <p class="x-index">CH/<b>03</b> — The System</p>
+          <p class="rd-eyebrow rd-r">Our Expertise</p>
+          <h2 class="x-h2" style="max-width:12ch;">
+            <span class="rd-k"><span class="rd-k-in">{data.headline}</span></span>
+          </h2>
+          <p class="x-sub rd-r">End-to-end digital marketing solutions built to generate leads, grow revenue, and dominate your local market.</p>
+          <p class="x-sys-counter" aria-hidden="true">Module <b id="x-mod-counter">01</b> / {String(data.items.length).padStart(2, '0')}</p>
+          <p class="x-sys-note rd-r">Not sure which services are right for you?</p>
+          <a class="rd-btn rd-btn-wa rd-mag rd-r" href="https://wa.me/16475840800" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a>
+        </div>
+      </div>
+
+      <ol class="x-mods" id="x-mods">
+        {data.items.map((item, i) => (
+          <li class="x-mod">
+            <a href={`/marketing-services/${SLUGS[i] ?? ''}/`}>
+              <span class="x-mod-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+              </div>
+              <span class="x-mod-arrow" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M9 7h8v8" /></svg>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ol>
+
+    </div>
+
+    <div class="x-stack">
+      <p class="x-stack-h">The stack we run for GTA businesses</p>
+      <div class="rd-marquee" style="--rd-mq-dur: 44s;">
+        <div class="rd-mq-track">
+          {TOOLS.map((t) => (
+            <span class="rd-chip"><img src={`/logos/tools/${t.file}`} alt={t.alt} loading="lazy" decoding="async" /></span>
+          ))}
+        </div>
+        <div class="rd-mq-track" aria-hidden="true">
+          {TOOLS.map((t) => (
+            <span class="rd-chip"><img src={`/logos/tools/${t.file}`} alt="" loading="lazy" decoding="async" /></span>
+          ))}
+        </div>
+      </div>
+      <p class="x-stack-legal">
+        Logos shown are the property of their respective owners. CiCon Marketing is not affiliated with or
+        endorsed by these companies — we work with their platforms as part of our service delivery.
+      </p>
+    </div>
+  </div>
+</section>

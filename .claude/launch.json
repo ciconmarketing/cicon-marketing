@@ -6,6 +6,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "port": 4321
+    },
+    {
+      "name": "cicon-marketing-alt",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["astro", "dev", "--port", "4399"],
+      "port": 4399
     }
   ]
 }
