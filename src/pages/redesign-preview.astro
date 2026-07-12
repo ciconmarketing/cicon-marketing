@@ -77,6 +77,26 @@ try {
 </head>
 
 <body class="font-sans antialiased rd-page" style="background:#212129;color:#E7E7E7;">
+  {import.meta.env.DEV && (
+    <script type="module">
+      /**
+       * Dev-only Vite/React preamble.
+       *
+       * This page has no `client:*` React island, so Astro never detects
+       * JSX usage here and never injects @vitejs/plugin-react's Fast Refresh
+       * preamble. The hero's particle scene (leak-scene/mount.tsx) is loaded
+       * via a plain dynamic import() from a vanilla <script>, completely
+       * outside Astro's island pipeline — without this, React throws
+       * "can't detect preamble" the moment that import resolves. Production
+       * builds don't need this: there is no dev refresh runtime to detect.
+       */
+      import RefreshRuntime from '/@react-refresh';
+      RefreshRuntime.injectIntoGlobalHook(window);
+      window.$RefreshReg$ = () => {};
+      window.$RefreshSig$ = () => (type) => type;
+      window.__vite_plugin_react_preamble_installed__ = true;
+    </script>
+  )}
   <Nav />
 
   <main class="rd-page">
