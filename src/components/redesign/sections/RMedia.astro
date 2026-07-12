@@ -1,0 +1,60 @@
+---
+/**
+ * RMedia — dark re-skin of the media-production showcase (ResultsShowcase).
+ * Same copy and the same /real-client-results.mp4 asset, framed in a dark
+ * container with a soft amber edge glow. Video is poster-first and lazy:
+ * it only starts loading/playing when scrolled into view, pauses off-screen,
+ * and never autoplays under reduced-motion.
+ */
+---
+
+<section class="rd-section rd-section--deep" id="media-production">
+  <div class="container-xl" style="text-align:center;">
+    <p class="rd-eyebrow rd-r" style="justify-content:center;">What We Capture</p>
+    <h2 class="font-heading rd-h2" style="margin-left:auto;margin-right:auto;">
+      <span class="rd-k"><span class="rd-k-in">Premium video, built for</span></span>
+      <span class="rd-k"><span class="rd-k-in" style="color:#FFCF00;">the brands behind it.</span></span>
+    </h2>
+    <p class="rd-sub rd-r" style="margin:0 auto;">
+      From custom homes to luxury dental clinics — we produce the cinematic content that makes premium businesses look the part.
+    </p>
+
+    <div class="rd-media-frame rd-r">
+      <video
+        id="rd-showreel"
+        src="/real-client-results.mp4"
+        poster="/real-client-results-poster.jpg"
+        aria-label="Showreel of CiCon Marketing client video production"
+        muted
+        loop
+        playsinline
+        preload="none"
+      ></video>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Lazy showreel: load + play only in view, pause off-screen / tab change.
+  // Reduced-motion users keep the poster unless they interact natively.
+  const video = document.getElementById('rd-showreel') as HTMLVideoElement | null;
+  if (video) {
+    const motionOK = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+    const io = new IntersectionObserver(
+      (entries) => {
+        const visible = entries[0]?.isIntersecting;
+        if (visible && motionOK && !document.hidden) {
+          if (video.preload === 'none') video.preload = 'metadata';
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.25 },
+    );
+    io.observe(video);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) video.pause();
+    });
+  }
+</script>

@@ -1,0 +1,60 @@
+---
+/**
+ * RToolsMarquee — dark re-skin of the "stack we run" strip (ToolsStrip).
+ * Same logo set and copy; seamless CSS marquee with light legibility chips.
+ * Styles live in /public/redesign/redesign.css (rd-* classes).
+ */
+const TOOLS = [
+  { name: 'Google Ads',              file: 'google-ads.svg',      alt: 'Google Ads' },
+  { name: 'Meta Ads',                file: 'meta-ads.svg',        alt: 'Meta Ads (Facebook & Instagram)' },
+  { name: 'Google Business Profile', file: 'gbp.svg',             alt: 'Google Business Profile' },
+  { name: 'Google Analytics 4',      file: 'ga4.svg',             alt: 'Google Analytics 4' },
+  { name: 'WordPress',               file: 'wordpress.svg',       alt: 'WordPress' },
+  { name: 'GoHighLevel',             file: 'gohighlevel.svg',     alt: 'GoHighLevel',  small: true },
+  { name: 'Shopify',                 file: 'shopify.svg',         alt: 'Shopify',       small: true },
+  { name: 'Ahrefs',                  file: 'ahrefs.svg',          alt: 'Ahrefs',        small: true },
+  { name: 'Bing Ads',                file: 'bing-ads.svg',        alt: 'Microsoft Bing Ads', small: true },
+];
+---
+
+<section class="rd-section rd-section--tight" aria-label="Tools and platforms we use" role="region">
+  <div class="container-xl" style="text-align:center;">
+    <p class="rd-eyebrow rd-r" style="margin-bottom:36px;">The stack we run for GTA businesses</p>
+  </div>
+
+  <div class="rd-marquee" aria-hidden="true">
+    <div class="rd-mq-track" style="--rd-mq-dur:35s;">
+      {TOOLS.map((tool) => (
+        <span class="rd-chip" title={tool.name}>
+          <img
+            src={`/logos/tools/${tool.file}`}
+            alt={tool.alt}
+            class={tool.small ? 'rd-chip-sm' : ''}
+            width={tool.small ? '116' : '155'}
+            height={tool.small ? '32' : '42'}
+            loading="lazy"
+            decoding="async"
+          />
+        </span>
+      ))}
+      {TOOLS.map((tool) => (
+        <span class="rd-chip" aria-hidden="true" title={tool.name}>
+          <img
+            src={`/logos/tools/${tool.file}`}
+            alt=""
+            class={tool.small ? 'rd-chip-sm' : ''}
+            width={tool.small ? '116' : '155'}
+            height={tool.small ? '32' : '42'}
+            loading="lazy"
+            decoding="async"
+          />
+        </span>
+      ))}
+    </div>
+  </div>
+
+  <p class="rd-mq-note">
+    Logos shown are the property of their respective owners. CiCon Marketing is not affiliated with or
+    endorsed by these companies — we work with their platforms as part of our service delivery.
+  </p>
+</section>

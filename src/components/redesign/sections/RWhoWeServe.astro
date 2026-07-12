@@ -1,0 +1,71 @@
+---
+/**
+ * RWhoWeServe — matches WHO-WE-SERVE.png: 2x2 grid of dark industry cards,
+ * each with a mono SEG/0X index, a 3D clay icon (self-hosted render per the
+ * existing icon slug — tooth/home/store/briefcase) on a warm amber ambient
+ * glow, Clash title and blurb. Same headline/copy/icon-slug data as before;
+ * only the visual asset behind each slug changes from a stock photo to a
+ * clay render. CTA bar unchanged.
+ */
+import type { WhoWeServeData } from '../../../lib/types';
+interface Props { data: WhoWeServeData }
+const { data } = Astro.props;
+
+// Clay-render icon per existing icon slug (was a stock-photo fallback map)
+const CLAY_ICONS: Record<string, string> = {
+  tooth: '/redesign/icons/tooth.webp',
+  home: '/redesign/icons/wrench.webp',
+  store: '/redesign/icons/bag.webp',
+  briefcase: '/redesign/icons/torus.webp',
+};
+---
+
+<section id="who-we-serve" class="rd-section">
+  <div class="container-xl">
+
+    <div class="rd-chapter rd-r">
+      CH/ <b>05</b> — WHO IT'S FOR
+      <span class="rd-chapter-line" aria-hidden="true"></span>
+    </div>
+    <p class="rd-eyebrow rd-r">Industries We Serve</p>
+    <h2 class="font-heading rd-h2">
+      <span class="rd-k"><span class="rd-k-in">{data.headline}</span></span>
+    </h2>
+    <p class="rd-sub rd-r" style="margin-bottom:56px;">{data.subheadline}</p>
+
+    <div class="rd-serve-grid">
+      {data.industries.map((industry, i) => (
+        <div class="rd-serve-card rd-r">
+          <div class="rd-serve-glow" aria-hidden="true"></div>
+          <img
+            class="rd-serve-icon"
+            src={CLAY_ICONS[industry.icon] ?? CLAY_ICONS.tooth}
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            decoding="async"
+          />
+          <div class="rd-serve-body">
+            <span class="rd-serve-seg">SEG/{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="font-heading">{industry.title}</h3>
+            <p>{industry.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="rd-strip rd-r">
+      <div>
+        <h3 class="font-heading">Don't see your industry?</h3>
+        <p>We work with any growth-focused local business in the GTA. Let's talk.</p>
+      </div>
+      <a class="rd-btn rd-btn-wa rd-mag" href="https://wa.me/16475840800" target="_blank" rel="noopener noreferrer" style="white-space:nowrap;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="flex-shrink:0">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        Chat on WhatsApp
+      </a>
+    </div>
+
+  </div>
+</section>

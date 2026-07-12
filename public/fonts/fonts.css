@@ -1,0 +1,28 @@
+/*
+ * Redesign POC typography — self-hosted, no font CDN at runtime.
+ *
+ * Clash Display Semibold 600 (headings): Indian Type Foundry via Fontshare,
+ * free for commercial use. Fontshare's compact latin build (15 KB).
+ * Space Mono Bold 700 (eyebrow + Phase-C metric only): latin subset (9.5 KB).
+ *
+ * Lives in /public on purpose: this file is not part of the Tailwind content
+ * scan and never enters Vite's CSS chunk graph, so it cannot perturb the
+ * compiled stylesheets that live pages link.
+ */
+
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/ClashDisplay-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Space Mono';
+  src: url('/fonts/SpaceMono-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+2000-206F, U+2190-2193, U+20AC, U+2122;
+}

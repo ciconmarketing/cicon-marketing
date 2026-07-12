@@ -1,0 +1,42 @@
+---
+/**
+ * RProblems — editorial listicle matching PROBLEMS-WE-SOLVE.png: full-width
+ * FAULT/0X rows separated by hairline dividers, "Our Fix" mono label, amber
+ * "◆ Sealed" marker right-aligned per row. No cards. Copy flows unchanged.
+ */
+import type { ProblemsSolvedData } from '../../../lib/types';
+interface Props { data: ProblemsSolvedData }
+const { data } = Astro.props;
+---
+
+<section id="problems-solved" class="rd-section">
+  <div class="container-xl">
+
+    <div class="rd-chapter rd-r">
+      CH/ <b>02</b> — THE DIAGNOSIS
+      <span class="rd-chapter-line" aria-hidden="true"></span>
+    </div>
+    <p class="rd-eyebrow rd-r">Pain Points We Fix</p>
+    <h2 class="font-heading rd-h2">
+      <span class="rd-k"><span class="rd-k-in">{data.headline}</span></span>
+    </h2>
+    <p class="rd-sub rd-r" style="margin-bottom:64px;">{data.subheadline}</p>
+
+    <div class="rd-faults">
+      {data.problems.map((item, i) => (
+        <div class="rd-fault rd-r">
+          <span class="rd-fault-id">FAULT/{String(i + 1).padStart(2, '0')}</span>
+          <div class="rd-fault-main">
+            <h3 class="font-heading">{item.problem}</h3>
+            <div class="rd-fault-fix">
+              <span class="rd-fault-fixlabel">Our Fix</span>
+              <p>{item.solution}</p>
+            </div>
+          </div>
+          <span class="rd-fault-sealed"><span aria-hidden="true">◆</span> Sealed</span>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>
