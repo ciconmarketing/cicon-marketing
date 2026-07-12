@@ -1,8 +1,8 @@
 ---
 /**
- * RHowItWorks — the four-step process with oversized Space Mono numerals and
- * a thin amber connector line threading the steps (echoes the hero pipeline).
- * Step copy flows through unchanged.
+ * RHowItWorks — editorial listicle matching HOW-IT-WORKS.png: a vertical
+ * numbered timeline (01–04), thin amber connector line threading the rows,
+ * mono chapter label, no card borders. Step copy flows through unchanged.
  */
 import type { HowItWorksData } from '../../../lib/types';
 interface Props { data: HowItWorksData }
@@ -12,21 +12,25 @@ const { data } = Astro.props;
 <section id="how-it-works" class="rd-section rd-section--deep">
   <div class="container-xl">
 
-    <p class="rd-eyebrow rd-r">Our Process</p>
-    <div class="rd-split" style="align-items:end;margin-bottom:64px;gap:40px;">
-      <h2 class="font-heading rd-h2" style="margin-bottom:0;">
-        <span class="rd-k"><span class="rd-k-in">{data.headline}</span></span>
-      </h2>
-      <p class="rd-sub rd-r">{data.subheadline}</p>
+    <div class="rd-chapter rd-r">
+      CH/ <b>04</b> — THE METHOD
+      <span class="rd-chapter-line" aria-hidden="true"></span>
     </div>
+    <p class="rd-eyebrow rd-r">Our Process</p>
+    <h2 class="font-heading rd-h2">
+      <span class="rd-k"><span class="rd-k-in">{data.headline}</span></span>
+    </h2>
+    <p class="rd-sub rd-r" style="margin-bottom:64px;">{data.subheadline}</p>
 
-    <div class="rd-steps">
-      <div class="rd-steps-line" aria-hidden="true"></div>
+    <div class="rd-hiw-list">
+      <div class="rd-hiw-line" aria-hidden="true"></div>
       {data.steps.map((step) => (
-        <div class="rd-step rd-r">
-          <span class="rd-step-num" aria-hidden="true">{String(step.stepNumber).padStart(2, '0')}</span>
-          <h3 class="font-heading">{step.title}</h3>
-          <p>{step.description}</p>
+        <div class="rd-hiw-row rd-r">
+          <span class="rd-hiw-badge" aria-hidden="true">{String(step.stepNumber).padStart(2, '0')}</span>
+          <div class="rd-hiw-content">
+            <h3 class="font-heading">{step.title}</h3>
+            <p>{step.description}</p>
+          </div>
         </div>
       ))}
     </div>

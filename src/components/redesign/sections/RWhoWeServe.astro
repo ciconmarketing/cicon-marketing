@@ -1,44 +1,52 @@
 ---
 /**
- * RWhoWeServe — dark re-skin of the four industry cards. Same headline,
- * copy and image sources (Sanity image if set, otherwise the same fallback
- * mapping the live grid uses), with a charcoal-to-transparent scrim.
+ * RWhoWeServe — matches WHO-WE-SERVE.png: 2x2 grid of dark industry cards,
+ * each with a mono SEG/0X index, a 3D clay icon (self-hosted render per the
+ * existing icon slug — tooth/home/store/briefcase) on a warm amber ambient
+ * glow, Clash title and blurb. Same headline/copy/icon-slug data as before;
+ * only the visual asset behind each slug changes from a stock photo to a
+ * clay render. CTA bar unchanged.
  */
 import type { WhoWeServeData } from '../../../lib/types';
 interface Props { data: WhoWeServeData }
 const { data } = Astro.props;
 
-const FALLBACK_IMAGES: Record<string, string> = {
-  tooth: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=600&q=75&auto=format&fit=crop',
-  home: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=75&auto=format&fit=crop',
-  store: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&q=75&auto=format&fit=crop',
-  briefcase: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=75&auto=format&fit=crop',
+// Clay-render icon per existing icon slug (was a stock-photo fallback map)
+const CLAY_ICONS: Record<string, string> = {
+  tooth: '/redesign/icons/tooth.webp',
+  home: '/redesign/icons/wrench.webp',
+  store: '/redesign/icons/bag.webp',
+  briefcase: '/redesign/icons/torus.webp',
 };
-const FALLBACK_DEFAULT = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=75&auto=format&fit=crop';
 ---
 
 <section id="who-we-serve" class="rd-section">
   <div class="container-xl">
 
-    <p class="rd-eyebrow rd-r">Industries We Serve</p>
-    <div class="rd-split" style="align-items:end;margin-bottom:56px;gap:40px;">
-      <h2 class="font-heading rd-h2" style="margin-bottom:0;">
-        <span class="rd-k"><span class="rd-k-in">{data.headline}</span></span>
-      </h2>
-      <p class="rd-sub rd-r">{data.subheadline}</p>
+    <div class="rd-chapter rd-r">
+      CH/ <b>05</b> — WHO IT'S FOR
+      <span class="rd-chapter-line" aria-hidden="true"></span>
     </div>
+    <p class="rd-eyebrow rd-r">Industries We Serve</p>
+    <h2 class="font-heading rd-h2">
+      <span class="rd-k"><span class="rd-k-in">{data.headline}</span></span>
+    </h2>
+    <p class="rd-sub rd-r" style="margin-bottom:56px;">{data.subheadline}</p>
 
-    <div class="rd-industries">
-      {data.industries.map((industry) => (
-        <div class="rd-ind rd-r">
+    <div class="rd-serve-grid">
+      {data.industries.map((industry, i) => (
+        <div class="rd-serve-card rd-r">
+          <div class="rd-serve-glow" aria-hidden="true"></div>
           <img
-            src={industry.imageUrl ?? FALLBACK_IMAGES[industry.icon] ?? FALLBACK_DEFAULT}
-            alt={industry.imageAlt ?? industry.title}
+            class="rd-serve-icon"
+            src={CLAY_ICONS[industry.icon] ?? CLAY_ICONS.tooth}
+            alt=""
+            aria-hidden="true"
             loading="lazy"
             decoding="async"
           />
-          <div class="rd-ind-scrim" aria-hidden="true"></div>
-          <div class="rd-ind-body">
+          <div class="rd-serve-body">
+            <span class="rd-serve-seg">SEG/{String(i + 1).padStart(2, '0')}</span>
             <h3 class="font-heading">{industry.title}</h3>
             <p>{industry.description}</p>
           </div>
