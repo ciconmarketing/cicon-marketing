@@ -70,7 +70,7 @@ const STAR = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
           Real results from real GTA businesses who trusted CiCon Marketing to grow their brand.
         </p>
 
-        <div class="rd-dots rd-r" role="tablist" aria-label="Reviews">
+        <div class="rd-dots rd-r" role="group" aria-label="Reviews">
           {REVIEWS.map((r, i) => (
             <button
               class={`rd-dot${i === 0 ? ' is-active' : ''}`}
@@ -87,7 +87,7 @@ const STAR = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
           <article class={`rd-review${i === 0 ? ' is-active' : ''}`} data-rd-review={i}>
             <div class="rd-review-top">
               <span class="rd-review-id">REC/{String(i + 1).padStart(2, '0')}</span>
-              <div class="rd-stars" aria-label={`${r.rating} out of 5 stars`}>
+              <div class="rd-stars" role="img" aria-label={`${r.rating} out of 5 stars`}>
                 {Array(r.rating).fill(0).map(() => <span set:html={STAR} />)}
               </div>
             </div>
