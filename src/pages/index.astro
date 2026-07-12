@@ -1,20 +1,25 @@
 ---
 import Nav from '../components/Nav.astro';
-import Hero from '../components/Hero.astro';
-import WhyCiCon from '../components/WhyCiCon.astro';
-import ResultsShowcase from '../components/react/ResultsShowcase.tsx';
-import Services from '../components/Services.astro';
-import WhoWeServe from '../components/WhoWeServe.astro';
-import HowItWorks from '../components/HowItWorks.astro';
-import ProblemsSolved from '../components/ProblemsSolved.astro';
-import GoogleReviews from '../components/react/GoogleReviews.tsx';
-import ReadyToGrow from '../components/ReadyToGrow.astro';
-import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
-import ToolsStrip from '../components/home/ToolsStrip.astro';
-import TrustedByMarquee from '../components/home/TrustedByMarquee.astro';
 import ScrollProgress from '../components/react/ScrollProgress.tsx';
 import '../styles/globals.css';
+
+// Redesign body components ("The Leak, Sealed" — approved on
+// /redesign-preview, branch redesign/hero-leak-sealed). Presentation-layer
+// swap only: same data fetching below, same head/SEO further down.
+import HeroLeakSealed from '../components/redesign/HeroLeakSealed.astro';
+import RToolsMarquee from '../components/redesign/sections/RToolsMarquee.astro';
+import RStats from '../components/redesign/sections/RStats.astro';
+import RMedia from '../components/redesign/sections/RMedia.astro';
+import RThreeThings from '../components/redesign/sections/RThreeThings.astro';
+import RServices from '../components/redesign/sections/RServices.astro';
+import RClientLogos from '../components/redesign/sections/RClientLogos.astro';
+import RWhoWeServe from '../components/redesign/sections/RWhoWeServe.astro';
+import RHowItWorks from '../components/redesign/sections/RHowItWorks.astro';
+import RProblems from '../components/redesign/sections/RProblems.astro';
+import RReviews from '../components/redesign/sections/RReviews.astro';
+import RFinalCta from '../components/redesign/sections/RFinalCta.astro';
+import RContact from '../components/redesign/sections/RContact.astro';
 
 import { getHomepage, getTrustedByMarquee, getWhyCiconCards } from '../lib/sanity';
 import { ORG_CICON, WEBSITE_CICON } from '../lib/schema-constants';
@@ -52,7 +57,7 @@ try {
 ---
 
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -180,105 +185,89 @@ try {
   <noscript><img height="1" width="1" style="display:none"
   src="https://www.facebook.com/tr?id=1299226945517753&ev=PageView&noscript=1"/></noscript>
   <!-- End Meta Pixel -->
+
+  <!--
+    Redesign presentation assets — added for the "Leak, Sealed" body swap.
+    No SEO-relevant tag above this line was touched: title, description,
+    canonical, robots, OG, Twitter, JSON-LD, favicon, GTM, Pixel are all
+    byte-for-byte unchanged. These four lines only load the redesign's
+    typography (self-hosted, no font CDN) and section CSS.
+  -->
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/ClashDisplay-Semibold.woff2" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/SpaceMono-Bold.woff2" />
+  <link rel="stylesheet" href="/fonts/fonts.css" />
+  <link rel="stylesheet" href="/redesign/redesign.css" />
 </head>
 
-<body class="font-sans bg-white text-gray-900 antialiased">
+<body class="font-sans antialiased rd-page" style="background:#212129;color:#E7E7E7;">
   <!-- Google Tag Manager (noscript) -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NH5ZSMKJ"
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
+
+  {import.meta.env.DEV && (
+    <script type="module">
+      /**
+       * Dev-only Vite/React preamble — see redesign/hero-leak-sealed's
+       * HeroLeakSealed particle scene for why this is needed. Compiled away
+       * in production (no dev refresh runtime exists there to detect).
+       */
+      import RefreshRuntime from '/@react-refresh';
+      RefreshRuntime.injectIntoGlobalHook(window);
+      window.$RefreshReg$ = () => {};
+      window.$RefreshSig$ = () => (type) => type;
+      window.__vite_plugin_react_preamble_installed__ = true;
+    </script>
+  )}
 
   <!-- Scroll progress bar — client:idle defers until after first paint -->
   <ScrollProgress client:idle />
 
   <Nav />
 
-  <main>
-    <Hero           data={data.hero} />
-    <ToolsStrip />
-    <WhyCiCon       data={data.whyCicon} />
-    <ResultsShowcase client:visible />
-
-    <!-- ── WHY CICON CARDS — Three things every account gets ── -->
-    <section aria-labelledby="why-cicon-cards-h2" style="padding:80px 0 96px;background:#fff;">
-      <div class="container-xl">
-        <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:#9D833E;margin:0 0 14px;">
-          {whyCiconCards.eyebrow}
-        </p>
-        <h2 id="why-cicon-cards-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#212129;letter-spacing:-0.02em;line-height:1.12;margin:0 0 52px;">
-          {whyCiconCards.heading}
-        </h2>
-        <div class="hp-why-cards-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;">
-          {whyCiconCards.cards.map((card: { label: string; heading: string; body: string }, i: number) => (
-            <div style={`background:#FAFAFA;border:1px solid #E7E7E7;border-top:3px solid ${i === 0 ? '#FFCF00' : i === 1 ? '#9D833E' : '#212129'};border-radius:12px;padding:32px 28px 28px;`}>
-              <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:#9D833E;margin:0 0 14px;">
-                {card.label}
-              </p>
-              <h3 style="font-size:1.1rem;font-weight:800;color:#212129;line-height:1.35;margin:0 0 14px;letter-spacing:-0.01em;">
-                {card.heading}
-              </h3>
-              <p style="font-size:0.95rem;line-height:1.7;color:rgba(58,58,58,0.8);margin:0;">
-                {card.body}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-    <style>
-      @media (max-width: 767px) {
-        .hp-why-cards-grid { grid-template-columns: 1fr !important; }
-      }
-    </style>
-
-    <Services       data={data.services} />
-    <TrustedByMarquee data={trustedBy} />
-    <WhoWeServe     data={data.whoWeServe} />
-    <HowItWorks     data={data.howItWorks} />
-    <ProblemsSolved data={data.problemsSolved} />
-    <!-- Social proof section after Problems We Solve -->
-    <GoogleReviews  client:visible />
-    <ReadyToGrow    data={data.readyToGrow} />
-    <Contact        data={data.contact} />
+  <main class="rd-page">
+    <HeroLeakSealed />
+    <RToolsMarquee />
+    <RStats data={data.whyCicon} />
+    <RMedia />
+    <RThreeThings data={whyCiconCards} />
+    <RServices data={data.services} />
+    <RClientLogos data={trustedBy} />
+    <RWhoWeServe data={data.whoWeServe} />
+    <RHowItWorks data={data.howItWorks} />
+    <RProblems data={data.problemsSolved} />
+    <RReviews />
+    <RFinalCta data={data.readyToGrow} />
+    <RContact data={data.contact} />
   </main>
 
   <Footer includeLocalBusinessSchema={false} />
 
-  <!-- Scroll-reveal: add .in-view to .reveal elements as they enter the viewport -->
   <script>
-    const observer = new IntersectionObserver(
-      (entries) => entries.forEach((e) => e.isIntersecting && e.target.classList.add('in-view')),
-      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
-    );
-    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-  </script>
-
-  <!-- AOS — loaded idle so it never forces a layout reflow during LCP -->
-  <script is:inline>
-    (function () {
-      function loadAOS() {
-        var s = document.createElement('script');
-        s.src = 'https://unpkg.com/aos@2.3.4/dist/aos.js';
-        s.onload = function () {
-          if (typeof AOS !== 'undefined') {
-            AOS.init({ duration: 650, easing: 'ease-out-cubic', once: true, offset: 60, delay: 0 });
-          }
-        };
-        s.onerror = function () {
-          document.querySelectorAll('[data-aos]').forEach(function (el) {
-            el.removeAttribute('data-aos');
-            el.removeAttribute('data-aos-delay');
+    /**
+     * Motion boot: adds the .rd-motion gate (reveal initial states apply only
+     * under it) and lazy-loads the shared motion runtime after first paint.
+     * Reduced-motion users never get the gate — the page is fully static.
+     * If the runtime fails to load, the gate is removed so nothing stays put
+     * at opacity 0.
+     */
+    const motionOK = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+    const forceStatic = new URLSearchParams(window.location.search).has('static');
+    if (motionOK && !forceStatic) {
+      document.documentElement.classList.add('rd-motion');
+      const boot = () =>
+        import('../components/redesign/motion/motion')
+          .then((m) => m.initMotion())
+          .catch((err) => {
+            console.warn('[rd] motion runtime failed, reverting to static', err);
+            document.documentElement.classList.remove('rd-motion');
           });
-        };
-        document.head.appendChild(s);
-      }
-      // Defer until browser is idle — prevents forced reflow impacting LCP/TBT
       if ('requestIdleCallback' in window) {
-        requestIdleCallback(loadAOS, { timeout: 3000 });
+        requestIdleCallback(boot, { timeout: 1200 });
       } else {
-        setTimeout(loadAOS, 300);
+        setTimeout(boot, 200);
       }
-    })();
+    }
   </script>
 
 </body>
