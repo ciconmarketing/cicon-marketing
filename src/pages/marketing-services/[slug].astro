@@ -8,7 +8,7 @@
  */
 import '../../styles/globals.css';
 import { getServicePage, ALL_SERVICE_SLUGS_QUERY } from '../../lib/sanity'
-import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON, REVIEW_COUNT } from '../../lib/schema-constants'
+import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON } from '../../lib/schema-constants'
 import Nav                 from '../../components/Nav.astro'
 import Footer              from '../../components/Footer.astro'
 import ServiceHero         from '../../components/services/ServiceHero.astro'
@@ -92,19 +92,12 @@ const jsonLd = {
     // BreadcrumbList
     {
       '@type': 'BreadcrumbList',
+      '@id': `${canonicalUrl}#breadcrumb`,
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Home',     item: 'https://cicon.ca/' },
         { '@type': 'ListItem', position: 2, name: 'Services', item: 'https://cicon.ca/marketing-services/' },
-        { '@type': 'ListItem', position: 3, name: page.title },
+        { '@type': 'ListItem', position: 3, name: page.title, item: canonicalUrl },
       ],
-    },
-    // AggregateRating (agency-level)
-    {
-      '@type': 'AggregateRating',
-      '@id': 'https://cicon.ca/#aggregaterating',
-      itemReviewed: { '@id': 'https://cicon.ca/#organization' },
-      ratingValue: '5.0',
-      reviewCount: REVIEW_COUNT,
     },
   ],
 }

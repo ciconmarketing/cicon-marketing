@@ -6,6 +6,8 @@
  * navigation, "N of M reviews" counter, single active card crossfade.
  * Auto-rotation is disabled under prefers-reduced-motion; dots still work.
  */
+import { RATING_VALUE, REVIEW_COUNT } from '../../../lib/schema-constants';
+
 const REVIEWS = [
   {
     id: 1,
@@ -69,6 +71,7 @@ const STAR = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
         <p class="rd-sub rd-r">
           Real results from real GTA businesses who trusted CiCon Marketing to grow their brand.
         </p>
+        <p class="rd-review-count rd-r">{RATING_VALUE} ★ average from {REVIEW_COUNT} Google Reviews</p>
 
         <div class="rd-dots rd-r" role="group" aria-label="Reviews">
           {REVIEWS.map((r, i) => (

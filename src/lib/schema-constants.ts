@@ -1,3 +1,19 @@
+/**
+ * Update these in one place — they propagate to every AggregateRating node
+ * sitewide (nested on Organization and LocalBusiness below) and to the
+ * visible rating line on the homepage reviews section.
+ */
+export const RATING_VALUE = '5.0'
+export const REVIEW_COUNT = 8
+
+const AGGREGATE_RATING = {
+  '@type': 'AggregateRating',
+  ratingValue: RATING_VALUE,
+  reviewCount: REVIEW_COUNT,
+  bestRating: '5',
+  worstRating: '1',
+} as const
+
 export const PERSON_MAJID = {
   '@type': 'Person',
   '@id': 'https://cicon.ca/#majid-behzad',
@@ -36,6 +52,7 @@ export const ORG_CICON = {
   telephone: '+1-289-807-1020',
   email: 'info@cicon.ca',
   sameAs: ['https://www.facebook.com/ciconmarketing/','https://www.instagram.com/ciconmktg/','https://linkedin.com/company/cicon-marketing/','https://www.youtube.com/@CiConMarketing'],
+  aggregateRating: AGGREGATE_RATING,
 } as const
 
 /**
@@ -81,10 +98,8 @@ export const LOCAL_BUSINESS_CICON = {
   priceRange: '$$',
   areaServed: { '@type': 'AdministrativeArea', name: 'Greater Toronto Area' },
   sameAs: ['https://www.facebook.com/ciconmarketing/', 'https://www.instagram.com/ciconmktg/', 'https://linkedin.com/company/cicon-marketing/', 'https://www.youtube.com/@CiConMarketing'],
+  aggregateRating: AGGREGATE_RATING,
 } as const
-
-/** Update this number in one place — it propagates to all service page AggregateRating schemas. */
-export const REVIEW_COUNT = 47
 
 export const WEBSITE_CICON = {
   '@type': 'WebSite',

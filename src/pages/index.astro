@@ -22,7 +22,7 @@ import RFinalCta from '../components/redesign/sections/RFinalCta.astro';
 import RContact from '../components/redesign/sections/RContact.astro';
 
 import { getHomepage, getTrustedByMarquee, getWhyCiconCards } from '../lib/sanity';
-import { ORG_CICON, WEBSITE_CICON } from '../lib/schema-constants';
+import { ORG_CICON, WEBSITE_CICON, RATING_VALUE, REVIEW_COUNT } from '../lib/schema-constants';
 import { defaultHomepageData, defaultTrustedByMarquee } from '../lib/defaults';
 import type { HomepageData, TrustedByMarqueeData } from '../lib/types';
 
@@ -134,6 +134,13 @@ try {
         priceRange: '$$',
         areaServed: { '@type': 'AdministrativeArea', name: 'Greater Toronto Area' },
         sameAs: ORG_CICON.sameAs,
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: RATING_VALUE,
+          reviewCount: REVIEW_COUNT,
+          bestRating: '5',
+          worstRating: '1',
+        },
       },
     ],
   })} />
