@@ -218,7 +218,7 @@ html.rd-motion .rd-r { opacity: 0; transform: translateY(26px); }
   text-align: center;
   font-size: 11px;
   line-height: 1.6;
-  color: var(--rd-ink-faint);
+  color: var(--rd-ink-dim);
   margin: 26px auto 0;
   padding: 0 24px;
   max-width: 680px;
