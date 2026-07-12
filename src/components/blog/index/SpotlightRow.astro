@@ -31,7 +31,7 @@ const topCategory = [...categories].sort((a, b) => b.postCount - a.postCount)[0]
 ) : topCategory ? (
   <div class="bg-white border rounded-2xl p-10 my-8" style="border-color:rgba(157,131,62,0.15);" aria-label="Category spotlight">
     <p class="text-teal-600 font-semibold uppercase text-[10px] tracking-widest mb-2" style="font-family:'Inter',sans-serif;">More on {topCategory.name}</p>
-    <h3 class="text-black font-bold mb-2" style="font-family:'Inter',sans-serif;font-size:1.75rem;">{topCategory.name} guides for GTA businesses</h3>
+    <h3 class="font-heading text-black font-bold mb-2" style="font-family:'Clash Display','Inter',sans-serif;font-size:1.75rem;">{topCategory.name} guides for GTA businesses</h3>
     {topCategory.description && <p class="text-gray-500 mb-4">{topCategory.description}</p>}
     <a href={`/blog/?category=${topCategory.slug}`} class="group inline-flex items-center gap-1 font-semibold text-sm text-teal-600 relative" style="font-family:'Inter',sans-serif;">
       View all {topCategory.postCount} guide{topCategory.postCount !== 1 ? 's' : ''} →

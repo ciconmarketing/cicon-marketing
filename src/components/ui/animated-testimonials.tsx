@@ -86,7 +86,7 @@ export function AnimatedTestimonials({
                 </div>
               )}
 
-              <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl text-[#212129]">
+              <h2 className="font-heading text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl text-[#212129]">
                 {title}
               </h2>
 

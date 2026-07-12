@@ -157,10 +157,10 @@ function renderBlocks(blocks: PTBlock[]): string {
 
     switch (block.style) {
       case 'h2':
-        result.push(`<h2 class="font-display font-bold text-[var(--black)] mt-12 mb-6 leading-tight scroll-mt-24" style="font-size:clamp(1.75rem,3vw,2.5rem);letter-spacing:-0.01em" id="${slugify(plainText(block.children))}">${inner}</h2>`)
+        result.push(`<h2 class="font-heading font-bold text-[var(--black)] mt-12 mb-6 leading-tight scroll-mt-24" style="font-size:clamp(1.75rem,3vw,2.5rem);letter-spacing:-0.01em" id="${slugify(plainText(block.children))}">${inner}</h2>`)
         break
       case 'h3':
-        result.push(`<h3 class="font-display font-semibold text-[var(--black)] mt-8 mb-4 text-[1.375rem] leading-snug scroll-mt-24">${inner}</h3>`)
+        result.push(`<h3 class="font-heading font-semibold text-[var(--black)] mt-8 mb-4 text-[1.375rem] leading-snug scroll-mt-24">${inner}</h3>`)
         break
       case 'blockquote':
         result.push(`<blockquote class="border-l-4 border-[var(--goldenrod)] pl-6 py-2 my-8 italic text-[var(--charcoal)] text-[1.125rem] leading-relaxed">${inner}</blockquote>`)
@@ -269,7 +269,7 @@ function renderComparisonTabs(block: PTComparisonTabs): string {
 
   return `
 <div class="comparison-tabs-block my-10 rounded-xl overflow-hidden border border-[var(--hairline)]" data-tab-group="${idx}">
-  ${heading ? `<h3 class="px-6 pt-6 pb-0 font-display font-semibold text-[var(--black)] text-[1.25rem]">${heading}</h3>` : ''}
+  ${heading ? `<h3 class="px-6 pt-6 pb-0 font-heading font-semibold text-[var(--black)] text-[1.25rem]">${heading}</h3>` : ''}
   <div class="tab-nav relative flex overflow-x-auto border-b border-[var(--hairline)] bg-white" role="tablist">
     <div class="tab-underline absolute bottom-0 h-0.5 bg-[var(--amber)] transition-all duration-200" style="left:0;width:0"></div>
     ${tabButtons}

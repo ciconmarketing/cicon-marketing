@@ -224,6 +224,7 @@ try {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/fonts/fonts.css" />
 
   <!-- Primary meta -->
   <title>{aboutData?.seoTitle ?? 'About CiCon Marketing | Boutique Agency, Richmond Hill GTA'}</title>
@@ -271,7 +272,7 @@ try {
     }
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Inter', sans-serif; background: var(--off-white); color: var(--charcoal); }
-    h1,h2,h3,h4,h5,h6 { font-family: 'Inter', sans-serif; }
+    h1,h2,h3,h4,h5,h6 { font-family: 'Clash Display', 'Inter', sans-serif; }
     /* FAQ details/summary reset */
     details > summary { list-style: none; cursor: pointer; }
     details > summary::-webkit-details-marker { display: none; }
@@ -359,6 +360,7 @@ try {
 
       <h1
         id="about-h1"
+        class="font-heading"
         style="font-size:clamp(2rem,4.5vw,3.75rem);font-weight:900;color:#fff;line-height:1.08;letter-spacing:-0.025em;max-width:880px;margin:0 0 28px;"
       >
         {aboutData.hero.headline}
@@ -410,7 +412,7 @@ try {
       <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
         Our reason for being
       </p>
-      <h2 id="why-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 28px;">
+      <h2 id="why-h2" class="font-heading" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 28px;">
         {aboutData.whySection.headline}
       </h2>
       <p style="font-size:clamp(1.05rem,1.6vw,1.2rem);line-height:1.75;color:var(--charcoal);">
@@ -466,7 +468,7 @@ try {
           <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
             {founderData.eyebrow}
           </p>
-          <h2 id="founder-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 24px;">
+          <h2 id="founder-h2" class="font-heading" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 24px;">
             {founderData.heading}
           </h2>
 
@@ -497,7 +499,7 @@ try {
       <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
         Transparency
       </p>
-      <h2 id="ai-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 14px;">
+      <h2 id="ai-h2" class="font-heading" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 14px;">
         AI-augmented, human-owned
       </h2>
       <p style="font-size:1.05rem;color:rgba(58,58,58,0.75);margin:0 0 52px;max-width:560px;line-height:1.6;">
@@ -509,7 +511,7 @@ try {
 
         <!-- Column 1 -->
         <div style="background:#fff;border:1px solid var(--alabaster);border-top:3px solid var(--action);border-radius:12px;padding:32px;">
-          <h3 style="font-size:1.05rem;font-weight:800;color:#000;margin:0 0 16px;letter-spacing:-0.01em;">
+          <h3 class="font-heading" style="font-size:1.05rem;font-weight:800;color:#000;margin:0 0 16px;letter-spacing:-0.01em;">
             Where AI accelerates
           </h3>
           <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;">
@@ -524,7 +526,7 @@ try {
 
         <!-- Column 2 -->
         <div style="background:#fff;border:1px solid var(--alabaster);border-top:3px solid var(--accent);border-radius:12px;padding:32px;">
-          <h3 style="font-size:1.05rem;font-weight:800;color:#000;margin:0 0 16px;letter-spacing:-0.01em;">
+          <h3 class="font-heading" style="font-size:1.05rem;font-weight:800;color:#000;margin:0 0 16px;letter-spacing:-0.01em;">
             Where humans own it
           </h3>
           <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;">
@@ -539,7 +541,7 @@ try {
 
         <!-- Column 3 -->
         <div style="background:#fff;border:1px solid var(--alabaster);border-top:3px solid var(--shadow);border-radius:12px;padding:32px;">
-          <h3 style="font-size:1.05rem;font-weight:800;color:#000;margin:0 0 16px;letter-spacing:-0.01em;">
+          <h3 class="font-heading" style="font-size:1.05rem;font-weight:800;color:#000;margin:0 0 16px;letter-spacing:-0.01em;">
             What clients get back
           </h3>
           <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;">
@@ -565,7 +567,7 @@ try {
       <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
         The Stack
       </p>
-      <h2 id="stack-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 14px;">
+      <h2 id="stack-h2" class="font-heading" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 14px;">
         The stack behind every CiCon campaign
       </h2>
       <p style="font-size:1.05rem;color:rgba(58,58,58,0.75);margin:0 0 52px;max-width:560px;line-height:1.6;">
@@ -583,7 +585,7 @@ try {
             onmouseout="this.style.borderColor='var(--alabaster)';this.style.boxShadow='none'"
           >
             <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin:0 0 10px;">{tool.category}</p>
-            <h3 style="font-size:1.15rem;font-weight:800;color:#000;margin:0 0 10px;letter-spacing:-0.01em;">{tool.name}</h3>
+            <h3 class="font-heading" style="font-size:1.15rem;font-weight:800;color:#000;margin:0 0 10px;letter-spacing:-0.01em;">{tool.name}</h3>
             <p style="font-size:0.9rem;line-height:1.55;color:rgba(58,58,58,0.8);margin:0;">{tool.purpose}</p>
           </div>
         ))}
@@ -609,7 +611,7 @@ try {
       <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
         {whyCiconCardsData.eyebrow}
       </p>
-      <h2 id="why-cicon-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 52px;">
+      <h2 id="why-cicon-h2" class="font-heading" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 52px;">
         {whyCiconCardsData.heading}
       </h2>
 
@@ -619,7 +621,7 @@ try {
             <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--accent);margin:0 0 14px;">
               {card.label}
             </p>
-            <h3 style="font-size:1.1rem;font-weight:800;color:#000;line-height:1.35;margin:0 0 14px;letter-spacing:-0.01em;">
+            <h3 class="font-heading" style="font-size:1.1rem;font-weight:800;color:#000;line-height:1.35;margin:0 0 14px;letter-spacing:-0.01em;">
               {card.heading}
             </h3>
             <p style="font-size:0.95rem;line-height:1.7;color:rgba(58,58,58,0.8);margin:0;">
@@ -646,7 +648,7 @@ try {
       <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
         Engagement model
       </p>
-      <h2 id="process-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 56px;">
+      <h2 id="process-h2" class="font-heading" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 56px;">
         How an engagement runs
       </h2>
 
@@ -672,7 +674,7 @@ try {
               <span style={`font-size:15px;font-weight:900;color:${i % 2 === 0 ? 'var(--shadow)' : '#fff'};letter-spacing:-0.01em;`}>{stage.num}</span>
             </div>
             <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin:0 0 6px;">{stage.duration}</p>
-            <h3 style="font-size:1.15rem;font-weight:800;color:#000;margin:0 0 10px;">{stage.name}</h3>
+            <h3 class="font-heading" style="font-size:1.15rem;font-weight:800;color:#000;margin:0 0 10px;">{stage.name}</h3>
             <p style="font-size:0.88rem;line-height:1.6;color:rgba(58,58,58,0.75);margin:0;">{stage.body}</p>
           </div>
         ))}
@@ -698,7 +700,7 @@ try {
       <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
         Principles
       </p>
-      <h2 id="values-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 52px;">
+      <h2 id="values-h2" class="font-heading" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 52px;">
         What we stand behind
       </h2>
 
@@ -713,7 +715,7 @@ try {
             <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin:0 0 16px;">
               0{i + 1}
             </p>
-            <h3 style="font-size:1.15rem;font-weight:800;color:#000;line-height:1.35;margin:0 0 14px;letter-spacing:-0.01em;">
+            <h3 class="font-heading" style="font-size:1.15rem;font-weight:800;color:#000;line-height:1.35;margin:0 0 14px;letter-spacing:-0.01em;">
               {v.text}
             </h3>
             {v.body && (
@@ -743,7 +745,7 @@ try {
       <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--action);margin:0 0 14px;">
         Dental vertical
       </p>
-      <h2 id="dental-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#fff;letter-spacing:-0.02em;line-height:1.12;max-width:760px;margin:0 0 24px;">
+      <h2 id="dental-h2" class="font-heading" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#fff;letter-spacing:-0.02em;line-height:1.12;max-width:760px;margin:0 0 24px;">
         {aboutData.dentalSection.headline}
       </h2>
       <p style="font-size:1.05rem;line-height:1.72;color:rgba(255,255,255,0.72);max-width:680px;margin:0 0 52px;">
@@ -812,7 +814,7 @@ try {
       <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
         Where we operate
       </p>
-      <h2 id="local-h2" style="font-size:clamp(1.5rem,2.8vw,2.25rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.15;margin:0 0 24px;">
+      <h2 id="local-h2" class="font-heading" style="font-size:clamp(1.5rem,2.8vw,2.25rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.15;margin:0 0 24px;">
         {aboutData.localSection.headline}
       </h2>
       <p style="font-size:1.05rem;line-height:1.75;color:var(--charcoal);">
@@ -843,7 +845,7 @@ try {
       <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);margin:0 0 14px;">
         FAQ
       </p>
-      <h2 id="faq-h2" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 48px;">
+      <h2 id="faq-h2" class="font-heading" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.12;margin:0 0 48px;">
         Common questions
       </h2>
 
@@ -909,7 +911,7 @@ try {
       <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--action);margin:0 0 20px;">
         Let's talk
       </p>
-      <h2 id="cta-h2" style="font-size:clamp(2rem,4vw,3.25rem);font-weight:900;color:#fff;letter-spacing:-0.025em;line-height:1.1;margin:0 0 20px;">
+      <h2 id="cta-h2" class="font-heading" style="font-size:clamp(2rem,4vw,3.25rem);font-weight:900;color:#fff;letter-spacing:-0.025em;line-height:1.1;margin:0 0 20px;">
         {aboutData.finalCta.headline}
       </h2>
 

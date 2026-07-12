@@ -223,6 +223,7 @@ const schema: any = {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/fonts/fonts.css" />
   <title>{metaTitle}</title>
   <meta name="description" content={metaDesc} />
   <link rel="canonical" href={canonicalUrl} />
@@ -328,7 +329,7 @@ const schema: any = {
     )}
 
     <!-- H1 -->
-    <h1 class="font-display font-bold text-white max-w-[900px] mb-5 leading-tight" style="font-size:clamp(2.5rem,5vw,4rem);letter-spacing:-0.02em">
+    <h1 class="font-heading font-bold text-white max-w-[900px] mb-5 leading-tight" style="font-size:clamp(2.5rem,5vw,4rem);letter-spacing:-0.02em">
       {post.title}
     </h1>
 
@@ -429,7 +430,7 @@ const schema: any = {
       <!-- ══ FAQ SECTION ══════════════════════════════════════════════════════ -->
       {post.faqs && post.faqs.length > 0 && (
         <section class="mt-16" aria-label="Frequently Asked Questions">
-          <h2 class="font-display font-bold mb-8 leading-tight scroll-mt-24" style="font-size:clamp(1.75rem,3vw,2.5rem);color:var(--black);letter-spacing:-0.01em" id="faq">
+          <h2 class="font-heading font-bold mb-8 leading-tight scroll-mt-24" style="font-size:clamp(1.75rem,3vw,2.5rem);color:var(--black);letter-spacing:-0.01em" id="faq">
             Frequently Asked Questions
           </h2>
 
@@ -512,7 +513,7 @@ const schema: any = {
       <!-- Left: copy -->
       <div class="end-cta-left">
         <p class="font-display font-semibold uppercase text-[11px] tracking-[0.15em] mb-4" style="color:var(--goldenrod)">Ready to Grow?</p>
-        <h2 class="font-display font-bold text-white mb-5 leading-tight" style="font-size:clamp(2rem,4vw,3rem)">
+        <h2 class="font-heading font-bold text-white mb-5 leading-tight" style="font-size:clamp(2rem,4vw,3rem)">
           Stop guessing.<br/>Start growing.
         </h2>
         <p class="font-body text-[1.125rem] mb-8 max-w-[520px] leading-relaxed" style="color:rgba(255,255,255,0.8)">
@@ -616,7 +617,7 @@ const schema: any = {
     <div class="max-w-[1280px] mx-auto px-6">
       <div class="mb-10">
         <p class="font-display font-semibold uppercase text-[11px] tracking-[0.15em] mb-3" style="color:var(--goldenrod)">Continue Reading</p>
-        <h2 class="font-display font-bold" style="font-size:2rem;color:var(--black)">
+        <h2 class="font-heading font-bold" style="font-size:2rem;color:var(--black)">
           More on {post.category?.name ?? 'Digital Marketing'} →
         </h2>
       </div>
@@ -651,7 +652,7 @@ const schema: any = {
                     {related.category.name}
                   </span>
                 )}
-                <h3 class="font-display font-semibold leading-snug mb-3 related-card-title" style="font-size:1.25rem;color:var(--black);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">
+                <h3 class="font-heading font-semibold leading-snug mb-3 related-card-title" style="font-size:1.25rem;color:var(--black);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">
                   {related.title}
                 </h3>
                 <p class="font-body text-sm" style="color:rgba(58,58,58,0.6);font-size:13px">

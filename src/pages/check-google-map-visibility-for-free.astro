@@ -112,6 +112,7 @@ const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/fonts/fonts.css" />
 
   <!-- Resource hints for GTM/GA4 -->
   <link rel="preconnect" href="https://www.googletagmanager.com" />
@@ -209,7 +210,7 @@ const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility
     }
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Inter', sans-serif; background: var(--off-white); color: var(--charcoal); }
-    h1,h2,h3,h4,h5,h6 { font-family: 'Inter', sans-serif; }
+    h1,h2,h3,h4,h5,h6 { font-family: 'Clash Display', 'Inter', sans-serif; }
     details > summary { list-style: none; cursor: pointer; }
     details > summary::-webkit-details-marker { display: none; }
   </style>
@@ -239,6 +240,7 @@ const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility
           </p>
           <h1
             id="page-h1"
+            class="font-heading"
             style="font-size:clamp(1.9rem,3.8vw,3rem);font-weight:900;color:#fff;line-height:1.1;letter-spacing:-0.02em;margin:0 0 24px;"
           >
             {mapCheckData.hero.headline}
@@ -327,6 +329,7 @@ const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility
 
       <h2
         id="results-h2"
+        class="font-heading"
         style="font-size:clamp(1.6rem,3vw,2.25rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.15;margin:0 0 20px;"
       >
         Did you see Red or Orange dots?
@@ -345,7 +348,7 @@ const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility
               style="width:18px;height:18px;border-radius:50%;background:#DC2626;flex-shrink:0;display:inline-block;"
               aria-hidden="true"
             ></span>
-            <h3 style="font-size:1.05rem;font-weight:800;color:#DC2626;margin:0;">Red Dots</h3>
+            <h3 class="font-heading" style="font-size:1.05rem;font-weight:800;color:#DC2626;margin:0;">Red Dots</h3>
           </div>
           <p style="font-size:0.97rem;line-height:1.65;color:var(--charcoal);margin:0;">
             Your business is buried on page 2 or 3. Customers can't find you. You're effectively invisible to anyone not searching from directly outside your door.
@@ -359,7 +362,7 @@ const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility
               style="width:18px;height:18px;border-radius:50%;background:#EA580C;flex-shrink:0;display:inline-block;"
               aria-hidden="true"
             ></span>
-            <h3 style="font-size:1.05rem;font-weight:800;color:#EA580C;margin:0;">Orange Dots</h3>
+            <h3 class="font-heading" style="font-size:1.05rem;font-weight:800;color:#EA580C;margin:0;">Orange Dots</h3>
           </div>
           <p style="font-size:0.97rem;line-height:1.65;color:var(--charcoal);margin:0;">
             You're close, but a competitor is currently taking your leads. Positions 4–10 capture a fraction of the clicks that positions 1–3 do. Close is not close enough.
@@ -393,6 +396,7 @@ const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility
         </p>
         <h2
           id="audit-h2"
+          class="font-heading"
           style="font-size:clamp(1.6rem,3vw,2.25rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.15;margin:0 0 16px;"
         >
           Get Your Full "Local Dominance" Strategy Audit
@@ -435,6 +439,7 @@ const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility
       </p>
       <h2
         id="faq-h2"
+        class="font-heading"
         style="font-size:clamp(1.6rem,3vw,2.25rem);font-weight:900;color:#000;letter-spacing:-0.02em;line-height:1.15;margin:0 0 44px;"
       >
         Frequently Asked Questions
@@ -485,6 +490,7 @@ const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility
       </p>
       <h2
         id="final-cta-h2"
+        class="font-heading"
         style="font-size:clamp(1.75rem,3.5vw,2.75rem);font-weight:900;color:#fff;letter-spacing:-0.025em;line-height:1.1;margin:0 0 32px;"
       >
         {mapCheckData.finalCta.headline}

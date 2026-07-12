@@ -48,6 +48,7 @@ const jsonLd = {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/fonts/fonts.css" />
   <title>Privacy Policy — CiCon Marketing</title>
   <meta name="description" content="Learn how CiCon Marketing collects, uses, and protects your personal information when you interact with our services." />
   <link rel="canonical" href={canonicalUrl} />
@@ -69,7 +70,7 @@ const jsonLd = {
     }
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Inter', sans-serif; background: var(--off-white); color: var(--charcoal); }
-    h1,h2,h3 { font-family: 'Inter', sans-serif; }
+    h1,h2,h3 { font-family: 'Clash Display', 'Inter', sans-serif; }
     .legal-body h2 { font-size: 1.1rem; font-weight: 700; color: var(--navy); margin: 2rem 0 0.5rem; }
     .legal-body p  { font-size: 0.95rem; line-height: 1.75; margin: 0 0 1rem; }
     .legal-body ul { font-size: 0.95rem; line-height: 1.75; margin: 0 0 1rem; padding-left: 1.4rem; }
@@ -138,7 +139,7 @@ const jsonLd = {
   <section style="background:var(--navy);padding:64px 24px 48px;">
     <div style="max-width:800px;margin:0 auto;">
       <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:#9D833E;margin:0 0 12px;">Legal</p>
-      <h1 style="font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:900;color:#fff;margin:0 0 12px;line-height:1.15;letter-spacing:-0.02em;">{ppData.pageTitle}</h1>
+      <h1 class="font-heading" style="font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:900;color:#fff;margin:0 0 12px;line-height:1.15;letter-spacing:-0.02em;">{ppData.pageTitle}</h1>
       <p style="font-size:0.9rem;color:rgba(255,255,255,0.55);margin:0;">CiCon Marketing — Last reviewed {ppData.lastReviewed}</p>
     </div>
   </section>
@@ -153,7 +154,7 @@ const jsonLd = {
         <>
           <p>CiCon Marketing ("we," "us," or "our") respects the privacy of our users ("you" or "your"). This Privacy Policy describes the types of information we collect through our lead capture forms on Meta Platforms (including Facebook, Instagram, and WhatsApp) and LinkedIn and how we use that information.</p>
 
-          <h2>Information We Collect</h2>
+          <h2 class="font-heading">Information We Collect</h2>
           <p>We collect the following information when you submit a lead capture form on our website, Meta Platforms, Google Ads and LinkedIn campaigns:</p>
           <ul>
             <li>Full Name</li>
@@ -162,7 +163,7 @@ const jsonLd = {
             <li>City</li>
           </ul>
 
-          <h2>SMS Message</h2>
+          <h2 class="font-heading">SMS Message</h2>
           <p>SMS messages will inform the recipient:</p>
           <ul>
             <li>They are consenting to receive messages from the business</li>
@@ -174,7 +175,7 @@ const jsonLd = {
           </ul>
           <p>We collect your phone number when you opt in to receive appointment reminders and promotional SMS messages. You may withdraw this consent at any time by replying STOP or contacting us at <a href="mailto:info@cicon.ca">info@cicon.ca</a>.</p>
 
-          <h2>Use of Information</h2>
+          <h2 class="font-heading">Use of Information</h2>
           <p>We use the information we collect to:</p>
           <ul>
             <li>Respond to your inquiries and requests about CiCon Marketing's services.</li>
@@ -182,16 +183,16 @@ const jsonLd = {
             <li>Improve our marketing and advertising efforts on Meta Platforms and LinkedIn.</li>
           </ul>
 
-          <h2>Data Sharing</h2>
+          <h2 class="font-heading">Data Sharing</h2>
           <p>We will not share your information with any third party without your consent, except for the following limited circumstances:</p>
           <ul>
             <li><strong>Service Providers:</strong> We may share your information with service providers who help us operate our business, such as email marketing providers. These service providers are obligated to protect your information according to strict confidentiality agreements.</li>
           </ul>
 
-          <h2>Data Retention</h2>
+          <h2 class="font-heading">Data Retention</h2>
           <p>We will retain your information for as long as necessary to fulfill the purposes described in this Privacy Policy, unless a longer retention period is required or permitted by law (e.g., for tax or accounting purposes).</p>
 
-          <h2>Your Rights</h2>
+          <h2 class="font-heading">Your Rights</h2>
           <p>You have the following rights with respect to your information:</p>
           <ul>
             <li><strong>Access:</strong> You have the right to access your information and request a copy of it.</li>
@@ -207,13 +208,13 @@ const jsonLd = {
             69 Cartier Crescent, Richmond Hill, ON L4C 2N3, Canada
           </p>
 
-          <h2>Security</h2>
+          <h2 class="font-heading">Security</h2>
           <p>We take reasonable steps to protect your information from unauthorized access, disclosure, alteration, or destruction. However, no internet transmission is completely secure, and we cannot guarantee the security of your information.</p>
 
-          <h2>Changes to this Privacy Policy</h2>
+          <h2 class="font-heading">Changes to this Privacy Policy</h2>
           <p>We may update this Privacy Policy from time to time. We will post any changes on this webpage.</p>
 
-          <h2>Contact Us</h2>
+          <h2 class="font-heading">Contact Us</h2>
           <p>If you have any questions about this Privacy Policy, please contact our Privacy Officer at <a href="mailto:info@cicon.ca">info@cicon.ca</a> or by mail at the address provided above.</p>
         </>
       )}

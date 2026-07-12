@@ -78,6 +78,7 @@ const jsonLd = {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/fonts/fonts.css" />
   <title>{hub?.seoTitle ?? hub?.heroHeadline ?? 'Digital Marketing Services'} | CiCon Marketing — GTA</title>
   <meta name="description" content={hub?.seoDescription ?? hub?.heroDescription ?? 'Boutique digital marketing services for GTA businesses and dental clinics. Paid ads, SEO, social media, web development, and more.'} />
   <link rel="canonical" href="https://cicon.ca/marketing-services/" />
@@ -116,7 +117,7 @@ const jsonLd = {
     }
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Inter', sans-serif; background: var(--off-white); }
-    h1, h2, h3, h4, h5, h6 { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Clash Display', 'Inter', sans-serif; }
     /* Hub hero two-column layout */
     .hub-hero-grid {
       display: grid;
@@ -222,7 +223,7 @@ const jsonLd = {
             <span class="h-[1px] w-8" style="background:var(--accent)"></span>
             <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Full-Service Marketing</span>
           </div>
-          <h1 class="text-5xl lg:text-6xl font-extrabold leading-[1.1] text-white mb-5">
+          <h1 class="font-heading text-5xl lg:text-6xl font-extrabold leading-[1.1] text-white mb-5">
             {hub?.heroHeadline ?? 'Every service your business needs to grow'}
           </h1>
           {hub?.heroSubheadline && (
@@ -283,7 +284,7 @@ const jsonLd = {
           <span class="h-[1px] w-8" style="background:var(--accent)"></span>
           <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Our Services</span>
         </div>
-        <h2 class="text-3xl font-extrabold" style="color:var(--black)">8 services. One senior strategist.</h2>
+        <h2 class="font-heading text-3xl font-extrabold" style="color:var(--black)">8 services. One senior strategist.</h2>
       </div>
 
       {sortedServices.length > 0 ? (
@@ -295,7 +296,7 @@ const jsonLd = {
               style="background:#fff;border-color:var(--alabaster)"
             >
               <div class="text-3xl mb-4">{SERVICE_CONFIG[svc.serviceType]?.icon ?? '⚡'}</div>
-              <h3 class="font-bold text-lg mb-2 group-hover:underline" style="color:var(--black)">{svc.title}</h3>
+              <h3 class="font-heading font-bold text-lg mb-2 group-hover:underline" style="color:var(--black)">{svc.title}</h3>
               {svc.heroSubheadline && (
                 <p class="text-sm leading-relaxed flex-1" style="color:var(--charcoal)">{svc.heroSubheadline}</p>
               )}
@@ -337,7 +338,7 @@ const jsonLd = {
         <span class="h-[1px] w-8" style="background:var(--accent)"></span>
         <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Find Your Service</span>
       </div>
-      <h2 class="text-3xl font-extrabold mb-3" style="color:var(--black)">
+      <h2 class="font-heading text-3xl font-extrabold mb-3" style="color:var(--black)">
         {hub?.routerHeadline ?? 'Which service do you actually need?'}
       </h2>
       {hub?.routerIntro && (

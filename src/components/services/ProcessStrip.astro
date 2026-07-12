@@ -23,7 +23,7 @@ const { steps = defaultSteps } = Astro.props
         <span class="h-[1px] w-8" style="background:var(--accent)"></span>
         <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">How We Work</span>
       </div>
-      <h2 class="text-3xl font-extrabold" style="color:var(--black)">Four steps. No surprises.</h2>
+      <h2 class="font-heading text-3xl font-extrabold" style="color:var(--black)">Four steps. No surprises.</h2>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -43,7 +43,7 @@ const { steps = defaultSteps } = Astro.props
             >
               {String(step.number).padStart(2, '0')}
             </div>
-            <h3 class="text-lg font-bold mb-2" style="color:var(--black)">{step.label}</h3>
+            <h3 class="font-heading text-lg font-bold mb-2" style="color:var(--black)">{step.label}</h3>
             <p class="text-sm leading-relaxed" style="color:var(--charcoal)">{step.description}</p>
           </div>
         </div>

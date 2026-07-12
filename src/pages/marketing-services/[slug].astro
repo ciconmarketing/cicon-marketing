@@ -108,6 +108,7 @@ const jsonLd = {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/fonts/fonts.css" />
   <title>{page.metaTitle ?? `${page.title} | CiCon Marketing — GTA`}</title>
   <meta name="description" content={page.metaDescription ?? page.heroDescription ?? ''} />
   <link rel="canonical" href={canonicalUrl} />
@@ -148,7 +149,7 @@ const jsonLd = {
     }
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Inter', sans-serif; background: var(--off-white); color: var(--charcoal); }
-    h1, h2, h3, h4, h5, h6 { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Clash Display', 'Inter', sans-serif; }
     /* FAQ summary marker removal */
     details > summary { list-style: none; }
     details > summary::-webkit-details-marker { display: none; }

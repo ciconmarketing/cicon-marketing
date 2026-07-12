@@ -78,7 +78,7 @@ function StepCard({ step, index, total }: { step: Step; index: number; total: nu
         whileHover={{ y: -5, transition: { duration: 0.2 } }}
         className="group bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-teal-600/50 rounded-2xl p-6 text-center transition-colors duration-300 cursor-default w-full"
       >
-        <h3 className="text-base font-bold text-white mb-3 leading-snug">{step.title}</h3>
+        <h3 className="font-heading text-base font-bold text-white mb-3 leading-snug">{step.title}</h3>
         <p className="text-sm text-gray-400 leading-relaxed">{step.description}</p>
       </motion.div>
     </div>
