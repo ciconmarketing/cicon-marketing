@@ -8,6 +8,7 @@ const CORE_PAGES = [
   '/',
   '/about-us/',
   '/contact-us/',
+  '/faq/',
   '/check-google-map-visibility-for-free/',
 ]
 
