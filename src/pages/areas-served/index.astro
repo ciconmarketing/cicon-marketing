@@ -1,11 +1,14 @@
 ---
 /**
  * /areas-served/ — Areas Served hub.
+ * Content lives in Sanity (`areasServedHub` singleton, referencing
+ * `serviceArea` documents by group — see sanity/schemas/areasServedHub.ts).
  * Groups CiCon's real operating footprint (Richmond Hill base + GTA markets),
  * links only to published city pages, and represents everything else as
  * honest coverage text. Useful standalone even with zero city pages.
  */
-import { AREA_PAGES, COVERAGE_AREAS, getPublishedAreas, validateAreaPages } from '../../lib/areas-served'
+import { getAreasServedHub, getServiceAreas } from '../../lib/sanity'
+import { getPublishedAreas, validateAreaPages } from '../../lib/areas-served'
 import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON } from '../../lib/schema-constants'
 import Nav             from '../../components/Nav.astro'
 import Footer          from '../../components/Footer.astro'
@@ -22,121 +25,47 @@ import ServiceFaq      from '../../components/services/ServiceFaq.astro'
 import FinalCta        from '../../components/services/FinalCta.astro'
 import GoogleReviews   from '../../components/react/GoogleReviews.tsx'
 
-validateAreaPages()
+const [hub, areas] = await Promise.all([getAreasServedHub(), getServiceAreas()])
+validateAreaPages(areas)
 
 const isPreview = import.meta.env.VERCEL_ENV !== 'production'
-const canonicalUrl = 'https://cicon.ca/areas-served/'
+const canonicalUrl = hub?.canonicalOverride ?? 'https://cicon.ca/areas-served/'
 
-const TITLE = 'Digital Marketing Agency for Richmond Hill & the GTA | CiCon'
+// Sane fallbacks only in the unlikely event the Sanity fetch fails at build
+// time — the live content is always the Sanity singleton, never this.
+const TITLE = hub?.seoTitle ?? 'Digital Marketing Agency for Richmond Hill & the GTA | CiCon'
 const META_DESCRIPTION =
+  hub?.seoDescription ??
   'CiCon Marketing serves Richmond Hill, York Region, and selected GTA markets with senior-led local SEO, Google Ads, and dental marketing. Chat on WhatsApp.'
-
+const HERO_EYEBROW = hub?.heroEyebrow ?? 'Richmond Hill Based · Serving the GTA'
+const HERO_HEADLINE = hub?.heroHeadline ?? 'Digital Marketing Across Richmond Hill and the Greater Toronto Area'
+const HERO_SUBHEADLINE =
+  hub?.heroSubheadline ??
+  'CiCon Marketing builds local SEO, paid advertising, and lead systems for businesses and dental clinics across York Region, Toronto, and selected GTA markets — senior-run, boutique, and honest about where we can actually win.'
 const SUMMARY =
-  'CiCon Marketing is a Richmond Hill–based digital marketing agency serving businesses and dental clinics across York Region, Toronto, and selected GTA markets — including Markham, Vaughan, Thornhill, Aurora, Newmarket, North York, and surrounding communities. We work remotely and on location, with a senior strategist on every account. If your market is not a genuine fit, we will say so.'
-
-// ── Build the grouped card data ──────────────────────────────────────────────
-// Linked card only when the target page is published + indexable.
-function cardFor(slug: string, fallbackLine: string) {
-  const p = AREA_PAGES.find((x) => x.slug === slug)
-  if (!p) return { name: slug, line: fallbackLine }
-  const linked = p.status === 'published' && p.indexable
-  return {
-    name: p.cityName,
-    line: fallbackLine,
-    ...(linked ? { href: `/areas-served/${p.slug}/` } : {}),
-  }
-}
-function coverage(name: string) {
-  const c = COVERAGE_AREAS.find((x) => x.name === name)
-  return { name, line: c?.line ?? '' }
+  hub?.answerFirstIntro ??
+  'CiCon Marketing is a Richmond Hill–based digital marketing agency serving businesses and dental clinics across York Region, Toronto, and selected GTA markets. We work remotely and on location, with a senior strategist on every account. If your market is not a genuine fit, we will say so.'
+const SUPPORTING_SECTIONS = hub?.supportingSections ?? []
+const HUB_SERVICES = hub?.featuredServices ?? []
+const HUB_FAQS = hub?.faqs ?? []
+const FINAL_CTA = hub?.finalCta ?? {
+  headline: "Tell us your market. We'll tell you the truth.",
+  body: "Start a WhatsApp conversation. We'll look at your city, your competition, and your current visibility — and give you an honest read on what it takes to win there.",
 }
 
-const groups: CityGroup[] = [
-  {
-    heading: 'Home market',
-    note: 'Where CiCon is headquartered — our own Google Business Profile competes here.',
-    cards: [cardFor('richmond-hill', 'Our home base. Local SEO, Google Ads, and dental marketing with our office minutes away.')],
-  },
-  {
-    heading: 'York Region',
-    cards: [
-      cardFor('vaughan', 'Contractors, showrooms, and clinics in one of the GTA’s most competitive paid-search markets.'),
-      cardFor('markham', 'Showrooms, home improvement, professional services, and dental — with on-location media production nearby.'),
-      cardFor('thornhill', 'Clinics and local services across the community spanning Vaughan and Markham.'),
-      cardFor('aurora', 'Premium home services and clinics — qualified leads over vanity traffic.'),
-      cardFor('newmarket', 'Northern York Region trades, clinics, and professional services.'),
-      coverage('King'),
-      coverage('Whitchurch–Stouffville'),
-      coverage('East Gwillimbury'),
-    ],
-  },
-  {
-    heading: 'Toronto markets',
-    note: 'North York, Scarborough, and Etobicoke are distinct search markets within the City of Toronto — we treat them that way.',
-    cards: [
-      cardFor('north-york', 'Dense clinic and professional-service competition along the Yonge corridor.'),
-      coverage('Toronto'),
-      coverage('Scarborough'),
-      coverage('Etobicoke'),
-    ],
-  },
-  {
-    heading: 'Eastern GTA · Durham corridor',
-    cards: [coverage('Pickering')],
-  },
-  {
-    heading: 'Northwest GTA',
-    cards: [coverage('Bolton')],
-  },
-  {
-    heading: 'Extended western GTA coverage',
-    note: 'Served for paid advertising, SEO, and remote-friendly engagements where the fit is genuine.',
-    cards: [coverage('Mississauga')],
-  },
-]
-
-// ── Services across the GTA (canonical service pages) ────────────────────────
-const HUB_SERVICES = [
-  { slug: 'local-seo-optimization', title: 'Local SEO', angle: 'Google Maps and local rankings across your real service area.' },
-  { slug: 'ai-seo-and-seo', title: 'AI SEO', angle: 'Visibility when GTA buyers ask Google AI, ChatGPT, or Perplexity who to hire.' },
-  { slug: 'paid-advertising-services', title: 'Paid Advertising', angle: 'Google, Meta, and Microsoft Ads tuned to GTA cost-per-click realities.' },
-  { slug: 'dental-marketing-services', title: 'Dental Marketing', angle: 'Our flagship specialization — patient acquisition for GTA clinics.' },
-  { slug: 'website-development', title: 'Website Development', angle: 'Fast, conversion-first sites that turn local traffic into inquiries.' },
-  { slug: 'crm-integration', title: 'CRM Integration', angle: 'Follow-up systems so the leads you pay for actually get called.' },
-]
-
-const HUB_FAQS = [
-  {
-    question: 'Which GTA cities does CiCon Marketing serve?',
-    answer:
-      'We serve Richmond Hill (our home base), Markham, Vaughan, Thornhill, Aurora, Newmarket, King, Whitchurch–Stouffville, and East Gwillimbury in York Region; North York, Scarborough, Etobicoke, and the wider City of Toronto; plus Pickering, Bolton, and Mississauga where the engagement is a genuine fit.',
-  },
-  {
-    question: 'Is CiCon Marketing located in Richmond Hill?',
-    answer:
-      'Yes — our office is at 131 Golf Club Ct, Richmond Hill, ON L4C 5E1. We do not have offices in other cities, and our city pages never claim otherwise.',
-  },
-  {
-    question: 'Do you work with businesses outside Richmond Hill?',
-    answer:
-      'Constantly. Most of our clients are spread across York Region and Toronto. Local SEO and Google Business Profile work benefit from local knowledge; paid advertising, SEO, content, and CRM work run well remotely across the GTA and beyond.',
-  },
-  {
-    question: 'Can CiCon manage marketing for multiple locations?',
-    answer:
-      'Yes. Multi-location businesses get a per-location Google Business Profile strategy, location-specific tracking, and consolidated reporting, so you can see which location produces which leads.',
-  },
-  {
-    question: 'Do you provide on-site photography and video across the GTA?',
-    answer:
-      'Yes — media production is a core service, and we shoot on location across the GTA. Practical travel radius from Richmond Hill covers York Region and most of Toronto comfortably; for farther markets we confirm logistics before committing.',
-  },
-  {
-    question: 'Can CiCon improve Google Maps rankings in multiple service areas?',
-    answer:
-      'Often — within honest limits. Maps visibility depends on proximity, relevance, and prominence; no agency controls proximity. We maximize the visibility that is realistically available through profile discipline, reviews, categories, and local content, and we will tell you upfront when a target is not winnable.',
-  },
-]
+// ── Build the grouped card data straight from the Sanity singleton ──────────
+// Linked card only when the target area is published + indexable + has a page.
+const groups: CityGroup[] = (hub?.geographicGroups ?? []).map((g) => ({
+  heading: g.heading,
+  note: g.note,
+  cards: g.areas.map((a) => ({
+    name: a.cityName,
+    line: a.hubCardLine,
+    ...(a.hasDedicatedPage && a.status === 'published' && a.indexable
+      ? { href: `/areas-served/${a.slug}/` }
+      : {}),
+  })),
+}))
 
 // ── Schema.org ────────────────────────────────────────────────────────────────
 const jsonLd = {
@@ -155,15 +84,17 @@ const jsonLd = {
       about: { '@id': 'https://cicon.ca/#organization' },
       inLanguage: 'en-CA',
     },
-    {
-      '@type': 'FAQPage',
-      '@id': `${canonicalUrl}#faq`,
-      mainEntity: HUB_FAQS.map((faq) => ({
-        '@type': 'Question',
-        name: faq.question,
-        acceptedAnswer: { '@type': 'Answer', text: faq.answer },
-      })),
-    },
+    ...(HUB_FAQS.length
+      ? [{
+          '@type': 'FAQPage',
+          '@id': `${canonicalUrl}#faq`,
+          mainEntity: HUB_FAQS.map((faq) => ({
+            '@type': 'Question',
+            name: faq.question,
+            acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+          })),
+        }]
+      : []),
     {
       '@type': 'BreadcrumbList',
       '@id': `${canonicalUrl}#breadcrumb`,
@@ -175,7 +106,7 @@ const jsonLd = {
   ],
 }
 
-const publishedCount = getPublishedAreas().length
+const publishedCount = getPublishedAreas(areas).length
 ---
 
 <!DOCTYPE html>
@@ -197,13 +128,13 @@ const publishedCount = getPublishedAreas().length
   <meta property="og:url" content={canonicalUrl} />
   <meta property="og:title" content={TITLE} />
   <meta property="og:description" content={META_DESCRIPTION} />
-  <meta property="og:image" content="https://cicon.ca/logo-cicon.jpg" />
+  <meta property="og:image" content={hub?.ogImageUrl ?? 'https://cicon.ca/logo-cicon.jpg'} />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={TITLE} />
   <meta name="twitter:description" content={META_DESCRIPTION} />
-  <meta name="twitter:image" content="https://cicon.ca/logo-cicon.jpg" />
+  <meta name="twitter:image" content={hub?.ogImageUrl ?? 'https://cicon.ca/logo-cicon.jpg'} />
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" sizes="120x120" href="/logo-cicon-120.png" />
@@ -298,9 +229,9 @@ const publishedCount = getPublishedAreas().length
   <div style="height:16px"></div>
 
   <AreaHero
-    eyebrow="Richmond Hill Based · Serving the GTA"
-    headline="Digital Marketing Across Richmond Hill and the Greater Toronto Area"
-    valueProp="CiCon Marketing builds local SEO, paid advertising, and lead systems for businesses and dental clinics across York Region, Toronto, and selected GTA markets — senior-run, boutique, and honest about where we can actually win."
+    eyebrow={HERO_EYEBROW}
+    headline={HERO_HEADLINE}
+    valueProp={HERO_SUBHEADLINE}
     disclosure="One office: 131 Golf Club Ct, Richmond Hill. Everywhere else we serve remotely and on location — no satellite-office theatre."
     trackSource="hub"
   />
@@ -323,36 +254,32 @@ const publishedCount = getPublishedAreas().length
 
   <CityGroups groups={groups} />
 
-  <!-- Why local market knowledge matters -->
-  <section class="py-20" style="background:#fff">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="max-w-2xl mb-12">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="h-[1px] w-8" style="background:var(--accent)"></span>
-          <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Why Location Matters</span>
-        </div>
-        <h2 class="font-heading text-3xl font-extrabold" style="color:var(--black)">
-          The GTA is not one market
-        </h2>
-        <p class="text-base mt-3" style="color:var(--charcoal)">
-          A playbook that wins in downtown Toronto loses in Aurora. Here is what actually changes from city to city — and why it changes what we build.
-        </p>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[
-          { t: 'Search behaviour', d: 'Suburban markets search "near me" and neighbourhood names; district markets like North York behave differently from "Toronto" queries. Targeting follows behaviour, not municipal lines.' },
-          { t: 'Competition & CPC', d: 'Vaughan trades keywords cost multiples of the same click in Newmarket. Budget strategy has to respect each market’s auction, or the spend evaporates.' },
-          { t: 'Maps visibility', d: 'Google Maps weighs proximity heavily. Where you can realistically rank decides where paid coverage must fill the gap — pretending otherwise wastes money.' },
-          { t: 'Industry mix', d: 'Showrooms cluster in Markham, trades in Vaughan and Bolton, clinics along the Yonge corridor. The dominant local industries shape which services matter most.' },
-        ].map((item) => (
-          <div class="rounded-2xl border p-6" style="border-color:var(--alabaster);background:var(--off-white)">
-            <div class="font-heading text-lg font-bold mb-2" style="color:var(--black)">{item.t}</div>
-            <p class="text-sm leading-relaxed m-0" style="color:var(--charcoal)">{item.d}</p>
+  {SUPPORTING_SECTIONS.length > 0 && (
+    <section class="py-20" style="background:#fff">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-2xl mb-12">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+            <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Why Location Matters</span>
           </div>
-        ))}
+          <h2 class="font-heading text-3xl font-extrabold" style="color:var(--black)">
+            The GTA is not one market
+          </h2>
+          <p class="text-base mt-3" style="color:var(--charcoal)">
+            A playbook that wins in downtown Toronto loses in Aurora. Here is what actually changes from city to city — and why it changes what we build.
+          </p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {SUPPORTING_SECTIONS.map((item) => (
+            <div class="rounded-2xl border p-6" style="border-color:var(--alabaster);background:var(--off-white)">
+              <div class="font-heading text-lg font-bold mb-2" style="color:var(--black)">{item.heading}</div>
+              <p class="text-sm leading-relaxed m-0" style="color:var(--charcoal)">{item.body}</p>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  )}
 
   <AreaServices cityName="GTA" services={HUB_SERVICES} trackSource="hub" />
 
@@ -368,8 +295,8 @@ const publishedCount = getPublishedAreas().length
   <GoogleReviews client:visible />
 
   <FinalCta
-    headline="Tell us your market. We'll tell you the truth."
-    body="Start a WhatsApp conversation. We'll look at your city, your competition, and your current visibility — and give you an honest read on what it takes to win there."
+    headline={FINAL_CTA.headline}
+    body={FINAL_CTA.body}
   />
 
   <Footer />

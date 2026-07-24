@@ -1,6 +1,6 @@
 ---
 import { SERVICES_NAV } from '../lib/services-nav';
-import { AREA_PAGES } from '../lib/areas-served';
+import { getServiceAreas } from '../lib/sanity';
 import { LOCAL_BUSINESS_CICON } from '../lib/schema-constants';
 
 interface Props {
@@ -16,9 +16,11 @@ const footerServices = [...SERVICES_NAV].sort((a, b) => a.title.localeCompare(b.
 
 // Service Areas column: keep the historical 7-city claim, but link a city only
 // when its /areas-served/ page is published + indexable (never link drafts).
+// getServiceAreas() is memoized per build, so this costs one Sanity fetch total.
 const FOOTER_AREA_NAMES = ['Richmond Hill', 'North York', 'Thornhill', 'Markham', 'Vaughan', 'Aurora', 'Newmarket'];
+const allAreas = await getServiceAreas();
 const footerAreas = FOOTER_AREA_NAMES.map((name) => {
-  const p = AREA_PAGES.find((a) => a.cityName === name && a.status === 'published' && a.indexable);
+  const p = allAreas.find((a) => a.cityName === name && a.hasDedicatedPage && a.status === 'published' && a.indexable);
   return { name, href: p ? `/areas-served/${p.slug}/` : null };
 });
 ---

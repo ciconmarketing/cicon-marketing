@@ -464,3 +464,150 @@ export async function getSmsTermsPage() {
   if (!client) return null
   try { return await client.fetch(SMS_TERMS_PAGE_QUERY) } catch { return null }
 }
+
+// ── Areas Served system ──────────────────────────────────────────────────────
+// CMS-backed: src/pages/areas-served/*.astro fetch everything from Sanity.
+// Whitby is excluded at the content layer (schema + editorial policy), not here.
+
+const SERVICE_AREA_FIELDS = `
+  _id, cityName, officialName, "slug": slug.current, region, tier, status,
+  hasDedicatedPage, indexable, lastReviewed,
+  metaTitle, metaDescription, "canonical": canonicalOverride, "ogImageUrl": ogImage.asset->url,
+  hubCardLine, eyebrow, h1, summary,
+  localContext,
+  bestFitIndustries[]{ name, note },
+  featuredServices[]{ "slug": service->slug.current, "title": service->title, angle },
+  faqs[]{ question, answer },
+  localProof[]{ kind, label, href, approved },
+  nearbyAreas[]->{ "slug": slug.current, cityName, status, hasDedicatedPage, indexable }
+`
+
+export const ALL_SERVICE_AREAS_QUERY = `
+  *[_type == "serviceArea"] | order(cityName asc){ ${SERVICE_AREA_FIELDS} }
+`
+
+export const SERVICE_AREA_BY_SLUG_QUERY = `
+  *[_type == "serviceArea" && slug.current == $slug][0]{ ${SERVICE_AREA_FIELDS} }
+`
+
+export const AREAS_SERVED_HUB_QUERY = `
+  *[_type == "areasServedHub"][0]{
+    seoTitle, seoDescription, "ogImageUrl": ogImage.asset->url, canonicalOverride,
+    heroEyebrow, heroHeadline, heroSubheadline, answerFirstIntro,
+    supportingSections[]{ heading, body },
+    geographicGroups[]{
+      heading, note,
+      "areas": areas[]->{ "slug": slug.current, cityName, hubCardLine, status, hasDedicatedPage, indexable }
+    },
+    featuredServices[]{ "slug": service->slug.current, "title": service->title, angle },
+    faqs[]{ question, answer },
+    finalCta{ headline, body },
+    lastReviewed
+  }
+`
+
+export type ProofItem = {
+  kind: 'fact' | 'blog' | 'client' | 'testimonial'
+  label: string
+  href?: string
+  approved: boolean
+}
+
+export type NearbyAreaRef = {
+  slug: string
+  cityName: string
+  status: string
+  hasDedicatedPage: boolean
+  indexable: boolean
+}
+
+export type FeaturedServiceRef = { slug: string; title: string; angle: string }
+
+export type ServiceAreaData = {
+  _id: string
+  cityName: string
+  officialName?: string
+  slug: string
+  region: string
+  tier: number
+  status: 'draft' | 'published'
+  hasDedicatedPage: boolean
+  indexable: boolean
+  lastReviewed?: string
+  metaTitle?: string
+  metaDescription?: string
+  canonical?: string
+  ogImageUrl?: string
+  hubCardLine: string
+  eyebrow?: string
+  h1?: string
+  summary?: string
+  localContext?: string[]
+  bestFitIndustries?: Array<{ name: string; note?: string }>
+  featuredServices?: FeaturedServiceRef[]
+  faqs?: Array<{ question: string; answer: string }>
+  localProof?: ProofItem[]
+  nearbyAreas?: NearbyAreaRef[]
+}
+
+export type AreasServedHubData = {
+  seoTitle?: string
+  seoDescription?: string
+  ogImageUrl?: string
+  canonicalOverride?: string
+  heroEyebrow?: string
+  heroHeadline?: string
+  heroSubheadline?: string
+  answerFirstIntro?: string
+  supportingSections?: Array<{ heading: string; body: string }>
+  geographicGroups?: Array<{
+    heading: string
+    note?: string
+    areas: Array<{ slug: string; cityName: string; hubCardLine: string; status: string; hasDedicatedPage: boolean; indexable: boolean }>
+  }>
+  featuredServices?: FeaturedServiceRef[]
+  faqs?: Array<{ question: string; answer: string }>
+  finalCta?: { headline?: string; body?: string }
+  lastReviewed?: string
+}
+
+// getStaticPaths and Footer.astro (rendered on every page) all need the full
+// area list — memoize the promise per build so we hit Sanity once, not N times.
+let serviceAreasPromise: Promise<ServiceAreaData[]> | null = null
+
+export function getServiceAreas(): Promise<ServiceAreaData[]> {
+  if (serviceAreasPromise) return serviceAreasPromise
+  serviceAreasPromise = (async () => {
+    const client = getSanityClient()
+    if (!client) return []
+    try {
+      return await client.fetch<ServiceAreaData[]>(ALL_SERVICE_AREAS_QUERY)
+    } catch (err) {
+      console.error('[Sanity] Service areas fetch failed:', err)
+      return []
+    }
+  })()
+  return serviceAreasPromise
+}
+
+export async function getServiceArea(slug: string): Promise<ServiceAreaData | null> {
+  const client = getSanityClient()
+  if (!client) return null
+  try {
+    return await client.fetch<ServiceAreaData>(SERVICE_AREA_BY_SLUG_QUERY, { slug })
+  } catch (err) {
+    console.error('[Sanity] Service area fetch failed:', err)
+    return null
+  }
+}
+
+export async function getAreasServedHub(): Promise<AreasServedHubData | null> {
+  const client = getSanityClient()
+  if (!client) return null
+  try {
+    return await client.fetch<AreasServedHubData>(AREAS_SERVED_HUB_QUERY)
+  } catch (err) {
+    console.error('[Sanity] Areas Served hub fetch failed:', err)
+    return null
+  }
+}

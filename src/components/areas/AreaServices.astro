@@ -4,10 +4,10 @@
  * to its canonical /marketing-services/ page (city pages route to service
  * pages; we do not create service×city combination pages).
  */
-import type { FeaturedService } from '../../lib/areas-served'
+import type { FeaturedServiceRef } from '../../lib/sanity'
 interface Props {
   cityName: string
-  services: FeaturedService[]
+  services: FeaturedServiceRef[]
   /** analytics source, e.g. the city slug */
   trackSource: string
 }

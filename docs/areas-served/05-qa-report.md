@@ -46,3 +46,20 @@
 4. Create a GA4 annotation for the launch date; add the GTM tags for the new events.
 5. Day 7–14: GSC indexation check (`site:cicon.ca/areas-served/`); Day 30: first query review; Day 60–90: content/CTR review per the editorial README cadence.
 6. Separately, review doc 04 (Richmond Hill consolidation) and green-light the blog merge + redirects ~2–4 weeks after launch.
+
+---
+
+## Addendum — 2026-07-24: re-verified after CMS migration
+
+Same 5-page launch set (hub, richmond-hill, vaughan, markham, thornhill indexable; aurora/newmarket/north-york draft), now served entirely from Sanity. Re-ran the full QA sweep against the CMS-backed build:
+
+- `npm run test:areas`: **11/11**, fetching live Sanity data (was 10/10 against static fixtures pre-migration; added a "Sanity returned all 16 GBP-list areas" test and a hub-only-areas sanity check).
+- Production build (`VERCEL_ENV=production`): clean.
+- Robots: hub + 4 cities `index,follow`; 3 drafts `noindex`. Identical to pre-migration.
+- `/areas-sitemap.xml`: identical 5-URL set, `lastmod` now sourced from each document's `lastReviewed` field in Sanity.
+- Zero: stale business data, Whitby references, links to draft pages, unresolved internal hrefs, JSON-LD parse failures.
+- Hub renders all 16 areas (4 as linked cards, 12 as plain coverage text) exactly matching the Sanity `geographicGroups` structure — verified via static HTML extraction, not just visual spot-check.
+- Visual check (Chrome, desktop + 375px mobile) on hub and Thornhill: pixel-identical to the pre-migration static version; zero console errors.
+- Confirmed via `mcp__Sanity__get_schema` that only two new document types exist in the deployed schema (`serviceArea`, `areasServedHub`) alongside the pre-existing types — matches the requested Studio IA exactly, no extra nav entries.
+
+**New consideration:** content changes now require a Sanity publish **and** a new Vercel build (Astro fetches at build time, not runtime) — a Studio-only publish does not update the live site until the next deploy. This is the same tradeoff every other Sanity-backed page on this site already has (blog, service pages); documented in the editorial README.

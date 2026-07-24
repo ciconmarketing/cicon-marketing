@@ -1,14 +1,16 @@
 ---
 /**
  * /areas-served/[slug]/ — city page.
- * Data-driven from src/lib/areas-served.ts (repo-side content model with a
- * build-time quality gate). Draft pages are generated for review but carry
- * noindex, receive no internal links, and never enter the sitemap.
+ * Content lives in Sanity (`serviceArea` documents). getStaticPaths fetches
+ * every area once, runs the quality gate, and generates a route only for
+ * areas with hasDedicatedPage — draft areas are generated too (noindexed,
+ * for MJ review) but never linked or sitemapped.
  * Section order: Breadcrumbs → AreaHero → AnswerFirst → AreaContext →
  * AreaServices → AreaProof → ProcessStrip → EeatBlock → FAQ → NearbyAreas →
  * GoogleReviews → FinalCta.
  */
-import { getBuildableAreas, getAreaBySlug, validateAreaPages } from '../../lib/areas-served'
+import { getServiceAreas } from '../../lib/sanity'
+import { validateAreaPages, getBuildableAreas } from '../../lib/areas-served'
 import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON } from '../../lib/schema-constants'
 import Nav             from '../../components/Nav.astro'
 import Footer          from '../../components/Footer.astro'
@@ -26,19 +28,16 @@ import ServiceFaq      from '../../components/services/ServiceFaq.astro'
 import FinalCta        from '../../components/services/FinalCta.astro'
 import GoogleReviews   from '../../components/react/GoogleReviews.tsx'
 
-export function getStaticPaths() {
-  validateAreaPages() // quality gate — throws at build time on any violation
-  return getBuildableAreas().map((p) => ({ params: { slug: p.slug } }))
+export async function getStaticPaths() {
+  const areas = await getServiceAreas()
+  validateAreaPages(areas) // quality gate — throws at build time on any violation
+  return getBuildableAreas(areas).map((page) => ({ params: { slug: page.slug }, props: { page } }))
 }
 
-const { slug } = Astro.params
-const page = getAreaBySlug(slug!)
-if (!page) {
-  return Astro.redirect('/areas-served/', 307)
-}
+const { page } = Astro.props
 
 const isPreview = import.meta.env.VERCEL_ENV !== 'production'
-const canonicalUrl = `https://cicon.ca/areas-served/${page.slug}/`
+const canonicalUrl = page.canonical ?? `https://cicon.ca/areas-served/${page.slug}/`
 // Draft/non-indexable pages are reviewable on the live URL but never indexed.
 const robots = isPreview || !page.indexable
   ? 'noindex, nofollow, noarchive, nosnippet'
@@ -72,11 +71,11 @@ const jsonLd = {
         description: 'Free WhatsApp consultation with our senior strategist',
       },
     },
-    ...(page.faqs.length
+    ...(page.faqs?.length
       ? [{
           '@type': 'FAQPage',
           '@id': `${canonicalUrl}#faq`,
-          mainEntity: page.faqs.map((faq) => ({
+          mainEntity: page.faqs.map((faq: { question: string; answer: string }) => ({
             '@type': 'Question',
             name: faq.question,
             acceptedAnswer: { '@type': 'Answer', text: faq.answer },
@@ -102,7 +101,7 @@ const jsonLd = {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="/fonts/fonts.css" />
-  <title>{page.title}</title>
+  <title>{page.metaTitle}</title>
   <meta name="description" content={page.metaDescription} />
   <link rel="canonical" href={canonicalUrl} />
   <meta name="robots" content={robots} />
@@ -110,15 +109,15 @@ const jsonLd = {
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content={canonicalUrl} />
-  <meta property="og:title" content={page.title} />
+  <meta property="og:title" content={page.metaTitle} />
   <meta property="og:description" content={page.metaDescription} />
-  <meta property="og:image" content="https://cicon.ca/logo-cicon.jpg" />
+  <meta property="og:image" content={page.ogImageUrl ?? 'https://cicon.ca/logo-cicon.jpg'} />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={page.title} />
+  <meta name="twitter:title" content={page.metaTitle} />
   <meta name="twitter:description" content={page.metaDescription} />
-  <meta name="twitter:image" content="https://cicon.ca/logo-cicon.jpg" />
+  <meta name="twitter:image" content={page.ogImageUrl ?? 'https://cicon.ca/logo-cicon.jpg'} />
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" sizes="120x120" href="/logo-cicon-120.png" />
@@ -216,7 +215,7 @@ const jsonLd = {
   <AreaHero
     eyebrow={page.eyebrow}
     headline={page.h1}
-    valueProp={page.summary.split('. ').slice(0, 2).join('. ').replace(/\.+$/, '') + '.'}
+    valueProp={(page.summary ?? '').split('. ').slice(0, 2).join('. ').replace(/\.+$/, '') + '.'}
     disclosure={disclosure}
     trackSource={page.slug}
   />
@@ -225,21 +224,21 @@ const jsonLd = {
 
   <AreaContext
     cityName={page.cityName}
-    paragraphs={page.localContext}
-    industries={page.bestFitIndustries}
+    paragraphs={page.localContext ?? []}
+    industries={page.bestFitIndustries ?? []}
   />
 
-  <AreaServices cityName={page.cityName} services={page.featuredServices} trackSource={page.slug} />
+  <AreaServices cityName={page.cityName} services={page.featuredServices ?? []} trackSource={page.slug} />
 
-  <AreaProof cityName={page.cityName} proof={page.localProof} />
+  <AreaProof cityName={page.cityName} proof={page.localProof ?? []} />
 
   <ProcessStrip />
 
   <EeatBlock />
 
-  <ServiceFaq faqs={page.faqs} pageUrl={canonicalUrl} />
+  <ServiceFaq faqs={page.faqs ?? []} pageUrl={canonicalUrl} />
 
-  <NearbyAreas cityName={page.cityName} nearbySlugs={page.nearbyAreas} />
+  <NearbyAreas cityName={page.cityName} nearbyAreas={page.nearbyAreas ?? []} />
 
   <GoogleReviews client:visible />
 

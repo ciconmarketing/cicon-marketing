@@ -78,3 +78,18 @@ On hub + city pages, one deferred listener script (pattern copied from `contact-
 - Published set is now data-driven to 4 cities (richmond-hill, vaughan, markham, thornhill); all link surfaces (hub cards, footer, nearby modules, sitemap) update automatically from `status`/`indexable` — no template changes were needed to expand the launch set, confirming the architecture works as designed.
 - `Nav.astro`: desktop nav breakpoint moved `md`→`lg` (fixes pre-existing stuck-dropdown bug at 768–1023px); nav labels `whitespace-nowrap`; header phone visible ≥ `xl`.
 - Business-entity constants: single `LOCAL_BUSINESS_CICON` now emitted on the homepage too (was an inline near-duplicate with a stale email).
+
+---
+
+## Addendum 2 — 2026-07-24: migrated content to Sanity CMS
+
+Per MJ's Sanity Studio information-architecture spec, all areas-served content moved from repo-side TypeScript literals (`AREA_PAGES`/`COVERAGE_AREAS` in `src/lib/areas-served.ts`) into Sanity, matching the existing `servicePage`/`servicesHub` pattern:
+
+- **`sanity/schemas/serviceArea.ts`** — one document type for all 16 active GBP areas (Studio nav: "Areas Served"). Fields cover editorial status, Has Dedicated Page, Indexable, SEO, hero, content blocks, local proof (with an `approved` flag per item), featured-service references, and nearby-area references. Cross-field validation (`Rule.custom`) blocks Indexable unless Status=Published + Has Dedicated Page=Yes + ≥1 approved proof item — enforced live in Studio, not just at build time. A `rejectWhitby` validator blocks any document whose name/slug contains "whitby".
+- **`sanity/schemas/areasServedHub.ts`** — singleton (Studio nav: "Areas Served Hub"), same `__experimental_actions: ['update','publish']` pattern as `servicesHub.ts`. References `serviceArea` documents by group instead of duplicating city copy.
+- No custom Studio desk structure was added — the default `structureTool()` already produces exactly one nav entry per registered document type, satisfying "only two top-level entries" without extra complexity.
+- `src/lib/sanity.ts` gained `getServiceAreas()` (build-time memoized — one fetch serves `getStaticPaths`, the hub page, `areas-sitemap.xml.ts`, and every page's `<Footer>`), `getServiceArea(slug)`, `getAreasServedHub()`, and the `ServiceAreaData`/`AreasServedHubData` types.
+- `src/lib/areas-served.ts` is now content-free — purely `validateAreaPages()` (the build-time backstop gate) operating on whatever Sanity returns, plus `getPublishedAreas`/`getBuildableAreas`/`getAreaBySlug` helpers.
+- `[slug].astro`'s `getStaticPaths()` fetches once and passes each area as `props`, avoiding a second per-page Sanity round-trip.
+- `scripts/__tests__/areas-served.test.ts` now fetches live Sanity data (via a `before()` hook, `.env.local`-loaded `@sanity/client`, same dotenv pattern as `seed-case-studies.ts`) and runs the same gate against it — 11 tests, all passing against production content.
+- All 16 areas seeded and published in Sanity via the Sanity MCP tools (`create_documents`/`patch_documents`/`publish_documents`): 4 published+indexable, 3 draft, 9 hub-only. Studio deployed via `npx sanity deploy` (`https://cicon-marketing.sanity.studio`) per the standing CLAUDE.md instruction to redeploy Studio after schema changes.

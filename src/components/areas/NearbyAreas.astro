@@ -1,19 +1,19 @@
 ---
 /**
  * NearbyAreas — links to nearby areas-served pages.
- * Only published + indexable targets render as links; others are skipped
- * entirely (never link to a noindexed draft). Renders nothing if no
- * qualifying neighbours exist.
+ * Only published + indexable + hasDedicatedPage targets render as links;
+ * others are skipped entirely (never link to a noindexed draft or a
+ * hub-only area with no page). Renders nothing if no qualifying neighbours
+ * exist. Target status/indexable/hasDedicatedPage are already resolved via
+ * the Sanity reference join — no extra lookup needed here.
  */
-import { getAreaBySlug } from '../../lib/areas-served'
+import type { NearbyAreaRef } from '../../lib/sanity'
 interface Props {
   cityName: string
-  nearbySlugs: string[]
+  nearbyAreas: NearbyAreaRef[]
 }
-const { cityName, nearbySlugs } = Astro.props
-const targets = nearbySlugs
-  .map((s) => getAreaBySlug(s))
-  .filter((p): p is NonNullable<typeof p> => !!p && p.status === 'published' && p.indexable)
+const { cityName, nearbyAreas } = Astro.props
+const targets = nearbyAreas.filter((a) => a.hasDedicatedPage && a.status === 'published' && a.indexable)
 if (!targets.length) return
 ---
 
