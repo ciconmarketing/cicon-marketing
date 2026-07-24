@@ -1,0 +1,17 @@
+---
+/**
+ * AnswerFirst — standalone 40–80 word direct-answer block near the top of
+ * areas-served pages. Written to remain understandable when quoted alone
+ * (AI-retrieval friendly). Light background.
+ */
+interface Props { summary: string }
+const { summary } = Astro.props
+---
+
+<section class="py-12" style="background:var(--off-white)">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="rounded-2xl border bg-white p-8" style="border-color:var(--alabaster);border-left:3px solid var(--accent)">
+      <p class="text-base sm:text-lg leading-relaxed m-0" style="color:var(--charcoal)">{summary}</p>
+    </div>
+  </div>
+</section>

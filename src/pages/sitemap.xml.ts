@@ -9,6 +9,7 @@ export const GET: APIRoute = async () => {
   const entries = [
     { loc: `${SITE_URL}/page-sitemap.xml` },
     { loc: `${SITE_URL}/services-sitemap.xml` },
+    { loc: `${SITE_URL}/areas-sitemap.xml` },
     { loc: `${SITE_URL}/post-sitemap.xml` },
   ]
   return xmlResponse(renderSitemapIndex(entries))

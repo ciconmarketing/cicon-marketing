@@ -6,6 +6,32 @@
 export const RATING_VALUE = '5.0'
 export const REVIEW_COUNT = 8
 
+/**
+ * areaServed for the sitewide business entities. Mirrors the active GBP
+ * service-area list (updated 2026-07-24 — Whitby intentionally removed).
+ * Bolton is a community within Caledon; North York, Scarborough, and
+ * Etobicoke are districts of Toronto — all are distinct search markets.
+ */
+const AREA_SERVED_GBP = [
+  { '@type': 'AdministrativeArea', name: 'Greater Toronto Area' },
+  { '@type': 'City', name: 'Richmond Hill' },
+  { '@type': 'City', name: 'Markham' },
+  { '@type': 'City', name: 'Vaughan' },
+  { '@type': 'Place', name: 'Thornhill' },
+  { '@type': 'City', name: 'Aurora' },
+  { '@type': 'City', name: 'Newmarket' },
+  { '@type': 'Place', name: 'North York' },
+  { '@type': 'AdministrativeArea', name: 'King' },
+  { '@type': 'City', name: 'Whitchurch-Stouffville' },
+  { '@type': 'City', name: 'East Gwillimbury' },
+  { '@type': 'City', name: 'Toronto' },
+  { '@type': 'City', name: 'Mississauga' },
+  { '@type': 'Place', name: 'Etobicoke' },
+  { '@type': 'City', name: 'Pickering' },
+  { '@type': 'Place', name: 'Scarborough' },
+  { '@type': 'Place', name: 'Bolton' },
+] as const
+
 const AGGREGATE_RATING = {
   '@type': 'AggregateRating',
   ratingValue: RATING_VALUE,
@@ -40,7 +66,7 @@ export const ORG_CICON = {
   description: 'Boutique digital marketing and media production agency based in Richmond Hill, Ontario, serving businesses and dental clinics across the Greater Toronto Area.',
   foundingDate: '2023',
   founder: { '@id': 'https://cicon.ca/#majid-behzad' },
-  areaServed: { '@type': 'AdministrativeArea', name: 'Greater Toronto Area' },
+  areaServed: AREA_SERVED_GBP,
   address: {
     '@type': 'PostalAddress',
     streetAddress: '131 Golf Club Ct',
@@ -96,7 +122,7 @@ export const LOCAL_BUSINESS_CICON = {
     },
   ],
   priceRange: '$$',
-  areaServed: { '@type': 'AdministrativeArea', name: 'Greater Toronto Area' },
+  areaServed: AREA_SERVED_GBP,
   sameAs: ['https://www.facebook.com/ciconmarketing/', 'https://www.instagram.com/ciconmktg/', 'https://linkedin.com/company/cicon-marketing/', 'https://www.youtube.com/@CiConMarketing'],
   aggregateRating: AGGREGATE_RATING,
 } as const

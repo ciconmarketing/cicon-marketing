@@ -1,0 +1,68 @@
+---
+/**
+ * CityGroups — the hub's geographic grouping of markets.
+ * Two card types, deliberately distinct:
+ *  - linked cards for published+indexable city pages
+ *  - plain coverage cards (no link, no fake affordance) for everything else
+ */
+export interface CityCard {
+  name: string
+  line: string
+  href?: string // only present for published+indexable pages
+}
+export interface CityGroup {
+  heading: string
+  note?: string
+  cards: CityCard[]
+}
+interface Props { groups: CityGroup[] }
+const { groups } = Astro.props
+---
+
+<section class="py-20" style="background:var(--off-white)" id="markets">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-2xl mb-12">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+        <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Where We Work</span>
+      </div>
+      <h2 class="font-heading text-3xl font-extrabold" style="color:var(--black)">Find your market</h2>
+      <p class="text-base mt-3" style="color:var(--charcoal)">
+        Markets with a dedicated page link below. The rest we serve from Richmond Hill without a separate page — coverage is real either way, and we will tell you honestly if your market is not a fit.
+      </p>
+    </div>
+
+    <div class="space-y-12">
+      {groups.map((group) => (
+        <div>
+          <h3 class="font-heading text-xl font-bold mb-2" style="color:var(--black)">{group.heading}</h3>
+          {group.note && <p class="text-sm mb-4" style="color:#777">{group.note}</p>}
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+            {group.cards.map((card) =>
+              card.href ? (
+                <a
+                  href={card.href}
+                  data-cicon-event="area_city_card_click"
+                  data-cicon-city={card.name}
+                  class="group block rounded-2xl border bg-white p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+                  style="border-color:var(--alabaster);text-decoration:none"
+                >
+                  <div class="flex items-center justify-between mb-1.5">
+                    <span class="font-heading text-lg font-bold group-hover:underline" style="color:var(--black)">{card.name}</span>
+                    <span class="text-sm font-semibold" style="color:var(--accent)">→</span>
+                  </div>
+                  <p class="text-sm leading-relaxed m-0" style="color:var(--charcoal)">{card.line}</p>
+                </a>
+              ) : (
+                <div class="rounded-2xl border p-5" style="border-color:var(--alabaster);background:#fff;opacity:.85">
+                  <div class="font-heading text-lg font-bold mb-1.5" style="color:var(--charcoal)">{card.name}</div>
+                  <p class="text-sm leading-relaxed m-0" style="color:#777">{card.line}</p>
+                </div>
+              )
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

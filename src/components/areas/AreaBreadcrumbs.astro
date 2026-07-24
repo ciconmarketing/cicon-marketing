@@ -1,0 +1,24 @@
+---
+/**
+ * AreaBreadcrumbs — visible breadcrumb trail for areas-served pages.
+ * Mirrors the BreadcrumbList JSON-LD emitted by the page head.
+ */
+interface Crumb { label: string; href?: string }
+interface Props { crumbs: Crumb[] }
+const { crumbs } = Astro.props
+---
+
+<nav aria-label="Breadcrumb" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+  <ol class="flex flex-wrap items-center gap-1 text-xs" style="color:#888;list-style:none;margin:0;padding:0">
+    {crumbs.map((c, i) => (
+      <li class="flex items-center gap-1">
+        {i > 0 && <span aria-hidden="true" style="color:var(--accent)">›</span>}
+        {c.href ? (
+          <a href={c.href} class="hover:underline" style="color:#888">{c.label}</a>
+        ) : (
+          <span aria-current="page" style="color:var(--charcoal);font-weight:600">{c.label}</span>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>

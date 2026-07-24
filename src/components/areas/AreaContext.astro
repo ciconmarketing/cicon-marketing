@@ -1,0 +1,54 @@
+---
+/**
+ * AreaContext — "The {city} market" editorial section + best-fit industries.
+ * Light background, follows the service-page eyebrow convention.
+ */
+interface Industry { name: string; note: string }
+interface Props {
+  cityName: string
+  paragraphs: string[]
+  industries: Industry[]
+}
+const { cityName, paragraphs, industries } = Astro.props
+---
+
+<section class="py-20" style="background:#fff">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+          <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Local Market</span>
+        </div>
+        <h2 class="font-heading text-3xl font-extrabold mb-6" style="color:var(--black)">
+          What we see in the {cityName} market
+        </h2>
+        <div class="space-y-4">
+          {paragraphs.map((p) => (
+            <p class="text-base leading-relaxed" style="color:var(--charcoal)">{p}</p>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+          <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Who This Fits</span>
+        </div>
+        <h2 class="font-heading text-3xl font-extrabold mb-6" style="color:var(--black)">
+          Best-fit businesses in {cityName}
+        </h2>
+        <ul style="list-style:none;margin:0;padding:0" class="space-y-4">
+          {industries.map((ind) => (
+            <li class="rounded-xl border p-5" style="border-color:var(--alabaster);background:var(--off-white)">
+              <div class="font-semibold mb-1" style="color:var(--black)">{ind.name}</div>
+              <div class="text-sm leading-relaxed" style="color:var(--charcoal)">{ind.note}</div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>

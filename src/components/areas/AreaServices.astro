@@ -1,0 +1,48 @@
+---
+/**
+ * AreaServices — the 3–6 services most relevant to this market, each linking
+ * to its canonical /marketing-services/ page (city pages route to service
+ * pages; we do not create service×city combination pages).
+ */
+import type { FeaturedService } from '../../lib/areas-served'
+interface Props {
+  cityName: string
+  services: FeaturedService[]
+  /** analytics source, e.g. the city slug */
+  trackSource: string
+}
+const { cityName, services, trackSource } = Astro.props
+---
+
+<section class="py-20" style="background:var(--off-white)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-2xl mb-12">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+        <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Services</span>
+      </div>
+      <h2 class="font-heading text-3xl font-extrabold" style="color:var(--black)">
+        What {cityName} businesses hire us for
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {services.map((s) => (
+        <a
+          href={`/marketing-services/${s.slug}/`}
+          data-cicon-event="area_service_card_click"
+          data-cicon-source={trackSource}
+          data-cicon-service={s.slug}
+          class="group block rounded-2xl border bg-white p-6 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+          style="border-color:var(--alabaster);text-decoration:none"
+        >
+          <div class="font-heading text-lg font-bold mb-2 group-hover:underline" style="color:var(--black)">
+            {s.title}
+          </div>
+          <p class="text-sm leading-relaxed m-0" style="color:var(--charcoal)">{s.angle}</p>
+          <div class="text-sm font-semibold mt-4" style="color:var(--accent)">Explore {s.title} →</div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

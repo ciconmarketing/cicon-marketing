@@ -1,5 +1,6 @@
 ---
 import { SERVICES_NAV } from '../lib/services-nav';
+import { AREA_PAGES } from '../lib/areas-served';
 import { LOCAL_BUSINESS_CICON } from '../lib/schema-constants';
 
 interface Props {
@@ -12,6 +13,14 @@ const { includeLocalBusinessSchema = true } = Astro.props;
 const year = new Date().getFullYear();
 // Sort alphabetically, matching nav dropdown convention
 const footerServices = [...SERVICES_NAV].sort((a, b) => a.title.localeCompare(b.title));
+
+// Service Areas column: keep the historical 7-city claim, but link a city only
+// when its /areas-served/ page is published + indexable (never link drafts).
+const FOOTER_AREA_NAMES = ['Richmond Hill', 'North York', 'Thornhill', 'Markham', 'Vaughan', 'Aurora', 'Newmarket'];
+const footerAreas = FOOTER_AREA_NAMES.map((name) => {
+  const p = AREA_PAGES.find((a) => a.cityName === name && a.status === 'published' && a.indexable);
+  return { name, href: p ? `/areas-served/${p.slug}/` : null };
+});
 ---
 
 <footer style="background:#212129;color:#a0a0b0;">
@@ -104,6 +113,7 @@ const footerServices = [...SERVICES_NAV].sort((a, b) => a.title.localeCompare(b.
         <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;font-size:13px;">
           {[
             { label: 'About Us',       href: '/about-us/' },
+            { label: 'Areas Served',   href: '/areas-served/' },
             { label: 'Blog',           href: '/blog/' },
             { label: 'FAQ',            href: '/faq/' },
             { label: 'Contact',        href: '/contact-us/' },
@@ -121,17 +131,35 @@ const footerServices = [...SERVICES_NAV].sort((a, b) => a.title.localeCompare(b.
         </ul>
       </div>
 
-      <!-- Column 4: Service Areas -->
+      <!-- Column 4: Service Areas — heading links to the hub; cities link only
+           when their areas-served page is published (drafts stay plain text) -->
       <div class="footer-col-areas">
-        <p style="color:#fff;font-weight:600;margin:0 0 20px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;">Service Areas</p>
+        <p style="color:#fff;font-weight:600;margin:0 0 20px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;">
+          <a href="/areas-served/" style="color:#fff;text-decoration:none;transition:color .15s;" onmouseover="this.style.color='#5eead4'" onmouseout="this.style.color='#fff'">Service Areas</a>
+        </p>
         <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;font-size:13px;color:#a0a0b0;">
-          <li>Richmond Hill</li>
-          <li>North York</li>
-          <li>Thornhill</li>
-          <li>Markham</li>
-          <li>Vaughan</li>
-          <li>Aurora</li>
-          <li>Newmarket</li>
+          {footerAreas.map((area) => (
+            <li>
+              {area.href ? (
+                <a
+                  href={area.href}
+                  style="color:#a0a0b0;text-decoration:none;transition:color .15s;"
+                  onmouseover="this.style.color='#5eead4'"
+                  onmouseout="this.style.color='#a0a0b0'"
+                >{area.name}</a>
+              ) : (
+                area.name
+              )}
+            </li>
+          ))}
+          <li>
+            <a
+              href="/areas-served/"
+              style="color:#B79A54;text-decoration:none;transition:color .15s;"
+              onmouseover="this.style.color='#5eead4'"
+              onmouseout="this.style.color='#B79A54'"
+            >All areas we serve →</a>
+          </li>
         </ul>
       </div>
 

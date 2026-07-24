@@ -1,0 +1,42 @@
+---
+/**
+ * AreaProof — local proof section. Renders ONLY approved proof items;
+ * unapproved placeholders exist in data for editorial tracking but never
+ * reach the page. If no approved items exist the section renders nothing
+ * (the build gate prevents such a page from being indexable anyway).
+ */
+import type { ProofItem } from '../../lib/areas-served'
+interface Props {
+  cityName: string
+  proof: ProofItem[]
+}
+const { cityName, proof } = Astro.props
+const approved = proof.filter((p) => p.approved)
+if (!approved.length) return
+---
+
+<section class="py-20" style="background:#fff">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center gap-2 mb-3">
+      <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+      <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Receipts</span>
+    </div>
+    <h2 class="font-heading text-3xl font-extrabold mb-8" style="color:var(--black)">
+      Our work connected to {cityName}
+    </h2>
+    <ul style="list-style:none;margin:0;padding:0" class="space-y-3">
+      {approved.map((item) => (
+        <li class="rounded-xl border p-5 flex items-start gap-3" style="border-color:var(--alabaster);background:var(--off-white)">
+          <span aria-hidden="true" style="color:var(--accent);font-weight:700">◆</span>
+          <div class="text-sm leading-relaxed" style="color:var(--charcoal)">
+            {item.href ? (
+              <a href={item.href} class="font-semibold hover:underline" style="color:var(--black)">{item.label}</a>
+            ) : (
+              <span>{item.label}</span>
+            )}
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
