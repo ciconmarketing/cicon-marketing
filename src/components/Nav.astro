@@ -29,18 +29,18 @@ import { SERVICES_NAV } from '../lib/services-nav'
       </a>
 
       <!-- Desktop Nav Links -->
-      <ul class="hidden md:flex items-center gap-8" style="list-style:none;margin:0;padding:0;">
+      <ul class="hidden lg:flex items-center gap-6 xl:gap-8" style="list-style:none;margin:0;padding:0;">
 
         <!-- Home -->
         <li>
-          <a href="/" class="text-gray-600 hover:text-teal-600 font-medium text-sm transition-colors duration-150 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-teal-600 after:transition-all hover:after:w-full">
+          <a href="/" class="whitespace-nowrap text-gray-600 hover:text-teal-600 font-medium text-sm transition-colors duration-150 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-teal-600 after:transition-all hover:after:w-full">
             Home
           </a>
         </li>
 
         <!-- Services dropdown item -->
         <li class="nav-item nav-item--has-dropdown" data-mobile-accordion>
-          <a href="/marketing-services/" class="nav-link text-gray-600 hover:text-teal-600 font-medium text-sm transition-colors duration-150 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-teal-600 after:transition-all hover:after:w-full inline-flex items-center" aria-haspopup="true" aria-expanded="false">
+          <a href="/marketing-services/" class="nav-link whitespace-nowrap text-gray-600 hover:text-teal-600 font-medium text-sm transition-colors duration-150 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-teal-600 after:transition-all hover:after:w-full inline-flex items-center" aria-haspopup="true" aria-expanded="false">
             Services
             <svg class="nav-caret" width="12" height="12" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
@@ -79,7 +79,7 @@ import { SERVICES_NAV } from '../lib/services-nav'
           { href: '/contact-us/', label: 'Contact' },
         ].map(link => (
           <li>
-            <a href={link.href} class="text-gray-600 hover:text-teal-600 font-medium text-sm transition-colors duration-150 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-teal-600 after:transition-all hover:after:w-full">
+            <a href={link.href} class="whitespace-nowrap text-gray-600 hover:text-teal-600 font-medium text-sm transition-colors duration-150 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-teal-600 after:transition-all hover:after:w-full">
               {link.label}
             </a>
           </li>
@@ -87,12 +87,12 @@ import { SERVICES_NAV } from '../lib/services-nav'
       </ul>
 
       <!-- CTA area: phone + WhatsApp -->
-      <div class="hidden md:flex items-center gap-3">
+      <div class="hidden lg:flex items-center gap-3">
 
         <!-- Phone number -->
         <a
           href="tel:+12898071020"
-          class="inline-flex items-center gap-1.5 text-gray-600 hover:text-teal-600 font-medium text-sm transition-colors duration-150"
+          class="hidden xl:inline-flex items-center gap-1.5 whitespace-nowrap text-gray-600 hover:text-teal-600 font-medium text-sm transition-colors duration-150"
           aria-label="Call CiCon Marketing"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -102,14 +102,14 @@ import { SERVICES_NAV } from '../lib/services-nav'
         </a>
 
         <!-- Divider -->
-        <span class="h-5 w-px bg-gray-300" aria-hidden="true"></span>
+        <span class="hidden xl:block h-5 w-px bg-gray-300" aria-hidden="true"></span>
 
         <!-- WhatsApp CTA -->
         <a
           href="https://wa.me/16475840800"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 px-5 py-2.5 font-semibold rounded-xl text-sm transition-all duration-200 shadow-md hover:-translate-y-0.5"
+          class="inline-flex items-center gap-2 px-5 py-2.5 font-semibold rounded-xl text-sm whitespace-nowrap transition-all duration-200 shadow-md hover:-translate-y-0.5"
           style="background:#25D366;color:#10231A;"
           onmouseover="this.style.background='#1ebe5d'"
           onmouseout="this.style.background='#25D366'"
@@ -124,7 +124,7 @@ import { SERVICES_NAV } from '../lib/services-nav'
       <!-- Mobile Menu Button -->
       <button
         id="mobile-menu-btn"
-        class="md:hidden p-2 text-gray-600 hover:text-navy-900 transition-colors rounded-lg hover:bg-gray-100"
+        class="lg:hidden p-2 text-gray-600 hover:text-navy-900 transition-colors rounded-lg hover:bg-gray-100"
         aria-label="Toggle menu"
         aria-expanded="false"
       >
@@ -141,7 +141,7 @@ import { SERVICES_NAV } from '../lib/services-nav'
   <!-- Mobile Menu -->
   <div
     id="mobile-menu"
-    class="hidden md:hidden bg-white border-t border-gray-100 shadow-lg"
+    class="hidden lg:hidden bg-white border-t border-gray-100 shadow-lg"
   >
     <div class="container-xl py-4 flex flex-col gap-1">
 

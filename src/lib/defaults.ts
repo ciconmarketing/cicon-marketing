@@ -223,9 +223,9 @@ export const defaultHomepageData: HomepageData = {
 
   contact: {
     headline: 'Get In Touch',
-    email: 'hello@cicon.ca',
-    phone: '+1 (905) 884-5060',
-    address: 'Richmond Hill, ON, Canada',
+    email: 'info@cicon.ca',
+    phone: '+1 (289) 807-1020',
+    address: '131 Golf Club Ct, Richmond Hill, ON L4C 5E1, Canada',
   },
 };
 

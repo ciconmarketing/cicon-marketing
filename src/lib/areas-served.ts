@@ -229,14 +229,14 @@ export const AREA_PAGES: ServiceAreaPage[] = [
     lastReviewed: '2026-07-24',
   },
 
-  // ── Thornhill — DRAFT until proof approved ────────────────────────────────
+  // ── Thornhill — published 2026-07-24 (MJ approved client-city attribution) ─
   {
     slug: 'thornhill',
     cityName: 'Thornhill',
     region: 'York Region',
     tier: 1,
-    status: 'draft',
-    indexable: false,
+    status: 'published',
+    indexable: true,
     title: 'Digital Marketing Agency Serving Thornhill, Ontario | CiCon',
     metaDescription:
       'Digital marketing for Thornhill businesses from a boutique agency based next door in Richmond Hill. Local SEO, Google Ads, and dental marketing that convert.',
@@ -261,23 +261,25 @@ export const AREA_PAGES: ServiceAreaPage[] = [
       { slug: 'social-media-marketing-services', title: 'Social Media Marketing', angle: 'Community-level presence for neighbourhood-driven businesses.' },
     ],
     localProof: [
-      // Verified from the clients' own public websites 2026-07-24; all three
-      // logos already appear in cicon.ca's Trusted-By marquee. Rendering their
-      // names WITH a city attribution still requires MJ approval.
+      // City locations verified from the clients' own public websites
+      // 2026-07-24; MJ approved restrained city attribution the same day.
+      // All three logos already appear in cicon.ca's Trusted-By marquee.
+      // Keep wording factual: name + city + relationship. No results, metrics,
+      // or project scope.
       {
         kind: 'client',
-        label: 'Joseph Kitchen and Bath — 60 Doncaster Ave, Thornhill (publicly stated address). Pending MJ approval.',
-        approved: false,
+        label: 'Joseph Kitchen and Bath — Thornhill kitchen and bath showroom on our client roster.',
+        approved: true,
       },
       {
         kind: 'client',
-        label: 'AM Group Studio — 95-97 Doncaster Ave, Thornhill (publicly stated address). Pending MJ approval.',
-        approved: false,
+        label: 'AM Group Studio — Thornhill-based design-build studio we work with.',
+        approved: true,
       },
       {
         kind: 'client',
-        label: 'Artistry Homes — 95-97 Doncaster Ave, Thornhill (publicly stated address). Pending MJ approval.',
-        approved: false,
+        label: 'Artistry Homes — Thornhill-based custom home builder on our client roster.',
+        approved: true,
       },
       {
         kind: 'blog',
@@ -307,14 +309,14 @@ export const AREA_PAGES: ServiceAreaPage[] = [
     lastReviewed: '2026-07-24',
   },
 
-  // ── Markham — DRAFT until client association approved ────────────────────
+  // ── Markham — published 2026-07-24 (MJ approved client-city attribution) ──
   {
     slug: 'markham',
     cityName: 'Markham',
     region: 'York Region',
     tier: 1,
-    status: 'draft',
-    indexable: false,
+    status: 'published',
+    indexable: true,
     title: 'Digital Marketing Agency Serving Markham, Ontario | CiCon',
     metaDescription:
       'Digital marketing for Markham showrooms, home-improvement companies, and clinics. Boutique, senior-led strategy from nearby Richmond Hill. Chat on WhatsApp.',
@@ -341,23 +343,25 @@ export const AREA_PAGES: ServiceAreaPage[] = [
       { slug: 'dental-marketing-services', title: 'Dental Marketing', angle: 'Patient acquisition in one of the GTA\'s most competitive clinic markets.' },
     ],
     localProof: [
-      // Verified from the clients' own public websites 2026-07-24; all three
-      // logos already appear in cicon.ca's Trusted-By marquee. Rendering their
-      // names WITH a city attribution still requires MJ approval.
+      // City locations verified from the clients' own public websites
+      // 2026-07-24; MJ approved restrained city attribution the same day.
+      // All three logos already appear in cicon.ca's Trusted-By marquee.
+      // Keep wording factual: name + city + relationship. No results, metrics,
+      // or project scope.
       {
         kind: 'client',
-        label: 'Sparkle Light — 162 Bullock Dr, Markham (publicly stated address). Pending MJ approval.',
-        approved: false,
+        label: 'Sparkle Light — Markham-based lighting brand on our active client roster.',
+        approved: true,
       },
       {
         kind: 'client',
-        label: 'Bethel International — 43 Riviera Dr, Markham Canadian HQ (publicly stated). Pending MJ approval.',
-        approved: false,
+        label: 'Bethel International — lighting manufacturer with its Canadian head office in Markham; a CiCon client.',
+        approved: true,
       },
       {
         kind: 'client',
-        label: 'Venizzi Kitchen and Bath — 162 Bullock Dr, Markham (publicly stated address). Pending MJ approval.',
-        approved: false,
+        label: 'Venizzi Kitchen and Bath — Markham kitchen and bath showroom we work with.',
+        approved: true,
       },
       {
         kind: 'blog',
@@ -577,7 +581,9 @@ export const COVERAGE_AREAS: CoverageArea[] = [
   { name: 'Scarborough', region: 'Toronto', line: 'Eastern Toronto clinics, contractors, and local businesses — a market we are actively expanding into.' },
   { name: 'Etobicoke', region: 'Toronto', line: 'Western Toronto coverage for paid advertising, SEO, and remote-friendly engagements.' },
   { name: 'Pickering', region: 'Durham Region', line: 'Eastern GTA corridor coverage for dental, home-service, and professional businesses.' },
-  { name: 'Bolton', region: 'Caledon', line: 'Home services, HVAC, and trades in Bolton and the Caledon area.' },
+  // Bolton stays hub-only this release; Direct Air Systems attribution
+  // approved by MJ 2026-07-24 (restrained wording, no results/metrics).
+  { name: 'Bolton', region: 'Caledon', line: 'Home services, HVAC, and trades in Bolton and the Caledon area — home of Direct Air Systems, an HVAC company on our client roster.' },
   { name: 'Mississauga', region: 'Peel Region', line: 'Western GTA coverage for paid advertising, SEO, and dental marketing engagements.' },
 ]
 

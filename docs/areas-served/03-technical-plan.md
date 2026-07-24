@@ -71,3 +71,10 @@ On hub + city pages, one deferred listener script (pattern copied from `contact-
 - `scripts/__tests__/areas-served.test.ts` (node --test, same harness as parser tests): validation gate rules incl. Whitby ban, slug shape, meta lengths, FAQ uniqueness across cities, nearbyAreas referential integrity + no links to non-indexable pages.
 - `npm run build` → assert: draft pages emit noindex; sitemap contains only hub+published; canonicals trailing-slash; no `/areas-served` 404s in internal links (link-check script over `dist/`).
 - Schema spot-validation of emitted JSON-LD (parse + required-key assertions in test).
+
+---
+
+## Addendum — 2026-07-24 revision round
+- Published set is now data-driven to 4 cities (richmond-hill, vaughan, markham, thornhill); all link surfaces (hub cards, footer, nearby modules, sitemap) update automatically from `status`/`indexable` — no template changes were needed to expand the launch set, confirming the architecture works as designed.
+- `Nav.astro`: desktop nav breakpoint moved `md`→`lg` (fixes pre-existing stuck-dropdown bug at 768–1023px); nav labels `whitespace-nowrap`; header phone visible ≥ `xl`.
+- Business-entity constants: single `LOCAL_BUSINESS_CICON` now emitted on the homepage too (was an inline near-duplicate with a stale email).

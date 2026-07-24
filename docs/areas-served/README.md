@@ -20,12 +20,16 @@ At least one of, stored as an `approved: true` proof item:
 
 Never invent proof, statistics, or "our {city} office" language. The gate blocks the office phrasing and Whitby outright; it cannot catch fabrication — that's on the editor.
 
-## Verified-but-unapproved client locations (2026-07-24)
+## Client-city attribution status (2026-07-24)
 
-Checked against each client's own public website. These sit in the data as `approved: false` (they render nothing) until MJ approves public use:
-- **Markham:** Sparkle Light, Bethel International (Canadian HQ), Venizzi
-- **Thornhill:** Joseph Kitchen and Bath, AM Group Studio, Artistry Homes
-- **Bolton:** Direct Air Systems (main office; Markham showroom)
+Locations checked against each client's own public website.
+
+**Approved by MJ for restrained public attribution** (rendered on pages; wording = name + city + relationship, never results/metrics/scope):
+- **Markham:** Sparkle Light, Bethel International (Canadian HQ), Venizzi → published on `/areas-served/markham/`
+- **Thornhill:** Joseph Kitchen and Bath, AM Group Studio, Artistry Homes → published on `/areas-served/thornhill/`
+- **Bolton:** Direct Air Systems → hub coverage card only (Bolton has no page this release)
+
+**Verified but NOT approved for attribution** (do not render without a new MJ decision):
 - **Richmond Hill:** Maison Opes, Smile Express Denture Clinic, MacGyver Auto Body, Paya Group
 - **Toronto:** First Electrical Supply (East York), Pizza Olive, Moxie Dental
 

@@ -24,7 +24,9 @@ test('only proof-backed pages are published and indexable', () => {
   const published = getPublishedAreas()
   assert.deepEqual(
     published.map((p) => p.slug).sort(),
-    ['richmond-hill', 'vaughan'],
+    // markham + thornhill published 2026-07-24 with MJ-approved client-city
+    // attribution; aurora/newmarket/north-york remain drafts.
+    ['markham', 'richmond-hill', 'thornhill', 'vaughan'],
     'published set changed — update this test only alongside a deliberate publish decision'
   )
   for (const p of published) {
