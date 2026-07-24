@@ -1,9 +1,14 @@
 ---
 /**
- * AreaProof — local proof section. Renders ONLY approved proof items;
- * unapproved placeholders exist in data for editorial tracking but never
- * reach the page. If no approved items exist the section renders nothing
- * (the build gate prevents such a page from being indexable anyway).
+ * AreaProof — "Our work connected to {city}" section. Renders ONLY approved
+ * proof items; unapproved placeholders exist in data for editorial tracking
+ * but never reach the page. If no approved items exist the section renders
+ * nothing (the build gate also prevents such a page from being indexable).
+ *
+ * Client/testimonial labels follow the "Company Name — description" pattern;
+ * the company name renders bold and, if a link is provided, only the name is
+ * clickable. External client sites open in a new tab with
+ * rel="noopener noreferrer"; internal cicon.ca links (blog proof) do not.
  */
 import type { ProofItem } from '../../lib/sanity'
 interface Props {
@@ -13,6 +18,17 @@ interface Props {
 const { cityName, proof } = Astro.props
 const approved = proof.filter((p) => p.approved)
 if (!approved.length) return
+
+function splitLabel(item: ProofItem): { name: string; rest: string } | null {
+  if ((item.kind === 'client' || item.kind === 'testimonial') && item.label.includes('—')) {
+    const idx = item.label.indexOf('—')
+    return { name: item.label.slice(0, idx).trim(), rest: item.label.slice(idx + 1).trim() }
+  }
+  return null
+}
+function isExternal(href?: string): boolean {
+  return !!href && !href.startsWith('https://cicon.ca')
+}
 ---
 
 <section class="py-20" style="background:#fff">
@@ -25,18 +41,41 @@ if (!approved.length) return
       Our work connected to {cityName}
     </h2>
     <ul style="list-style:none;margin:0;padding:0" class="space-y-3">
-      {approved.map((item) => (
-        <li class="rounded-xl border p-5 flex items-start gap-3" style="border-color:var(--alabaster);background:var(--off-white)">
-          <span aria-hidden="true" style="color:var(--accent);font-weight:700">◆</span>
-          <div class="text-sm leading-relaxed" style="color:var(--charcoal)">
-            {item.href ? (
-              <a href={item.href} class="font-semibold hover:underline" style="color:var(--black)">{item.label}</a>
-            ) : (
-              <span>{item.label}</span>
-            )}
-          </div>
-        </li>
-      ))}
+      {approved.map((item) => {
+        const split = splitLabel(item)
+        const external = isExternal(item.href)
+        return (
+          <li class="rounded-xl border p-5 flex items-start gap-3" style="border-color:var(--alabaster);background:var(--off-white)">
+            <span aria-hidden="true" class="flex-shrink-0" style="color:var(--accent);font-weight:700">◆</span>
+            <div class="text-sm leading-relaxed flex-1 min-w-0 break-words" style="color:var(--charcoal)">
+              {split ? (
+                <Fragment>
+                  {item.href ? (
+                    <a
+                      href={item.href}
+                      class="font-semibold hover:underline break-words"
+                      style="color:var(--black)"
+                      {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    >{split.name}</a>
+                  ) : (
+                    <strong class="font-semibold" style="color:var(--black)">{split.name}</strong>
+                  )}
+                  {` — ${split.rest}`}
+                </Fragment>
+              ) : item.href ? (
+                <a
+                  href={item.href}
+                  class="font-semibold hover:underline break-words"
+                  style="color:var(--black)"
+                  {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                >{item.label}</a>
+              ) : (
+                <span>{item.label}</span>
+              )}
+            </div>
+          </li>
+        )
+      })}
     </ul>
   </div>
 </section>

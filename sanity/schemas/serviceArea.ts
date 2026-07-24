@@ -167,12 +167,12 @@ export default defineType({
       type: 'string',
       group: 'seo',
       hidden: ({ document }) => !hasPage(document),
-      description: 'Target: 55–62 characters.',
+      description: 'Required: 50–60 characters (CiCon editorial standard).',
       validation: (Rule) => Rule.custom((value, context) => {
         if (!hasPage(context.document)) return true
         if (!value) return 'Required once Has Dedicated Page is Yes.'
         const len = value.length
-        if (len < 55 || len > 62) return `Meta title must be 55–62 characters for Google SERP (currently ${len}).`
+        if (len < 50 || len > 60) return `Meta title must be 50–60 characters for Google SERP (currently ${len}).`
         return true
       }),
     }),
@@ -183,12 +183,12 @@ export default defineType({
       rows: 3,
       group: 'seo',
       hidden: ({ document }) => !hasPage(document),
-      description: 'Target: 130–160 characters.',
+      description: 'Required: 130–140 characters (CiCon editorial standard).',
       validation: (Rule) => Rule.custom((value, context) => {
         if (!hasPage(context.document)) return true
         if (!value) return 'Required once Has Dedicated Page is Yes.'
         const len = value.length
-        if (len < 130 || len > 160) return `Meta description must be 130–160 characters for Google SERP (currently ${len}).`
+        if (len < 130 || len > 140) return `Meta description must be 130–140 characters for Google SERP (currently ${len}).`
         return true
       }),
     }),

@@ -63,3 +63,19 @@ Same 5-page launch set (hub, richmond-hill, vaughan, markham, thornhill indexabl
 - Confirmed via `mcp__Sanity__get_schema` that only two new document types exist in the deployed schema (`serviceArea`, `areasServedHub`) alongside the pre-existing types — matches the requested Studio IA exactly, no extra nav entries.
 
 **New consideration:** content changes now require a Sanity publish **and** a new Vercel build (Astro fetches at build time, not runtime) — a Studio-only publish does not update the live site until the next deploy. This is the same tradeoff every other Sanity-backed page on this site already has (blog, service pages); documented in the editorial README.
+
+---
+
+## Addendum 2 — 2026-07-24: metadata tightened to 50-60/130-140, new client proof added
+
+**Metadata standard change (Areas Served only — distinct from the sitewide 55-62/130-160 blog/service default):** Meta title 50–60 chars, meta description 130–140 chars, enforced in the Sanity schema (`serviceArea.ts`, `areasServedHub.ts`) and the build-time gate (`validateAreaPages`). All 7 area titles were already within 50–60 (no rewrite needed); all 8 descriptions (hub + 7 areas) exceeded 140 chars and were rewritten — see the metadata table in the chat response for exact before/after character counts. Rewrites preserved city-specific positioning, varied their opening structure (no mechanical "Digital marketing for X..." repetition across every page), and added zero keyword padding.
+
+**New approved client proof:**
+- Richmond Hill: +4 (Smile Express Denture Clinic, Maison Opes Corp., Paya Group Inc., North America Prefab Solutions) — appended to the existing 3 items, none removed.
+- Toronto: +3 (First Electrical Supply, Pizza Olive, Nootk) — first proof items on this hub-only record; does not create a page (hasDedicatedPage stays false).
+- North York: +2 (Aramount Corporation, Atlas Value Builders) — replaced the single unapproved "reference required" placeholder, which was stale now that real proof exists. Status remains `draft`, `indexable: false` — unchanged.
+- All 9 new items: `approved: true`, restrained factual wording (name + business type + relationship only, no results/metrics/testimonial claims), external client URL as `href`.
+
+**AreaProof.astro rewritten:** client/testimonial labels now split on the em dash so only the company name is a link (bold, `break-words` for long names); external links get `target="_blank" rel="noopener noreferrer"`, internal `cicon.ca` blog links do not; flex item given `min-w-0`/`flex-1` so long names wrap instead of overflowing.
+
+**Verification:** `npm run test:areas` 15/15 (added a length-audit test iterating every record, a uniqueness test, and an explicit 130–140 rejection test). Production build clean. Confirmed via built HTML: Toronto absent from `/areas-served/` routes (still hub-only, no page generated), `/areas-sitemap.xml` unchanged (still exactly hub + richmond-hill + vaughan + markham + thornhill), North York page still `noindex` with the new proof visible for review, zero unapproved-proof leakage, zero stale business data, zero Whitby. Studio redeployed with the new field-level validation live.

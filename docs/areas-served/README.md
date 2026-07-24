@@ -41,15 +41,19 @@ Locations checked against each client's own public website.
 - **Thornhill:** Joseph Kitchen and Bath, AM Group Studio, Artistry Homes → published on `/areas-served/thornhill/`
 - **Bolton:** Direct Air Systems → hub coverage card only (Bolton has no page this release)
 
+- **Richmond Hill:** Smile Express Denture Clinic, Maison Opes Corp., Paya Group Inc., North America Prefab Solutions → 7 total approved proof items on `/areas-served/richmond-hill/`
+- **Toronto:** First Electrical Supply, Pizza Olive, Nootk → stored on the `toronto` document; does **not** publish a page (hub-only, `hasDedicatedPage: false`)
+- **North York:** Aramount Corporation, Atlas Value Builders → stored on the `north-york` document; page remains `draft`/`noindex` — proof alone does not flip indexability
+
 **Verified but NOT approved for attribution** (do not add to any `serviceArea.localProof` without a new MJ decision):
-- **Richmond Hill:** Maison Opes, Smile Express Denture Clinic, MacGyver Auto Body, Paya Group
-- **Toronto:** First Electrical Supply (East York), Pizza Olive, Moxie Dental
+- **Richmond Hill:** MacGyver Auto Body
+- **Toronto:** Moxie Dental
 
 ## Adding a new city
 
 1. In Studio, create a new **Areas Served** document. Set City / Area Name, Slug, Region, Tier, Editorial Status = Draft, Has Dedicated Page = Yes (once content is ready) or No (hub-only for now).
 2. Fill Hub Card Line (always required) and, once Has Dedicated Page is Yes, the Hero/Content Blocks fields: Eyebrow, H1, Answer-First Summary (40–80 words, names CiCon + Richmond Hill base), ≥2 Local Market Context paragraphs, ≥2 Best-Fit Industries, 3–6 Featured Services (referencing real `servicePage` docs), 3–6 FAQs whose question text doesn't duplicate another city.
-3. Meta Title 55–62 chars, Meta Description 130–160 chars (CiCon-wide SEO standard; hard-enforced by the schema).
+3. Meta Title 50–60 chars, Meta Description 130–140 chars (Areas Served editorial standard — tighter than the sitewide 55–62/130–160 blog/service default; hard-enforced by the schema, tested by `npm run test:areas`).
 4. Add 3–5 **Nearby Areas** references (links only render once the target is published+indexable).
 5. In the **Areas Served Hub** singleton, add the new document to the right Geographic Group's Areas list (or remove it from `Toronto markets`/etc. if it graduates from hub-only).
 6. Leave Indexable off until proof is approved and status is Published.

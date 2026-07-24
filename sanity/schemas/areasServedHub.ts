@@ -43,9 +43,9 @@ export default defineType({
       title: 'SEO Title',
       type: 'string',
       group: 'seo',
-      description: 'Target: 55–62 characters.',
-      validation: (Rule) => Rule.required().min(55).max(62)
-        .error('SEO title must be 55–62 characters for Google SERP.'),
+      description: 'Required: 50–60 characters (CiCon editorial standard).',
+      validation: (Rule) => Rule.required().min(50).max(60)
+        .error('SEO title must be 50–60 characters for Google SERP.'),
     }),
     defineField({
       name: 'seoDescription',
@@ -53,9 +53,9 @@ export default defineType({
       type: 'text',
       rows: 3,
       group: 'seo',
-      description: 'Target: 130–160 characters.',
-      validation: (Rule) => Rule.required().min(130).max(160)
-        .error('Meta description must be 130–160 characters for Google SERP.'),
+      description: 'Required: 130–140 characters (CiCon editorial standard).',
+      validation: (Rule) => Rule.required().min(130).max(140)
+        .error('Meta description must be 130–140 characters for Google SERP.'),
     }),
     defineField({
       name: 'ogImage',

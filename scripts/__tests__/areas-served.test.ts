@@ -46,15 +46,26 @@ const SERVICE_AREA_FIELDS = `
 `
 
 let areas: ServiceAreaData[] = []
+let hub: { seoTitle?: string; seoDescription?: string } | null = null
 
 before(async () => {
   if (!projectId) throw new Error('PUBLIC_SANITY_PROJECT_ID missing — check .env.local')
   const client = createClient({ projectId, dataset, useCdn: false, apiVersion: '2024-01-01' })
   areas = await client.fetch<ServiceAreaData[]>(`*[_type == "serviceArea"] | order(cityName asc){ ${SERVICE_AREA_FIELDS} }`)
+  hub = await client.fetch(`*[_type == "areasServedHub"][0]{ seoTitle, seoDescription }`)
 })
 
 test('Sanity returned all 16 GBP-list areas', () => {
   assert.equal(areas.length, 16, `expected 16 serviceArea docs, got ${areas.length}`)
+})
+
+test('hub metaTitle is 50-60 chars and metaDescription is 130-140 chars', () => {
+  assert.ok(hub?.seoTitle, 'hub seoTitle missing')
+  assert.ok(hub?.seoDescription, 'hub seoDescription missing')
+  const titleLen = hub!.seoTitle!.length
+  const descLen = hub!.seoDescription!.length
+  assert.ok(titleLen >= 50 && titleLen <= 60, `hub seoTitle is ${titleLen} chars, expected 50-60`)
+  assert.ok(descLen >= 130 && descLen <= 140, `hub seoDescription is ${descLen} chars, expected 130-140`)
 })
 
 test('live data passes the quality gate', () => {
@@ -121,7 +132,57 @@ test('gate rejects out-of-range metadata lengths', () => {
     metaTitle: 'Too short',
     faqs: (template.faqs ?? []).map((f, i) => ({ ...f, question: `Badmeta unique question ${i}?` })),
   }
-  assert.throws(() => validateAreaPages([...areas, bad]), /metaTitle must be 55–62/)
+  assert.throws(() => validateAreaPages([...areas, bad]), /metaTitle must be 50–60/)
+})
+
+test('gate rejects a metaDescription outside 130–140 chars', () => {
+  const template = areas.find((p) => p.slug === 'vaughan')!
+  const bad: ServiceAreaData = {
+    ...template,
+    _id: 'test-baddesc',
+    slug: 'baddesc',
+    cityName: 'Baddesc',
+    status: 'draft',
+    indexable: false,
+    // deliberately over 140 chars
+    metaDescription: 'This meta description is intentionally written to be far too long for the new tightened Areas Served editorial standard of one hundred thirty to one hundred forty characters inclusive.',
+    faqs: (template.faqs ?? []).map((f, i) => ({ ...f, question: `Baddesc unique question ${i}?` })),
+  }
+  assert.throws(() => validateAreaPages([...areas, bad]), /metaDescription must be 130–140/)
+})
+
+test('every populated metaTitle is 50–60 chars and metaDescription is 130–140 chars', () => {
+  for (const p of areas.filter((x) => x.hasDedicatedPage)) {
+    assert.ok(p.metaTitle, `${p.slug} is missing metaTitle`)
+    assert.ok(p.metaDescription, `${p.slug} is missing metaDescription`)
+    const titleLen = p.metaTitle!.length
+    const descLen = p.metaDescription!.length
+    assert.ok(titleLen >= 50 && titleLen <= 60, `${p.slug} metaTitle is ${titleLen} chars, expected 50-60`)
+    assert.ok(descLen >= 130 && descLen <= 140, `${p.slug} metaDescription is ${descLen} chars, expected 130-140`)
+  }
+  // hub-only areas must not carry populated-but-out-of-range metadata either
+  for (const p of areas.filter((x) => !x.hasDedicatedPage)) {
+    if (p.metaTitle) {
+      const len = p.metaTitle.length
+      assert.ok(len >= 50 && len <= 60, `${p.slug} (hub-only) metaTitle is ${len} chars, expected 50-60`)
+    }
+    if (p.metaDescription) {
+      const len = p.metaDescription.length
+      assert.ok(len >= 130 && len <= 140, `${p.slug} (hub-only) metaDescription is ${len} chars, expected 130-140`)
+    }
+  }
+})
+
+test('every indexable page has unique metaTitle and metaDescription', () => {
+  const indexable = areas.filter((p) => p.hasDedicatedPage && p.status === 'published' && p.indexable)
+  const titles = new Set<string>()
+  const descs = new Set<string>()
+  for (const p of indexable) {
+    assert.ok(!titles.has(p.metaTitle!), `duplicate metaTitle on ${p.slug}`)
+    assert.ok(!descs.has(p.metaDescription!), `duplicate metaDescription on ${p.slug}`)
+    titles.add(p.metaTitle!)
+    descs.add(p.metaDescription!)
+  }
 })
 
 test('gate rejects FAQ text duplicated across cities', () => {
