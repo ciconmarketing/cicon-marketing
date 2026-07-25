@@ -24,6 +24,8 @@ import blogPost, {
 import blogCategory from './blogCategory'
 import servicePage from './servicePage'
 import servicesHub from './servicesHub'
+import serviceArea from './serviceArea'
+import areasServedHub from './areasServedHub'
 import caseStudy from './caseStudy'
 import trustedByMarquee from './trustedByMarquee'
 import contactPage from './contactPage'
@@ -538,6 +540,9 @@ export const schemaTypes = [
   servicePage,
   servicesHub,
   caseStudy,
+  // Areas served system
+  serviceArea,
+  areasServedHub,
   // Homepage modules
   trustedByMarquee,
   whyCiconCards,

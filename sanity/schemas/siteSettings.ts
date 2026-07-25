@@ -43,7 +43,7 @@ export default defineType({
       name: 'email',
       title: 'Primary Email',
       type: 'string',
-      initialValue: 'hello@cicon.ca',
+      initialValue: 'info@cicon.ca',
     }),
     defineField({
       name: 'address',

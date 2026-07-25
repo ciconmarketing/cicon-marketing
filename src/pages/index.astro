@@ -22,7 +22,7 @@ import RFinalCta from '../components/redesign/sections/RFinalCta.astro';
 import RContact from '../components/redesign/sections/RContact.astro';
 
 import { getHomepage, getTrustedByMarquee, getWhyCiconCards } from '../lib/sanity';
-import { ORG_CICON, WEBSITE_CICON, RATING_VALUE, REVIEW_COUNT } from '../lib/schema-constants';
+import { ORG_CICON, WEBSITE_CICON, LOCAL_BUSINESS_CICON, RATING_VALUE, REVIEW_COUNT } from '../lib/schema-constants';
 import { defaultHomepageData, defaultTrustedByMarquee } from '../lib/defaults';
 import type { HomepageData, TrustedByMarqueeData } from '../lib/types';
 
@@ -101,47 +101,9 @@ try {
     '@graph': [
       ORG_CICON,
       WEBSITE_CICON,
-      {
-        '@type': 'LocalBusiness',
-        '@id': 'https://cicon.ca/#local-business',
-        name: 'CiCon Marketing',
-        url: 'https://cicon.ca/',
-        telephone: '+1-289-807-1020',
-        email: 'hello@cicon.ca',
-        logo: { '@type': 'ImageObject', url: 'https://cicon.ca/logo-cicon.jpg' },
-        image: 'https://cicon.ca/logo-cicon.jpg',
-        address: {
-          '@type': 'PostalAddress',
-          streetAddress: '131 Golf Club Ct',
-          addressLocality: 'Richmond Hill',
-          addressRegion: 'ON',
-          postalCode: 'L4C 5E1',
-          addressCountry: 'CA',
-        },
-        geo: {
-          '@type': 'GeoCoordinates',
-          latitude: 43.8828,
-          longitude: -79.4403,
-        },
-        openingHoursSpecification: [
-          {
-            '@type': 'OpeningHoursSpecification',
-            dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
-            opens: '09:00',
-            closes: '18:00',
-          },
-        ],
-        priceRange: '$$',
-        areaServed: { '@type': 'AdministrativeArea', name: 'Greater Toronto Area' },
-        sameAs: ORG_CICON.sameAs,
-        aggregateRating: {
-          '@type': 'AggregateRating',
-          ratingValue: RATING_VALUE,
-          reviewCount: REVIEW_COUNT,
-          bestRating: '5',
-          worstRating: '1',
-        },
-      },
+      // Canonical LocalBusiness — shared constant so NAP/email/areaServed stay
+      // consistent sitewide (Footer skips its copy on this page).
+      LOCAL_BUSINESS_CICON,
     ],
   })} />
 

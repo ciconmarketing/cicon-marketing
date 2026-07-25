@@ -48,7 +48,7 @@ const jsonLdContactPage = {
 const jsonLdLocalBusiness = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
-  "@id": "https://cicon.ca/#organization",
+  "@id": "https://cicon.ca/#local-business",
   "name": "CiCon Marketing",
   "url": "https://cicon.ca",
   "telephone": "+1-289-807-1020",
@@ -61,7 +61,7 @@ const jsonLdLocalBusiness = {
     "postalCode": "L4C 5E1",
     "addressCountry": "CA"
   },
-  "geo": { "@type": "GeoCoordinates", "latitude": 43.8801, "longitude": -79.4392 },
+  "geo": { "@type": "GeoCoordinates", "latitude": 43.8828, "longitude": -79.4403 },
   "openingHoursSpecification": {
     "@type": "OpeningHoursSpecification",
     "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
@@ -642,6 +642,9 @@ const jsonLdFaq = {
         </h2>
         <p style="font-size:15px;line-height:1.8;color:#555;margin:0;">
           {contactSeoCopy.body}
+        </p>
+        <p style="font-size:15px;line-height:1.8;margin:14px 0 0;">
+          <a href="/areas-served/" style="color:#9D833E;font-weight:600;text-decoration:none;">See every GTA area we serve →</a>
         </p>
       </div>
     </section>

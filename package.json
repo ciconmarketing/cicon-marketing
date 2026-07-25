@@ -11,7 +11,8 @@
     "enrich-arvow": "tsx scripts/post-processor/enrich-arvow-post.ts",
     "seed-case-studies": "tsx scripts/seed-case-studies.ts",
     "scrape-services": "tsx scripts/scrape-service-pages.ts",
-    "sanity:deploy": "cd sanity && npx sanity deploy"
+    "sanity:deploy": "cd sanity && npx sanity deploy",
+    "test:areas": "node --import tsx/esm --test scripts/__tests__/areas-served.test.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",

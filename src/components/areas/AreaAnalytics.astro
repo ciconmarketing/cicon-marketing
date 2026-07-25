@@ -1,0 +1,41 @@
+---
+/**
+ * AreaAnalytics — click tracking for areas-served pages.
+ * Pushes to the GTM dataLayer via the sitewide gtag shim (same event names
+ * as contact-us.astro): whatsapp_click / phone_click / get_in_touch_click /
+ * area_city_card_click / area_service_card_click.
+ *
+ * Two layers:
+ *  1) elements tagged with data-cicon-event (rich params)
+ *  2) any untagged wa.me / tel: link on the page (Nav, Footer, FinalCta)
+ */
+interface Props { pageSource: string }
+const { pageSource } = Astro.props
+---
+
+<script is:inline define:vars={{ pageSource }}>
+  window.addEventListener('load', function () {
+    function push(name, params) {
+      if (typeof window.gtag !== 'function') return;
+      window.gtag('event', name, params);
+    }
+    document.querySelectorAll('[data-cicon-event]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var params = { source: 'areas_' + (el.dataset.ciconSource || pageSource) };
+        if (el.dataset.ciconCity) params.city = el.dataset.ciconCity;
+        if (el.dataset.ciconService) params.service = el.dataset.ciconService;
+        push(el.dataset.ciconEvent, params);
+      });
+    });
+    document.querySelectorAll('a[href^="https://wa.me"]:not([data-cicon-event])').forEach(function (el) {
+      el.addEventListener('click', function () {
+        push('whatsapp_click', { source: 'areas_' + pageSource });
+      });
+    });
+    document.querySelectorAll('a[href^="tel:"]:not([data-cicon-event])').forEach(function (el) {
+      el.addEventListener('click', function () {
+        push('phone_click', { source: 'areas_' + pageSource });
+      });
+    });
+  }, { once: true });
+</script>

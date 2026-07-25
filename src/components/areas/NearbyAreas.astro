@@ -1,0 +1,45 @@
+---
+/**
+ * NearbyAreas — links to nearby areas-served pages.
+ * Only published + indexable + hasDedicatedPage targets render as links;
+ * others are skipped entirely (never link to a noindexed draft or a
+ * hub-only area with no page). Renders nothing if no qualifying neighbours
+ * exist. Target status/indexable/hasDedicatedPage are already resolved via
+ * the Sanity reference join — no extra lookup needed here.
+ */
+import type { NearbyAreaRef } from '../../lib/sanity'
+interface Props {
+  cityName: string
+  nearbyAreas: NearbyAreaRef[]
+}
+const { cityName, nearbyAreas } = Astro.props
+const targets = nearbyAreas.filter((a) => a.hasDedicatedPage && a.status === 'published' && a.indexable)
+if (!targets.length) return
+---
+
+<section class="py-16" style="background:var(--off-white)">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="font-heading text-2xl font-extrabold mb-6" style="color:var(--black)">
+      Also serving areas near {cityName}
+    </h2>
+    <div class="flex flex-wrap gap-3">
+      {targets.map((t) => (
+        <a
+          href={`/areas-served/${t.slug}/`}
+          class="inline-flex items-center gap-2 rounded-xl border bg-white px-5 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow"
+          style="border-color:var(--alabaster);color:var(--black);text-decoration:none"
+        >
+          <span aria-hidden="true" style="color:var(--accent)">📍</span>
+          {t.cityName}
+        </a>
+      ))}
+      <a
+        href="/areas-served/"
+        class="inline-flex items-center gap-2 rounded-xl border px-5 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5"
+        style="border-color:var(--accent-text);color:var(--accent-text);text-decoration:none;background:transparent"
+      >
+        All areas we serve →
+      </a>
+    </div>
+  </div>
+</section>
