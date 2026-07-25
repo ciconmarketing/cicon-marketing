@@ -36,7 +36,18 @@ const footerAreas = FOOTER_AREA_NAMES.map((name) => {
 
         <!-- Logo + Tagline -->
         <a href="/" style="display:inline-flex;margin-bottom:16px;background:#fff;border-radius:12px;padding:8px;text-decoration:none;">
-          <img src="/logo-cicon.jpg" alt="CiCon Digital Marketing" width="144" height="40" style="height:40px;width:auto;object-fit:contain;" loading="lazy" />
+          <picture>
+            <source srcset="/logo-cicon-footer-160.webp" type="image/webp" />
+            <img
+              src="/logo-cicon-footer-160.png"
+              alt="CiCon Digital Marketing"
+              width="160"
+              height="160"
+              style="height:40px;width:auto;object-fit:contain;"
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
         </a>
         <p style="font-size:14px;line-height:1.6;max-width:360px;margin:0 0 20px;color:#a0a0b0;">
           Boutique digital marketing and media production for GTA businesses and dental clinics.

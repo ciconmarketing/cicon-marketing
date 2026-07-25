@@ -7,8 +7,12 @@
  * for MJ review) but never linked or sitemapped.
  * Section order: Breadcrumbs → AreaHero → AnswerFirst → AreaContext →
  * AreaServices → AreaProof → ProcessStrip → EeatBlock → FAQ → NearbyAreas →
- * GoogleReviews → FinalCta.
+ * AreaReviews → FinalCta.
  */
+// Self-hosted Inter (weight axis only, no italics — none used on this page).
+// Replaces a Google Fonts CDN <link> (2 preconnects + a render-blocking
+// stylesheet fetch) with an already-installed local package.
+import '@fontsource-variable/inter/wght.css'
 import { getServiceAreas } from '../../lib/sanity'
 import { validateAreaPages, getBuildableAreas } from '../../lib/areas-served'
 import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON } from '../../lib/schema-constants'
@@ -26,7 +30,7 @@ import ProcessStrip    from '../../components/services/ProcessStrip.astro'
 import EeatBlock       from '../../components/services/EeatBlock.astro'
 import ServiceFaq      from '../../components/services/ServiceFaq.astro'
 import FinalCta        from '../../components/services/FinalCta.astro'
-import GoogleReviews   from '../../components/react/GoogleReviews.tsx'
+import AreaReviews     from '../../components/areas/AreaReviews.astro'
 
 export async function getStaticPaths() {
   const areas = await getServiceAreas()
@@ -130,6 +134,16 @@ const jsonLd = {
     :root {
       --action:    #FFCF00;
       --accent:    #9D833E;
+      /* Darker read of --accent for small text on light backgrounds — #9D833E
+         only clears ~3.5:1 there (WCAG AA needs 4.5:1 for normal text).
+         --accent itself is unchanged and still used for dark-bg text,
+         borders, and decorative (aria-hidden) glyphs. */
+      --accent-text: #7A6329;
+      /* Lighter read of --accent for small text on --shadow backgrounds —
+         #9D833E clears only ~4.37:1 on #212129 (just under the 4.5:1 AA
+         floor); this variant clears ~5:1. Not needed on darker surfaces
+         (e.g. the #1a1a20 bio card), where --accent already passes. */
+      --accent-dark-text: #A68F51;
       --shadow:    #212129;
       --alabaster: #E7E7E7;
       --off-white: #FAFAFA;
@@ -137,15 +151,11 @@ const jsonLd = {
       --black:     #000;
     }
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: 'Inter', sans-serif; background: var(--off-white); color: var(--charcoal); }
-    h1, h2, h3, h4, h5, h6 { font-family: 'Clash Display', 'Inter', sans-serif; }
+    body { margin: 0; font-family: 'Inter Variable', 'Inter', sans-serif; background: var(--off-white); color: var(--charcoal); }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Clash Display', 'Inter Variable', 'Inter', sans-serif; }
     details > summary { list-style: none; }
     details > summary::-webkit-details-marker { display: none; }
   </style>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
   <!-- Google Tag Manager (lazy: loads after 3.5 s or first user interaction) -->
   <script is:inline>
@@ -204,6 +214,8 @@ const jsonLd = {
 
   <Nav />
 
+  <main>
+
   <AreaBreadcrumbs crumbs={[
     { label: 'Home', href: '/' },
     { label: 'Areas Served', href: '/areas-served/' },
@@ -240,12 +252,14 @@ const jsonLd = {
 
   <NearbyAreas cityName={page.cityName} nearbyAreas={page.nearbyAreas ?? []} />
 
-  <GoogleReviews client:visible />
+  <AreaReviews />
 
   <FinalCta
     headline={`Ready to grow in ${page.cityName}?`}
     body={`Start a WhatsApp conversation. We'll audit your current marketing, tell you honestly whether ${page.cityName} search can produce the leads you need, and map the realistic path — no fluff, no hard sell.`}
   />
+
+  </main>
 
   <Footer />
 

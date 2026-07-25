@@ -24,7 +24,7 @@ const { groups } = Astro.props
     <div class="max-w-2xl mb-12">
       <div class="flex items-center gap-2 mb-3">
         <span class="h-[1px] w-8" style="background:var(--accent)"></span>
-        <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Where We Work</span>
+        <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent-text)">Where We Work</span>
       </div>
       <h2 class="font-heading text-3xl font-extrabold" style="color:var(--black)">Find your market</h2>
       <p class="text-base mt-3" style="color:var(--charcoal)">
@@ -36,7 +36,7 @@ const { groups } = Astro.props
       {groups.map((group) => (
         <div>
           <h3 class="font-heading text-xl font-bold mb-2" style="color:var(--black)">{group.heading}</h3>
-          {group.note && <p class="text-sm mb-4" style="color:#777">{group.note}</p>}
+          {group.note && <p class="text-sm mb-4" style="color:#5a5a5a">{group.note}</p>}
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
             {group.cards.map((card) =>
               card.href ? (
@@ -49,14 +49,14 @@ const { groups } = Astro.props
                 >
                   <div class="flex items-center justify-between mb-1.5">
                     <span class="font-heading text-lg font-bold group-hover:underline" style="color:var(--black)">{card.name}</span>
-                    <span class="text-sm font-semibold" style="color:var(--accent)">→</span>
+                    <span class="text-sm font-semibold" style="color:var(--accent-text)">→</span>
                   </div>
                   <p class="text-sm leading-relaxed m-0" style="color:var(--charcoal)">{card.line}</p>
                 </a>
               ) : (
                 <div class="rounded-2xl border p-5" style="border-color:var(--alabaster);background:#fff;opacity:.85">
                   <div class="font-heading text-lg font-bold mb-1.5" style="color:var(--charcoal)">{card.name}</div>
-                  <p class="text-sm leading-relaxed m-0" style="color:#777">{card.line}</p>
+                  <p class="text-sm leading-relaxed m-0" style="color:#5a5a5a">{card.line}</p>
                 </div>
               )
             )}

@@ -1,0 +1,159 @@
+---
+/**
+ * AreaReviews — static, zero-hydration replacement for the React
+ * GoogleReviews island on areas-served pages. Same 5 reviews, same
+ * auto-rotate-every-7s + dot-navigation behaviour, same accessible
+ * star/count labelling — but server-rendered with a ~15-line vanilla
+ * <script> instead of shipping framer-motion + lucide-react + Radix
+ * Avatar/Separator to hydrate a client:visible React island.
+ * Auto-rotation is disabled under prefers-reduced-motion; dots still work.
+ */
+import { RATING_VALUE, REVIEW_COUNT } from '../../lib/schema-constants'
+
+const REVIEWS = [
+  {
+    name: 'Sparkle Light',
+    role: 'Business Owner, Sparkle Light',
+    rating: 5,
+    content:
+      "Majid and his team brought an incredible level of creativity, expertise, and genuine dedication — handling everything from content creation to our full digital strategy across Instagram, Facebook, YouTube, and TikTok. What makes CiCon truly stand out is their personalized approach. We've seen measurable improvements in brand awareness, engagement, and most importantly — sales. I truly believe Sparkle Light would not be where it is today without their continued support.",
+  },
+  {
+    name: 'Ashkan Pourshaban',
+    role: 'Local Guide',
+    rating: 5,
+    content:
+      "We've been working with CiCon for our social media marketing and advertising, and the experience has been fantastic from day one. Their team is creative, responsive, and truly understands how to position our brand online. Since partnering with them, we've seen a noticeable increase in engagement, followers, and overall brand awareness. They regularly provide insights and updates, making it easy to track progress and results. Highly recommend CiCon to any business looking to grow their digital presence with a reliable and professional marketing team!",
+  },
+  {
+    name: 'NickNuts GTA',
+    role: 'Local Business Owner',
+    rating: 5,
+    content:
+      'Creative, responsive, and results-driven. CiCon helped elevate our brand with smart strategy and great execution. From the very first meeting they understood exactly what we needed and delivered beyond expectations.',
+  },
+  {
+    name: 'Alex',
+    role: 'Small Business Owner',
+    rating: 5,
+    content:
+      'Exceeded expectations with strong support, great communication, and a real partnership approach. The team genuinely cares about your success and treats your business like their own.',
+  },
+  {
+    name: 'Soroush',
+    role: 'Entrepreneur',
+    rating: 5,
+    content:
+      'Professional, fast, and reliable. CiCon built a beautiful website and delivered strong SEO results that have made a real difference to our online visibility and lead generation.',
+  },
+]
+
+const STAR = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="16" height="16"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>'
+---
+
+<section class="py-20" style="background:#fff">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center gap-2 mb-3">
+      <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+      <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent-text)">5-Star Google Reviews</span>
+    </div>
+    <h2 class="font-heading text-3xl font-extrabold mb-3" style="color:var(--black)">What our clients say</h2>
+    <p class="text-base mb-2" style="color:var(--charcoal)">
+      Real results from real GTA businesses who trusted CiCon Marketing to grow their brand.
+    </p>
+    <p class="text-sm mb-8" style="color:#5a5a5a">{RATING_VALUE} ★ average from {REVIEW_COUNT} Google Reviews</p>
+
+    <div class="review-stage" id="area-review-stage">
+      {REVIEWS.map((r, i) => (
+        <article class={`review-card${i === 0 ? ' is-active' : ''}`} data-review={i}>
+          <div class="rounded-2xl border p-6 sm:p-8" style="border-color:var(--alabaster);background:var(--off-white)">
+            <div class="flex items-center gap-1 mb-4" role="img" aria-label={`${r.rating} out of 5 stars`} style="color:var(--action)">
+              {Array(r.rating).fill(0).map(() => <span set:html={STAR} />)}
+            </div>
+            <p class="text-base leading-relaxed mb-6" style="color:var(--charcoal)">"{r.content}"</p>
+            <div>
+              <div class="font-semibold" style="color:var(--black)">{r.name}</div>
+              <div class="text-sm" style="color:#5a5a5a">{r.role}</div>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="flex items-center gap-4 mt-6">
+      <div class="flex gap-2" role="group" aria-label="Choose a review" id="area-review-dots">
+        {REVIEWS.map((_, i) => (
+          <button
+            type="button"
+            class={`review-dot${i === 0 ? ' is-active' : ''}`}
+            data-review-dot={i}
+            aria-label={`View testimonial ${i + 1} of ${REVIEWS.length}`}
+          ></button>
+        ))}
+      </div>
+      <span class="text-sm" style="color:#5a5a5a"><span id="area-review-idx">1</span> of {REVIEWS.length} reviews</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .review-stage { position: relative; }
+  .review-card { display: none; }
+  .review-card.is-active { display: block; }
+  /* 24x24 hit area (WCAG target-size) around an 8px visible dot, via a
+     centered pseudo-element, so the tap target grows without changing
+     the design's dot appearance. */
+  .review-dot {
+    width: 24px;
+    height: 24px;
+    border: none;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+  }
+  .review-dot::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background: var(--alabaster);
+    transition: background-color 0.2s ease;
+  }
+  .review-dot.is-active::before { background: var(--accent); }
+</style>
+
+<script>
+  // Same rotation behaviour as the previous React carousel: 7s auto-advance,
+  // dot navigation, disabled under prefers-reduced-motion (dots still work).
+  const cards = [...document.querySelectorAll<HTMLElement>('#area-review-stage [data-review]')]
+  const dots = [...document.querySelectorAll<HTMLButtonElement>('#area-review-dots [data-review-dot]')]
+  const idxEl = document.getElementById('area-review-idx')
+  if (cards.length > 1) {
+    let active = 0
+    let timer = 0
+    const show = (i: number) => {
+      active = (i + cards.length) % cards.length
+      cards.forEach((c, k) => c.classList.toggle('is-active', k === active))
+      dots.forEach((d, k) => d.classList.toggle('is-active', k === active))
+      if (idxEl) idxEl.textContent = String(active + 1)
+    }
+    const motionOK = window.matchMedia('(prefers-reduced-motion: no-preference)').matches
+    const start = () => {
+      if (!motionOK) return
+      window.clearInterval(timer)
+      timer = window.setInterval(() => show(active + 1), 7000)
+    }
+    dots.forEach((d, k) =>
+      d.addEventListener('click', () => {
+        show(k)
+        start()
+      }),
+    )
+    start()
+  }
+</script>

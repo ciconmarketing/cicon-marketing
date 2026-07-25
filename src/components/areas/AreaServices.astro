@@ -19,7 +19,7 @@ const { cityName, services, trackSource } = Astro.props
     <div class="max-w-2xl mb-12">
       <div class="flex items-center gap-2 mb-3">
         <span class="h-[1px] w-8" style="background:var(--accent)"></span>
-        <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Services</span>
+        <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent-text)">Services</span>
       </div>
       <h2 class="font-heading text-3xl font-extrabold" style="color:var(--black)">
         What {cityName} businesses hire us for
@@ -40,7 +40,7 @@ const { cityName, services, trackSource } = Astro.props
             {s.title}
           </div>
           <p class="text-sm leading-relaxed m-0" style="color:var(--charcoal)">{s.angle}</p>
-          <div class="text-sm font-semibold mt-4" style="color:var(--accent)">Explore {s.title} →</div>
+          <div class="text-sm font-semibold mt-4" style="color:var(--accent-text)">Explore {s.title} →</div>
         </a>
       ))}
     </div>
