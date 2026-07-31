@@ -1,5 +1,5 @@
 ---
-import { SERVICES_NAV } from '../lib/services-nav'
+import { SERVICES_NAV_HEADER } from '../lib/services-nav'
 // No other props – Nav is static
 ---
 
@@ -50,7 +50,7 @@ import { SERVICES_NAV } from '../lib/services-nav'
           </a>
           <div class="nav-dropdown" role="menu" aria-label="Services menu">
             <ul class="nav-dropdown-list" style="list-style:none;margin:0;padding:0;">
-              {SERVICES_NAV.map((service) => (
+              {SERVICES_NAV_HEADER.map((service) => (
                 <li role="none">
                   <a href={`/marketing-services/${service.slug}/`} class="nav-dropdown-item" role="menuitem">
                     <span class="nav-dropdown-icon" aria-hidden="true">{service.icon}</span>
@@ -158,7 +158,7 @@ import { SERVICES_NAV } from '../lib/services-nav'
           </svg>
         </a>
         <div class="mobile-services-dropdown" role="menu" aria-label="Services menu">
-          {SERVICES_NAV.map((service) => (
+          {SERVICES_NAV_HEADER.map((service) => (
             <a href={`/marketing-services/${service.slug}/`} class="mobile-dropdown-item" role="menuitem">
               <span aria-hidden="true">{service.icon}</span>
               <span>{service.title}</span>
