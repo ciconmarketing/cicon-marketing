@@ -326,6 +326,50 @@ export default defineType({
       of: [statField('eeatStatItem', 'E-E-A-T Stat')],
     }),
 
+    // ── Pricing ───────────────────────────────────────────────────────────────
+    defineField({
+      name: 'pricingHeadline',
+      title: 'Pricing Headline',
+      type: 'string',
+      group: 'content',
+      description: 'Leave the tiers empty to hide the pricing section entirely',
+      initialValue: 'Transparent pricing',
+    }),
+    defineField({
+      name: 'pricingIntro',
+      title: 'Pricing Intro',
+      type: 'text',
+      rows: 2,
+      group: 'content',
+    }),
+    defineField({
+      name: 'pricingTiers',
+      title: 'Pricing Tiers (max 3)',
+      type: 'array',
+      group: 'content',
+      description: 'Section only renders when at least one tier is present',
+      of: [defineArrayMember({
+        type: 'object',
+        name: 'pricingTier',
+        fields: [
+          defineField({ name: 'name', title: 'Tier Name', type: 'string', validation: (Rule) => Rule.required() }),
+          defineField({ name: 'audience', title: 'Who it is for', type: 'string' }),
+          defineField({ name: 'price', title: 'Price (e.g. "$1,500")', type: 'string', validation: (Rule) => Rule.required() }),
+          defineField({ name: 'cadence', title: 'Cadence (e.g. "/month")', type: 'string', initialValue: '/month' }),
+          defineField({ name: 'includes', title: 'What it includes', type: 'array', of: [{ type: 'string' }] }),
+        ],
+        preview: { select: { title: 'name', subtitle: 'price' } },
+      })],
+      validation: (Rule) => Rule.max(3),
+    }),
+    defineField({
+      name: 'pricingNote',
+      title: 'Pricing Note (below tiers)',
+      type: 'string',
+      group: 'content',
+      description: 'e.g. "No setup fees. No cancellation fees."',
+    }),
+
     // ── FAQ ───────────────────────────────────────────────────────────────────
     defineField({
       name: 'faqs',

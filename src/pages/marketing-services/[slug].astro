@@ -4,7 +4,7 @@
  * Dynamically renders one servicePage document from Sanity.
  * Section order: Hero → StickyBar → PAA → AntiPitch →
  * Capabilities → [Dental: CDCP + Channels] → Process →
- * EeatBlock → FAQ → RelatedServices → RelatedPosts → FinalCta
+ * EeatBlock → [Pricing] → FAQ → RelatedServices → RelatedPosts → FinalCta
  */
 import '../../styles/globals.css';
 import { getServicePage, ALL_SERVICE_SLUGS_QUERY } from '../../lib/sanity'
@@ -18,6 +18,7 @@ import CapabilitiesGrid    from '../../components/services/CapabilitiesGrid.astr
 import ProcessStrip        from '../../components/services/ProcessStrip.astro'
 import EeatBlock           from '../../components/services/EeatBlock.astro'
 import ServiceFaq          from '../../components/services/ServiceFaq.astro'
+import PricingBlock        from '../../components/services/PricingBlock.astro'
 import RelatedServices     from '../../components/services/RelatedServices.astro'
 import RelatedPosts        from '../../components/services/RelatedPosts.astro'
 import FinalCta            from '../../components/services/FinalCta.astro'
@@ -263,6 +264,13 @@ const jsonLd = {
     headline={page.eeatHeadline}
     body={page.eeatBody}
     stats={page.eeatStats}
+  />
+
+  <PricingBlock
+    headline={page.pricingHeadline}
+    intro={page.pricingIntro}
+    note={page.pricingNote}
+    tiers={page.pricingTiers}
   />
 
   {page.faqs?.length && (

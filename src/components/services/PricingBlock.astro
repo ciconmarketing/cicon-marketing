@@ -1,0 +1,86 @@
+---
+/**
+ * PricingBlock — published price tiers for a service spoke page.
+ * Renders nothing unless at least one tier is present, so services
+ * that don't publish pricing are unaffected.
+ */
+interface Tier {
+  name: string
+  audience?: string
+  price: string
+  cadence?: string
+  includes?: string[]
+}
+interface Props {
+  headline?: string | null
+  intro?: string | null
+  note?: string | null
+  tiers?: Tier[] | null
+}
+
+// GROQ returns null (not undefined) for absent fields, so default params
+// don't apply — normalise explicitly.
+const { headline, intro, note, tiers } = Astro.props
+const list: Tier[] = tiers ?? []
+const heading = headline ?? 'Transparent pricing'
+const cols = list.length >= 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'
+---
+
+{list.length > 0 && (
+  <section class="py-20" style="background:#fff">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="max-w-2xl mb-14">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="h-[1px] w-8" style="background:var(--accent)"></span>
+          <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent-text)">Pricing</span>
+        </div>
+        <h2 class="font-heading text-3xl font-extrabold" style="color:var(--black)">{heading}</h2>
+        {intro && (
+          <p class="mt-4 text-base leading-relaxed" style="color:var(--charcoal)">{intro}</p>
+        )}
+      </div>
+
+      <div class={`grid grid-cols-1 ${cols} gap-6`}>
+        {list.map((tier) => (
+          <div
+            class="rounded-2xl p-8 border flex flex-col h-full"
+            style="border-color:var(--alabaster);background:var(--off-white)"
+          >
+            <h3 class="font-heading text-xl font-bold mb-1" style="color:var(--black)">{tier.name}</h3>
+            {tier.audience && (
+              <p class="text-sm mb-6" style="color:var(--charcoal)">{tier.audience}</p>
+            )}
+
+            <div class="flex items-baseline gap-1 mb-6">
+              <span class="font-heading text-4xl font-extrabold" style="color:var(--black)">{tier.price}</span>
+              {tier.cadence && (
+                <span class="text-base font-medium" style="color:var(--charcoal)">{tier.cadence}</span>
+              )}
+            </div>
+
+            {tier.includes && tier.includes.length > 0 && (
+              <ul class="space-y-3 mt-2">
+                {tier.includes.map((item) => (
+                  <li class="flex gap-3 text-sm leading-relaxed" style="color:var(--charcoal)">
+                    <span
+                      class="mt-[7px] shrink-0 w-1.5 h-1.5 rounded-full"
+                      style="background:var(--accent)"
+                      aria-hidden="true"
+                    ></span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {note && (
+        <p class="mt-8 text-sm" style="color:var(--charcoal)">{note}</p>
+      )}
+
+    </div>
+  </section>
+)}
