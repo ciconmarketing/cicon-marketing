@@ -4,7 +4,11 @@
  * visible rating line on the homepage reviews section.
  */
 export const RATING_VALUE = '5.0'
-export const REVIEW_COUNT = 8
+// Google Business Profile review count. Verified against GBP 2026-08-07.
+// Must stay in sync with the "Verified 5-star reviews" stat tiles in Sanity —
+// a mismatch between visible copy and AggregateRating breaks Google's
+// structured-data guidelines.
+export const REVIEW_COUNT = 9
 
 /**
  * areaServed for the sitewide business entities. Mirrors the active GBP
