@@ -23,7 +23,14 @@ interface Props {
 const { headline, intro, note, tiers } = Astro.props
 const list: Tier[] = tiers ?? []
 const heading = headline ?? 'Transparent pricing'
-const cols = list.length >= 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'
+// 3 tiers read best in a single row. 4 would be cramped there, so they wrap to
+// a 2x2 grid from md — the includes lists need the width. 1-2 tiers keep the
+// original behaviour (stacked until lg) so existing pages are unaffected.
+// Class strings are literal so Tailwind's scanner picks them up.
+const cols =
+  list.length === 3 ? 'lg:grid-cols-3'
+  : list.length >= 4 ? 'md:grid-cols-2'
+  : 'lg:grid-cols-2'
 ---
 
 {list.length > 0 && (

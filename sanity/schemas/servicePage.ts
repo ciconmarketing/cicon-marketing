@@ -344,10 +344,10 @@ export default defineType({
     }),
     defineField({
       name: 'pricingTiers',
-      title: 'Pricing Tiers (max 3)',
+      title: 'Pricing Tiers (max 4)',
       type: 'array',
       group: 'content',
-      description: 'Section only renders when at least one tier is present',
+      description: 'Section only renders when at least one tier is present. 3 tiers lay out in one row; 4 lay out as a 2×2 grid.',
       of: [defineArrayMember({
         type: 'object',
         name: 'pricingTier',
@@ -360,7 +360,7 @@ export default defineType({
         ],
         preview: { select: { title: 'name', subtitle: 'price' } },
       })],
-      validation: (Rule) => Rule.max(3),
+      validation: (Rule) => Rule.max(4),
     }),
     defineField({
       name: 'pricingNote',
