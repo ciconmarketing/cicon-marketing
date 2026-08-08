@@ -1,7 +1,7 @@
 ---
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
-import ScrollProgress from '../components/react/ScrollProgress.tsx';
+import ScrollProgress from '../components/redesign/ScrollProgress.astro';
 import '../styles/globals.css';
 
 // Redesign body components ("The Leak, Sealed" — approved on
@@ -86,11 +86,6 @@ try {
     ? <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
     : <meta name="robots" content="index, follow" />
   }
-
-  <!-- AOS – Animate On Scroll (non-blocking: preload as style, swap rel on load) -->
-  <link rel="preload" href="https://unpkg.com/aos@2.3.4/dist/aos.css" as="style"
-        onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" /></noscript>
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" sizes="120x120" href="/logo-cicon-120.png" />
@@ -189,8 +184,8 @@ try {
     </script>
   )}
 
-  <!-- Scroll progress bar — client:idle defers until after first paint -->
-  <ScrollProgress client:idle />
+  <!-- Scroll progress bar — vanilla, no framework runtime -->
+  <ScrollProgress />
 
   <Nav />
 
