@@ -11,7 +11,7 @@
 export const SERVICES_NAV = [
   { slug: 'dental-marketing-services',        title: 'Dental Marketing',       icon: '🦷', isFlagship: true,  inNav: true  },
   { slug: 'dental-seo',                       title: 'Dental SEO',             icon: '🦷', isFlagship: false, inNav: false },
-  { slug: 'ai-seo-and-seo',                   title: 'AI SEO',                         icon: '🔍', isFlagship: false, inNav: true  },
+  { slug: 'ai-seo',                   title: 'AI SEO',                         icon: '🔍', isFlagship: false, inNav: true  },
   { slug: 'content-marketing',                title: 'Content Marketing',              icon: '✍️', isFlagship: false, inNav: true  },
   { slug: 'conversion-rate-optimization',     title: 'Conversion Rate Optimization',   icon: '📈', isFlagship: false, inNav: true  },
   { slug: 'crm-integration',                  title: 'CRM Integration',                icon: '🔗', isFlagship: false, inNav: true  },

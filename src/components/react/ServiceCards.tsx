@@ -23,7 +23,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 
 const slugMap: Record<string, string> = {
   megaphone:  '/marketing-services/paid-advertising-services/',
-  search:     '/marketing-services/ai-seo-and-seo/',
+  search:     '/marketing-services/ai-seo/',
   tooth:      '/marketing-services/dental-marketing-services/',
   social:     '/marketing-services/social-media-marketing-services/',
   code:       '/marketing-services/website-development/',

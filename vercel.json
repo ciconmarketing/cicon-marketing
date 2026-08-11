@@ -76,7 +76,7 @@
   "redirects": [
     {
       "source": "/seo/",
-      "destination": "/marketing-services/ai-seo-and-seo/",
+      "destination": "/marketing-services/ai-seo/",
       "permanent": true
     },
     {
@@ -131,7 +131,7 @@
     },
     {
       "source": "/services/ai-seo/",
-      "destination": "/marketing-services/ai-seo-and-seo/",
+      "destination": "/marketing-services/ai-seo/",
       "permanent": true
     },
     {
@@ -242,6 +242,16 @@
     {
       "source": "/marketing-services/paid-advertising/",
       "destination": "/marketing-services/paid-advertising-services/",
+      "permanent": true
+    },
+    {
+      "source": "/marketing-services/ai-seo-and-seo/",
+      "destination": "/marketing-services/ai-seo/",
+      "permanent": true
+    },
+    {
+      "source": "/marketing-services/ai-seo-and-seo",
+      "destination": "/marketing-services/ai-seo/",
       "permanent": true
     }
   ]
