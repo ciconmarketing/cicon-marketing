@@ -19,6 +19,14 @@ const { cityName, proof } = Astro.props
 const approved = proof.filter((p) => p.approved)
 if (!approved.length) return
 
+// A section headed "Our work connected to X" must actually show work. Client,
+// testimonial, and blog items qualify; a bare coverage fact does not. Areas
+// carrying only 'fact' proof get an honest coverage heading instead, so a page
+// can go live without implying engagements that do not exist.
+const hasWork = approved.some((p) => p.kind === 'client' || p.kind === 'testimonial' || p.kind === 'blog')
+const eyebrow = hasWork ? 'Receipts' : 'Coverage'
+const heading = hasWork ? `Our work connected to ${cityName}` : `How we cover ${cityName}`
+
 function splitLabel(item: ProofItem): { name: string; rest: string } | null {
   if ((item.kind === 'client' || item.kind === 'testimonial') && item.label.includes('—')) {
     const idx = item.label.indexOf('—')
@@ -35,10 +43,10 @@ function isExternal(href?: string): boolean {
   <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center gap-2 mb-3">
       <span class="h-[1px] w-8" style="background:var(--accent)"></span>
-      <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent-text)">Receipts</span>
+      <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent-text)">{eyebrow}</span>
     </div>
     <h2 class="font-heading text-3xl font-extrabold mb-8" style="color:var(--black)">
-      Our work connected to {cityName}
+      {heading}
     </h2>
     <ul style="list-style:none;margin:0;padding:0" class="space-y-3">
       {approved.map((item) => {
