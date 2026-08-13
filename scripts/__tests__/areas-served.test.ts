@@ -77,9 +77,14 @@ test('only proof-backed pages are published and indexable', () => {
   assert.deepEqual(
     published.map((p) => p.slug).sort(),
     // markham + thornhill published 2026-07-24; toronto + north-york + bolton
-    // published 2026-08-12, each on verified local client proof.
-    // aurora/newmarket remain drafts — no client in either market yet.
-    ['bolton', 'markham', 'north-york', 'richmond-hill', 'thornhill', 'toronto', 'vaughan'],
+    // published 2026-08-12 on verified local client proof.
+    // aurora + newmarket published 2026-08-12 at MJ's explicit direction with
+    // NO client in either market — they carry a 'fact' coverage item only, and
+    // AreaProof renders a "How we cover X" heading rather than claiming work.
+    [
+      'aurora', 'bolton', 'markham', 'newmarket',
+      'north-york', 'richmond-hill', 'thornhill', 'toronto', 'vaughan',
+    ],
     'published set changed in Sanity — update this test only alongside a deliberate publish decision'
   )
   for (const p of published) {
