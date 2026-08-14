@@ -14,6 +14,7 @@ import '@fontsource-variable/inter/wght.css'
 import { getAreasServedHub, getServiceAreas } from '../../lib/sanity'
 import { getPublishedAreas, validateAreaPages } from '../../lib/areas-served'
 import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON } from '../../lib/schema-constants'
+import { toAbsoluteUrl } from '../../lib/url'
 import Nav             from '../../components/Nav.astro'
 import Footer          from '../../components/Footer.astro'
 import AreaBreadcrumbs from '../../components/areas/AreaBreadcrumbs.astro'
@@ -33,7 +34,7 @@ const [hub, areas] = await Promise.all([getAreasServedHub(), getServiceAreas()])
 validateAreaPages(areas)
 
 const isPreview = import.meta.env.VERCEL_ENV !== 'production'
-const canonicalUrl = hub?.canonicalOverride ?? 'https://cicon.ca/areas-served/'
+const canonicalUrl = toAbsoluteUrl(hub?.canonicalOverride, 'https://cicon.ca/areas-served/')
 
 // Sane fallbacks only in the unlikely event the Sanity fetch fails at build
 // time — the live content is always the Sanity singleton, never this.

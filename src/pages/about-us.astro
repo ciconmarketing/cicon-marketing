@@ -13,6 +13,7 @@ import '../styles/globals.css';
 import { getAboutPage, getWhyCiconCards, getTrustedByMarquee } from '../lib/sanity';
 import { defaultTrustedByMarquee } from '../lib/defaults';
 import type { TrustedByMarqueeData } from '../lib/types';
+import { toAbsoluteUrl } from '../lib/url';
 
 const isPreview = import.meta.env.VERCEL_ENV !== 'production';
 const canonicalUrl = 'https://cicon.ca/about-us/';
@@ -229,7 +230,7 @@ try {
   <!-- Primary meta -->
   <title>{aboutData?.seoTitle ?? 'About CiCon Marketing | Boutique Agency, Richmond Hill GTA'}</title>
   <meta name="description" content={aboutData?.seoDescription ?? 'Meet the boutique GTA agency behind 14+ years of real growth. Senior-led, AI-augmented marketing for local businesses and dental clinics.'} />
-  <link rel="canonical" href={aboutData?.canonicalOverride ?? canonicalUrl} />
+  <link rel="canonical" href={toAbsoluteUrl(aboutData?.canonicalOverride, canonicalUrl)} />
   {isPreview
     ? <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
     : <meta name="robots" content="index, follow" />
@@ -237,7 +238,7 @@ try {
 
   <!-- Open Graph -->
   <meta property="og:type"        content="website" />
-  <meta property="og:url"         content={aboutData?.canonicalOverride ?? canonicalUrl} />
+  <meta property="og:url"         content={toAbsoluteUrl(aboutData?.canonicalOverride, canonicalUrl)} />
   <meta property="og:title"       content={aboutData?.seoTitle ?? 'About CiCon Marketing | Boutique Agency, Richmond Hill GTA'} />
   <meta property="og:description" content={aboutData?.seoDescription ?? 'Meet the boutique GTA agency behind 14+ years of real growth. Senior-led, AI-augmented marketing for local businesses and dental clinics.'} />
   <meta property="og:image"       content={aboutData?.ogImageUrl ?? 'https://cicon.ca/logo-cicon.jpg'} />

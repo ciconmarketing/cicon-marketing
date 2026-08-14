@@ -16,6 +16,7 @@ import '@fontsource-variable/inter/wght.css'
 import { getServiceAreas } from '../../lib/sanity'
 import { validateAreaPages, getBuildableAreas } from '../../lib/areas-served'
 import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON } from '../../lib/schema-constants'
+import { toAbsoluteUrl } from '../../lib/url'
 import Nav             from '../../components/Nav.astro'
 import Footer          from '../../components/Footer.astro'
 import AreaBreadcrumbs from '../../components/areas/AreaBreadcrumbs.astro'
@@ -41,7 +42,7 @@ export async function getStaticPaths() {
 const { page } = Astro.props
 
 const isPreview = import.meta.env.VERCEL_ENV !== 'production'
-const canonicalUrl = page.canonical ?? `https://cicon.ca/areas-served/${page.slug}/`
+const canonicalUrl = toAbsoluteUrl(page.canonical, `https://cicon.ca/areas-served/${page.slug}/`)
 // Draft/non-indexable pages are reviewable on the live URL but never indexed.
 const robots = isPreview || !page.indexable
   ? 'noindex, nofollow, noarchive, nosnippet'

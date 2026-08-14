@@ -9,6 +9,7 @@
 import '../../styles/globals.css';
 import { getServicePage, ALL_SERVICE_SLUGS_QUERY } from '../../lib/sanity'
 import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON } from '../../lib/schema-constants'
+import { toAbsoluteUrl } from '../../lib/url'
 import Nav                 from '../../components/Nav.astro'
 import Footer              from '../../components/Footer.astro'
 import ServiceHero         from '../../components/services/ServiceHero.astro'
@@ -47,7 +48,7 @@ if (!page) {
 }
 
 const isPreview = import.meta.env.VERCEL_ENV !== 'production'
-const canonicalUrl = page.canonical ?? `https://cicon.ca/marketing-services/${slug}/`
+const canonicalUrl = toAbsoluteUrl(page.canonical, `https://cicon.ca/marketing-services/${slug}/`)
 const isDental = page.serviceType === 'dental'
 
 // ── Schema.org ────────────────────────────────────────────────────────────────

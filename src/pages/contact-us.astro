@@ -4,6 +4,7 @@ import Nav          from '../components/Nav.astro';
 import Footer       from '../components/Footer.astro';
 import ContactForm  from '../components/contact/ContactForm.astro';
 import { getContactPage } from '../lib/sanity';
+import { toAbsoluteUrl } from '../lib/url';
 
 const isPreview = import.meta.env.VERCEL_ENV !== 'production';
 
@@ -161,7 +162,7 @@ const jsonLdFaq = {
   <!-- Primary Meta -->
   <title>{contactSeoOverrides.seoTitle ?? 'Contact CiCon Marketing | GTA Agency, Richmond Hill ON'}</title>
   <meta name="description" content={contactSeoOverrides.seoDescription ?? 'Reach a senior marketing strategist in Richmond Hill. Serving GTA businesses and dental clinics. Response within 1 business hour, Mon–Fri.'} />
-  <link rel="canonical" href={contactSeoOverrides.canonicalOverride ?? 'https://cicon.ca/contact-us/'} />
+  <link rel="canonical" href={toAbsoluteUrl(contactSeoOverrides.canonicalOverride, 'https://cicon.ca/contact-us/')} />
   {isPreview
     ? <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
     : <meta name="robots" content="index, follow" />
@@ -169,7 +170,7 @@ const jsonLdFaq = {
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content={contactSeoOverrides.canonicalOverride ?? 'https://cicon.ca/contact-us/'} />
+  <meta property="og:url" content={toAbsoluteUrl(contactSeoOverrides.canonicalOverride, 'https://cicon.ca/contact-us/')} />
   <meta property="og:title" content={contactSeoOverrides.seoTitle ?? 'Contact CiCon Marketing | GTA Agency, Richmond Hill ON'} />
   <meta property="og:description" content={contactSeoOverrides.seoDescription ?? 'Reach a senior marketing strategist in Richmond Hill. Serving GTA businesses and dental clinics. Same-business-hour response, Mon–Fri.'} />
   <meta property="og:image" content={contactSeoOverrides.ogImageUrl ?? 'https://cicon.ca/logo-cicon.jpg'} />
