@@ -4,11 +4,12 @@
  * visible rating line on the homepage reviews section.
  */
 export const RATING_VALUE = '5.0'
-// Google Business Profile review count. Verified against GBP 2026-08-07.
-// Must stay in sync with the "Verified 5-star reviews" stat tiles in Sanity —
-// a mismatch between visible copy and AggregateRating breaks Google's
-// structured-data guidelines.
-export const REVIEW_COUNT = 9
+// Google Business Profile review count. Re-verified against live GBP data
+// (Localo sync + place.latestPlaceSnapshot.reviewsCount) on 2026-08-15: 8.
+// A prior commit (ea45c9c) set this to 9, but that no longer matches Google's
+// own public count on the listing — must stay in sync with the actual
+// REVIEWS array in RReviews.astro / GoogleReviews.tsx (currently 8 cards).
+export const REVIEW_COUNT = 8
 
 /**
  * areaServed for the sitewide business entities. Mirrors the active GBP
