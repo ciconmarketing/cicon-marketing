@@ -8,7 +8,13 @@
 import Nav            from '../components/Nav.astro';
 import Footer         from '../components/Footer.astro';
 import ContactForm    from '../components/contact/ContactForm.astro';
-import GoogleReviews  from '../components/react/GoogleReviews.tsx';
+// Static, zero-hydration reviews. The React GoogleReviews island pulled
+// React + framer-motion + Radix (349 KB raw / 112 KB gzip) onto this route for
+// a testimonial carousel; this renders the same 8 GBP reviews with the same
+// 7s rotation and dot nav from ~1 KB of inline JS.
+import AreaReviews    from '../components/areas/AreaReviews.astro';
+import LocalVisibilityScan from '../components/mapcheck/LocalVisibilityScan.astro';
+import RankingByLocation   from '../components/mapcheck/RankingByLocation.astro';
 import { ORG_CICON, WEBSITE_CICON } from '../lib/schema-constants';
 import '../styles/globals.css';
 import { getFreeMapCheckPage } from '../lib/sanity';
@@ -103,8 +109,9 @@ try {
   }
 } catch {}
 
+// Still read from Sanity — the hero visual is now the animated scanner, but
+// this image continues to drive og:image / twitter:image below.
 const heroImageUrl = mapCheckData.hero.heroImage?.asset?.url ?? null;
-const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility heat map audit interface showing local ranking positions across a city area';
 ---
 
 <!DOCTYPE html>
@@ -223,15 +230,30 @@ const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility
 
   <Nav />
 
+  <!-- Wraps the page's primary content so the document exposes a `main`
+       landmark. Purely semantic — no styling attached, so nothing moves. -->
+  <main id="main">
+
   <!-- ══════════════════════════════════════════════════════════════════════
        SECTION 1 — HERO
        ═════════════════════════════════════════════════════════════════════ -->
+  <!-- Vertical padding is deliberately generous on desktop so the animated
+       scanner (vertically centred against the taller copy column) isn't tight
+       against the nav above or the tool section below. Mobile keeps the
+       original rhythm — see the media query under this section. -->
   <section
     aria-labelledby="page-h1"
-    style="background:var(--shadow);padding:80px 0 72px;overflow:hidden;"
+    class="hero-section"
+    style="background:var(--shadow);padding:112px 0 100px;overflow:hidden;"
   >
     <div class="container-xl">
-      <div class="hero-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;">
+      <!-- minmax(0,…) rather than a bare 1fr: a bare 1fr floors each track at
+           its item's min-content, which let the scanner widen its own column
+           and squeeze the copy to ~120px on tablets.
+           The 1.45 bias keeps the scanner ~690px at desktop, which is the
+           width its map needs to hold the approved 16:9 proportions without
+           the metrics rail stretching it square. -->
+      <div class="hero-grid" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.45fr);gap:56px;align-items:center;">
 
         <!-- Left: copy -->
         <div>
@@ -255,26 +277,12 @@ const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility
           </p>
         </div>
 
-        <!-- Right: illustration — sourced from Sanity Studio → Free Map Check Page → Hero Image -->
+        <!-- Right: animated Local Visibility Scan.
+             Server-rendered SVG/CSS — no image request, so the hero's LCP
+             candidate stays the H1 text. The Sanity hero image is still read
+             above and still drives og:image / twitter:image unchanged. -->
         <div style="display:flex;align-items:center;justify-content:center;">
-          {heroImageUrl ? (
-            <img
-              src={heroImageUrl}
-              alt={heroImageAlt}
-              width="1600"
-              height="900"
-              loading="eager"
-              fetchpriority="high"
-              style="width:100%;height:auto;border-radius:12px;box-shadow:0 24px 48px rgba(0,0,0,0.3);"
-            />
-          ) : (
-            <!-- Placeholder shown until image is uploaded in Sanity Studio -->
-            <div style="width:100%;aspect-ratio:16/9;border-radius:12px;background:rgba(255,255,255,0.06);border:2px dashed rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;">
-              <p style="color:rgba(255,255,255,0.3);font-size:13px;font-family:'Inter',sans-serif;text-align:center;padding:16px;">
-                Upload hero image in<br/>Sanity Studio → Free Map Check Page → Hero Image
-              </p>
-            </div>
-          )}
+          <LocalVisibilityScan />
         </div>
 
       </div>
@@ -282,8 +290,16 @@ const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility
   </section>
 
   <style>
+    /* Below ~1024px two columns leave neither the copy nor the scanner enough
+       room, so stack them and let each use the full width. */
+    @media (max-width: 1023px) {
+      .hero-grid { grid-template-columns: minmax(0, 1fr) !important; gap: 40px !important; }
+      .hero-section { padding: 88px 0 80px !important; }
+    }
     @media (max-width: 767px) {
-      .hero-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+      .hero-grid { gap: 32px !important; }
+      /* stacked layout — keep the original mobile rhythm */
+      .hero-section { padding: 72px 0 64px !important; }
     }
   </style>
 
@@ -299,23 +315,98 @@ const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility
       <div
         style="max-width:900px;margin:0 auto;background:var(--off-white);border-radius:20px;padding:8px;border:1px solid var(--alabaster);overflow:hidden;"
       >
-        <!-- Localo Local Rank Checker widget
-             is:inline on both scripts prevents Astro from hoisting/bundling them,
-             which would break the window.LOCALO_FREE_TOOL global assignment.
-             Config script MUST precede freetool.js so the token exists on window
-             before the library initialises. -->
+        <!-- Localo Local Rank Checker widget.
+             is:inline prevents Astro from hoisting/bundling these, which would
+             break the window.LOCALO_FREE_TOOL global assignment. The config
+             MUST exist before freetool.js runs, so it stays inline and eager —
+             it's three lines and no network cost.
+
+             freetool.js itself is injected only once the tool nears the
+             viewport. It pulls in reCAPTCHA and its own bundle (the bulk of
+             this page's network payload) and prompts for geolocation on init,
+             so loading it on page load spent all of that — and showed a
+             location permission prompt — before the visitor had scrolled to
+             the tool at all. Token, container, search, analysis and results
+             behaviour are untouched; only the moment of loading changed. -->
         <script is:inline>
           window.LOCALO_FREE_TOOL = {
             container: "#free-tool",
             token: "fZbYFB16Tex919WferyoqZSqjwJGcutPy265taFBWno"
           };
         </script>
-        <script src="https://jstools.localo.app/scripts/freetool.js" async defer is:inline></script>
 
-        <div id="free-tool">Loading...</div>
+        <div id="free-tool" role="region" aria-label="Google Maps ranking heat map scanner" aria-busy="true">Loading...</div>
+
+        <!-- Colour-only override on the widget's own "Powered by Localo"
+             credit line, which ships at #999 on #fafafa (2.7:1). We can't edit
+             their markup; this just darkens the text to clear AA. If Localo
+             renames the class the rule simply stops applying — nothing breaks. -->
+        <style is:global>
+          #free-tool .localo-free-tool-credits,
+          #free-tool .localo-free-tool-credits a { color: #6B6459 !important; }
+        </style>
+
+        <script is:inline>
+          (function () {
+            var host = document.getElementById('free-tool');
+            if (!host) return;
+            var loaded = false;
+
+            function load() {
+              if (loaded) return;
+              loaded = true;
+              var s = document.createElement('script');
+              s.src = 'https://jstools.localo.app/scripts/freetool.js';
+              s.async = true;
+              s.onload = function () { host.setAttribute('aria-busy', 'false'); };
+              document.head.appendChild(s);
+
+              // The widget injects its own iframes (incl. reCAPTCHA) with no
+              // title, which fails the frame-title audit. We can't change their
+              // markup, but we can label frames as they appear.
+              var mo = new MutationObserver(function () {
+                var frames = document.querySelectorAll('#free-tool iframe:not([title])');
+                for (var i = 0; i < frames.length; i++) {
+                  frames[i].setAttribute('title', 'Google Maps ranking heat map scanner');
+                }
+              });
+              mo.observe(host, { childList: true, subtree: true });
+              setTimeout(function () { mo.disconnect(); }, 30000);
+            }
+
+            if (!('IntersectionObserver' in window)) { load(); return; }
+            // 250px of runway: enough that the widget is fetching before it
+            // scrolls into view, but not so much that it fires at rest on a
+            // phone, where the tool already sits only ~300px below the fold.
+            var io = new IntersectionObserver(function (entries) {
+              if (entries[0].isIntersecting) { io.disconnect(); load(); }
+            }, { rootMargin: '250px 0px' });
+            io.observe(host);
+          })();
+        </script>
       </div>
     </div>
   </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       SECTION 2b — BRIDGE → EDUCATIONAL ANIMATION
+       Deliberately quiet: one line, no heading, no CTA. Its only job is to
+       carry the visitor from "here is my result" to "but ranking depends on
+       where the search happens" before the animation explains why.
+       ═════════════════════════════════════════════════════════════════════ -->
+  <div class="mapcheck-bridge">
+    <div class="container-xl" style="max-width:800px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <span aria-hidden="true" class="mapcheck-bridge-rule"></span>
+        <p style="margin:0;font-size:0.95rem;line-height:1.6;color:rgba(58,58,58,0.72);">
+          One pin is one opinion. Here is what the same search looks like from across your service area.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <RankingByLocation />
 
 
   <!-- ══════════════════════════════════════════════════════════════════════
@@ -362,7 +453,10 @@ const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility
               style="width:18px;height:18px;border-radius:50%;background:#EA580C;flex-shrink:0;display:inline-block;"
               aria-hidden="true"
             ></span>
-            <h3 class="font-heading" style="font-size:1.05rem;font-weight:800;color:#EA580C;margin:0;">Orange Dots</h3>
+            <!-- Heading text only: #EA580C is 3.56:1 on white, under AA. The
+                 dot swatch, border and card keep the original orange — only
+                 this small bold label darkens to clear 4.5:1. -->
+            <h3 class="font-heading" style="font-size:1.05rem;font-weight:800;color:#C44405;margin:0;">Orange Dots</h3>
           </div>
           <p style="font-size:0.97rem;line-height:1.65;color:var(--charcoal);margin:0;">
             You're close, but a competitor is currently taking your leads. Positions 4–10 capture a fraction of the clicks that positions 1–3 do. Close is not close enough.
@@ -376,6 +470,25 @@ const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility
   <style>
     @media (max-width: 599px) {
       .explainer-grid { grid-template-columns: 1fr !important; }
+    }
+
+    /* The bridge line has to read as the lead-in to the animation below it,
+       not as its own little section. It sits tight under the tool (the tool
+       section's own bottom padding is pulled back here) and close above the
+       educational block. */
+    .mapcheck-bridge {
+      background: #fff;
+      padding: 0 0 18px;
+      margin-top: -34px;
+    }
+    .mapcheck-bridge-rule {
+      flex: none;
+      width: 1px;
+      height: 30px;
+      background: linear-gradient(to bottom, transparent, var(--alabaster));
+    }
+    @media (max-width: 767px) {
+      .mapcheck-bridge { padding-bottom: 14px; margin-top: -26px; }
     }
   </style>
 
@@ -421,9 +534,7 @@ const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility
   <!-- ══════════════════════════════════════════════════════════════════════
        SECTION 5 — SOCIAL PROOF (Home page GoogleReviews — unchanged)
        ═════════════════════════════════════════════════════════════════════ -->
-  <div style="background:var(--off-white);">
-    <GoogleReviews client:visible />
-  </div>
+  <AreaReviews />
 
 
   <!-- ══════════════════════════════════════════════════════════════════════
@@ -445,13 +556,18 @@ const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility
         Frequently Asked Questions
       </h2>
 
-      <div style="display:flex;flex-direction:column;gap:8px;" role="list">
+      <!-- No role="list"/role="listitem": `listitem` is not a permitted role on
+           <details>, which broke the accessibility tree. <details>/<summary>
+           already expose the correct disclosure semantics on their own, and
+           they also manage their own expanded state — so no hardcoded
+           aria-expanded either (it was always reporting "false", even when the
+           answer was open). -->
+      <div style="display:flex;flex-direction:column;gap:8px;">
 
         {mapCheckData.faqs.map((faq: { question: string; answer: string }) => (
-          <details role="listitem" style="background:var(--off-white);border:1px solid var(--alabaster);border-radius:12px;overflow:hidden;">
+          <details style="background:var(--off-white);border:1px solid var(--alabaster);border-radius:12px;overflow:hidden;">
             <summary
               style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 24px;font-size:1rem;font-weight:700;color:#000;line-height:1.4;"
-              aria-expanded="false"
             >
               <span>{faq.question}</span>
               <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="flex-shrink:0;color:var(--accent);transition:transform .25s ease;">
@@ -507,7 +623,7 @@ const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility
           style="display:inline-flex;align-items:center;gap:10px;padding:15px 32px;background:var(--wa-bright);color:#10231A;font-weight:700;font-size:15px;border-radius:12px;text-decoration:none;transition:background .15s;"
           onmouseover="this.style.background='var(--wa-bright-h)'"
           onmouseout="this.style.background='var(--wa-bright)'"
-          aria-label="Chat with CiCon Marketing on WhatsApp"
+          aria-label="Chat on WhatsApp with CiCon Marketing"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
@@ -537,6 +653,8 @@ const heroImageAlt = mapCheckData.hero.heroImage?.alt ?? 'Google Maps visibility
     }
   </style>
 
+
+  </main>
 
   <Footer />
 

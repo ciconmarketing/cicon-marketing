@@ -1,0 +1,515 @@
+---
+/**
+ * RankingByLocation — the educational "your ranking changes with the
+ * searcher's location" sequence that sits between the scan tool and the
+ * red/orange explainer.
+ *
+ * Native rebuild of the approved Claude Design reference. Same three scenes
+ * (#1 nearby → #3 at 1.2 km → #7 at 2.3 km), same zoom-out to the full 25-point
+ * grid resting at 0.82 scale, same local-pack reshuffle.
+ *
+ * Desktop: progress is derived from how far the *wrapper* has travelled through
+ * the viewport (never from sticky-element offsets, which stay constant while
+ * pinned). ~2.4 viewport heights, then the visitor is straight back to normal
+ * scrolling.
+ * Mobile: no pinning at all — one 4.8 s timed run when the section reaches 35 %
+ * of the viewport, settling permanently on the final grid.
+ * Reduced motion: jumps to the finished state and never listens to scroll.
+ *
+ * The 25 markers and 3 pack rows are server-rendered once; each frame mutates
+ * only `opacity`/`transform` on them, so there is no per-frame layout thrash
+ * and no DOM churn.
+ */
+
+// Ranks across the 5 × 5 service-area grid — strong at the centre, fading out.
+const GRID = [
+  [20, 12, 9, 14, 22],
+  [12, 5, 3, 7, 16],
+  [7, 2, 1, 2, 9],
+  [9, 4, 3, 5, 12],
+  [18, 16, 7, 12, 20],
+];
+
+const rankColor = (r: number) =>
+  r <= 2 ? '#2E7D5B' : r <= 5 ? '#D9A227' : r <= 10 ? '#D4712C' : '#BF4230';
+
+const POINTS = GRID.flatMap((row, r) =>
+  row.map((rank, c) => {
+    const ring = Math.max(Math.abs(r - 2), Math.abs(c - 2));
+    return {
+      r, c, ring, rank,
+      label: rank >= 20 ? '20+' : String(rank),
+      left: 50 + (c - 2) * 19,
+      top: 50 + (r - 2) * 19,
+      size: ring === 0 ? 40 : 34,
+    };
+  }),
+);
+
+const PACK = ['Your business', 'Competitor A', 'Competitor B'];
+---
+
+<!-- Deliberately not a heading element: this line is an illustrative UI
+     annotation, not new SEO copy, so it must stay out of the page's heading
+     outline. The section is named for assistive tech via aria-label instead.
+     (Angle brackets avoided on purpose — naive SEO crawlers regex for
+     heading tags and would count one inside this comment.) -->
+<section class="rbl" aria-label="How your Google Maps ranking changes with the searcher's location">
+  <div class="rbl-wrap" id="rbl-wrap">
+    <div class="rbl-sticky" id="rbl-sticky">
+      <div class="rbl-inner">
+
+        <div class="rbl-head">
+          <div class="rbl-head-l">
+            <span class="rbl-eyebrow">Why one check isn't enough</span>
+            <p class="rbl-h">Your ranking changes with the searcher's location.</p>
+          </div>
+          <div class="rbl-stage">
+            <span class="rbl-rule"></span>
+            <span id="rbl-stage-label">Scene 1 / near the business</span>
+          </div>
+        </div>
+
+        <div class="rbl-cols">
+
+          <!-- ── Map ──────────────────────────────────────────────────────── -->
+          <div class="rbl-mapbox">
+            <div class="rbl-map" id="rbl-map">
+              <svg class="rbl-grid" id="rbl-gridsvg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <g stroke="#26231F" stroke-width="0.12" fill="none">
+                  <path d="M10 0 V100 M30 0 V100 M50 0 V100 M70 0 V100 M90 0 V100"></path>
+                  <path d="M0 10 H100 M0 30 H100 M0 50 H100 M0 70 H100 M0 90 H100"></path>
+                </g>
+              </svg>
+              <svg class="rbl-roads" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <g stroke="#C9C1B2" stroke-width="0.45" fill="none">
+                  <path d="M0 50 H100"></path>
+                  <path d="M50 0 V100"></path>
+                  <path d="M0 14 H62 L100 40"></path>
+                  <path d="M18 100 L18 62 L100 78"></path>
+                </g>
+              </svg>
+
+              <div class="rbl-ring" id="rbl-ring-a"></div>
+              <div class="rbl-ring" id="rbl-ring-b"></div>
+
+              {POINTS.map((p) => (
+                <div
+                  class="rbl-pt"
+                  data-ring={p.ring}
+                  data-r={p.r}
+                  data-c={p.c}
+                  style={`left:${p.left}%;top:${p.top}%;width:${p.size}px;height:${p.size}px;margin:${-p.size / 2}px 0 0 ${-p.size / 2}px;font-size:${p.ring === 0 ? 14 : 12}px;background:${rankColor(p.rank)};z-index:${p.ring === 0 ? 5 : 4}`}
+                >{p.label}</div>
+              ))}
+
+              <!-- the moving searcher -->
+              <div class="rbl-search" id="rbl-search"><span id="rbl-search-rank">1</span></div>
+
+              <!-- the business -->
+              <div class="rbl-biz"></div>
+              <div class="rbl-biz-label">Your business</div>
+            </div>
+
+            <div class="rbl-legend">
+              <span><i style="background:#2E7D5B"></i>1–2</span>
+              <span><i style="background:#D9A227"></i>3–5</span>
+              <span><i style="background:#D4712C"></i>6–10</span>
+              <span><i style="background:#BF4230"></i>11+</span>
+            </div>
+          </div>
+
+          <!-- ── Local pack + caption ─────────────────────────────────────── -->
+          <div class="rbl-side">
+            <div class="rbl-card">
+              <div class="rbl-card-head">
+                <span>Search location</span>
+                <span id="rbl-dist">Nearby</span>
+              </div>
+              <div class="rbl-pack">
+                {PACK.map((name, i) => (
+                  <div class:list={['rbl-prow', { 'is-mine': i === 0 }]} data-idx={i}>
+                    <span class="rbl-prank">{i + 1}</span>
+                    <span class="rbl-pname">{name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <p class="rbl-cap" id="rbl-cap">
+              Checking from near your business can make visibility look stronger than what customers see across your service area.
+            </p>
+
+            <div class="rbl-ticks">
+              <span class="rbl-tick"></span><span class="rbl-tick"></span><span class="rbl-tick"></span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .rbl {
+    --ink: #26231F;
+    --paper: #FBF9F5;
+    --sand: #F7F4EE;
+    --line: #E4DFD4;
+    --muted: #6E675C;
+    /* Darkened from #9A9184, which failed WCAG AA (2.83:1) on the sand/paper
+       surfaces it labels — the eyebrow and the "search location" caption. */
+    --muted-2: #726A5D;
+    --accent: #B4761A;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+    background: var(--sand);
+    color: var(--ink);
+  }
+
+  .rbl-wrap { position: relative; height: 240vh; }
+  .rbl-sticky {
+    position: sticky; top: 0; height: 100vh;
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .rbl-inner {
+    width: 100%; max-width: 1120px; padding: 0 28px;
+    display: flex; flex-direction: column; gap: 22px;
+  }
+
+  /* ── Head ────────────────────────────────────────────────────────────── */
+  .rbl-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 20px; flex-wrap: wrap;
+  }
+  .rbl-head-l { display: flex; flex-direction: column; gap: 7px; }
+  .rbl-eyebrow {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--muted-2);
+  }
+  .rbl-h {
+    font-size: clamp(1.15rem, 2vw, 1.4rem); font-weight: 600; letter-spacing: -0.01em;
+    max-width: 30ch; text-wrap: pretty; margin: 0; line-height: 1.3;
+  }
+  .rbl-stage {
+    display: flex; align-items: center; gap: 14px;
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+  }
+  .rbl-rule { display: inline-block; width: 22px; height: 1px; background: #DBD5C9; }
+
+  /* ── Columns ─────────────────────────────────────────────────────────── */
+  .rbl-cols { display: flex; gap: 22px; align-items: stretch; flex-wrap: wrap; }
+
+  .rbl-mapbox {
+    flex: 1 1 420px; min-width: 300px; max-width: min(560px, 58vh);
+    position: relative; aspect-ratio: 1 / 1;
+    border: 1px solid var(--line); border-radius: 4px; background: var(--paper);
+    overflow: hidden;
+  }
+  .rbl-map { position: absolute; inset: 0; will-change: transform; }
+  .rbl-grid, .rbl-roads { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .rbl-grid { opacity: 0.05; }
+
+  .rbl-ring {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%; border: 1px solid rgba(180, 118, 26, 0.5);
+    background: rgba(180, 118, 26, 0.05); z-index: 2;
+  }
+
+  .rbl-pt {
+    position: absolute; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-weight: 600; color: #FBF9F5;
+    box-shadow: 0 1px 3px rgba(38, 35, 31, 0.2);
+    /* hidden until the scroll/timed sequence reveals them; JS owns these two
+       properties from here on. No will-change — 25 promoted layers costs more
+       than it saves for marks this small. */
+    opacity: 0; transform: scale(0.55);
+  }
+
+  .rbl-search {
+    position: absolute; width: 44px; height: 44px; margin: -22px 0 0 -22px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    background: #2E7D5B; border: 3px solid var(--paper);
+    box-shadow: 0 2px 8px rgba(38, 35, 31, 0.22); z-index: 7;
+    transition: background 0.45s ease;
+    will-change: opacity, transform;
+  }
+  .rbl-search span { font-family: var(--mono); font-size: 15px; font-weight: 600; color: #FBF9F5; }
+
+  .rbl-biz {
+    position: absolute; left: 50%; top: 50%; width: 15px; height: 15px;
+    margin: -7.5px 0 0 -7.5px; border-radius: 50%; background: var(--ink);
+    border: 3px solid var(--paper); box-shadow: 0 1px 4px rgba(38, 35, 31, 0.35); z-index: 6;
+  }
+  .rbl-biz-label {
+    position: absolute; left: 50%; top: 50%; margin: 12px 0 0 -60px; width: 120px;
+    text-align: center; font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink); z-index: 6;
+  }
+
+  .rbl-legend {
+    position: absolute; left: 14px; bottom: 12px;
+    display: flex; align-items: center; gap: 12px; padding: 7px 11px;
+    background: rgba(251, 249, 245, 0.92); border: 1px solid var(--line); border-radius: 3px;
+    font-family: var(--mono); font-size: 10px; color: var(--muted);
+  }
+  .rbl-legend span { display: flex; align-items: center; gap: 5px; }
+  .rbl-legend i { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* ── Side ────────────────────────────────────────────────────────────── */
+  .rbl-side { flex: 0 1 300px; min-width: 250px; display: flex; flex-direction: column; gap: 16px; }
+  .rbl-card { border: 1px solid var(--line); border-radius: 4px; background: var(--paper); padding: 14px 14px 15px; }
+  .rbl-card-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--muted-2); margin-bottom: 12px;
+  }
+  #rbl-dist { font-weight: 600; color: #2E7D5B; transition: color 0.4s ease; }
+
+  /* --row-pitch is the vertical step between the three pack rows. The reshuffle
+     transform is applied from JS, which reads this value — keep them coupled
+     here rather than hard-coding the number in two places. */
+  .rbl-pack { position: relative; --row-pitch: 47px; height: calc(var(--row-pitch) * 2 + 40px); }
+  .rbl-prow {
+    position: absolute; left: 0; right: 0; top: 0; height: 40px;
+    display: flex; align-items: center; gap: 12px; padding: 0 12px;
+    border: 1px solid var(--line); border-radius: 3px; background: var(--sand);
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.5s ease;
+    will-change: transform;
+  }
+  .rbl-prow.is-mine { border-color: #2E7D5B; background: rgba(180, 118, 26, 0.05); }
+  .rbl-prank {
+    font-family: var(--mono); font-size: 11px; width: 18px; height: 18px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: #B8B0A2; color: #FBF9F5; flex: 0 0 auto; transition: background 0.5s ease;
+  }
+  .rbl-prow.is-mine .rbl-prank { background: #2E7D5B; }
+  .rbl-pname { font-size: 13px; color: var(--muted); }
+  .rbl-prow.is-mine .rbl-pname { font-weight: 600; color: var(--ink); }
+
+  .rbl-cap { margin: 0; font-size: 14px; line-height: 1.55; color: #55504A; max-width: 34ch; text-wrap: pretty; }
+
+  .rbl-ticks { display: flex; gap: 6px; align-items: center; margin-top: auto; }
+  .rbl-tick {
+    height: 2px; width: 16px; border-radius: 2px; background: #DBD5C9;
+    transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1), background 0.45s ease;
+  }
+  .rbl-tick.is-on { background: var(--accent); }
+  .rbl-tick.is-cur { width: 34px; }
+
+  /* ── Mobile / reduced motion: no pinning, section flows normally ──────── */
+  @media (max-width: 859px) {
+    .rbl-wrap { height: auto !important; }
+    /* less padding on top than bottom: the bridge line above is the lead-in,
+       so the animation should sit close under it */
+    .rbl-sticky { position: static; height: auto; padding: 28px 0 56px; }
+    .rbl-inner { padding: 0 20px; gap: 18px; }
+    .rbl-mapbox { max-width: 100%; }
+    .rbl-side { flex-basis: 100%; }
+    /* Stays absolutely positioned here on purpose. .rbl-map is out of flow, so
+       a `position: static` legend becomes the mapbox's first in-flow child and
+       renders across the top of the map instead of under it. */
+    .rbl-legend { left: 10px; bottom: 10px; gap: 10px; }
+    .rbl-stage { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rbl-wrap { height: auto !important; }
+    .rbl-sticky { position: static; height: auto; padding: 28px 0 56px; }
+    .rbl-prow, .rbl-tick, .rbl-search, #rbl-dist { transition: none !important; }
+  }
+</style>
+
+<noscript>
+  <!-- Without JS nothing drives the reveal, so show the finished map: the
+       full 25-point grid is the point of the section, and the lone searcher
+       marker would be meaningless frozen at scene 1.
+
+       is:inline is REQUIRED here. Without it Astro lifts this <style> out of
+       the <noscript>, scopes it, and merges it into the page stylesheet — the
+       `height:auto !important` then applies to everyone, which collapses the
+       scroll runway and pins the animation at its final frame. -->
+  <style is:inline>
+    .rbl .rbl-wrap { height: auto !important; }
+    .rbl .rbl-sticky { position: static !important; height: auto !important; padding: 56px 0; }
+    .rbl .rbl-pt { opacity: 0.96 !important; transform: scale(1) !important; }
+    .rbl .rbl-search, .rbl .rbl-ring { display: none !important; }
+    .rbl .rbl-grid { opacity: 0.14 !important; }
+  </style>
+</noscript>
+
+<script>
+  (() => {
+    const wrap = document.getElementById('rbl-wrap');
+    const map = document.getElementById('rbl-map');
+    const search = document.getElementById('rbl-search');
+    const searchRank = document.getElementById('rbl-search-rank');
+    const ringA = document.getElementById('rbl-ring-a');
+    const ringB = document.getElementById('rbl-ring-b');
+    const gridSvg = document.getElementById('rbl-gridsvg');
+    const distEl = document.getElementById('rbl-dist');
+    const capEl = document.getElementById('rbl-cap');
+    const stageEl = document.getElementById('rbl-stage-label');
+    if (!wrap || !map || !search || !searchRank || !ringA || !ringB || !gridSvg || !distEl || !capEl) return;
+
+    const pts = [...document.querySelectorAll<HTMLElement>('.rbl-pt')];
+    const rows = [...document.querySelectorAll<HTMLElement>('.rbl-prow')];
+    const ticks = [...document.querySelectorAll<HTMLElement>('.rbl-tick')];
+
+    // Row step comes from CSS (--row-pitch) so spacing lives in one place.
+    const pack = document.querySelector<HTMLElement>('.rbl-pack');
+    const ROW_PITCH =
+      parseFloat(pack ? getComputedStyle(pack).getPropertyValue('--row-pitch') : '') || 47;
+
+    const EASE = (t: number) => 1 - Math.pow(1 - t, 3);
+    const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
+    const seg = (p: number, a: number, b: number) => clamp((p - a) / (b - a), 0, 1);
+
+    const STOPS = [
+      { dist: 'Nearby',      rank: 1, x: 0.055, y: -0.045, r: 0.11 },
+      { dist: '1.2 km away', rank: 3, x: 0.20,  y: -0.155, r: 0.24 },
+      { dist: '2.3 km away', rank: 7, x: 0.345, y: -0.27,  r: 0.40 },
+    ];
+    const CAPTIONS = [
+      'Checking from near your business can make visibility look stronger than what customers see across your service area.',
+      'A customer two kilometres away sees a different local pack. Same query, same business, lower position.',
+      'Scan the whole service area and the truth appears: strong at the centre, fading at the edges.',
+    ];
+    const STAGES = [
+      'Scene 1 / near the business',
+      'Scene 2 / customer moves away',
+      'Scene 3 / the full picture',
+    ];
+    const colorFor = (r: number) =>
+      r <= 2 ? '#2E7D5B' : r <= 5 ? '#D9A227' : r <= 10 ? '#D4712C' : '#BF4230';
+
+    let lastStage = -1;
+
+    function render(p: number) {
+      const travel = seg(p, 0.20, 0.60) * 2;
+      const zoom = EASE(seg(p, 0.68, 1));
+      const i = Math.min(1, Math.floor(travel));
+      const u = EASE(clamp(travel - i, 0, 1));
+      const a = STOPS[i], b = STOPS[i + 1];
+      const x = a.x + (b.x - a.x) * u;
+      const y = a.y + (b.y - a.y) * u;
+      const rad = a.r + (b.r - a.r) * u;
+      const stopIdx = travel < 0.5 ? 0 : travel < 1.5 ? 1 : 2;
+      const cur = STOPS[stopIdx];
+      const rankColor = colorFor(cur.rank);
+
+      // final resting scale is 0.82 — the full 25-point map must stay readable
+      map.style.transform = 'scale(' + (1 - 0.18 * zoom) + ')';
+      gridSvg.style.opacity = String(0.05 + 0.09 * zoom);
+
+      // the single searcher fades out as the full grid takes over
+      const searchOut = 1 - EASE(seg(p, 0.68, 0.84));
+      search.style.left = 50 + x * 100 + '%';
+      search.style.top = 50 + y * 100 + '%';
+      search.style.opacity = String(searchOut);
+      search.style.transform = 'scale(' + (0.85 + 0.15 * searchOut) + ')';
+      search.style.background = rankColor;
+      searchRank.textContent = String(cur.rank);
+
+      const ringSize = (mult: number) => (rad * 200 * mult).toFixed(2) + '%';
+      ringA.style.width = ringA.style.height = ringSize(1);
+      ringA.style.opacity = String(searchOut);
+      ringB.style.width = ringB.style.height = ringSize(1.55);
+      ringB.style.opacity = String(searchOut * 0.44);
+
+      // 25 scan points revealed centre-out
+      const revealCentre = seg(p, 0.69, 0.74);
+      const revealInner = seg(p, 0.74, 0.86);
+      const revealOuter = seg(p, 0.84, 0.99);
+      for (const el of pts) {
+        const ring = +el.dataset.ring!;
+        const r = +el.dataset.r!, c = +el.dataset.c!;
+        const t = ring === 0 ? revealCentre : ring === 1 ? revealInner : revealOuter;
+        const stagger =
+          ring === 0 ? 0 : (ring === 1 ? (r * 3 + c) % 8 : (r * 5 + c) % 16) / (ring === 1 ? 14 : 26);
+        const o = EASE(clamp((t - stagger) / (1 - stagger || 1), 0, 1));
+        el.style.opacity = (o * 0.96).toFixed(3);
+        el.style.transform = 'scale(' + (0.55 + 0.45 * o).toFixed(3) + ')';
+      }
+
+      // local pack reshuffles as the searcher moves away
+      const order = stopIdx === 0 ? [0, 1, 2] : stopIdx === 1 ? [1, 0, 2] : [2, 1, 0];
+      rows.forEach((row, idx) => {
+        const pos = order[idx];
+        row.style.transform = 'translateY(' + pos * ROW_PITCH + 'px)';
+        row.querySelector<HTMLElement>('.rbl-prank')!.textContent = String(pos + 1);
+        if (idx === 0) {
+          row.style.borderColor = rankColor;
+          row.querySelector<HTMLElement>('.rbl-prank')!.style.background = rankColor;
+        }
+      });
+
+      // text only touched when the scene actually changes
+      const stageIdx = p < 0.20 ? 0 : p < 0.68 ? 1 : 2;
+      if (stageIdx !== lastStage) {
+        lastStage = stageIdx;
+        capEl.textContent = CAPTIONS[stageIdx];
+        if (stageEl) stageEl.textContent = STAGES[stageIdx];
+        ticks.forEach((t, n) => {
+          t.classList.toggle('is-on', n <= stageIdx);
+          t.classList.toggle('is-cur', n === stageIdx);
+        });
+      }
+      distEl.textContent = cur.dist;
+      distEl.style.color = rankColor;
+    }
+
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const mobile = matchMedia('(max-width: 859px)').matches;
+
+    if (reduced) { render(1); return; }
+
+    // Progress is measured against the wrapper's own travel, so it keeps
+    // advancing while the inner element is pinned.
+    let raf = 0;
+    let active = false;
+
+    const tick = () => {
+      raf = 0;
+      const rect = wrap.getBoundingClientRect();
+      const total = Math.max(1, wrap.offsetHeight - window.innerHeight);
+      render(clamp(-rect.top / total, 0, 1));
+    };
+    const onScroll = () => { if (active && !raf) raf = requestAnimationFrame(tick); };
+
+    const runTimed = () => {
+      const dur = 4800, t0 = performance.now();
+      const step = (now: number) => {
+        const p = clamp((now - t0) / dur, 0, 1);
+        render(p);
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+
+    // Scene 1 is the correct resting frame before either driver takes over.
+    render(0);
+
+    let played = false;
+    const io = new IntersectionObserver((entries) => {
+      const e = entries[0];
+      if (mobile) {
+        // one concise timed run, then it rests on the final grid for good
+        if (e.isIntersecting && !played) { played = true; runTimed(); }
+        return;
+      }
+      active = e.isIntersecting;
+      if (active) tick();
+      else if (raf) { cancelAnimationFrame(raf); raf = 0; }
+    }, { threshold: mobile ? 0.35 : 0 });
+    io.observe(wrap);
+
+    if (!mobile) {
+      // capture phase so scrolling inside any ancestor container still drives it
+      document.addEventListener('scroll', onScroll, { passive: true, capture: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+    }
+  })();
+</script>
