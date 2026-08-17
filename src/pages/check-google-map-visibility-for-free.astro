@@ -375,15 +375,93 @@ const heroImageUrl = mapCheckData.hero.heroImage?.asset?.url ?? null;
             }
 
             if (!('IntersectionObserver' in window)) { load(); return; }
+
             // 250px of runway: enough that the widget is fetching before it
             // scrolls into view, but not so much that it fires at rest on a
             // phone, where the tool already sits only ~300px below the fold.
-            var io = new IntersectionObserver(function (entries) {
-              if (entries[0].isIntersecting) { io.disconnect(); load(); }
-            }, { rootMargin: '250px 0px' });
-            io.observe(host);
+            function observeViewport() {
+              var io = new IntersectionObserver(function (entries) {
+                if (entries[0].isIntersecting) { io.disconnect(); load(); }
+              }, { rootMargin: '250px 0px' });
+              io.observe(host);
+            }
+
+            // Is the tool already within the observer's margin right now? On a
+            // phone it sits ~370px below the fold, so this is false and the
+            // viewport path below runs exactly as before — mobile behaviour is
+            // deliberately untouched. On a desktop viewport it is true, which
+            // previously meant the whole Localo + reCAPTCHA stack (~2.3 MB)
+            // downloaded and executed during initial load purely because the
+            // widget happened to be on screen. There, wait for intent instead.
+            var box = host.getBoundingClientRect();
+            var alreadyInView = box.top < window.innerHeight + 250 && box.bottom > -250;
+            if (!alreadyInView) { observeViewport(); return; }
+
+            // ── Intent-activated path (tool visible at load) ────────────────
+            // Reserve the widget's rendered height so activating it doesn't
+            // shift the page, and give the region a real button so it is
+            // keyboard-reachable and announced properly.
+            host.style.minHeight = host.offsetHeight > 380 ? '' : '391px';
+            host.setAttribute('aria-busy', 'false');
+            host.innerHTML =
+              '<button type="button" class="ft-start" ' +
+              'aria-label="Load the Google Maps ranking scanner">' +
+              '<span class="ft-start-icon" aria-hidden="true">▶</span>' +
+              '<span class="ft-start-text">Click to load the scanner</span>' +
+              '</button>';
+
+            var btn = host.querySelector('.ft-start');
+            var started = false;
+
+            function activate() {
+              if (started) return;
+              started = true;
+              host.innerHTML = '<p class="ft-loading" role="status">Loading the scanner…</p>';
+              host.setAttribute('aria-busy', 'true');
+              load();
+              // Hand the visitor straight into the tool so the click that
+              // started it doesn't have to be repeated once it renders.
+              var tries = 0;
+              var focusTimer = setInterval(function () {
+                var field = host.querySelector('input, [contenteditable="true"], button');
+                if (field) { clearInterval(focusTimer); try { field.focus({ preventScroll: true }); } catch (e) {} }
+                else if (++tries > 60) { clearInterval(focusTimer); }
+              }, 250);
+            }
+
+            // Pointer entering the card is the earliest honest signal of
+            // intent — it typically precedes the click by a few hundred ms, so
+            // the bundle is already in flight by the time they reach the field.
+            ['pointerenter', 'pointerdown', 'focusin', 'keydown', 'touchstart'].forEach(function (ev) {
+              host.addEventListener(ev, activate, { once: true, passive: true });
+            });
+            if (btn) btn.addEventListener('click', activate, { once: true });
           })();
         </script>
+
+        <style is:global>
+          /* Pre-activation shell. Only ever rendered on viewports where the
+             tool is already on screen at load; the phone path never sees it. */
+          #free-tool .ft-start {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 10px; width: 100%; min-height: 391px; padding: 24px;
+            background: transparent; border: 1px dashed var(--alabaster); border-radius: 16px;
+            cursor: pointer; font: inherit; color: var(--charcoal);
+            transition: border-color .18s ease, background .18s ease;
+          }
+          #free-tool .ft-start:hover,
+          #free-tool .ft-start:focus-visible { border-color: var(--accent); background: rgba(157,131,62,0.04); }
+          #free-tool .ft-start-icon {
+            display: flex; align-items: center; justify-content: center;
+            width: 44px; height: 44px; border-radius: 50%;
+            background: var(--shadow); color: #fff; font-size: 15px; padding-left: 3px;
+          }
+          #free-tool .ft-start-text { font-size: 0.95rem; font-weight: 600; }
+          #free-tool .ft-loading {
+            display: flex; align-items: center; justify-content: center;
+            min-height: 391px; margin: 0; font-size: 0.95rem; color: var(--charcoal);
+          }
+        </style>
       </div>
     </div>
   </section>
