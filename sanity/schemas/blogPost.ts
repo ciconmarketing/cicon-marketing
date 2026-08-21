@@ -109,6 +109,47 @@ export const inlineImageType = defineType({
   },
 })
 
+export const inlineVideoType = defineType({
+  name: 'inlineVideo',
+  title: 'Inline Video',
+  type: 'object',
+  description:
+    'Silent explainer animation. Plays once when scrolled into view, then stops. Nothing downloads until the reader reaches it.',
+  fields: [
+    defineField({
+      name: 'url',
+      title: 'MP4 URL',
+      type: 'string',
+      description: 'H.264 MP4. Site-relative (e.g. /video/name.mp4) or absolute CDN URL.',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'webmUrl',
+      title: 'WebM URL (optional)',
+      type: 'string',
+      description: 'VP9 WebM served first when the browser supports it — usually 20–30% smaller.',
+    }),
+    defineField({
+      name: 'posterUrl',
+      title: 'Poster Image URL',
+      type: 'string',
+      description: 'Shown before playback and to reduced-motion visitors. Required so nothing renders empty.',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'alt',
+      title: 'Accessible Description',
+      type: 'string',
+      description: 'Describes what the animation shows, for screen readers.',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({ name: 'caption', title: 'Caption', type: 'string' }),
+  ],
+  preview: {
+    select: { title: 'alt', subtitle: 'caption' },
+  },
+})
+
 export const comparisonTabsType = defineType({
   name: 'comparisonTabs',
   title: 'Comparison Tabs',
@@ -363,6 +404,7 @@ export default defineType({
         { type: 'deepDive' },
         { type: 'pullQuote' },
         { type: 'inlineImage' },
+        { type: 'inlineVideo' },
       ],
     }),
 

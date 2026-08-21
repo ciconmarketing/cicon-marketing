@@ -9,6 +9,7 @@ import type { PTNode } from '../../lib/portable-text'
 import { PERSON_MAJID, ORG_CICON, WEBSITE_CICON } from '../../lib/schema-constants'
 import Nav from '../../components/Nav.astro'
 import Footer from '../../components/Footer.astro'
+import InlineVideoPlayer from '../../components/blog/InlineVideoPlayer.astro'
 import '../../styles/globals.css'
 
 // ── Sanity client ──────────────────────────────────────────────────────────────
@@ -1144,6 +1145,8 @@ const schema: any = {
 
 })();
 </script>
+
+<InlineVideoPlayer />
 
 </body>
 </html>

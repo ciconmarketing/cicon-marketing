@@ -18,6 +18,7 @@ import { renderPortableText, extractH2s } from '../../../lib/portable-text'
 import type { PTNode } from '../../../lib/portable-text'
 import Nav from '../../../components/Nav.astro'
 import Footer from '../../../components/Footer.astro'
+import InlineVideoPlayer from '../../../components/blog/InlineVideoPlayer.astro'
 import '../../../styles/globals.css'
 
 // ── Sanity client (previewDrafts perspective — sees unpublished drafts) ─────────
@@ -490,6 +491,8 @@ const metaDesc  = post.metaDescription || post.dek || ''
 
     /* simple-table styles now inlined in portable-text.ts */
   </style>
+
+<InlineVideoPlayer />
 
 </body>
 </html>

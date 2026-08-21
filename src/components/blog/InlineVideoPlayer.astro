@@ -1,0 +1,91 @@
+---
+/**
+ * Drives `inlineVideo` blocks rendered inside blog body HTML.
+ *
+ * Body HTML is injected with `set:html`, so any <script> inside it never runs —
+ * the behaviour has to live on the page instead. Include this once on any page
+ * that renders a post body.
+ *
+ * Performance contract:
+ *   - <source> tags ship with `data-src`, so the browser fetches nothing until
+ *     the reader actually reaches the figure. Only the poster loads up front.
+ *   - Plays through exactly once (no `loop`), pauses off-screen, resumes where
+ *     it left off, and never restarts once it has ended.
+ *   - `prefers-reduced-motion` visitors keep the poster and get native controls.
+ */
+---
+
+<script is:inline>
+  (function () {
+    var videos = document.querySelectorAll('video.inline-video');
+    if (!videos.length) return;
+
+    var reduceMotion =
+      window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function attachSources(video) {
+      if (video.dataset.sourcesReady === '1') return;
+      video.dataset.sourcesReady = '1';
+      var sources = video.querySelectorAll('source[data-src]');
+      for (var i = 0; i < sources.length; i++) {
+        sources[i].setAttribute('src', sources[i].getAttribute('data-src'));
+        sources[i].removeAttribute('data-src');
+      }
+      video.load();
+    }
+
+    // Reduced motion: never autoplay. Give the reader controls so the animation
+    // is still reachable on demand.
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      for (var i = 0; i < videos.length; i++) {
+        (function (video) {
+          video.setAttribute('controls', '');
+          video.addEventListener('play', function () { attachSources(video); }, { once: true });
+        })(videos[i]);
+      }
+      return;
+    }
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          var video = entry.target;
+
+          if (!entry.isIntersecting) {
+            if (!video.paused) video.pause();
+            return;
+          }
+
+          if (video.dataset.ended === '1') return;
+          attachSources(video);
+
+          var attempt = video.play();
+          if (attempt && attempt.catch) {
+            attempt.catch(function () {
+              // Autoplay refused (rare when muted) — fall back to controls.
+              video.setAttribute('controls', '');
+            });
+          }
+        });
+      },
+      { threshold: 0.4 },
+    );
+
+    for (var j = 0; j < videos.length; j++) {
+      (function (video) {
+        video.addEventListener('ended', function () {
+          video.dataset.ended = '1';
+          observer.unobserve(video);
+        });
+        observer.observe(video);
+      })(videos[j]);
+    }
+
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) return;
+      for (var k = 0; k < videos.length; k++) {
+        if (!videos[k].paused) videos[k].pause();
+      }
+    });
+  })();
+</script>

@@ -53,6 +53,16 @@ export interface PTInlineImage {
   tilt?: 'left' | 'right'
 }
 
+export interface PTInlineVideo {
+  _key?: string
+  _type: 'inlineVideo'
+  url?: string
+  webmUrl?: string
+  posterUrl?: string
+  alt?: string
+  caption?: string
+}
+
 export interface PTComparisonTab {
   _key?: string
   title?: string
@@ -87,7 +97,7 @@ export interface PTSimpleTable {
   rows?: PTTableRow[]
 }
 
-export type PTNode = PTBlock | PTStatCallout | PTPullQuote | PTInlineImage | PTComparisonTabs | PTDeepDive | PTSimpleTable
+export type PTNode = PTBlock | PTStatCallout | PTPullQuote | PTInlineImage | PTInlineVideo | PTComparisonTabs | PTDeepDive | PTSimpleTable
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -238,6 +248,33 @@ function renderInlineImage(block: PTInlineImage, index: number): string {
 }
 
 let tabGroupIndex = 0
+
+function renderInlineVideo(block: PTInlineVideo): string {
+  if (!block.url || !block.posterUrl) return ''
+  const alt = esc(block.alt ?? '')
+  const caption = esc(block.caption ?? '')
+  const webm = block.webmUrl
+    ? `\n    <source data-src="${esc(block.webmUrl)}" type="video/webm" />`
+    : ''
+  // preload="none" + data-src: nothing is fetched until the reader scrolls here.
+  // Sources are swapped in and played exactly once, then the observer disconnects.
+  return `
+<figure class="inline-video-block my-10 text-center">
+  <video
+    class="inline-video max-w-full rounded-lg mx-auto"
+    poster="${esc(block.posterUrl)}"
+    aria-label="${alt}"
+    muted
+    playsinline
+    preload="none"
+    disablepictureinpicture
+    style="width:100%;height:auto;display:block;box-shadow:0 20px 40px -15px rgba(33,33,41,0.35),0 8px 24px -8px rgba(0,0,0,0.15);border:1px solid rgba(157,131,62,0.25)"
+  >${webm}
+    <source data-src="${esc(block.url)}" type="video/mp4" />
+  </video>
+  ${caption ? `<figcaption class="text-[var(--charcoal)] text-sm italic opacity-70 mt-3">${caption}</figcaption>` : ''}
+</figure>`
+}
 
 function renderComparisonTabs(block: PTComparisonTabs): string {
   const idx = tabGroupIndex++
@@ -417,6 +454,9 @@ export function renderPortableText(nodes: PTNode[]): string {
           break
         case 'inlineImage':
           result.push(renderInlineImage(node as PTInlineImage, inlineImgIndex++))
+          break
+        case 'inlineVideo':
+          result.push(renderInlineVideo(node as PTInlineVideo))
           break
         case 'simpleTable':
           result.push(renderSimpleTable(node as PTSimpleTable))
