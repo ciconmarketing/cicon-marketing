@@ -105,7 +105,7 @@ export default defineType({
       title: 'Meta Title',
       type: 'string',
       group: 'seo',
-      validation: (Rule) => Rule.max(60),
+      validation: (Rule) => Rule.min(50).max(61).warning('Aim for 50-61 characters'),
     }),
     defineField({
       name: 'metaDescription',
@@ -113,7 +113,7 @@ export default defineType({
       type: 'text',
       rows: 2,
       group: 'seo',
-      validation: (Rule) => Rule.max(160),
+      validation: (Rule) => Rule.min(140).max(150).warning('Aim for 140-150 characters'),
     }),
     defineField({
       name: 'canonical',

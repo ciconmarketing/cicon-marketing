@@ -44,7 +44,7 @@ export default defineType({
       type: 'string',
       group: 'seo',
       description: 'Required: 50–60 characters (CiCon editorial standard).',
-      validation: (Rule) => Rule.required().min(50).max(60)
+      validation: (Rule) => Rule.required().min(50).max(61)
         .error('SEO title must be 50–60 characters for Google SERP.'),
     }),
     defineField({
@@ -54,7 +54,7 @@ export default defineType({
       rows: 3,
       group: 'seo',
       description: 'Required: 130–140 characters (CiCon editorial standard).',
-      validation: (Rule) => Rule.required().min(130).max(140)
+      validation: (Rule) => Rule.required().min(140).max(150)
         .error('Meta description must be 130–140 characters for Google SERP.'),
     }),
     defineField({

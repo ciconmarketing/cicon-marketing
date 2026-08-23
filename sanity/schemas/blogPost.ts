@@ -445,10 +445,10 @@ export default defineType({
       title: 'Meta Title',
       type: 'string',
       group: 'meta',
-      description: 'Target: 55-62 characters. Current length appears in real-time.',
+      description: 'Target: 50-61 characters. Current length appears in real-time.',
       validation: (Rule) => Rule.required()
-        .min(55).max(62)
-        .error('Meta title must be 55-62 characters for Google SERP. Current length will be shown in Studio.'),
+        .min(50).max(61)
+        .error('Meta title must be 50-61 characters for Google SERP. Current length will be shown in Studio.'),
     }),
     defineField({
       name: 'metaDescription',
@@ -456,10 +456,10 @@ export default defineType({
       type: 'text',
       rows: 2,
       group: 'meta',
-      description: 'Target: 130-160 characters. Current length appears in real-time.',
+      description: 'Target: 140-150 characters. Current length appears in real-time.',
       validation: (Rule) => Rule.required()
-        .min(130).max(160)
-        .error('Meta description must be 130-160 characters for Google SERP.'),
+        .min(140).max(150)
+        .error('Meta description must be 140-150 characters for Google SERP.'),
     }),
     defineField({ name: 'keywords', title: 'Target Keywords', type: 'array', group: 'meta', of: [{ type: 'string' }] }),
 

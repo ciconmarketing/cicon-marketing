@@ -75,7 +75,7 @@ export default defineType({
       title: 'SEO Title',
       type: 'string',
       description: 'Page title for search engines. 50–60 characters recommended.',
-      validation: (Rule) => Rule.max(60).warning('Keep under 60 characters for best SEO'),
+      validation: (Rule) => Rule.min(50).max(61).warning('Aim for 50-61 characters'),
     }),
     defineField({
       name: 'seoDescription',
@@ -83,7 +83,7 @@ export default defineType({
       type: 'text',
       rows: 3,
       description: '135–145 characters recommended.',
-      validation: (Rule) => Rule.max(155).warning('Keep under 155 characters'),
+      validation: (Rule) => Rule.min(140).max(150).warning('Aim for 140-150 characters'),
     }),
     defineField({
       name: 'ogImage',

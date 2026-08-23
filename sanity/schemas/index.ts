@@ -222,7 +222,7 @@ const homepage = defineType({
       type: 'string',
       group: 'seo',
       description: 'Overrides the default <title> tag. Keep under 60 characters.',
-      validation: r => r.max(60),
+      validation: r => r.min(50).max(61).warning('Aim for 50-61 characters'),
     }),
     defineField({
       name: 'seoDescription',
@@ -231,7 +231,7 @@ const homepage = defineType({
       rows: 3,
       group: 'seo',
       description: 'Overrides the default meta description. 120–155 characters recommended.',
-      validation: r => r.max(155),
+      validation: r => r.min(140).max(150).warning('Aim for 140-150 characters'),
     }),
     defineField({
       name: 'ogImage',
