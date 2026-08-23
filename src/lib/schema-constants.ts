@@ -37,13 +37,22 @@ const AREA_SERVED_GBP = [
   { '@type': 'Place', name: 'Bolton' },
 ] as const
 
-const AGGREGATE_RATING = {
-  '@type': 'AggregateRating',
-  ratingValue: RATING_VALUE,
-  reviewCount: REVIEW_COUNT,
-  bestRating: '5',
-  worstRating: '1',
-} as const
+/**
+ * Deliberately NO AggregateRating on Organization / LocalBusiness.
+ *
+ * These would be reviews CiCon publishes about itself, on its own site, which
+ * Google classes as self-serving: "If the entity that's being reviewed controls
+ * the reviews about itself, their pages that use LocalBusiness or any other type
+ * of Organization structured data are ineligible for star review feature."
+ * (developers.google.com/search/docs/appearance/structured-data/review-snippet)
+ *
+ * So it never earned a star snippet, and shipping it sitewide was live exposure
+ * to a structured-data manual action. Removed 2026-08-23.
+ *
+ * RATING_VALUE / REVIEW_COUNT above are still exported and still correct — they
+ * drive the *visible* "5.0 star average from N Google Reviews" line in the
+ * review sections. Please don't re-add an aggregateRating property here.
+ */
 
 export const PERSON_MAJID = {
   '@type': 'Person',
@@ -83,7 +92,6 @@ export const ORG_CICON = {
   telephone: '+1-289-807-1020',
   email: 'info@cicon.ca',
   sameAs: ['https://www.facebook.com/ciconmarketing/','https://www.instagram.com/ciconmktg/','https://linkedin.com/company/cicon-marketing/','https://www.youtube.com/@CiConMarketing'],
-  aggregateRating: AGGREGATE_RATING,
 } as const
 
 /**
@@ -129,7 +137,6 @@ export const LOCAL_BUSINESS_CICON = {
   priceRange: '$$',
   areaServed: AREA_SERVED_GBP,
   sameAs: ['https://www.facebook.com/ciconmarketing/', 'https://www.instagram.com/ciconmktg/', 'https://linkedin.com/company/cicon-marketing/', 'https://www.youtube.com/@CiConMarketing'],
-  aggregateRating: AGGREGATE_RATING,
 } as const
 
 export const WEBSITE_CICON = {
