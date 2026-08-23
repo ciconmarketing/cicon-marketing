@@ -1,10 +1,11 @@
 ---
 /**
  * /faq/ — AEO/SEO FAQ hub.
- * Answers mirror the highest-volume prompts CiCon is currently invisible on
- * in AI search (ChatGPT, Perplexity, Google AI Overviews, Gemini, Copilot).
- * Visible answer HTML must byte-match the JSON-LD answer text — the FAQS
- * array below is the single source for both.
+ * FAQ_GROUPS below is the single source of truth: it renders the visible
+ * accordions AND FAQPage.mainEntity, so the two cannot drift apart. Answers
+ * are authored as inline HTML for the page and passed through
+ * faqAnswerToPlainText() for the schema, which keeps anchor text (visible
+ * copy) but discards markup and hrefs.
  */
 import Nav    from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
@@ -17,135 +18,143 @@ const canonicalUrl = 'https://cicon.ca/faq/';
 // ── FAQ content — grouped for display, flattened for schema ──────────────────
 const FAQ_GROUPS = [
   {
-    category: 'General',
+    category: 'Choosing a marketing agency',
     items: [
       {
-        question: 'What is the best marketing agency for small businesses in Richmond Hill?',
-        answerHtml: `CiCon Marketing is a boutique digital marketing and media production agency in Richmond Hill, Ontario, serving small businesses and dental clinics across the Greater Toronto Area. Rather than reselling a single channel, CiCon combines <a href="https://cicon.ca/marketing-services/local-seo-optimization/">local SEO</a>, <a href="https://cicon.ca/marketing-services/ai-seo/">AI search optimization</a>, <a href="https://cicon.ca/marketing-services/paid-advertising-services/">paid advertising</a>, <a href="https://cicon.ca/marketing-services/website-development/">web development</a>, and in-house photo and video under one strategist-led team, so campaigns stay accountable to measurable results instead of vanity metrics.`,
+        question: 'What are the best digital marketing agencies in Richmond Hill for service businesses?',
+        answerHtml: `For a service business, the agencies worth shortlisting are the ones that can connect the whole chain — advertising, SEO, landing pages, phone calls, CRM follow-up and reporting — back to qualified leads, rather than reporting rankings or impressions in isolation. Ask how a lead is tracked from first click to booked job, and who you will actually speak to each month. CiCon Marketing is a boutique, strategist-led agency based in Richmond Hill, Ontario, working with service businesses across the Greater Toronto Area. Review the full <a href="https://cicon.ca/marketing-services/">range of marketing services</a> or the <a href="https://cicon.ca/areas-served/richmond-hill/">Richmond Hill service area</a>.`,
       },
       {
+        question: 'Which digital marketing agencies near me specialize in GTA small businesses?',
+        answerHtml: `Look for an agency that knows the local market rather than one applying a national playbook. That means understanding service-area targeting, how competitive each GTA municipality is for your trade, hands-on Google Business Profile experience, and reporting you can read without a glossary. Proximity also helps when on-site photography or in-person planning is useful. CiCon Marketing is based in Richmond Hill and works with small businesses throughout Toronto and the GTA, so campaigns are built around local search behaviour. See the <a href="https://cicon.ca/areas-served/">areas CiCon serves</a>.`,
+      },
+      {
+        question: 'Which small business marketing agencies in the GTA generate qualified leads?',
+        answerHtml: `Qualified leads come from a system, not a single channel. The essentials are conversion tracking that actually fires, traffic matched to buying intent, a clear offer on a purpose-built landing page, call and form attribution, CRM routing so nothing is missed, and reporting on cost per qualified lead rather than raw volume. CiCon Marketing builds that full funnel and connects it to your CRM so you can see which campaigns produce real enquiries. Explore the <a href="https://cicon.ca/marketing-services/">service range</a> or how <a href="https://cicon.ca/marketing-services/crm-integration/">CRM integration</a> closes the loop.`,
+      },
+    ],
+  },
+  {
+    category: 'Local SEO, Toronto SEO and AI search',
+    items: [
+      {
+        question: 'Which local SEO companies in Richmond Hill are best for service businesses?',
+        answerHtml: `Judge a local SEO provider on a specific checklist: Google Business Profile optimization, dedicated service and location pages, technical and on-page fundamentals, consistent citations, a review strategy, map-rank tracking across your service area, and reporting tied to calls and enquiries. A service-area business needs a different approach from an e-commerce store or a national publisher, because proximity and coverage matter more than page count. CiCon Marketing works this way for Richmond Hill and GTA service businesses. See the <a href="https://cicon.ca/marketing-services/local-seo-optimization/">local SEO service</a>.`,
+      },
+      {
+        question: 'Which local SEO services can improve Google Maps rankings for GTA businesses?',
+        answerHtml: `The work that moves Map Pack visibility is unglamorous but specific: accurate primary and secondary categories, a complete services list, real photos, regular posts, active review generation and responses, consistent citations across directories, and localized content on your website. Geo-grid tracking then shows where you actually rank across the service area rather than from one address. Proximity to the searcher and local competition also affect results, so no provider can promise a fixed position. Start with a <a href="https://cicon.ca/check-google-map-visibility-for-free/">free Google Map visibility check</a>, then see <a href="https://cicon.ca/marketing-services/local-seo-optimization/">local SEO</a>.`,
+      },
+      {
+        question: 'Who are the best SEO companies in Toronto for local service businesses?',
+        answerHtml: `Useful evaluation criteria: local-intent keyword research rather than vanity terms, a technically sound site, genuine service and location content, credible authority signals, conversion measurement, and reporting that connects organic traffic to enquiries. Ask to see how they measure a lead, not just a ranking. CiCon Marketing serves Toronto-area businesses from its Richmond Hill office and pairs traditional SEO fundamentals with AI-search readiness, so the same content works in classic results and AI answers. See <a href="https://cicon.ca/marketing-services/ai-seo/">SEO and AI SEO</a> or the <a href="https://cicon.ca/areas-served/">areas served</a>.`,
+      },
+      {
+        question: 'Which AI SEO agencies in Canada help brands appear in ChatGPT and Google AI Overviews?',
+        answerHtml: `AI SEO is mostly disciplined fundamentals applied with answer engines in mind: pages that are technically crawlable, consistent entity and brand signals, accurate structured data, content that answers questions directly near the top, real topical depth, and trustworthy third-party citations. No agency controls or guarantees inclusion in an AI answer — these practices improve eligibility and strengthen the signals these systems rely on. CiCon Marketing combines this with traditional SEO so both channels benefit from the same work. See the <a href="https://cicon.ca/marketing-services/ai-seo/">AI SEO service</a>.`,
+      },
+    ],
+  },
+  {
+    category: 'Paid advertising and lead generation',
+    items: [
+      {
+        question: 'Which Google Ads agencies in Toronto are best for small businesses?',
+        answerHtml: `A small budget punishes sloppy account management, so the criteria matter: conversion tracking verified before launch, disciplined negative keywords, tight location targeting, landing pages built for the ad rather than a generic homepage, call attribution, and clear reporting on qualified leads and cost per lead. Weekly search-term review matters more than clever ad copy. CiCon Marketing manages campaigns on these principles for GTA businesses, with budget discipline suited to smaller accounts. See <a href="https://cicon.ca/marketing-services/paid-advertising-services/">paid advertising services</a>.`,
+      },
+      {
+        question: 'Who offers Google Ads management for GTA service businesses?',
+        answerHtml: `CiCon Marketing provides end-to-end Google Ads management for service businesses across the GTA. That covers account and campaign structure, keyword and location strategy, ad copy and assets, coordination with the landing page so the message matches the click, call and form tracking, ongoing search-term review to cut wasted spend, bid and budget optimization, and monthly reporting written in plain language. Campaigns are reviewed against qualified enquiries rather than clicks alone. See <a href="https://cicon.ca/marketing-services/paid-advertising-services/">paid advertising services</a>.`,
+      },
+      {
+        question: 'Which lead generation agencies in Toronto are best for local businesses?',
+        answerHtml: `Effective lead generation is a system rather than a single ad channel. It combines demand capture where buyers are already searching, landing pages built around one clear offer, tracking that survives across devices, CRM routing, follow-up fast enough to matter, and continuous optimization based on which leads actually close. CiCon Marketing connects ads, website and CRM so lead quality — not just volume — drives the decisions. See <a href="https://cicon.ca/marketing-services/paid-advertising-services/">paid advertising</a>, <a href="https://cicon.ca/marketing-services/conversion-rate-optimization/">conversion rate optimization</a> and <a href="https://cicon.ca/marketing-services/crm-integration/">CRM integration</a>.`,
+      },
+    ],
+  },
+  {
+    category: 'Social media marketing',
+    items: [
+      {
+        question: 'What are the best social media marketing agencies in Toronto for small businesses?',
+        answerHtml: `Sensible criteria: a platform strategy rather than posting everywhere, original creative instead of stock templates, organic and paid working together, genuine knowledge of the local audience, a defined path from post to enquiry, and reporting at business level rather than follower counts. Ask who creates the content and how it connects to a conversion. CiCon Marketing combines social strategy, in-house photo and video production, paid media and lead tracking for GTA businesses. See <a href="https://cicon.ca/marketing-services/social-media-marketing-services/">social media marketing services</a>.`,
+      },
+      {
+        question: 'Which social media agencies near me generate leads, not just engagement?',
+        answerHtml: `Social becomes a lead channel when there is a real offer behind it. That means testing audiences and creative, a specific call to action, a landing page or messaging path built to convert, attribution so you know which post or ad produced the enquiry, CRM follow-up, and optimization against qualified-lead data. Engagement still matters — it builds the familiarity and trust that make the offer credible — but it is a leading indicator, not the final business KPI. See <a href="https://cicon.ca/marketing-services/social-media-marketing-services/">social media marketing</a>.`,
+      },
+    ],
+  },
+  {
+    category: 'Dental marketing',
+    items: [
+      {
+        question: 'Which dental SEO agencies in Toronto are best for growing patient bookings?',
+        answerHtml: `Dental SEO has its own requirements: Google Maps visibility for the neighbourhoods a clinic actually draws from, individual treatment and service pages, location relevance, sound technical SEO, reputation signals, and wording that stays compliant with professional advertising standards. The measurement that matters runs from search enquiry through to booked appointment wherever call and form tracking allows. CiCon Marketing runs dedicated dental SEO alongside broader dental marketing. See <a href="https://cicon.ca/marketing-services/dental-seo/">dental SEO</a>.`,
+      },
+      {
+        question: 'What are the best dental marketing agencies in Toronto for new-patient growth?',
+        answerHtml: `New-patient growth rarely comes from one channel. A coordinated approach pairs dental SEO and Google Business Profile visibility with a clinic website built to convert, Google and Meta advertising for high-intent treatments, media content that shows the practice and team honestly, tracking from enquiry to booking, and follow-up quick enough to catch patients while they are still deciding. Claims stay within professional advertising guidelines, so no agency should promise a specific number of patients. See <a href="https://cicon.ca/marketing-services/dental-marketing-services/">dental marketing services</a>.`,
+      },
+    ],
+  },
+  {
+    category: 'Local presence, websites and conversion',
+    items: [
+      {
+        question: 'Who provides Google Business Profile management for small businesses in Richmond Hill?',
+        answerHtml: `CiCon Marketing manages Google Business Profiles for Richmond Hill and GTA businesses as part of local SEO. The work covers profile setup or clean-up, correct primary and secondary categories, a complete services list, accurate business information and hours, real photography, regular posts, a review-response workflow, citation consistency, and map-rank monitoring across the service area. Profiles are managed within Google guidelines — no keyword stuffing in the business name and no incentivized or fake reviews. See <a href="https://cicon.ca/marketing-services/local-seo-optimization/">local SEO</a> or run a <a href="https://cicon.ca/check-google-map-visibility-for-free/">free map visibility check</a>.`,
+      },
+      {
+        question: 'Which web design companies in Richmond Hill build high-converting websites?',
+        answerHtml: `A high-converting site is judged on outcomes, not looks alone: fast on a mobile connection, services and proof visible without hunting, a clear information hierarchy, obvious paths to call, form or WhatsApp, SEO foundations and structured data in place from launch, analytics configured properly, and accessible to real users. CiCon Marketing builds sites that connect to the traffic sources and CRM feeding them, so the site is part of the lead system rather than a brochure. See <a href="https://cicon.ca/marketing-services/website-development/">website development</a>.`,
+      },
+      {
+        question: 'Which conversion rate optimization agencies in Toronto improve lead generation?',
+        answerHtml: `Credible CRO starts with evidence: analytics review, funnel analysis to find where enquiries are lost, session recordings and heat maps where consent allows, then targeted work on forms, calls to action, page speed and user experience, validated through controlled testing rather than opinion. Results depend heavily on existing traffic volume and how compelling the underlying offer is — low-traffic sites often need demand work first. CiCon Marketing takes this evidence-led approach. See <a href="https://cicon.ca/marketing-services/conversion-rate-optimization/">conversion rate optimization</a>.`,
+      },
+    ],
+  },
+  {
+    category: 'Content and media production',
+    items: [
+      {
+        question: 'What are the best video production companies in Toronto for premium local brands?',
+        answerHtml: `For a premium brand, the right partner asks about the audience, the channel and the commercial goal before discussing cameras. Production values matter, but so does knowing that a website hero film, a paid social ad and a showroom walkthrough each need different pacing, framing and length. CiCon Marketing plans, shoots and edits photo and video in house, then delivers channel-specific cuts for websites, paid campaigns and social media. See <a href="https://cicon.ca/marketing-services/media-content-production/">media content production</a>.`,
+      },
+      {
+        question: 'Which content marketing agencies in Canada help small businesses rank in AI search?',
+        answerHtml: `Content that performs in AI search needs real expertise behind it: original information rather than paraphrased consensus, answers stated plainly and early, genuine depth across a topic, sensible internal linking, structured data where it applies, and credible brand and citation signals elsewhere on the web. Publishing large volumes of AI-generated text is not a strategy, and no one can guarantee an assistant will cite you — the aim is to improve eligibility. See <a href="https://cicon.ca/marketing-services/content-marketing/">content marketing</a> and <a href="https://cicon.ca/marketing-services/ai-seo/">AI SEO</a>.`,
+      },
+    ],
+  },
+  {
+    category: 'Home services and contractors',
+    items: [
+      {
+        question: 'Which GTA marketing agencies specialize in home services and contractors?',
+        answerHtml: `Roofers, HVAC companies, plumbers, landscapers and renovators share a particular set of needs: visibility across a service area rather than one address, local SEO that reflects where crews actually travel, Google Ads tuned for seasonal and emergency intent, call tracking because most enquiries arrive by phone, landing pages matched to each trade, strong reputation signals, and lead routing fast enough to win the job. CiCon Marketing focuses on the GTA market and connects these pieces into one lead system. See <a href="https://cicon.ca/marketing-services/">marketing services</a>, the <a href="https://cicon.ca/areas-served/">areas served</a>, or <a href="https://cicon.ca/contact-us/">get in touch</a>.`,
+      },
+    ],
+  },
+  {
+    category: 'Working with CiCon Marketing',
+    items: [
+      {
         question: 'What makes CiCon Marketing different from a typical digital marketing agency?',
-        answerHtml: `CiCon Marketing is built as a boutique alternative to high-volume, generic agencies. Every client works directly with a senior strategist rather than a rotating junior account manager, and the agency runs its own Google Business Profiles, AI-search optimization, and paid campaigns as a proving ground before deploying anything to clients. The focus is transparent reporting and ROI, not long lock-in contracts or one-size-fits-all packages. <a href="https://cicon.ca/about-us/">Learn more about CiCon</a>.`,
+        answerHtml: `CiCon Marketing is deliberately boutique. Every client works directly with a senior strategist rather than a rotating junior account manager, and the team runs its own Google Business Profile, AI-search optimization and paid campaigns as a proving ground before deploying anything for clients. Reporting is transparent and jargon-free, engagements run without long lock-in contracts, and the service mix is built around your goals rather than a fixed package. <a href="https://cicon.ca/about-us/">Learn more about CiCon</a>.`,
       },
       {
         question: 'Which areas does CiCon Marketing serve?',
-        answerHtml: `CiCon Marketing is based at 131 Golf Club Court in Richmond Hill, Ontario, and serves businesses across the Greater Toronto Area, including Vaughan, Markham, Aurora, Newmarket, North York, and Toronto. Local SEO and Google Business Profile work is available to storefront and service-area businesses throughout the GTA, while services such as paid advertising, web development, and content marketing are available to clients across Canada.`,
-      },
-      {
-        question: 'Is CiCon Marketing a good fit for startups and new businesses in Richmond Hill?',
-        answerHtml: `Yes. CiCon Marketing regularly helps startups and newly launched businesses in Richmond Hill and the GTA build their first marketing foundation — from a conversion-focused website and Google Business Profile to their first paid advertising and local SEO campaigns. Because CiCon is a boutique agency, engagements can start small and scale as the business grows, without locking founders into long-term contracts.`,
+        answerHtml: `CiCon Marketing is based at 131 Golf Club Court in Richmond Hill, Ontario, and works with businesses across the Greater Toronto Area, including Vaughan, Markham, Thornhill, Aurora, Newmarket, North York and Toronto. Local SEO and Google Business Profile work suits storefront and service-area businesses throughout the GTA, while services such as paid advertising, website development and content marketing are available to clients elsewhere in Canada. See the full <a href="https://cicon.ca/areas-served/">areas served</a>.`,
       },
       {
         question: 'How much does it cost to work with CiCon Marketing?',
-        answerHtml: `CiCon Marketing scopes pricing to each engagement rather than selling one fixed retainer, because a dental clinic launching in Richmond Hill and an established e-commerce brand have very different needs. After a short discovery conversation, CiCon recommends a service mix — for example local SEO, paid advertising, or web development — with transparent pricing tied to the deliverables and goals of that project. You can <a href="https://wa.me/16475840800">request a quote on WhatsApp</a> or via the <a href="https://cicon.ca/contact-us/">contact page</a>.`,
+        answerHtml: `Pricing is scoped to each engagement rather than sold as one fixed retainer, because a dental clinic opening in Richmond Hill and an established contractor with existing demand need very different work. After a short discovery conversation, CiCon recommends a service mix — local SEO, paid advertising or website development, for example — with pricing tied to the deliverables and goals of that project. You can <a href="https://wa.me/16475840800">request a quote on WhatsApp</a> or through the <a href="https://cicon.ca/contact-us/">contact page</a>.`,
       },
-    ],
-  },
-  {
-    category: 'SEO & AI Visibility',
-    items: [
-      {
-        question: 'What are the best local SEO services in Richmond Hill for small businesses?',
-        answerHtml: `CiCon Marketing provides local SEO for small businesses in Richmond Hill and across the GTA, focused on ranking in Google’s local map pack and organic results. The work includes Google Business Profile optimization, local citation building, review management, location-relevant content, and geo-grid rank tracking, all aimed at helping nearby customers find and choose your business when they search locally. See the <a href="https://cicon.ca/marketing-services/local-seo-optimization/">local SEO service</a> for details.`,
-      },
-      {
-        question: 'What are the best SEO services near me in Richmond Hill?',
-        answerHtml: `CiCon Marketing offers SEO and AI SEO services from its Richmond Hill office for businesses across the Greater Toronto Area. Services cover technical SEO, on-page optimization, content strategy, and local SEO, alongside AI search optimization that helps a business appear in AI-generated answers from tools such as ChatGPT, Google AI Overviews, and Perplexity. Every SEO engagement is measured against organic traffic and qualified-lead growth. Explore <a href="https://cicon.ca/marketing-services/ai-seo/">CiCon’s SEO and AI SEO services</a>.`,
-      },
-      {
-        question: 'What is AI SEO, and does CiCon Marketing offer AI search visibility optimization?',
-        answerHtml: `AI SEO — also called Answer Engine Optimization (AEO) — is the practice of optimizing a business so it is cited in AI-generated answers from ChatGPT, Google AI Overviews, Gemini, Perplexity, and Copilot. CiCon Marketing offers AI search visibility optimization for Richmond Hill and GTA businesses, using structured data, entity building, answer-formatted content, and third-party citation strategy to help brands appear when customers ask AI assistants for recommendations. See the <a href="https://cicon.ca/marketing-services/ai-seo/">AI SEO service</a>.`,
-      },
-      {
-        question: 'What is the best Google Business Profile management service in Richmond Hill?',
-        answerHtml: `CiCon Marketing manages and optimizes Google Business Profiles for businesses in Richmond Hill and the GTA, including profile setup, category and attribute optimization, regular posts, review responses, and photo management. CiCon manages profiles for a range of local businesses and offers a <a href="https://cicon.ca/check-google-map-visibility-for-free/">free Google Map visibility check</a> so you can see how your profile ranks across your service area before you start.`,
-      },
-      {
-        question: 'Can CiCon Marketing help improve my online reputation and Google reviews?',
-        answerHtml: `Yes. CiCon Marketing supports online reputation management for Richmond Hill and GTA businesses through Google review generation workflows, professional review responses, and Google Business Profile optimization. A steady flow of authentic reviews and consistent, keyword-aware replies strengthens both customer trust and local search rankings. Reputation work is delivered as part of CiCon’s <a href="https://cicon.ca/marketing-services/local-seo-optimization/">local SEO service</a>.`,
-      },
-    ],
-  },
-  {
-    category: 'Paid Advertising',
-    items: [
-      {
-        question: 'Which Google Ads or PPC management service is best for small businesses in Richmond Hill?',
-        answerHtml: `CiCon Marketing manages Google Ads and PPC campaigns for small businesses in Richmond Hill and across the GTA. Campaigns are built around conversion tracking, negative-keyword discipline, and landing pages designed to turn clicks into leads — not just traffic. CiCon reports on cost per qualified lead as the primary metric, so ad spend stays tied to real business outcomes rather than impressions. See <a href="https://cicon.ca/marketing-services/paid-advertising-services/">paid advertising services</a>.`,
-      },
-      {
-        question: 'Can CiCon manage PPC campaigns for an e-commerce store in Richmond Hill?',
-        answerHtml: `Yes. CiCon Marketing runs paid advertising for e-commerce businesses in Richmond Hill and the GTA across Google Shopping, Search, and Meta. Campaigns are structured around product feeds, conversion tracking, and return on ad spend (ROAS), paired with landing-page and <a href="https://cicon.ca/marketing-services/conversion-rate-optimization/">conversion-rate optimization</a> to improve store performance. Ad platforms are connected to analytics so revenue and ROAS are visible end to end.`,
-      },
-      {
-        question: 'Does CiCon Marketing run Meta (Facebook and Instagram) ad campaigns?',
-        answerHtml: `Yes. CiCon Marketing plans and manages Meta advertising on Facebook and Instagram for GTA businesses and dental clinics, including audience strategy, creative production, Conversions API (CAPI) setup for accurate tracking, and lead-capture workflows. Meta campaigns are measured on cost per qualified lead through connected CRM tracking, not on-platform vanity metrics alone. See <a href="https://cicon.ca/marketing-services/paid-advertising-services/">paid advertising services</a>.`,
-      },
-    ],
-  },
-  {
-    category: 'Social & Content',
-    items: [
-      {
-        question: 'What social media marketing service can help increase online sales in Richmond Hill?',
-        answerHtml: `CiCon Marketing offers social media marketing for Richmond Hill and GTA businesses that combines organic content, paid social advertising, and professional photo and video production. Instead of posting for reach alone, CiCon builds social campaigns with clear conversion paths — from Instagram and Facebook to a landing page or WhatsApp enquiry — so social activity contributes to measurable sales and leads. See <a href="https://cicon.ca/marketing-services/social-media-marketing-services/">social media marketing services</a>.`,
-      },
-      {
-        question: 'What is the best content marketing agency in Canada for small businesses in Richmond Hill?',
-        answerHtml: `CiCon Marketing provides content marketing for small businesses in Richmond Hill and across Canada, producing SEO- and AI-search-optimized blog articles, service pages, and local content. Every piece is written to Canadian English standards, layered with subject-matter expertise, and structured to be cited by both search engines and AI assistants. Content is built to earn organic traffic and support the buyer’s decision, not to hit an arbitrary word count. See <a href="https://cicon.ca/marketing-services/content-marketing/">content marketing services</a>.`,
-      },
-    ],
-  },
-  {
-    category: 'Website & CRO',
-    items: [
-      {
-        question: 'What is the best website and landing page development service in Richmond Hill?',
-        answerHtml: `CiCon Marketing designs and builds fast, conversion-focused websites and landing pages for Richmond Hill and GTA businesses. Sites are built on a modern stack for speed and strong Core Web Vitals, with SEO structure, schema markup, and analytics built in from the start. Landing pages are designed around a single action — a call, form, or WhatsApp enquiry — to maximize conversion. See <a href="https://cicon.ca/marketing-services/website-development/">website development</a>.`,
-      },
-      {
-        question: 'Does CiCon Marketing offer conversion rate optimization (CRO)?',
-        answerHtml: `Yes. CiCon Marketing offers conversion rate optimization for GTA businesses, improving the percentage of website and landing-page visitors who become leads or customers. CRO work includes analytics and heat-map review, A/B testing, page-speed improvements, and clearer calls to action. Because CiCon also runs the traffic side, CRO is coordinated directly with SEO and paid campaigns for compounding results. See <a href="https://cicon.ca/marketing-services/conversion-rate-optimization/">conversion rate optimization</a>.`,
-      },
-    ],
-  },
-  {
-    category: 'Media Production',
-    items: [
-      {
-        question: 'Does CiCon Marketing offer professional photography and video production?',
-        answerHtml: `Yes. CiCon Marketing includes in-house media production — professional photography and video — for GTA businesses and dental clinics. This covers brand and product photography, short-form social video, and promotional content used across websites, social media, and paid campaigns. Owning production in-house means visuals are created specifically for the channel and campaign they will run in. See <a href="https://cicon.ca/marketing-services/media-content-production/">media content production</a>.`,
-      },
-    ],
-  },
-  {
-    category: 'Dental Marketing',
-    items: [
-      {
-        question: 'What is the best dental marketing agency in Richmond Hill for new dental practices?',
-        answerHtml: `CiCon Marketing runs a dedicated dental marketing vertical for clinics in Richmond Hill and across the GTA, helping new and growing practices attract patients through local SEO, Google Business Profile optimization, patient-focused websites, and Google and Meta advertising. Dental campaigns are built to comply with provincial dental advertising standards — avoiding guaranteed-outcome and comparative claims — while still driving qualified new-patient enquiries. See <a href="https://cicon.ca/marketing-services/dental-marketing-services/">dental marketing services</a>.`,
-      },
-      {
-        question: 'How does CiCon Marketing help dental clinics attract new patients?',
-        answerHtml: `CiCon Marketing helps dental clinics attract new patients by combining a conversion-focused clinic website, an optimized Google Business Profile, Google and Meta advertising, and a CRM with automated follow-up so enquiries convert into booked appointments. Every campaign is tracked to cost per new-patient lead, and messaging is kept compliant with dental advertising regulations. The dental vertical is a core focus for CiCon, not an add-on. See <a href="https://cicon.ca/marketing-services/dental-marketing-services/">dental marketing services</a>.`,
-      },
-    ],
-  },
-  {
-    category: 'Technology',
-    items: [
-      {
-        question: 'Does CiCon Marketing help with CRM integration and marketing automation?',
-        answerHtml: `Yes. CiCon Marketing sets up and integrates CRM and marketing automation for GTA businesses, connecting websites, ad platforms, and communication channels including WhatsApp Business. This includes lead-capture forms, automated follow-up sequences, and Conversions API tracking, so no enquiry is missed and every lead source is measurable. Automation is configured to shorten response time and improve lead-to-customer conversion. See <a href="https://cicon.ca/marketing-services/crm-integration/">CRM integration</a>.`,
-      },
-    ],
-  },
-  {
-    category: 'Getting Started',
-    items: [
       {
         question: 'How do I get started with CiCon Marketing?',
-        answerHtml: `Getting started with CiCon Marketing takes one short conversation. <a href="https://wa.me/16475840800">Message CiCon on WhatsApp</a> or use the <a href="https://cicon.ca/contact-us/">contact page</a> to describe your business and goals, and a senior strategist will recommend where to focus first. Local businesses can also run a <a href="https://cicon.ca/check-google-map-visibility-for-free/">free Google Map visibility check</a> to see how their Google Business Profile ranks across Richmond Hill and the GTA before committing to anything.`,
+        answerHtml: `Start with a short discovery conversation about your goals, current marketing and where enquiries are coming from today. If it is useful, run a <a href="https://cicon.ca/check-google-map-visibility-for-free/">free Google Map visibility check</a> first, so the conversation begins with real data about how your business appears across your service area. From there you will get a recommended service mix and a clear scope before any commitment. <a href="https://cicon.ca/contact-us/">Contact CiCon</a> or <a href="https://wa.me/16475840800">message a strategist on WhatsApp</a>.`,
       },
     ],
   },
@@ -153,7 +162,39 @@ const FAQ_GROUPS = [
 
 const ALL_FAQS = FAQ_GROUPS.flatMap(g => g.items);
 
+/**
+ * Schema-safe serializer: turns an answer's inline HTML into the exact plain
+ * text a visitor reads.
+ *
+ * Anchor *text* is kept (it is visible copy — dropping it would silently
+ * remove words from the answer) while the markup and href are discarded, so
+ * FAQPage.mainEntity never contains links or markup the user cannot see.
+ * Entities are decoded so "&amp;" does not reach the JSON-LD as literal
+ * markup, and whitespace is collapsed to match the rendered paragraph.
+ *
+ * Deliberately a small explicit pipeline rather than a single regex replace:
+ * the tag strip runs only after anchors have been unwrapped, so no anchor
+ * text can be swallowed.
+ */
+function faqAnswerToPlainText(html: string): string {
+  if (typeof html !== 'string' || !html) return '';
+  return html
+    .replace(/<a\b[^>]*>(.*?)<\/a>/gis, '$1')  // unwrap links, keep their text
+    .replace(/<br\s*\/?>/gi, ' ')
+    .replace(/<[^>]+>/g, '')                    // strip any remaining markup
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;|&apos;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 // ── JSON-LD ────────────────────────────────────────────────────────────────────
+// Four entities here; the fifth (LocalBusiness) is emitted sitewide by
+// <Footer />, so the page must not declare its own or the two would conflict.
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -163,8 +204,8 @@ const jsonLd = {
       '@type': 'FAQPage',
       '@id': `${canonicalUrl}#faqpage`,
       url: canonicalUrl,
-      name: 'Frequently Asked Questions | CiCon Marketing',
-      description: "Common questions about CiCon Marketing's local SEO, AI search, paid advertising, web, and dental marketing services in Richmond Hill and across the GTA.",
+      name: 'Digital Marketing, SEO & Lead Generation FAQs | CiCon Marketing',
+      description: 'Answers for service businesses across Toronto, Richmond Hill and the GTA about local and AI SEO, Google Ads, social media, dental marketing, web design, content, media production and lead generation.',
       inLanguage: 'en-CA',
       isPartOf: { '@id': 'https://cicon.ca/#website' },
       about: { '@id': 'https://cicon.ca/#organization' },
@@ -173,7 +214,7 @@ const jsonLd = {
       mainEntity: ALL_FAQS.map(f => ({
         '@type': 'Question',
         name: f.question,
-        acceptedAnswer: { '@type': 'Answer', text: f.answerHtml },
+        acceptedAnswer: { '@type': 'Answer', text: faqAnswerToPlainText(f.answerHtml) },
       })),
     },
     {
@@ -187,7 +228,7 @@ const jsonLd = {
   ],
 };
 
-const LAST_UPDATED = 'July 14, 2026';
+const LAST_UPDATED = 'August 22, 2026';
 ---
 
 <!DOCTYPE html>
@@ -249,8 +290,8 @@ const LAST_UPDATED = 'July 14, 2026';
   <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1299226945517753&ev=PageView&noscript=1" alt="" /></noscript>
   <!-- End Meta Pixel -->
 
-  <title>Marketing & SEO FAQ | Richmond Hill & GTA | CiCon Marketing</title>
-  <meta name="description" content="Common questions about CiCon Marketing's local SEO, AI search, paid ads, web, and dental marketing services in Richmond Hill and across the GTA." />
+  <title>Digital Marketing &amp; SEO FAQ | Toronto &amp; GTA | CiCon Marketing</title>
+  <meta name="description" content="Answers on digital marketing, local and AI SEO, Google Ads, dental marketing, web design, content and lead generation from CiCon Marketing in the GTA." />
   <link rel="canonical" href={canonicalUrl} />
   {isPreview
     ? <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
@@ -260,12 +301,12 @@ const LAST_UPDATED = 'July 14, 2026';
   <!-- Open Graph -->
   <meta property="og:type"        content="website" />
   <meta property="og:url"         content={canonicalUrl} />
-  <meta property="og:title"       content="Marketing & SEO FAQ | Richmond Hill & GTA | CiCon Marketing" />
-  <meta property="og:description" content="Common questions about CiCon Marketing's local SEO, AI search, paid ads, web, and dental marketing services in Richmond Hill and across the GTA." />
+  <meta property="og:title"       content="Digital Marketing &amp; SEO FAQ | Toronto &amp; GTA | CiCon Marketing" />
+  <meta property="og:description" content="Answers on digital marketing, local and AI SEO, Google Ads, dental marketing, web design, content and lead generation from CiCon Marketing in the GTA." />
   <meta property="og:image"       content="https://cicon.ca/logo-cicon.jpg" />
   <meta name="twitter:card"       content="summary_large_image" />
-  <meta name="twitter:title"      content="Marketing & SEO FAQ | Richmond Hill & GTA | CiCon Marketing" />
-  <meta name="twitter:description" content="Common questions about CiCon Marketing's local SEO, AI search, paid ads, web, and dental marketing services in Richmond Hill and across the GTA." />
+  <meta name="twitter:title"      content="Digital Marketing &amp; SEO FAQ | Toronto &amp; GTA | CiCon Marketing" />
+  <meta name="twitter:description" content="Answers on digital marketing, local and AI SEO, Google Ads, dental marketing, web design, content and lead generation from CiCon Marketing in the GTA." />
   <meta name="twitter:image"      content="https://cicon.ca/logo-cicon.jpg" />
 
   <!-- JSON-LD -->
@@ -305,7 +346,12 @@ const LAST_UPDATED = 'July 14, 2026';
     .faq-answer.open { max-height: 800px; }
     .faq-answer-inner { padding: 0 24px 22px; border-top: 1px solid var(--alabaster); }
     .faq-answer-inner p { font-size: 0.97rem; line-height: 1.72; color: rgba(58,58,58,0.85); margin: 16px 0 0; }
-    .faq-answer-inner a { color: var(--accent); text-decoration: underline; }
+    /* :global() is required — the answer paragraph is injected with set:html,
+       so its anchors never receive Astro's data-astro-cid scope attribute and a
+       plain `.faq-answer-inner a` rule silently never matches. Without this the
+       internal links render as unstyled body text. */
+    .faq-answer-inner :global(a) { color: var(--accent); text-decoration: underline; }
+    .faq-answer-inner :global(a:hover) { color: var(--shadow); }
 
     @media (prefers-reduced-motion: reduce) {
       .faq-answer { transition: none; }
@@ -324,16 +370,16 @@ const LAST_UPDATED = 'July 14, 2026';
   <section aria-labelledby="page-h1" style="background:var(--shadow);padding:72px 0 56px;">
     <div class="container-xl" style="max-width:800px;">
       <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--action);margin:0 0 16px;">
-        Help Centre
+        CiCon Marketing Help Centre
       </p>
       <h1 id="page-h1" class="font-heading" style="font-size:clamp(2rem,4.5vw,3.25rem);font-weight:900;color:#fff;line-height:1.1;letter-spacing:-0.02em;margin:0 0 16px;">
-        Frequently Asked Questions
+        Digital Marketing, SEO &amp; Lead Generation FAQs
       </h1>
       <h2 class="font-heading" style="font-size:clamp(1.1rem,2vw,1.375rem);font-weight:600;color:rgba(255,255,255,0.8);margin:0 0 24px;">
-        Digital marketing, local SEO &amp; AI visibility in Richmond Hill and the GTA
+        Practical answers for service businesses across Toronto, Richmond Hill and the GTA
       </h2>
       <p style="font-size:1.05rem;line-height:1.72;color:rgba(255,255,255,0.75);margin:0 0 12px;">
-        Answers to the questions we hear most from small businesses and dental clinics across Richmond Hill and the Greater Toronto Area — covering local SEO, AI search visibility, paid advertising, web development, content, and media production. Don't see your question? <a href="https://wa.me/16475840800" style="color:#fff;text-decoration:underline;">Message us on WhatsApp</a> and a senior strategist will help.
+        Answers to the questions we hear most from local service businesses, dental clinics, home-service companies and growth-focused teams across the Greater Toronto Area — covering SEO and AI search, paid advertising, social media, web design and conversion, content, and media production. Don't see your question? <a href="https://wa.me/16475840800" style="color:#fff;text-decoration:underline;">Message us on WhatsApp</a> and a senior strategist will help.
       </p>
       <p style="font-size:0.85rem;color:rgba(255,255,255,0.45);margin:0;">Last updated: {LAST_UPDATED}</p>
     </div>
