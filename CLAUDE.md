@@ -14,19 +14,19 @@ This is the CiCon Marketing website: Astro 5 + Sanity.io + Vercel.
 
 ## CiCon SEO Standards
 
-These lengths are enforced by Sanity schema validation. Do not work around them.
+`metaTitle` is enforced by Sanity schema validation (blocking). `metaDescription` is a Studio **warning**, not a hard error — 17 posts predate this standard. Write to the range anyway; do not treat the warning as optional.
 
 | Field            | Min | Max | Notes                                      |
 |------------------|-----|-----|--------------------------------------------|
 | `metaTitle`      | 50  | 61  | Google SERP truncates at ~60 chars         |
-| `metaDescription`| 140 | 150 | Below 140 looks thin; above 150 truncates  |
+| `metaDescription`| 140 | 150 | Warning-only in Studio; still the target    |
 
 **Rules when writing titles and descriptions:**
 
 - Write to fit the range, not just the topic. Count characters before finalising.
 - `metaTitle` format: `Primary Keyword: Secondary Context | CiCon` — keep the brand suffix short.
 - `metaDescription` format: one benefit sentence + one action/differentiator sentence. No keyword stuffing.
-- These are validated server-side in Sanity. A post with out-of-range values will show a blocking error in Studio and cannot be published cleanly.
+- `metaTitle` is validated server-side in Sanity: an out-of-range title shows a blocking error in Studio and cannot be published. `metaDescription` shows a non-blocking warning, so legacy posts stay publishable — new posts should still land in 140-150.
 - When generating or editing `metaTitle` / `metaDescription` values, always output the character count alongside the value.
 
 ---
