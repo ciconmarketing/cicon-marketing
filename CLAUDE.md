@@ -18,8 +18,8 @@ These lengths are enforced by Sanity schema validation. Do not work around them.
 
 | Field            | Min | Max | Notes                                      |
 |------------------|-----|-----|--------------------------------------------|
-| `metaTitle`      | 55  | 62  | Google SERP truncates at ~60 chars         |
-| `metaDescription`| 130 | 160 | Below 130 looks thin; above 160 truncates  |
+| `metaTitle`      | 50  | 61  | Google SERP truncates at ~60 chars         |
+| `metaDescription`| 140 | 150 | Below 140 looks thin; above 150 truncates  |
 
 **Rules when writing titles and descriptions:**
 
