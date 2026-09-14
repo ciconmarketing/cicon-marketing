@@ -210,6 +210,16 @@
       "permanent": true
     },
     {
+      "source": "/blog/digital-marketing-agency-richmond-hill/",
+      "destination": "/blog/digital-marketing-agency-in-richmond-hill-2026/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/digital-marketing-agency-richmond-hill",
+      "destination": "/blog/digital-marketing-agency-in-richmond-hill-2026/",
+      "permanent": true
+    },
+    {
       "source": "/google-ads-management-gta-trades-spring-checklist/",
       "destination": "/blog/google-ads-management-gta-trades-spring-checklist/",
       "permanent": true
