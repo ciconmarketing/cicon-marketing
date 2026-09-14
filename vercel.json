@@ -226,7 +226,17 @@
     },
     {
       "source": "/dental-seo-services-cdcp-renewal-gta/",
-      "destination": "/blog/dental-seo-services-cdcp-renewal-gta/",
+      "destination": "/blog/cdcp-dental-marketing-2026-gta-clinics/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/dental-seo-services-cdcp-renewal-gta/",
+      "destination": "/blog/cdcp-dental-marketing-2026-gta-clinics/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/dental-seo-services-cdcp-renewal-gta",
+      "destination": "/blog/cdcp-dental-marketing-2026-gta-clinics/",
       "permanent": true
     },
     {
