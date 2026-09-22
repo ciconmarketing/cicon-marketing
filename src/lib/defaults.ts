@@ -225,7 +225,7 @@ export const defaultHomepageData: HomepageData = {
     headline: 'Get In Touch',
     email: 'info@cicon.ca',
     phone: '+1 (289) 807-1020',
-    address: '131 Golf Club Ct, Richmond Hill, ON L4C 5E1, Canada',
+    address: '30 Via Renzo Drive, Suite 259, Richmond Hill, ON L4S 0B8, Canada',
   },
 };
 

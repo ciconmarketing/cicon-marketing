@@ -72,7 +72,7 @@ Site totals: 69 clicks / 25.3k impressions / avg pos 24.6. City signal:
 3. **Client confidentiality:** case studies were intentionally hidden. City pages must not name clients or attach cities to them without MJ's explicit approval — even where the client's location is publicly verifiable.
 4. **No layout component** means head-boilerplate duplication; a typo in one copy diverges silently. Kept identical to service template; noted for future refactor.
 5. Footer already *claims* Aurora/Newmarket/etc. as service areas — dropping them from the footer could feel like a regression to MJ; instead the hub represents them honestly as coverage without dedicated pages.
-6. Existing entity hygiene issues (privacy-policy shows a different street address — 69 Cartier Crescent vs 131 Golf Club Ct; `defaults.ts` fallback phone `+1 (905) 884-5060`; `hello@` vs `info@`; geo drift) — flagged for MJ, not silently changed.
+6. Existing entity hygiene issues (the privacy policy and site showed conflicting former addresses; `defaults.ts` fallback phone `+1 (905) 884-5060`; `hello@` vs `info@`; geo drift) — flagged for MJ, not silently changed.
 
 ## 5. Recommended architecture (implemented)
 - Hub `/areas-served/` + spokes `/areas-served/{city-slug}/`, driven by a single typed data module (`src/lib/areas-served.ts`) with a build-time quality gate; only `status: "published" && indexable` pages enter the sitemap (new `areas-sitemap.xml` registered in the index) and receive hub/footer links.
@@ -84,11 +84,11 @@ Site totals: 69 clicks / 25.3k impressions / avg pos 24.6. City signal:
 2. **Thornhill proof:** one Thornhill-area client reference or approval to publish the page on market-knowledge basis alone (demand gap is proven: 138 impr @ pos 49).
 3. Whether Aurora/Newmarket/North York pages should wait for proof (current recommendation) despite being in the footer today.
 4. Approval to consolidate the older Richmond Hill blog post (`digital-marketing-agency-richmond-hill`) into the 2026 version to reduce RH cannibalization.
-5. Confirm the privacy-policy street address (69 Cartier Crescent vs 131 Golf Club Ct) — likely stale, but not changed without confirmation.
+5. Confirm the privacy-policy street address because two former addresses conflicted — likely stale, but not changed without confirmation.
 
 ---
 
 ## Addendum — 2026-07-24 revision round (executed)
-- All §4.6/§6.5 business-data inconsistencies corrected: privacy-policy address (repo + live Sanity doc), `defaults.ts` fallback phone/email, homepage `hello@` JSON-LD (now reuses `LOCAL_BUSINESS_CICON`), about-us `#localbusiness` id + broken logo URL, contact-us `#organization`-collision id + geo drift. Canonical NAP everywhere: CiCon Marketing · 131 Golf Club Ct, Richmond Hill, ON L4C 5E1 · +1 (289) 807-1020 · info@cicon.ca.
+- All §4.6/§6.5 business-data inconsistencies corrected: privacy-policy address (repo + live Sanity doc), `defaults.ts` fallback phone/email, homepage `hello@` JSON-LD (now reuses `LOCAL_BUSINESS_CICON`), about-us `#localbusiness` id + broken logo URL, contact-us `#organization`-collision id + geo drift. This historical address was superseded on 2026-09-22 by the new canonical NAP: CiCon Marketing · 30 Via Renzo Drive, Suite 259, Richmond Hill, ON L4S 0B8 · +1 (289) 807-1020 · info@cicon.ca.
 - Missing-input #1 and #2 resolved: MJ approved restrained client-city attribution → Markham and Thornhill published. Launch set is now 5 indexable URLs.
 - New finding fixed: sitewide nav bug at 768–1023px (Services dropdown permanently open — no hidden state below the 1024px hover media query). Desktop nav breakpoint moved md→lg.
