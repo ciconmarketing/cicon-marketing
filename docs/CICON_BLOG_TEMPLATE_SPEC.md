@@ -814,9 +814,10 @@ export const ORG_CICON = {
   },
   address: {
     '@type': 'PostalAddress',
-    streetAddress: '131 Golf Club Ct',
+    streetAddress: '30 Via Renzo Drive, Suite 259',
     addressLocality: 'Richmond Hill',
     addressRegion: 'ON',
+    postalCode: 'L4S 0B8',
     addressCountry: 'CA',
   },
   telephone: '+1-289-807-1020',

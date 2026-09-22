@@ -50,10 +50,10 @@ export default defineType({
       title: 'Business Address',
       type: 'object',
       fields: [
-        defineField({ name: 'street', title: 'Street', type: 'string', initialValue: '131 Golf Club Ct' }),
+        defineField({ name: 'street', title: 'Street', type: 'string', initialValue: '30 Via Renzo Drive, Suite 259' }),
         defineField({ name: 'city', title: 'City', type: 'string', initialValue: 'Richmond Hill' }),
         defineField({ name: 'province', title: 'Province', type: 'string', initialValue: 'ON' }),
-        defineField({ name: 'postalCode', title: 'Postal Code', type: 'string', initialValue: 'L4C 5E1' }),
+        defineField({ name: 'postalCode', title: 'Postal Code', type: 'string', initialValue: 'L4S 0B8' }),
         defineField({ name: 'country', title: 'Country', type: 'string', initialValue: 'CA' }),
       ],
     }),
