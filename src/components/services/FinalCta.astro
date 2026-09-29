@@ -7,11 +7,17 @@ interface Props {
   headline?: string
   body?: string
   serviceName?: string
+  /**
+   * False for services sold only as one-time or per-session fees, so the trust
+   * strip doesn't promise monthly reporting the price doesn't include.
+   */
+  hasRetainer?: boolean
 }
 const {
   headline = 'Ready to grow? Let\'s build the plan.',
   body = 'Start a WhatsApp conversation. We\'ll audit your current marketing, identify your biggest gaps, and map out a realistic growth path — no fluff, no hard sell.',
   serviceName,
+  hasRetainer = true,
 } = Astro.props
 ---
 
@@ -54,7 +60,7 @@ const {
       {[
         '✓ No long-term contracts',
         '✓ Senior strategist on every conversation',
-        '✓ Monthly transparent reporting',
+        hasRetainer ? '✓ Monthly transparent reporting' : '✓ Scope agreed before work starts',
         '✓ GTA-based, always reachable',
       ].map((t) => <span>{t}</span>)}
     </div>

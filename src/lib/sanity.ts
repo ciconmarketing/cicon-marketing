@@ -192,8 +192,6 @@ const SERVICE_PAGE_FIELDS = `
   capabilities[]{ title, definition, description, icon },
   processSteps[]{ number, label, description },
   eeatHeadline, eeatBody, eeatStats[]{ value, label },
-  pricingHeadline, pricingIntro, pricingNote,
-  pricingTiers[]{ name, audience, price, cadence, includes },
   faqs[]{ question, answer },
   cdcpBlock{ headline, body, bullets },
   patientChannels[]{ channel, description },
@@ -205,7 +203,7 @@ const SERVICE_PAGE_FIELDS = `
 `
 
 export const ALL_SERVICE_PAGES_QUERY = `
-  *[_type == "servicePage" && status != "draft"] | order(serviceType asc) {
+  *[_type == "servicePage" && status != "draft"] | order(serviceType asc, _id asc) {
     _id, title, "slug": slug.current, serviceType,
     heroSubheadline, heroDescription,
     heroStats[]{ value, label }
@@ -257,10 +255,6 @@ export type ServicePageData = {
   eeatHeadline?: string
   eeatBody?: string
   eeatStats?: Array<{ value: string; label: string }>
-  pricingHeadline?: string
-  pricingIntro?: string
-  pricingNote?: string
-  pricingTiers?: Array<{ name: string; audience?: string; price: string; cadence?: string; includes?: string[] }>
   faqs?: Array<{ question: string; answer: string }>
   cdcpBlock?: { headline: string; body: string; bullets: string[] } | null
   patientChannels?: Array<{ channel: string; description: string }>

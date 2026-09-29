@@ -19,3 +19,6 @@ dist/
 # Logs
 *.log
 npm-debug.log*
+
+# Local content preview (snapshot of the public Sanity dataset + staged patches)
+.local-content/

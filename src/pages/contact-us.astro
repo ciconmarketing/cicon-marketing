@@ -5,8 +5,10 @@ import Footer       from '../components/Footer.astro';
 import ContactForm  from '../components/contact/ContactForm.astro';
 import { getContactPage } from '../lib/sanity';
 import { toAbsoluteUrl } from '../lib/url';
+import { formatAmount, lowestStartingOffers } from '../lib/service-pricing';
 
 const isPreview = import.meta.env.VERCEL_ENV !== 'production';
+const LOWEST = lowestStartingOffers();
 
 // ── Sanity-driven content with hardcoded fallbacks ────────────────────────────
 let contactHero = {
@@ -15,7 +17,7 @@ let contactHero = {
 };
 let contactFaqs = [
   { question: 'How fast do you actually respond?', answer: 'Within 1 business hour, Monday to Saturday, 9am – 6pm ET. Submissions after hours or on Sundays get a reply first thing the next business day. No exceptions, no auto-replies pretending to be us.' },
-  { question: "What's your minimum engagement?", answer: "Our smallest engagements start around $1,500/month for focused work like Google Business Profile management or local SEO. Full-service builds — paid ads, SEO, content, creative — typically start at $3,000–$5,000/month. We'd rather under-promise than oversell a retainer you don't need yet." },
+  { question: "What's your minimum engagement?", answer: `Our lowest starting prices are ${formatAmount(LOWEST.monthly.amount)} CAD per month (${LOWEST.monthly.name}) and ${formatAmount(LOWEST.oneTime.amount)} CAD one-time (${LOWEST.oneTime.name}). Every service has its own published starting price on our services page, and final pricing depends on the agreed scope. Ad spend is always excluded from our service fees.` },
   { question: 'Do you work with businesses outside the GTA?', answer: "Most of our clients are GTA-based because local SEO and Google Business Profile work benefit from us knowing the territory. We do take on remote clients for paid ads, SEO, and content — but if you need physical photo/video production or in-person strategy, GTA-only." },
   { question: "What if I'm already working with another agency?", answer: "Two options. We can run a no-strings audit of what they're doing — sometimes the answer is 'they're doing fine, stay put.' Or, if you're already decided to switch, we handle the offboarding so you don't have to fight for assets and access. Either way, no awkwardness — we've been on both sides of that conversation." },
 ];
@@ -78,43 +80,16 @@ const jsonLdLocalBusiness = {
   ]
 };
 
+// Built from the FAQs the page actually renders (Sanity, or the fallback
+// above), so the structured data can never drift from the visible answers.
 const jsonLdFaq = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "How fast do you actually respond?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Within 1 business hour, Monday to Saturday, 9am – 6pm ET. Submissions after hours or on Sundays get a reply first thing the next business day. No exceptions, no auto-replies pretending to be us."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What's your minimum engagement?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Our smallest engagements start around $1,500/month for focused work like Google Business Profile management or local SEO. Full-service builds — paid ads, SEO, content, creative — typically start at $3,000–$5,000/month. We'd rather under-promise than oversell a retainer you don't need yet."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Do you work with businesses outside the GTA?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Most of our clients are GTA-based because local SEO and Google Business Profile work benefit from us knowing the territory. We do take on remote clients for paid ads, SEO, and content — but if you need physical photo/video production or in-person strategy, GTA-only."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What if I'm already working with another agency?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Two options. We can run a no-strings audit of what they're doing — sometimes the answer is 'they're doing fine, stay put.' Or, if you're already decided to switch, we handle the offboarding so you don't have to fight for assets and access. Either way, no awkwardness — we've been on both sides of that conversation."
-      }
-    }
-  ]
+  "mainEntity": contactFaqs.map((faq) => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": { "@type": "Answer", "text": faq.answer },
+  })),
 };
 ---
 

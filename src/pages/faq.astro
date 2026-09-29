@@ -10,10 +10,12 @@
 import Nav    from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { ORG_CICON, WEBSITE_CICON } from '../lib/schema-constants';
+import { formatAmount, lowestStartingOffers } from '../lib/service-pricing';
 import '../styles/globals.css';
 
 const isPreview    = import.meta.env.VERCEL_ENV !== 'production';
 const canonicalUrl = 'https://cicon.ca/faq/';
+const LOWEST       = lowestStartingOffers();
 
 // ── FAQ content — grouped for display, flattened for schema ──────────────────
 const FAQ_GROUPS = [
@@ -150,7 +152,7 @@ const FAQ_GROUPS = [
       },
       {
         question: 'How much does it cost to work with CiCon Marketing?',
-        answerHtml: `Pricing is scoped to each engagement rather than sold as one fixed retainer, because a dental clinic opening in Richmond Hill and an established contractor with existing demand need very different work. After a short discovery conversation, CiCon recommends a service mix — local SEO, paid advertising or website development, for example — with pricing tied to the deliverables and goals of that project. You can <a href="https://wa.me/16475840800">request a quote on WhatsApp</a> or through the <a href="https://cicon.ca/contact-us/">contact page</a>.`,
+        answerHtml: `Every CiCon service has a published starting price in CAD, listed on the <a href="https://cicon.ca/marketing-services/">marketing services page</a>. Monthly services start at ${formatAmount(LOWEST.monthly.amount)} CAD per month (${LOWEST.monthly.name}), and one-time projects start at ${formatAmount(LOWEST.oneTime.amount)} CAD (${LOWEST.oneTime.name}). Final pricing depends on the agreed scope, because a dental clinic opening in Richmond Hill and an established contractor with existing demand need very different work, and ad spend is always excluded from our service fees. After a short discovery conversation, CiCon recommends a service mix — local SEO, paid advertising or website development, for example — with pricing tied to the deliverables and goals of that project. You can <a href="https://wa.me/16475840800">request a quote on WhatsApp</a> or through the <a href="https://cicon.ca/contact-us/">contact page</a>.`,
       },
       {
         question: 'How do I get started with CiCon Marketing?',

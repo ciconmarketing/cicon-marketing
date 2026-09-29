@@ -5,6 +5,8 @@
  * Desktop: two-column 60/40 — text left, heroImage right.
  */
 import PlaceholderImage from '../PlaceholderImage.astro'
+import PriceSummary from './PriceSummary.astro'
+import type { ServicePricing } from '../../lib/service-pricing'
 
 interface Stat { value: string; label: string }
 interface Props {
@@ -15,8 +17,10 @@ interface Props {
   stats?: Stat[]
   serviceName: string
   heroImage?: any
+  /** Starting prices shown beside the main CTA. */
+  pricing?: ServicePricing | null
 }
-const { badge, headline, subheadline, description, stats = [], serviceName, heroImage } = Astro.props
+const { badge, headline, subheadline, description, stats = [], serviceName, heroImage, pricing } = Astro.props
 ---
 
 <section
@@ -55,6 +59,13 @@ const { badge, headline, subheadline, description, stats = [], serviceName, hero
 
         {description && (
           <p class="text-lg leading-relaxed mb-8" style="color:#b0b0bb">{description}</p>
+        )}
+
+        <!-- Starting price, next to the main CTA -->
+        {pricing && (
+          <div class="mb-6">
+            <PriceSummary pricing={pricing} variant="hero" />
+          </div>
         )}
 
         <!-- CTAs -->
@@ -119,6 +130,11 @@ const { badge, headline, subheadline, description, stats = [], serviceName, hero
     grid-template-columns: 1fr;
     gap: 48px;
     align-items: center;
+  }
+  /* Let the text column shrink below its longest word so the price box and
+     CTAs stay inside narrow (zoomed) viewports. */
+  .hero-text {
+    min-width: 0;
   }
   .hero-image-col {
     border-radius: 8px;

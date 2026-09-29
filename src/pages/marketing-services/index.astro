@@ -1,7 +1,8 @@
 ---
 /**
  * /services/ — Services hub page.
- * Orchestrates traffic to 8 spoke pages.
+ * Orchestrates traffic to the 14 spoke pages, each card showing its
+ * published starting price from src/lib/service-pricing.ts.
  * Sections: HubHero → ServicesGrid → ServiceRouter → AntiPitch →
  *           ProcessStrip → EeatBlock → TestimonialsPlaceholder → FinalCta
  */
@@ -16,6 +17,8 @@ import EeatBlock        from '../../components/services/EeatBlock.astro'
 import FinalCta         from '../../components/services/FinalCta.astro'
 import GoogleReviews    from '../../components/react/GoogleReviews.tsx'
 import PlaceholderImage from '../../components/PlaceholderImage.astro'
+import PriceSummary     from '../../components/services/PriceSummary.astro'
+import { getServicePricing, offerJsonLd, HUB_PRICING_NOTE } from '../../lib/service-pricing'
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 const [hub, servicePages] = await Promise.all([
@@ -54,11 +57,18 @@ const ROUTER_QUESTIONS = [
   },
 ]
 
-// Schema.org
+// Schema.org — the OfferCatalog lists each service with the same Offer
+// nodes (same @ids) its own page publishes.
+const OFFER_CATALOG_ID = 'https://cicon.ca/marketing-services/#offer-catalog'
+const catalogServices = sortedServices
+  .map((svc) => ({ svc, pricing: getServicePricing(svc.slug) }))
+  .filter((x) => x.pricing)
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
-    ORG_CICON,
+    catalogServices.length
+      ? { ...ORG_CICON, hasOfferCatalog: { '@id': OFFER_CATALOG_ID } }
+      : ORG_CICON,
     PERSON_MAJID,
     WEBSITE_CICON,
     {
@@ -69,6 +79,20 @@ const jsonLd = {
         { '@type': 'ListItem', position: 2, name: 'Services', item: 'https://cicon.ca/marketing-services/' },
       ],
     },
+    ...(catalogServices.length ? [{
+      '@type': 'OfferCatalog',
+      '@id': OFFER_CATALOG_ID,
+      name: 'CiCon Marketing services and starting prices',
+      description: HUB_PRICING_NOTE,
+      itemListElement: catalogServices.map(({ svc, pricing }) => ({
+        '@type': 'Service',
+        '@id': `https://cicon.ca/marketing-services/${svc.slug}/#service`,
+        name: svc.title,
+        url: `https://cicon.ca/marketing-services/${svc.slug}/`,
+        provider: { '@id': 'https://cicon.ca/#organization' },
+        offers: pricing!.offers.map(offerJsonLd),
+      })),
+    }] : []),
   ],
 }
 ---
@@ -119,6 +143,18 @@ const jsonLd = {
     body { margin: 0; font-family: 'Inter', sans-serif; background: var(--off-white); }
     h1, h2, h3, h4, h5, h6 { font-family: 'Clash Display', 'Inter', sans-serif; }
     /* Hub hero two-column layout */
+    /* Services grid: equal-height cards; price sits under the title and the
+       stat + "Learn more" footer is pinned to the bottom of every card. */
+    .svc-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    .svc-card { display: flex; flex-direction: column; min-width: 0; }
+    .svc-card:focus-visible { outline: 3px solid var(--shadow); outline-offset: 3px; }
+    .svc-card .svc-footer { margin-top: auto; }
+    @media (min-width: 640px) {
+      .svc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (min-width: 1024px) {
+      .svc-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
     .hub-hero-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -284,34 +320,41 @@ const jsonLd = {
           <span class="h-[1px] w-8" style="background:var(--accent)"></span>
           <span class="text-xs font-semibold tracking-widest uppercase" style="color:var(--accent)">Our Services</span>
         </div>
-        <h2 class="font-heading text-3xl font-extrabold" style="color:var(--black)">8 services. One senior strategist.</h2>
+        <h2 class="font-heading text-3xl font-extrabold" style="color:var(--black)">14 services. One senior strategist.</h2>
       </div>
 
       {sortedServices.length > 0 ? (
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {sortedServices.map((svc) => (
-            <a
-              href={`/marketing-services/${svc.slug}/`}
-              class="group flex flex-col p-6 rounded-2xl border transition-all hover:-translate-y-1 hover:shadow-lg"
-              style="background:#fff;border-color:var(--alabaster)"
-            >
-              <div class="text-3xl mb-4">{SERVICE_CONFIG[svc.serviceType]?.icon ?? '⚡'}</div>
-              <h3 class="font-heading font-bold text-lg mb-2 group-hover:underline" style="color:var(--black)">{svc.title}</h3>
-              {svc.heroSubheadline && (
-                <p class="text-sm leading-relaxed flex-1" style="color:var(--charcoal)">{svc.heroSubheadline}</p>
-              )}
-              {svc.heroStats?.[0] && (
-                <div class="mt-4 pt-4 border-t" style="border-color:var(--alabaster)">
-                  <span class="text-xl font-extrabold" style="color:var(--accent)">{svc.heroStats[0].value}</span>
-                  <span class="text-xs ml-2" style="color:#999">{svc.heroStats[0].label}</span>
+        <div class="svc-grid">
+          {sortedServices.map((svc) => {
+            const pricing = getServicePricing(svc.slug)
+            return (
+              <a
+                href={`/marketing-services/${svc.slug}/`}
+                class="svc-card group p-6 rounded-2xl border transition-all hover:-translate-y-1 hover:shadow-lg"
+                style="background:#fff;border-color:var(--alabaster)"
+                data-service-card={svc.slug}
+              >
+                <div class="text-3xl mb-4" aria-hidden="true">{SERVICE_CONFIG[svc.serviceType]?.icon ?? '⚡'}</div>
+                <h3 class="font-heading font-bold text-lg mb-3 group-hover:underline" style="color:var(--black)">{svc.title}</h3>
+                <div class="svc-price mb-4">
+                  {pricing && <PriceSummary pricing={pricing} variant="card" />}
                 </div>
-              )}
-              <div class="mt-4 flex items-center gap-1 text-sm font-semibold" style="color:var(--accent)">
-                Learn more
-                <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-              </div>
-            </a>
-          ))}
+                <p class="text-sm leading-relaxed mb-4" style="color:var(--charcoal)">{svc.heroSubheadline}</p>
+                <div class="svc-footer pt-4 border-t" style="border-color:var(--alabaster)">
+                  {svc.heroStats?.[0] && (
+                    <>
+                      <span class="text-xl font-extrabold" style="color:var(--accent)">{svc.heroStats[0].value}</span>
+                      <span class="text-xs ml-2" style="color:#6B6B6B">{svc.heroStats[0].label}</span>
+                    </>
+                  )}
+                </div>
+                <div class="mt-4 flex items-center gap-1 text-sm font-semibold" style="color:#6E5B2A">
+                  Learn more
+                  <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                </div>
+              </a>
+            )
+          })}
         </div>
       ) : (
         <!-- Fallback when no published service pages yet -->
@@ -328,6 +371,15 @@ const jsonLd = {
           ))}
         </div>
       )}
+
+      <!-- Pricing note -->
+      <div id="pricing" class="mt-10 max-w-3xl rounded-xl border p-5" style="background:#fff;border-color:rgba(157,131,62,0.35)">
+        <p class="text-sm leading-relaxed" style="color:var(--charcoal)">{HUB_PRICING_NOTE}</p>
+        <p class="mt-3 text-sm leading-relaxed" style="color:var(--charcoal)">
+          <strong style="color:var(--black)">Your budget needs a focused plan.</strong>
+          We help you choose a service and scope that fit your priorities.
+        </p>
+      </div>
     </div>
   </section>
 
@@ -376,7 +428,6 @@ const jsonLd = {
     items={hub?.antiPitchItems ?? [
       { disqualifier: "You want results before the strategy is finished.", explanation: "Good marketing takes 30–90 days to calibrate. We'll tell you what's realistic on day one." },
       { disqualifier: "You need someone to manage everything without your involvement.", explanation: "We need monthly strategy calls. You stay informed — that's part of the model." },
-      { disqualifier: "Your budget is under $1,500/month all-in.", explanation: "Below that threshold, fees eat the spend. We can't move the needle responsibly at that level." },
     ]}
   />
 

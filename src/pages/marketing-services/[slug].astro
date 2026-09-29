@@ -4,12 +4,13 @@
  * Dynamically renders one servicePage document from Sanity.
  * Section order: Hero → StickyBar → PAA → AntiPitch →
  * Capabilities → [Dental: CDCP + Channels] → Process →
- * EeatBlock → [Pricing] → FAQ → RelatedServices → RelatedPosts → FinalCta
+ * EeatBlock → Pricing (#pricing) → FAQ → RelatedServices → RelatedPosts → FinalCta
  */
 import '../../styles/globals.css';
 import { getServicePage, ALL_SERVICE_SLUGS_QUERY } from '../../lib/sanity'
 import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON } from '../../lib/schema-constants'
 import { toAbsoluteUrl } from '../../lib/url'
+import { getServicePricing, hasRetainer, offerJsonLd } from '../../lib/service-pricing'
 import Nav                 from '../../components/Nav.astro'
 import Footer              from '../../components/Footer.astro'
 import ServiceHero         from '../../components/services/ServiceHero.astro'
@@ -51,6 +52,15 @@ const isPreview = import.meta.env.VERCEL_ENV !== 'production'
 const canonicalUrl = toAbsoluteUrl(page.canonical, `https://cicon.ca/marketing-services/${slug}/`)
 const isDental = page.serviceType === 'dental'
 
+// Published starting prices (src/lib/service-pricing.ts). The cost question is
+// answered from the same source and leads the FAQ, so the visible answer, the
+// #pricing section and the FAQPage/Offer JSON-LD can never disagree.
+const pricing = getServicePricing(slug)
+const faqs: Array<{ question: string; answer: string }> = [
+  ...(pricing ? [{ question: pricing.costQuestion, answer: pricing.explanation }] : []),
+  ...(page.faqs ?? []),
+]
+
 // ── Schema.org ────────────────────────────────────────────────────────────────
 const areaServed = (page.areaServed ?? ['Richmond Hill', 'Toronto', 'Markham', 'Vaughan', 'North York', 'Greater Toronto Area'])
   .map((name: string) => ({ '@type': 'City', name }))
@@ -73,19 +83,13 @@ const jsonLd = {
       provider: { '@id': 'https://cicon.ca/#organization' },
       ...(page.serviceTypeSchema && { serviceType: page.serviceTypeSchema }),
       areaServed,
-      offers: {
-        '@type': 'Offer',
-        name: 'Chat on WhatsApp',
-        price: 0,
-        priceCurrency: 'CAD',
-        description: 'Free WhatsApp consultation with our senior strategist',
-      },
+      ...(pricing && { offers: pricing.offers.map(offerJsonLd) }),
     },
     // FAQPage
-    ...(page.faqs?.length ? [{
+    ...(faqs.length ? [{
       '@type': 'FAQPage',
       '@id': `${canonicalUrl}#faq`,
-      mainEntity: page.faqs.map((faq: { question: string; answer: string }) => ({
+      mainEntity: faqs.map((faq) => ({
         '@type': 'Question',
         name: faq.question,
         acceptedAnswer: { '@type': 'Answer', text: faq.answer },
@@ -226,6 +230,7 @@ const jsonLd = {
     stats={page.heroStats}
     serviceName={page.title}
     heroImage={page.heroImage}
+    pricing={pricing}
   />
 
   {page.paaQuestions?.length && (
@@ -267,15 +272,10 @@ const jsonLd = {
     stats={page.eeatStats}
   />
 
-  <PricingBlock
-    headline={page.pricingHeadline}
-    intro={page.pricingIntro}
-    note={page.pricingNote}
-    tiers={page.pricingTiers}
-  />
+  <PricingBlock pricing={pricing} />
 
-  {page.faqs?.length && (
-    <ServiceFaq faqs={page.faqs} pageUrl={canonicalUrl} />
+  {faqs.length > 0 && (
+    <ServiceFaq faqs={faqs} pageUrl={canonicalUrl} />
   )}
 
   {page.relatedServices?.length && (
@@ -292,6 +292,7 @@ const jsonLd = {
     headline={page.finalCtaHeadline}
     body={page.finalCtaBody}
     serviceName={page.title}
+    hasRetainer={!pricing || hasRetainer(pricing)}
   />
 
   <Footer />

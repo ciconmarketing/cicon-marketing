@@ -7,6 +7,10 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "dev:local-content": "npm run content:build && TZ=UTC LOCAL_CONTENT_DATASET=.local-content/dataset.ndjson astro dev",
+    "content:snapshot": "node scripts/local-content/snapshot.mjs",
+    "content:build": "node scripts/local-content/build-dataset.mjs",
+    "test:pricing": "node --import tsx --test scripts/__tests__/service-pricing.test.ts",
     "astro": "astro",
     "enrich-arvow": "tsx scripts/post-processor/enrich-arvow-post.ts",
     "seed-case-studies": "tsx scripts/seed-case-studies.ts",
@@ -44,6 +48,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "cheerio": "^1.2.0",
+    "groq-js": "^2.0.0",
     "tsx": "^4.22.0",
     "typescript": "^5.9.3"
   }

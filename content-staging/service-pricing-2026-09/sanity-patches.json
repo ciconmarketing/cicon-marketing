@@ -1,0 +1,374 @@
+[
+  {
+    "patch": {
+      "id": "112974c8-fc1b-4f52-b063-441d98183ef7",
+      "ifRevisionID": "Pm9wd3LBrJ0tz0cHr6JtVm",
+      "set": {
+        "heroDescription": "CiCon is a boutique digital marketing agency serving GTA businesses and dental clinics. We run 14 interconnected services — from paid ads and SEO to video production and CRM — all managed by the same senior strategist. No account managers. No rotating contacts.",
+        "seoDescription": "Paid ads, SEO, social, video, CRM and more: 14 interconnected services for GTA businesses, all run by one senior strategist. No account managers.",
+        "heroStats[_key==\"hs1\"].value": "14"
+      },
+      "unset": [
+        "antiPitchItems[_key==\"ap3\"]"
+      ]
+    }
+  },
+  {
+    "patch": {
+      "id": "c339492f-dd10-4322-9a9d-5e2a63d6bc74",
+      "ifRevisionID": "gQ3ZJidoYVcWmwXzUwd1yw",
+      "set": {
+        "faqs[_key==\"94da8cf5f7c5\"].answer": "Our lowest starting prices are $499 CAD per month (CRM Integration) and $500 CAD one-time (Marketing Consultant). Every service has its own published starting price on our services page, and final pricing depends on the agreed scope. Ad spend is always excluded from our service fees."
+      }
+    }
+  },
+  {
+    "patch": {
+      "id": "dental-seo-service-page",
+      "ifRevisionID": "gQ3ZJidoYVcWmwXzV1PY24",
+      "set": {
+        "faqs[_key==\"faq7\"].answer": "Yes. Each location can get its own verified Google Business Profile, its own location service page, and separate citation management — with consolidated reporting so ownership sees the full picture across clinics. We confirm which locations your plan covers in your quote.",
+        "paaQuestions[_key==\"paa5\"].answer": "Yes. Each location can get its own verified Google Business Profile, its own service-area page and consolidated reporting so ownership sees performance across every clinic. Your quote confirms which locations the plan covers."
+      },
+      "unset": [
+        "pricingHeadline",
+        "pricingIntro",
+        "pricingNote",
+        "pricingTiers"
+      ]
+    }
+  },
+  {
+    "patch": {
+      "id": "e711d806-b841-49bf-8c43-ca1a7bc5688c",
+      "ifRevisionID": "ktfHlaQwfgYKsWoQafelZD",
+      "set": {
+        "heroDescription": "We run digital marketing for GTA dental clinics across Google Ads, Local SEO, social media, and patient testimonial videos, scoped to what your clinic needs. Every campaign is built around your clinic's growth goals and tracked to booked appointments, not impressions.",
+        "antiPitchItems[_key==\"ap3\"].disqualifier": "You want one fee that also covers your ad budget.",
+        "antiPitchItems[_key==\"ap3\"].explanation": "Our retainer covers the marketing services agreed for your clinic. Your advertising budget is separate, and we confirm the channels, work and ad budget in your quote.",
+        "capabilitiesHeadline": "Dental marketing channels, scoped to your clinic",
+        "capabilitiesIntro": "These are the channels we can run for your clinic, from the first Google search to the booked appointment. Your quote confirms which channels and work your monthly retainer covers, and ad spend is always separate.",
+        "capabilities[_key==\"cap1\"].description": "We optimize site architecture, on-page content, and authority signals for 'dentist near me', 'emergency dental [city]', and CDCP-specific searches. Can include monthly content updates and technical audits.",
+        "capabilities[_key==\"cap5\"].description": "GBP optimization, citation building across relevant directories, review generation strategy, and map pack ranking improvements. Review response management can be part of the scope.",
+        "capabilities[_key==\"cap6\"].description": "Call tracking, form tracking, and CRM setup that shows you exactly which campaign, ad, and keyword produced each patient inquiry. Can include a reporting dashboard built for clinic owners."
+      },
+      "unset": [
+        "faqs[_key==\"faq1\"]",
+        "paaQuestions[_key==\"paa1\"]"
+      ]
+    }
+  },
+  {
+    "patch": {
+      "id": "7d012bda-41ab-4dfa-8601-0cc6f27878fb",
+      "ifRevisionID": "Pm9wd3LBrJ0tz0cHr6JvzC",
+      "set": {
+        "antiPitchItems[_key==\"ap1\"].disqualifier": "You expect results without a realistic ad budget.",
+        "antiPitchItems[_key==\"ap1\"].explanation": "Competitive GTA markets need enough ad spend to produce useful data. Ad spend is separate from our management fee, and we agree the ad budget and management scope in your quote.",
+        "paaQuestions[_key==\"paa4\"].answer": "We can set up call tracking, form tracking, and CRM integration so every lead is attributed to its source campaign, ad group, and keyword. Tracking setup is scoped in your quote. You'll see cost per lead, cost per customer, and ROAS — not just clicks and impressions.",
+        "faqs[_key==\"a7f13c1b58ab\"].answer": "We measure success using KPIs: click-through rate (CTR), conversion rate, cost per acquisition (CPA), and return on ad spend (ROAS). Our monthly reports show cost per lead and revenue impact — not just platform metrics. Call and form tracking setup is agreed in your quote.",
+        "capabilitiesIntro": "We manage paid advertising across Google and Meta — built for GTA businesses that track to revenue. Google Ads and Meta Ads management each have a published starting price. LinkedIn, TikTok, Pinterest, and Microsoft Ads management is quoted separately for your scope.",
+        "capabilities[_key==\"f6bbdd0254d7\"].description": "Sponsored posts, text ads, and message ads delivered directly to decision-makers' inboxes. Best for B2B lead generation, professional service firms, and campaigns where connecting with industry professionals is the goal. Management is quoted separately for your scope.",
+        "capabilities[_key==\"6eacf7b7921e\"].description": "In-feed ads, branded hashtag challenges, and branded effects. TikTok's algorithm enables precise targeting based on user behavior and interests — effective for brand awareness, engagement, and product promotion in a creative, authentic format. Management is quoted separately for your scope.",
+        "capabilities[_key==\"864ccdb1a58a\"].description": "Interest, keyword, demographic, and customer list targeting. Especially effective for lifestyle, fashion, home decor, and DIY businesses looking to increase brand awareness and drive website traffic from high-intent browsers. Management is quoted separately for your scope.",
+        "capabilities[_key==\"e6679522931b\"].description": "Search ads, shopping ads, and audience targeting by demographics, location, and device. Integrates seamlessly with Google Ads for easy campaign import. A cost-effective complement to Google Ads that captures a unique segment of high-intent searchers. Management is quoted separately for your scope."
+      },
+      "unset": [
+        "paaQuestions[_key==\"paa1\"]"
+      ]
+    }
+  },
+  {
+    "patch": {
+      "id": "c0dd2d5c-032f-4486-ae99-c66e0a9d6ac1",
+      "ifRevisionID": "Pm9wd3LBrJ0tz0cHr6Jx0g",
+      "set": {
+        "heroSubheadline": "Google Business Profile management first. Citation building and review management scoped to your plan.",
+        "heroStats[_key==\"hs2\"].value": "Scoped",
+        "heroStats[_key==\"hs2\"].label": "Citation work matched to your plan",
+        "antiPitchItems[_key==\"ap3\"].disqualifier": "You expect the entry plan to cover every local SEO task.",
+        "antiPitchItems[_key==\"ap3\"].explanation": "The entry plan focuses on your Google Business Profile. Citation building, extra locations, and website page work are scoped separately in your quote.",
+        "capabilitiesHeadline": "Local SEO capabilities, scoped to your business",
+        "capabilitiesIntro": "Google uses dozens of signals to rank local businesses. Google Business Profile management is where the service starts; the wider local SEO work below is scoped to your business in your quote.",
+        "capabilities[_key==\"cap1\"].description": "We optimize every GBP field — categories, service areas, hours, photos, Q&A, and posts. Regular updates signal activity to Google's local algorithm and keep your profile competitive.",
+        "capabilities[_key==\"cap2\"].description": "We audit your existing citations for NAP inconsistencies (a common ranking killer), then build accurate listings across relevant directories, including Yelp, Apple Business Connect, Bing Places, and industry-specific directories.",
+        "capabilities[_key==\"cap5\"].description": "We track your Maps rankings across your target keywords, identify ranking blockers, and systematically improve your position through GBP authority, proximity optimization, and review velocity.",
+        "faqs[_key==\"faq3\"].answer": "We focus on the most valuable local keywords for your business — typically '[service] [city]' and '[service] near me' variations — and agree the keyword set in your quote. We track ranking progress monthly and report on impressions, clicks, and direction requests.",
+        "faqs[_key==\"faq4\"].answer": "Yes. For multi-location businesses, we can optimize a GBP for each physical location, and additional locations are scoped in your quote. For service-area businesses, we optimize your single GBP for all relevant GTA cities in your coverage zone.",
+        "faqs[_key==\"faq5\"].answer": "We monitor your rankings regularly. If a competitor gains ground, we investigate what changed — whether that's a new review surge, a GBP update, or a backlink push — and respond with a counter-strategy.",
+        "faqs[_key==\"faq2\"].answer": "You need a verified Google Business Profile, which typically requires a physical address (or a service-area business designation). We'll guide you through the setup and verification process if you don't have one yet. Profile setup is quoted separately from the monthly service.",
+        "processSteps[_key==\"ps3\"].description": "GBP optimized, plus any citation cleanup and review funnel work agreed in your plan",
+        "processSteps[_key==\"ps4\"].description": "Ongoing GBP updates and ranking reports, plus any agreed citation monitoring and review response management"
+      },
+      "unset": [
+        "eeatStats[_key==\"es2\"]"
+      ]
+    }
+  },
+  {
+    "patch": {
+      "id": "495f9ca8-c378-4b97-8ae7-ce392e91b884",
+      "ifRevisionID": "G2HW2gMjB37ESrzJY3al5a",
+      "set": {
+        "capabilities[_key==\"cap4\"].description": "We build keyword sets across three tiers — high-intent commercial terms (your money pages), informational long-tail terms (your authority builders), and AI-citation candidates (terms where AI Overviews currently dominate and you can replace the cited source). We track an agreed keyword set and report rank movement monthly.",
+        "capabilities[_key==\"c68d71696e0c\"].description": "We focus exclusively on Tier 1 and Tier 2 sources — industry publications, local news, .ca government and association sites, directory profiles the answer engines actually cite, and editorial placements in your vertical. No PBNs, no link farms, no comment spam. Link-building targets are agreed in your quote, with full transparency on every placement.",
+        "faqs[_key==\"43767efb5264\"].answer": "AI-powered tools assist in generating keyword suggestions, analyzing competitor content, and identifying emerging search trends. They help create content optimized for both search engines and AI answer engines — improving your chances of appearing in AI Overviews and traditional search results. They also monitor brand visibility across multiple AI platforms for continuous improvement.",
+        "faqs[_key==\"93431d254fd0\"].answer": "AI search engines like ChatGPT, Perplexity, and Google AI prioritize precise, contextually relevant answers — often through AI-generated summaries. This requires SEO strategies to focus on answer engine optimization and structured data to appear in AI-driven results. CiCon Marketing tailors content for these evolving platforms to support sustained organic traffic growth.",
+        "capabilitiesIntro": "Two systems now decide whether customers find you: Google's index, and the AI answer engines built on top of it. We work both — and report on them separately, because the results are rarely the same. Your monthly plan covers the work we agree in your quote."
+      }
+    }
+  },
+  {
+    "patch": {
+      "id": "21aa3b48-7440-4fa3-8307-5faed2f02b99",
+      "ifRevisionID": "Hiko0Ga04TZw1lAKmrqwTR",
+      "set": {
+        "faqs[_key==\"35f276fe1e49\"].answer": "Yes. Every social media engagement at CiCon covers the platform strategy, content calendar, creative direction, and performance reporting agreed in your plan — managed by a senior strategist, not a junior coordinator.",
+        "faqs[_key==\"d50d5e083397\"].answer": "Consistency beats frequency. For most Canadian businesses, 3–5 posts per week on your primary platform is a sustainable baseline. Quality and timing matter more than raw volume — posting at 2am daily helps no one. Your CiCon plan sets the posting volume for each platform before the service starts.",
+        "paaQuestions[_key==\"paa3\"].answer": "We agree on posting volume for each platform before the service starts. Volume is secondary to consistency and quality — we'd rather post three strong pieces of content than five generic ones.",
+        "capabilitiesHeadline": "Social media management, scoped to your platforms",
+        "capabilitiesIntro": "We agree on the platforms and monthly work before the service starts. These are the platforms we can cover for your business.",
+        "heroStats[_key==\"hs2\"].label": "Platforms we manage",
+        "capabilities[_key==\"9c38ea327415\"].description": "We manage Facebook Pages, Meta Business Suite campaigns, audience building, and retargeting. From organic content to paid reach, we optimize every touchpoint in the Meta ecosystem. Paid campaigns and ad spend are scoped separately.",
+        "capabilities[_key==\"af64b0ac0866\"].description": "We develop TikTok content strategies that match platform culture — not repurposed Instagram clips. Organic growth tactics combined with TikTok Ads for accelerated reach and measurable ROI. TikTok Ads management and ad spend are scoped separately."
+      },
+      "unset": [
+        "faqs[_key==\"9f71b757b581\"]"
+      ]
+    }
+  },
+  {
+    "patch": {
+      "id": "4d9d83ee-8ea7-4686-a12e-b439d9712b11",
+      "ifRevisionID": "Hiko0Ga04TZw1lAKms1kwz",
+      "set": {
+        "paaQuestions[_key==\"paa2\"].answer": "A multi-page business website typically takes 4–6 weeks from approved wireframes to launch. Single landing pages take 1–2 weeks. Timelines depend on how quickly you can provide content and feedback — we keep a project tracker so nothing stalls.",
+        "faqs[_key==\"e254067a3791\"].answer": "We can set up GA4, Google Tag Manager, and Google Search Console as part of your build, and the tracking work is agreed in your quote. For the Multi-Page + Full SEO build, tracking setup is scoped into the build so you have visibility into traffic, user behaviour, and conversion paths from launch.",
+        "faqs[_key==\"9d081d6c9dd4\"].answer": "Every build includes basic on-page SEO foundations: clean URL structure, proper heading hierarchy, metadata, and page speed optimization. The Multi-Page + Full SEO build adds technical and on-page SEO work scoped into the build, which can include schema markup and keyword research. Ongoing SEO campaigns are a separate service that picks up where development ends.",
+        "capabilities[_key==\"cap3\"].description": "Every site we build hits the green threshold on all three Core Web Vitals (LCP, INP, CLS) on both mobile and desktop. We use static-first frameworks, optimize every image to next-gen formats, lazy-load below-the-fold content, and verify speed before launch. Slow sites lose ad quality scores and rankings — we don't ship slow sites.",
+        "capabilities[_key==\"cap4\"].description": "Every site ships with semantic HTML, optimized internal linking, and a clean URL structure. Full schema.org coverage (Organization, Service, FAQ, Article, BreadcrumbList) and the wiring for Google Analytics 4, Google Tag Manager, conversion tracking, and Search Console can be scoped into your build — this work is central to the Multi-Page + Full SEO build.",
+        "capabilities[_key==\"2113fb206ac8\"].description": "Conversion tracking can be wired end-to-end as part of your build: forms connected to your CRM (GoHighLevel, HubSpot, Salesforce — whatever you run), phone numbers routed through call tracking with source attribution, and actions firing to GA4 and your ad platforms for optimization. We agree the tracking scope in your quote, so you know which ads drive which leads, by source and by campaign.",
+        "capabilities[_key==\"cap2\"].description": "We build dedicated landing pages for your Google Ads, Meta Ads, and email campaigns — each with its own headline, social proof, offer, and form. Built in Astro for sub-1-second load times, structured for A/B testing, and wired into your CRM so every lead lands where it should. Most clients run 4-12 active landing pages per campaign season. Campaign landing pages are quoted separately.",
+        "processSteps[_key==\"ps4\"].description": "Site goes live, and the post-launch support window agreed in your quote begins"
+      },
+      "unset": [
+        "paaQuestions[_key==\"paa1\"]"
+      ]
+    }
+  },
+  {
+    "patch": {
+      "id": "web-design-richmond-hill-page",
+      "ifRevisionID": "Pm9wd3LBrJ0tz0cHr6df4g",
+      "set": {
+        "heroDescription": "We are a marketing company that builds websites — not a web shop that dabbles in marketing. Every Richmond Hill site we build is designed around how customers actually find and choose you and starts with SEO foundations. With our Multi-Page + Full SEO build, technical and on-page SEO is in place on launch day rather than months later.",
+        "heroStats[_key==\"hs2\"].label": "SEO foundations live at launch",
+        "capabilities[_key==\"cap2\"].description": "Every build starts with SEO foundations: semantic HTML, clean internal linking, crawlable structure and Core Web Vitals headroom. The Multi-Page + Full SEO build scopes technical and on-page SEO into the build, which can include schema markup, keyword and competitor research, and content structured so AI search engines can quote it. Most agencies launch sites carrying a backlog of SEO problems that then cost money to fix; we build the foundations in from the start.",
+        "capabilities[_key==\"cap4\"].description": "Theme development from scratch or a starter framework stripped to essentials for speed — never a bloated commercial theme. Your team gets a CMS they can actually use to update content without touching code, plus documentation at handoff.",
+        "capabilities[_key==\"cap6\"].description": "Dental clinics and healthcare: booking integrations, patient intake, AODA-compliant accessible design. Home improvement and trades: project galleries, service request forms, service-area pages. Showrooms and retailers: catalogues. B2B services: intake workflows, lead magnets and case study templates.",
+        "faqs[_key==\"faq2\"].answer": "Every build includes basic on-page SEO foundations. If you choose the Multi-Page + Full SEO build, technical and on-page SEO for both traditional search and AI answer engines is scoped into the build, so it is in place when the site goes live. Ongoing SEO after launch is a separate service.",
+        "paaQuestions[_key==\"paa4\"].answer": "Every build includes SEO foundations, built during development rather than retrofitted. The Multi-Page + Full SEO build scopes technical and on-page SEO into the build, which can include AI-search readiness, so it is in place at launch.",
+        "faqs[_key==\"faq3\"].answer": "Three to ten pages takes two to five weeks. Sites with a blog or booking take five to eight weeks. Complex multi-region builds run longer. Timelines depend mostly on how quickly you can deliver content and approvals.",
+        "paaQuestions[_key==\"paa3\"].answer": "A custom site of three to ten pages takes two to five weeks once discovery and content are ready. Builds with a blog or multiple service areas take five to eight weeks. Content delivery is almost always the bottleneck, not development.",
+        "faqs[_key==\"faq4\"].answer": "Yes. Your quote confirms hosting setup and the post-launch support window for your build. Ongoing monthly maintenance is quoted separately and can cover CMS and plugin updates, security monitoring, backups, uptime checks and performance reviews.",
+        "faqs[_key==\"faq6\"].answer": "Your quote sets the post-launch support window for your build. After that, we offer monthly retainers or per-request support, quoted separately. You can also update content yourself through the CMS.",
+        "processSteps[_key==\"ps4\"].description": "We go live, verify indexing, confirm analytics, and hand over documentation for your CMS",
+        "eeatBody": "CiCon is based in Richmond Hill, and a senior strategist works directly on every build — no handoff to a junior developer after the sales call.\n\nThe distinction that matters: most web designers build a site and treat marketing as a separate job for someone else. We are a marketing company first, so the site is designed around lead generation from the first conversation, every build starts with SEO foundations, and our Multi-Page + Full SEO build goes live with technical and on-page SEO in place. Most agencies put a site live carrying SEO problems that then take months and money to unpick.\n\nRecent Richmond Hill and GTA builds include Atlas Value Builders, a modular four-season housing manufacturer, and Maison Opes, a home renovation company serving Toronto and the GTA. We work with businesses along the Yonge Street and Bayview corridors and across York Region — and we stay involved after launch rather than disappearing.",
+        "metaDescription": "Marketing-first web design for Richmond Hill businesses. Websites from $1,000 CAD, SEO foundations in every build, and full SEO builds available."
+      },
+      "unset": [
+        "pricingHeadline",
+        "pricingIntro",
+        "pricingNote",
+        "pricingTiers",
+        "faqs[_key==\"faq7\"]",
+        "paaQuestions[_key==\"paa2\"]"
+      ]
+    }
+  },
+  {
+    "patch": {
+      "id": "103bf360-222b-4d90-804b-7e6a511f1d56",
+      "ifRevisionID": "Pm9wd3LBrJ0tz0cHr6JtFu",
+      "set": {
+        "faqs[_key==\"faq2\"].answer": "Yes — on-location shooting is our default for most projects. We bring our own equipment, manage setup and breakdown, and need access to your space for the shoot. A standard session is 2–3 hours of shooting; larger productions can need more time on site, which we agree in your quote.",
+        "faqs[_key==\"faq3\"].answer": "Short-form social video projects take about 2–3 weeks from brief to delivery. Long-form brand films or testimonial productions take 4–6 weeks including editing and revision rounds.",
+        "paaQuestions[_key==\"paa2\"].answer": "A typical short-form social video project takes 2–3 weeks from brief to delivery. Long-form brand films or testimonial productions take 4–6 weeks including editing and revisions.",
+        "faqs[_key==\"faq5\"].answer": "We agree the number of revision rounds in your quote, along with the final assets and delivery schedule. Additional revisions are available at an hourly rate.",
+        "faqs[_key==\"faq6\"].answer": "Yes — when a production needs a script, we write it and get your approval before any shooting begins. Scripting is agreed as part of your brief. For short-form social video, we can also provide a content brief and talking points if you prefer an interview-style approach.",
+        "capabilities[_key==\"cap2\"].description": "Scripted or documentary-style short-form videos (15–90 seconds) designed for social media feeds. Scripting, shooting, editing, captions, and delivery in platform-specific formats, with clip volume agreed in your quote.",
+        "capabilitiesIntro": "We produce the content formats modern marketing runs on — from a single photoshoot to a full content system. Photo and video sessions have a published starting price; editing, written content, and larger productions are scoped in your quote.",
+        "processSteps[_key==\"ps4\"].description": "Edited, formatted, and delivered in the formats agreed in your brief — ready to publish or hand to your ad team"
+      }
+    }
+  },
+  {
+    "patch": {
+      "id": "a2f1c0ec-77c4-42fc-ab36-5a6a7b545d2f",
+      "ifRevisionID": "Pm9wd3LBrJ0tz0cHr6JwUw",
+      "set": {
+        "faqs[_key==\"faq2\"].answer": "A standard CRM integration — website forms, phone tracking, and Google Ads connection — takes 2–4 weeks. More complex setups with multi-stage automation sequences and multi-location pipelines take 4–8 weeks. We'll give you a specific timeline after the audit. Setup is quoted separately from the monthly service.",
+        "faqs[_key==\"faq4\"].answer": "Yes — team training and a written standard operating procedure (SOP) for how your team should log activity, manage pipeline stages, and interpret reports can be part of your CRM setup, which is quoted separately.",
+        "paaQuestions[_key==\"paa1\"].answer": "We work with GoHighLevel, HubSpot, and Zoho CRM — chosen based on your business size, budget, and existing tech stack. Initial setup, configuration, and integration with your marketing channels and website are quoted separately from the monthly service.",
+        "capabilitiesIntro": "We build and integrate CRM systems that connect your marketing spend to actual revenue — not vanity metrics. Initial setup is quoted separately; the monthly service covers the ongoing work we agree in your quote.",
+        "processSteps[_key==\"ps1\"].description": "Initial setup: we audit your current lead flow, identify where leads are being lost, and map out your ideal CRM architecture",
+        "processSteps[_key==\"ps2\"].description": "Initial setup: cRM configured, integrations built, call tracking live, and pipeline stages mapped to your actual sales process",
+        "processSteps[_key==\"ps3\"].description": "Initial setup: automation sequences built and tested with real lead scenarios — nothing goes live until we've verified it works",
+        "processSteps[_key==\"ps4\"].description": "Monthly service: monthly reporting on pipeline performance, lead source attribution, and automation improvements"
+      }
+    }
+  },
+  {
+    "patch": {
+      "id": "PkCti5erhLbeWRwoQTIBMF",
+      "ifRevisionID": "2m6L0sQfPY4xqiZQVU6xtC",
+      "set": {
+        "faqs[_key==\"faq5\"].answer": "Both. A one-time engagement covers the review and optimization work we agree before the project starts. Ongoing testing and optimization need a separate retainer, quoted for your scope. Most clients start with a one-time engagement and decide based on what we find.",
+        "faqs[_key==\"faq6\"].answer": "CRO compounds. Every percentage point of conversion lift makes future ad spend more productive, because more of the traffic you already pay for turns into leads. That gain doesn't reverse when you turn off the ads.",
+        "capabilities[_key==\"cap2\"].description": "With an ongoing CRO retainer, we run continuous testing on the elements that move revenue most — headlines, CTAs, form fields, page layouts, pricing displays. Every test is hypothesis-led, statistically valid, and run long enough to produce real results. No vanity tests.",
+        "capabilities[_key==\"cap4\"].description": "Forms are where many conversion paths break. We audit where visitors leave, remove unnecessary fields, add clear validation, and test changes against your current completion rate. We report the measured result for your site, without promising a fixed lift.",
+        "paaQuestions[_key==\"paa3\"].answer": "First measurable wins typically land within 30-60 days from initial changes. Compound results — where multiple optimizations stack — show up in the 90-180 day window with ongoing optimization, which runs under a separate retainer.",
+        "processSteps[_key==\"step4\"].description": "A results report at the end of the project. Monthly reviews continue only with an ongoing CRO retainer",
+        "heroStats[_key==\"hs1\"].value": "Baseline-first",
+        "heroStats[_key==\"hs1\"].label": "Changes measured against your current rate",
+        "antiPitchItems[_key==\"ap2\"].explanation": "No one can promise a specific lift before seeing your data. We measure your current conversion rate first, then report what each change actually does. Anyone promising 10× is selling you on the upside of a single lucky test, not a sustainable program."
+      },
+      "unset": [
+        "paaQuestions[_key==\"paa1\"]"
+      ]
+    }
+  },
+  {
+    "patch": {
+      "id": "aa05db35-e576-4cb8-ae3b-1d68f7e2d9a1",
+      "ifRevisionID": "zK4AU5dZr4AiApGpZpcX2u",
+      "set": {
+        "heroStats[_key==\"stat1\"].value": "Scoped content",
+        "heroStats[_key==\"stat1\"].label": "Volume matched to your plan",
+        "capabilities[_key==\"cap1\"].description": "We start every engagement with a content audit and topic-cluster map. Which subjects do your customers search around your services? Which clusters have under-developed competition you can dominate? What's the right sequence of pieces to build topical authority in 90-180 days? Deliverable: a written strategy and an editorial calendar tied to commercial outcomes.",
+        "capabilities[_key==\"cap2\"].description": "We write long-form blog posts at the volume agreed in your plan — typically 1,500-2,500 words each, deeply researched, optimized for AI Overview citation and internal linking. Every piece written by humans (AI-assisted research only), edited by a senior strategist, and matched to a specific stage in your customer journey.",
+        "capabilities[_key==\"cap3\"].description": "When your plan includes them, long-form pillar pieces — definitive guides, original research, in-depth tutorials — built to be the best resource on the internet for their topic. These are the pieces that rank for the most competitive keywords, earn backlinks naturally, and get cited as sources by both AI engines and other publishers.",
+        "capabilities[_key==\"cap4\"].description": "When your plan includes video, we script, structure, and direct video content tied to your editorial calendar. Most video work is repurposed long-form blog content reformatted for YouTube, LinkedIn, and embedded in your articles. (Note: for dedicated brand video or ad production, see our Media Production service.)",
+        "capabilitiesIntro": "Great content marketing is editorial discipline applied to commercial outcomes. Every piece earns its place in your strategy — and earns a citation, a click, or a customer. Here's how we deliver that for GTA businesses. Your quote sets the formats and content volume."
+      },
+      "unset": [
+        "paaQuestions[_key==\"paa1\"]"
+      ]
+    }
+  },
+  {
+    "patch": {
+      "id": "2m6L0sQfPY4xqiZQVU152E",
+      "ifRevisionID": "zK4AU5dZr4AiApGpZoCxLg",
+      "set": {
+        "antiPitchItems[_key==\"ap3\"].explanation": "Our standalone consultations have a published starting price, and we agree the scope before work starts. If price is the only deciding factor, a marketing course may serve you better than a consultant.",
+        "paaQuestions[_key==\"paa4\"].question": "What does a standalone marketing consultation deliver?",
+        "paaQuestions[_key==\"paa4\"].answer": "Clear advice, or the deliverable we agree before work starts, focused on the question you need answered. Broader strategic audits, roadmaps, and KPI frameworks are scoped separately.",
+        "faqs[_key==\"faq1\"].answer": "A standalone consultation is scoped to one agreed question, and we confirm the timeline before work starts. Larger strategic audits, roadmaps, and ongoing advisory are scoped separately.",
+        "faqs[_key==\"faq3\"].answer": "No. A standalone consultation is a one-time engagement. Ongoing advisory is month-to-month with a 30-day notice. We don't believe in locking clients into contracts to keep them — we keep them by delivering results.",
+        "capabilities[_key==\"cap5\"].description": "After the audit and roadmap, most clients want a senior brain in the room monthly. We review what's working, what's not, and what to change — without taking over execution. Think of it as having a CMO on retainer, without the full-time salary. Ongoing advisory is scoped and quoted separately.",
+        "capabilitiesIntro": "A consultant's job is to find what's broken, what's wasted, and what's missing — then build the plan to fix it. A standalone consultation focuses on one question we agree up front; the larger audits, roadmaps, and tracking work below are scoped separately.",
+        "processSteps[_key==\"step1\"].label": "Agree the problem",
+        "processSteps[_key==\"step1\"].description": "We agree on the question to address and the advice or deliverable you need",
+        "processSteps[_key==\"step2\"].label": "Review",
+        "processSteps[_key==\"step2\"].description": "We review the relevant information — your accounts, data, and current plans",
+        "processSteps[_key==\"step3\"].label": "Advise",
+        "processSteps[_key==\"step3\"].description": "You get clear advice or the agreed deliverable",
+        "processSteps[_key==\"step4\"].label": "Next steps",
+        "processSteps[_key==\"step4\"].description": "We agree on next steps. Any further work is scoped separately"
+      },
+      "unset": [
+        "paaQuestions[_key==\"paa1\"]"
+      ]
+    }
+  },
+  {
+    "patch": {
+      "id": "c6efed59-cee9-41f1-a3e9-9dcfdfdc6112",
+      "ifRevisionID": "PkCti5erhLbeWRwoQTebFr",
+      "set": {
+        "antiPitchItems[_key==\"ap1\"].disqualifier": "You expect a one-time setup to stay accurate forever.",
+        "antiPitchItems[_key==\"ap1\"].explanation": "MarTech stacks break when tools update, integrations expire, or new tracking requirements emerge. One-time setups are welcome — plan to revisit yours every 6-12 months. Any ongoing maintenance is scoped separately.",
+        "faqs[_key==\"faq4\"].answer": "Both. Setup is a one-time project. Any ongoing maintenance — monthly tracking audits, integration fixes when tools update, new event tracking as campaigns evolve — is scoped separately. Most clients start with setup and decide on maintenance once they see how their stack behaves.",
+        "capabilities[_key==\"cap3\"].description": "We deploy Meta Pixel, Google Ads conversion tracking, LinkedIn Insight Tag, and TikTok Pixel — all configured for offline conversion uploads and server-side tracking where supported. Can include Stape or equivalent server-side container setup to recover the 20-40% of data lost to client-side tracking failures.",
+        "capabilitiesIntro": "Marketing technology is the plumbing under everything else. When it's right, every campaign is measurable. When it's wrong, every decision is a guess. Each project covers the tools, tracking, and integrations we agree before work starts.",
+        "processSteps[_key==\"step1\"].label": "Scope",
+        "processSteps[_key==\"step1\"].description": "Audit your current tools and tracking, then agree the tools, tracking, and integrations in scope",
+        "processSteps[_key==\"step2\"].label": "Setup",
+        "processSteps[_key==\"step2\"].description": "Configure the agreed tracking, tags, and integrations",
+        "processSteps[_key==\"step3\"].label": "Checks",
+        "processSteps[_key==\"step3\"].description": "Test every event, conversion, and data flow before sign-off",
+        "processSteps[_key==\"step4\"].label": "Handoff",
+        "processSteps[_key==\"step4\"].description": "Document the setup and hand it over. Any ongoing maintenance is scoped separately"
+      },
+      "unset": [
+        "paaQuestions[_key==\"paa1\"]"
+      ]
+    }
+  },
+  {
+    "patch": {
+      "id": "30731ca6-fdc0-4ac9-86c4-7c355e8bfdca",
+      "ifRevisionID": "RsXRQ2MhNAJCmSsrjpekl9",
+      "set": {
+        "body[_key==\"g008\"].children[_key==\"gs008\"].text": "At CiCon Marketing, Google Ads management starts at $900 CAD per month. That is a management retainer: ad spend is excluded, and setup is not included. In competitive Toronto niches like dentists, movers, and home services, cost per lead ranges from $25–$120 depending on vertical and geography."
+      }
+    }
+  },
+  {
+    "patch": {
+      "id": "a669ba0b-7bd1-488d-8d68-b99cb2f759d5",
+      "ifRevisionID": "B3bGhiuNxVCuGP0hbYXZWO",
+      "set": {
+        "body[_key==\"c1e2f3a4b5d6\"].children[_key==\"c1e2f3a4b5d7\"].text": "Meta ads with a specialist agency: ",
+        "body[_key==\"c1e2f3a4b5d6\"].children[_key==\"c1e2f3a4b5d8\"].text": "typically $3,500–$8,000/month in combined ad spend and management — full campaign setup, creative, tracking, weekly reporting, and landing page guidance. At CiCon, Meta Ads management starts at $700 CAD/month; ad spend is excluded and setup is not included."
+      }
+    }
+  },
+  {
+    "patch": {
+      "id": "b3528cad-e5b2-47ea-a701-57b6aa79a0d1",
+      "ifRevisionID": "5j5Ctz9XatfAmwLkbFELfk",
+      "set": {
+        "body[_key==\"b090\"].children[_key==\"s090a\"].text": "Underinvesting leads to inconsistent results — a budget under ~$1,500/month rarely generates enough data to optimise. CiCon Marketing structures engagements with strategy-first discovery, clear KPIs around booked appointments, and direct access to a senior strategist rather than junior account layers. Our dental marketing retainer starts at $1,500 CAD per month, and ad spend is excluded."
+      }
+    }
+  },
+  {
+    "patch": {
+      "id": "d8780f6e-8896-4172-b2c3-4f08bc27438e",
+      "ifRevisionID": "Z4LjVQn1pZ1RdETdThbr76",
+      "set": {
+        "faqs[_key==\"gbpfaq3\"].answer": "Agency fees for monthly GBP management in the Greater Toronto Area typically range from $500 to $2,000+ per month, depending on the scope of work. At CiCon Marketing, Google Business Profile management and optimization starts at $800 CAD per month. Setup is not included, and we confirm the profile coverage and ongoing work in your quote."
+      }
+    }
+  },
+  {
+    "patch": {
+      "id": "156184bf-42f0-4034-898d-2ca22445aa1b",
+      "ifRevisionID": "ktfHlaQwfgYKsWoQafelZD",
+      "set": {
+        "body[_key==\"bdm26-p8\"].children[_key==\"bdm26-s34\"].text": "Transparent pricing remains a critical issue for Toronto dentists burned by overpriced, underperforming marketing contracts. CiCon's 2026 benchmarks show typical market fees across the most common dental marketing investments. These are market ranges, not CiCon's prices: CiCon's own dental marketing retainer starts at $1,500 CAD per month, and ad spend is excluded."
+      }
+    }
+  },
+  {
+    "patch": {
+      "id": "2m6L0sQfPY4xqiZQVTzQYf",
+      "ifRevisionID": "6op36HD8PY5ZBRiaMmH1G2",
+      "set": {
+        "body[_key==\"b08\"].children[_key==\"b08s1\"].text": "Security, speed, and search readiness are non-negotiable in 2026. Data from the Canadian Internet Registration Authority shows that Canadian small business sites with regular technical audits and SSL encryption experience 37% fewer service disruptions and 27% higher customer trust scores. CiCon Marketing can include analytics integration and hosting setup in a build, and monthly technical health checks are available as a separate ongoing service.",
+        "body[_key==\"b11\"].children[_key==\"b11s2\"].text": " — Senior-led strategy (14+ years, GTA-specialised), custom design, SEO foundations in every build with full SEO builds available, and support options scoped in your quote. Website projects start at $1,000 CAD (Starter Site), $2,500 CAD (Multi-Page Site), and $7,500 CAD (Multi-Page + Full SEO), as one-time starting prices.",
+        "body[_key==\"b19\"].children[_key==\"b19s1\"].text": "CiCon Marketing points of difference: Every project is run by senior strategist Majid Behzad, never a rotating junior account manager. Projects can add analytics, ad creative, landing pages, CRM integration, and monthly reporting, each scoped and quoted separately — so the website can become part of a growth platform, not just a brochure. In contrast, template providers offer speed and price, but lack guarantees on strategy, scaling, or ongoing care. With hundreds of successful Toronto-area launches, CiCon's approach is cited by clients for its clarity and accountability.",
+        "body[_key==\"b25\"].children[_key==\"b25s2\"].text": "Every build includes SEO foundations, speed optimization, and SSL. The Multi-Page + Full SEO build adds technical and on-page SEO scoped into the build, which can include schema markup. Google Analytics 4 and CRM integration can be added and are confirmed in your quote.",
+        "body[_key==\"b26\"].children[_key==\"b26s2\"].text": "In-house photographers and videographers capture original, copyright-cleared assets — rare in agencies. Photo and video shoots are scoped separately from the website build. Combined with conversion copywriting, sites launch with an advantage over stock-heavy competitors.",
+        "body[_key==\"b27\"].children[_key==\"b27s1\"].text": "Testing, Launch, and Handoff: ",
+        "body[_key==\"b27\"].children[_key==\"b27s2\"].text": "Extensive device and browser testing prevents post-launch issues. Each launch includes the post-launch support window set in your quote. Ongoing support and monthly reporting are quoted separately.",
+        "body[_key==\"b28\"].children[_key==\"b28s2\"].text": "Website performance can be tracked, and landing pages, CTAs, and speed updated as Google and user behaviour evolve. Ongoing optimisation is a separate monthly service. CiCon's boutique model ensures site owners always get senior attention, not helpdesk queues.",
+        "faqs[_key==\"faq01\"].answer": "The starting range for a professionally developed small business website is $3,800 to $6,500 in Toronto. Template-based options may be cheaper initially, but typically require extra spending for custom features and long-term support. At CiCon Marketing, website projects start at $1,000 CAD for a Starter Site, $2,500 CAD for a Multi-Page Site, and $7,500 CAD for a Multi-Page + Full SEO build, as one-time starting prices.",
+        "faqs[_key==\"faq03\"].answer": "WordPress remains the most flexible and future-proof platform, especially when paired with managed hosting and integrated CRMs. Shopify is optimal for e-commerce sites. CiCon builds business websites on WordPress or a static framework such as Astro, depending on the business model.",
+        "faqs[_key==\"faq04\"].answer": "At CiCon Marketing, website projects are one-time fees. Ongoing maintenance — technical audits, security patches, and analytics reporting — is quoted separately as a monthly service. Many low-cost providers offer little ongoing care, putting security and rankings at risk by year two post-launch."
+      }
+    }
+  }
+]

@@ -120,40 +120,72 @@ const { source = '', submitLabel = 'Send it' } = Astro.props;
     </div>
 
     <!-- ═══════════ STEP 3 ═══════════ -->
+    <!-- Budget: period first (monthly / one-time / not sure), then a range for
+         that period. `budget` keeps its existing values (plus under_1k) for the
+         CRM mapping; `budgetPeriod` and `budgetLabel` carry the period. -->
     <div id="step-3" data-step="3" style="display:none;">
-      <h2 class="font-heading" style="font-family:'Clash Display','Inter',sans-serif;font-size:22px;font-weight:800;color:#212129;margin:0 0 8px;">What are you working with monthly?</h2>
-      <p style="font-size:14px;color:#666;margin:0 0 24px;line-height:1.6;">This isn't a paywall — it tells us whether we're the right fit before we both waste a call.</p>
+      <h2 class="font-heading" style="font-family:'Clash Display','Inter',sans-serif;font-size:22px;font-weight:800;color:#212129;margin:0 0 8px;">What budget are you working with?</h2>
+      <p style="font-size:14px;color:#666;margin:0 0 24px;line-height:1.6;">This isn't a paywall. It helps us suggest a service and scope that fit.</p>
 
-      <fieldset style="border:none;padding:0;margin:0 0 28px;">
-        <legend id="legend-step3" class="sr-only">Monthly budget</legend>
+      <fieldset style="border:none;padding:0;margin:0 0 24px;">
+        <legend id="legend-step3-period" style="font-size:14px;font-weight:600;color:#3A3A3A;margin-bottom:12px;">Is this for:</legend>
+        <div role="radiogroup" aria-labelledby="legend-step3-period" style="display:flex;flex-direction:column;gap:12px;">
+          <label class="radio-option" data-step-field tabindex="0">
+            <input type="radio" name="budgetPeriod" value="monthly" style="display:none;" />
+            <span class="radio-custom" aria-hidden="true"></span>
+            <span style="font-size:15px;font-weight:600;color:#212129;">A monthly service</span>
+          </label>
+          <label class="radio-option" data-step-field tabindex="0">
+            <input type="radio" name="budgetPeriod" value="one_time" style="display:none;" />
+            <span class="radio-custom" aria-hidden="true"></span>
+            <span style="font-size:15px;font-weight:600;color:#212129;">A one-time project or session</span>
+          </label>
+          <label class="radio-option" data-step-field tabindex="0">
+            <input type="radio" name="budgetPeriod" value="not_sure" style="display:none;" />
+            <span class="radio-custom" aria-hidden="true"></span>
+            <span style="font-size:15px;font-weight:600;color:#212129;">Not sure yet</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset id="budget-amount" hidden style="border:none;padding:0;margin:0 0 20px;">
+        <legend id="legend-step3" data-monthly="What monthly budget do you have for our service fees?" data-one_time="What budget do you have for the project or session?" style="font-size:14px;font-weight:600;color:#3A3A3A;margin-bottom:12px;">What budget do you have?</legend>
         <div role="radiogroup" aria-labelledby="legend-step3" style="display:flex;flex-direction:column;gap:12px;">
+          <label class="radio-option" data-step-field tabindex="0">
+            <input type="radio" name="budget" value="under_1k" style="display:none;" />
+            <span class="radio-custom" aria-hidden="true"></span>
+            <span style="font-size:15px;font-weight:600;color:#212129;"><span class="budget-text">Under $1,000 CAD</span><span class="budget-suffix"></span></span>
+          </label>
           <label class="radio-option" data-step-field tabindex="0">
             <input type="radio" name="budget" value="1k_2k" style="display:none;" />
             <span class="radio-custom" aria-hidden="true"></span>
-            <span style="font-size:15px;font-weight:600;color:#212129;">$1,000 – $2,000</span>
+            <span style="font-size:15px;font-weight:600;color:#212129;"><span class="budget-text">$1,000 – $2,000 CAD</span><span class="budget-suffix"></span></span>
           </label>
           <label class="radio-option" data-step-field tabindex="0">
             <input type="radio" name="budget" value="2k_5k" style="display:none;" />
             <span class="radio-custom" aria-hidden="true"></span>
-            <span style="font-size:15px;font-weight:600;color:#212129;">$2,000 – $5,000</span>
+            <span style="font-size:15px;font-weight:600;color:#212129;"><span class="budget-text">$2,000 – $5,000 CAD</span><span class="budget-suffix"></span></span>
           </label>
           <label class="radio-option" data-step-field tabindex="0">
             <input type="radio" name="budget" value="5k_10k" style="display:none;" />
             <span class="radio-custom" aria-hidden="true"></span>
-            <span style="font-size:15px;font-weight:600;color:#212129;">$5,000 – $10,000</span>
+            <span style="font-size:15px;font-weight:600;color:#212129;"><span class="budget-text">$5,000 – $10,000 CAD</span><span class="budget-suffix"></span></span>
           </label>
           <label class="radio-option" data-step-field tabindex="0">
             <input type="radio" name="budget" value="10k_plus" style="display:none;" />
             <span class="radio-custom" aria-hidden="true"></span>
-            <span style="font-size:15px;font-weight:600;color:#212129;">$10,000+</span>
+            <span style="font-size:15px;font-weight:600;color:#212129;"><span class="budget-text">$10,000+ CAD</span><span class="budget-suffix"></span></span>
           </label>
           <label class="radio-option" data-step-field tabindex="0">
             <input type="radio" name="budget" value="not_sure" style="display:none;" />
             <span class="radio-custom" aria-hidden="true"></span>
-            <span style="font-size:15px;font-weight:600;color:#212129;">Not sure yet — let's talk</span>
+            <span style="font-size:15px;font-weight:600;color:#212129;"><span class="budget-text">Not sure yet — let's talk</span></span>
           </label>
         </div>
       </fieldset>
+
+      <p id="budget-unsure-note" hidden style="font-size:14px;color:#3A3A3A;margin:0 0 20px;line-height:1.6;">No problem — we'll work out the right service and scope together.</p>
+      <p style="font-size:13px;color:#555;margin:0 0 28px;line-height:1.6;">Ad spend is excluded from CiCon service fees. If you run ads, your ad budget is separate.</p>
 
       <div style="display:flex;justify-content:space-between;">
         <button type="button" class="btn-back">
@@ -446,7 +478,7 @@ const { source = '', submitLabel = 'Send it' } = Astro.props;
   var stepDescriptions = {
     1: 'Who we\'re talking to',
     2: '90-day goal',
-    3: 'Monthly budget',
+    3: 'Budget',
     4: 'Contact details',
   };
 
@@ -484,13 +516,21 @@ const { source = '', submitLabel = 'Send it' } = Astro.props;
     return el ? el.value : null;
   }
 
+  // Step 3 is complete once a period is chosen and, for monthly or one-time,
+  // a range too. "Not sure" needs no range. No range is ever rejected.
+  function budgetStepComplete() {
+    var period = getSelectedValue('budgetPeriod');
+    if (period === 'not_sure') return true;
+    return !!(period && getSelectedValue('budget'));
+  }
+
   function setNextBtnState(stepNum) {
     var names = { 1: 'business_type', 2: 'goal', 3: 'budget' };
     var name = names[stepNum];
     if (!name) return;
     var btn = document.getElementById('next-' + stepNum);
     if (!btn) return;
-    var val = getSelectedValue(name);
+    var val = stepNum === 3 ? budgetStepComplete() : getSelectedValue(name);
     if (val) {
       btn.removeAttribute('disabled');
       btn.style.opacity = '1';
@@ -524,6 +564,37 @@ const { source = '', submitLabel = 'Send it' } = Astro.props;
     if (live) live.style.display = 'none';
   }
 
+  // ── budget period (step 3) ────────────────────────────────────────────────
+  var PERIOD_SUFFIX = { monthly: ' per month', one_time: ' total' };
+  var PERIOD_LABEL = { monthly: 'Monthly service', one_time: 'One-time project or session', not_sure: 'Not sure yet' };
+
+  function applyBudgetPeriod(period) {
+    var amount = document.getElementById('budget-amount');
+    var unsure = document.getElementById('budget-unsure-note');
+    var legend = document.getElementById('legend-step3');
+    // A range means something different per period, so ask again on change.
+    document.querySelectorAll('input[name="budget"]').forEach(function (r) {
+      r.checked = false;
+      var l = r.closest('.radio-option');
+      if (l) l.classList.remove('is-selected');
+    });
+    delete formData.budget;
+    if (amount) amount.hidden = period === 'not_sure';
+    if (unsure) unsure.hidden = period !== 'not_sure';
+    if (legend && legend.dataset[period]) legend.textContent = legend.dataset[period];
+    document.querySelectorAll('#budget-amount .budget-suffix').forEach(function (el) {
+      el.textContent = PERIOD_SUFFIX[period] || '';
+    });
+  }
+
+  function budgetLabel(period, budget) {
+    if (period === 'not_sure') return PERIOD_LABEL.not_sure;
+    var input = document.querySelector('input[name="budget"][value="' + budget + '"]');
+    var label = input && input.closest('.radio-option');
+    var text = label ? label.textContent.replace(/\s+/g, ' ').trim() : budget;
+    return PERIOD_LABEL[period] + ': ' + text;
+  }
+
   // ── radio selection styling ───────────────────────────────────────────────
   document.querySelectorAll('.radio-option').forEach(function (label) {
     label.addEventListener('click', function () {
@@ -541,8 +612,9 @@ const { source = '', submitLabel = 'Send it' } = Astro.props;
       label.classList.add('is-selected');
       // Store
       formData[name] = input.value;
+      if (name === 'budgetPeriod') applyBudgetPeriod(input.value);
       // Determine which step we're in from input name
-      var stepMap = { business_type: 1, goal: 2, budget: 3 };
+      var stepMap = { business_type: 1, goal: 2, budget: 3, budgetPeriod: 3 };
       var sn = stepMap[name];
       if (sn) setNextBtnState(sn);
     });
@@ -563,7 +635,15 @@ const { source = '', submitLabel = 'Send it' } = Astro.props;
     btn.addEventListener('click', function () {
       if (btn.hasAttribute('disabled')) return;
       var names = { 1: 'business_type', 2: 'goal', 3: 'budget' };
-      formData[names[n]] = getSelectedValue(names[n]);
+      if (n === 3) {
+        // budget keeps its existing values (not_sure when no range applies).
+        var period = getSelectedValue('budgetPeriod');
+        formData.budgetPeriod = period;
+        formData.budget = period === 'not_sure' ? 'not_sure' : getSelectedValue('budget');
+        formData.budgetLabel = budgetLabel(period, formData.budget);
+      } else {
+        formData[names[n]] = getSelectedValue(names[n]);
+      }
       gtag('event', 'contact_form_step_complete', { step: n });
       showStep(n + 1);
     });

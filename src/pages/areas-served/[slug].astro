@@ -67,14 +67,9 @@ const jsonLd = {
       description: page.metaDescription,
       serviceType: 'Digital marketing',
       provider: { '@id': 'https://cicon.ca/#organization' },
+      // No Offer here: a price-0 Offer read as "this service is free", which
+      // contradicted the published starting prices on /marketing-services/.
       areaServed: { '@type': 'City', name: page.cityName },
-      offers: {
-        '@type': 'Offer',
-        name: 'Chat on WhatsApp',
-        price: 0,
-        priceCurrency: 'CAD',
-        description: 'Free WhatsApp consultation with our senior strategist',
-      },
     },
     ...(page.faqs?.length
       ? [{

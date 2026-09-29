@@ -1,0 +1,99 @@
+---
+/**
+ * PriceSummary — compact starting-price rows from SERVICE_PRICING.
+ *
+ * variant="card": light gold-tinted block for the services hub cards. Rendered
+ *   inside the card's <a>, so it must never contain links or buttons.
+ * variant="hero": dark-background block placed beside the hero CTA, with a
+ *   jump link to the page's #pricing section.
+ *
+ * Prices are plain server-rendered text ("From $900 CAD/month") so buyers,
+ * crawlers and screen readers all read the same thing.
+ */
+import {
+  amountText, offerNotes, unitSuffix,
+  type ServicePricing,
+} from '../../lib/service-pricing'
+
+interface Props {
+  pricing: ServicePricing
+  variant: 'card' | 'hero'
+}
+const { pricing, variant } = Astro.props
+const multi = pricing.offers.length > 1
+---
+
+<div class={`price-summary price-summary--${variant}`} data-price-summary={pricing.slug}>
+  {variant === 'hero' && <p class="ps-eyebrow">{multi ? 'Starting prices' : 'Starting price'}</p>}
+  <ul class="ps-rows" role="list">
+    {pricing.offers.map((offer) => {
+      const notes = offerNotes(offer)
+      return (
+        <li class="ps-row" data-offer={offer.id}>
+          {(multi || offer.label) && <span class="ps-label">{offer.label ?? offer.name}</span>}
+          <span class="ps-price">
+            <span class="ps-from">From</span>{' '}
+            <strong class="ps-amount">{amountText(offer)}</strong><wbr /><span class="ps-unit">{unitSuffix(offer.unit)}</span>
+          </span>
+          {notes.map((n) => <Fragment>{' '}<span class="ps-note">{n}</span></Fragment>)}
+        </li>
+      )
+    })}
+  </ul>
+  {variant === 'hero' && (
+    <a href="#pricing" class="ps-link">See pricing details</a>
+  )}
+</div>
+
+<style>
+  .price-summary { border-radius: 12px; }
+  .ps-rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .ps-row { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .ps-label { font-size: 12px; font-weight: 700; letter-spacing: 0.02em; line-height: 1.35; overflow-wrap: anywhere; }
+  .ps-price { font-size: 15px; line-height: 1.35; overflow-wrap: anywhere; }
+  .ps-from { font-weight: 500; }
+  /* "$1,500 CAD" and "/month" / "· one-time" never split mid-token. */
+  .ps-amount { font-size: 19px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap; }
+  .ps-unit { font-weight: 600; white-space: nowrap; }
+  .ps-note { font-size: 13px; line-height: 1.45; }
+
+  /* Hub card: light brand tint, restrained gold accent, dark price text. */
+  .price-summary--card {
+    background: #FBF6E8;
+    border: 1px solid rgba(157, 131, 62, 0.35);
+    border-left: 3px solid #9D833E;
+    padding: 12px 14px;
+    color: #1F1F1F;
+  }
+  .price-summary--card .ps-label { color: #3A3A3A; text-transform: none; }
+  .price-summary--card .ps-from,
+  .price-summary--card .ps-unit { color: #1F1F1F; }
+  .price-summary--card .ps-note { color: #3A3A3A; }
+
+  /* Hero: sits on the dark hero background beside the WhatsApp CTA. */
+  .price-summary--hero {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(157, 131, 62, 0.55);
+    padding: 16px 18px;
+    color: #FFFFFF;
+    max-width: 34rem;
+  }
+  .price-summary--hero .ps-eyebrow {
+    margin: 0 0 8px; font-size: 12px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: #FFCF00;
+  }
+  .price-summary--hero .ps-label { color: #FFCF00; }
+  .price-summary--hero .ps-price { font-size: 16px; }
+  .price-summary--hero .ps-amount { font-size: 22px; color: #FFFFFF; }
+  .price-summary--hero .ps-note { color: #D6D6DE; }
+  .price-summary--hero .ps-link {
+    display: inline-block; margin-top: 12px; font-size: 14px; font-weight: 600;
+    color: #FFFFFF; text-decoration: underline; text-underline-offset: 3px;
+  }
+  .price-summary--hero .ps-link:hover { color: #FFCF00; }
+  @media (max-width: 359px) {
+    .price-summary--hero { padding: 12px; }
+    .price-summary--hero .ps-amount { font-size: 19px; }
+  }
+  .price-summary--hero .ps-link:focus-visible { outline: 2px solid #FFCF00; outline-offset: 3px; border-radius: 2px; }
+</style>
