@@ -1,10 +1,13 @@
-# Service pricing update — staged Sanity content (2026-09-28)
+# Service pricing update — release record (2026-09-29)
 
-Status: **staged locally for owner review. Not applied to Sanity. Not deployed.**
+Status: **Live on `https://cicon.ca` as of 2026-09-29.** The 22 Sanity documents
+were published. Git commit `6de7ec5` was pushed to `main`. Vercel production
+deployment `dpl_kb8biR2Z4h5k64168KTFEbuznXWN` reached Ready and serves the
+live domain.
 
 The page copy for the service pages, services hub, contact page and six blog
 posts lives in Sanity (project `26ol0sqj`, dataset `cicon-marketing`). The
-changes for this update are staged here instead of being written to the CMS:
+changes for this update were published from these reviewed patches:
 
 | File | What it is |
 |---|---|
@@ -16,7 +19,7 @@ which drives the hub cards, the hero price line, the `#pricing` section, the
 cost FAQ and the Offer JSON-LD on every service page. The patches only remove
 old prices from CMS copy and fix copy that conflicted with the new offers.
 
-## Preview locally
+## Local preview method used before release
 
 ```bash
 npm run content:snapshot     # read-only export of the published dataset
@@ -27,34 +30,26 @@ npm run dev:local-content    # applies these patches to a local copy and serves 
 (`scripts/local-content/local-sanity-client.mjs`) via a Vite alias in
 `astro.config.mjs`. Nothing is written to Sanity; write methods throw.
 The alias is inactive unless `LOCAL_CONTENT_DATASET` is set, and never on Vercel.
+The revision guards in `sanity-patches.json` now reject a fresh published
+snapshot because the content has already been published. Use `npm run dev` to
+view current published content.
 
-## Release (only after owner approval — not done)
+## Release record
 
-1. Re-run `npm run content:snapshot && npm run content:build`. If any patch
-   reports a revision mismatch, someone edited that document after review:
-   re-review it before continuing.
-2. Confirm again that no services-hub draft exists. The owner discarded the
-   hub drafts; a read-only check on 2026-09-28 found only the published hub
-   document (`_rev Pm9wd3LBrJ0tz0cHr6JtVm`, the revision these patches expect).
-   Other drafts (3 blog posts, 1 map-check page) are unrelated and untouched.
-3. Apply `sanity-patches.json` to the dataset (for example with the Sanity HTTP
-   mutate API or a Sanity Content Release), publish, then deploy the code.
-   Code and content must go live together: the code removes the old CMS pricing
-   fields from the page, and the patches remove the old prices from the copy.
-   The site is static, so content changes appear on the next build. If a Sanity
-   publish triggers a production rebuild (deploy hook), publish the content in
-   the same window as the code deploy — otherwise production briefly runs the
-   old code against the new copy.
-4. Contact forms (code change, not Sanity): the GoHighLevel side is done
-   (2026-09-29). Workflow "Interactive Lead Form" → Create Contact maps
-   `budgetPeriod` → Budget Period, `budget` → Budget Range (text, accepts
-   `under_1k`), `budgetLabel` → Budget Details, plus the existing name, email,
-   phone, website and message. Keep the payload keys exactly `budget`,
-   `budgetPeriod`, `budgetLabel`. Controlled test on 2026-09-29: 4 test
-   contacts sent; payloads recorded for all 4; HTTP 200 recorded for test 1
-   only; all 4 opportunities confirmed in the CRM by the owner (screenshot).
-   Contact budget fields were owner-reported, not independently checked.
-   Remove the 4 test contacts and opportunities before release.
-5. Verify the live hub, all 14 service routes, the contact and FAQ pages, the
-   six blog posts, the area pages and the three contact forms (see the review
-   checklist).
+1. A fresh published-content snapshot matched all 22 original revisions.
+   The patches were saved as 22 Sanity drafts and then all 22 were published.
+   No unrelated drafts were touched.
+2. The tested code was committed, pushed to the release branch, and then
+   pushed to `main`. Vercel built the production site. The live hub, all 14
+   service routes, FAQs and structured data passed 20/20 pricing checks.
+   The live CRO page has no unsupported 2–5×, 20–50%, or 30–50% lift claim.
+3. Contact forms (code change, not Sanity): the GoHighLevel side is done.
+   Workflow "Interactive Lead Form" → Create Contact maps `budgetPeriod` →
+   Budget Period, `budget` → Budget Range (text, accepts `under_1k`), and
+   `budgetLabel` → Budget Details, plus the existing fields. The live contact
+   page includes these fields and the separate ad-spend note.
+4. The controlled test sent 4 contacts. Payloads were recorded for all 4;
+   an HTTP 200 was recorded for test 1 only. All 4 contacts, their budget
+   fields, and their opportunities were independently checked in the CRM.
+   After release, a CRM search found no `CiCon Pricing Test` contacts or
+   opportunities. The New Client stage had 13 opportunities.
