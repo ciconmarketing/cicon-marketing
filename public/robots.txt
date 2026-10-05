@@ -1,7 +1,5 @@
 User-agent: *
 Allow: /
 Disallow: /thank-you/
-Disallow: /privacy-policy/
-Disallow: /terms-and-conditions-sms/
 
 Sitemap: https://cicon.ca/sitemap.xml

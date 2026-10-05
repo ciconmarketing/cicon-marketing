@@ -5,11 +5,21 @@
  */
 export const RATING_VALUE = '5.0'
 // Google Business Profile review count. Re-verified against live GBP data
-// (Localo sync + place.latestPlaceSnapshot.reviewsCount) on 2026-08-15: 8.
-// A prior commit (ea45c9c) set this to 9, but that no longer matches Google's
-// own public count on the listing — must stay in sync with the actual
-// REVIEWS array in RReviews.astro / GoogleReviews.tsx (currently 8 cards).
-export const REVIEW_COUNT = 13
+// (Localo sync + place.latestPlaceSnapshot.reviewsCount) on 2026-10-05: 14.
+// The review carousels (RReviews.astro / GoogleReviews.tsx / AreaReviews.astro)
+// show a curated 12 of these; 2 short/related-party reviews are left out on
+// purpose. Service-page "Verified 5-star reviews" stats read this value too,
+// via syncReviewStats() below, so the number lives in one place.
+export const REVIEW_COUNT = 14
+
+/**
+ * Sanity stores some page stats as free text ({ value: '9', label: 'Verified
+ * 5-star reviews' }). Those drifted from the real count more than once, so any
+ * stat whose label is about reviews is rewritten to REVIEW_COUNT at build time.
+ */
+export function syncReviewStats<T extends { value?: string; label?: string }>(stats?: T[] | null): T[] | undefined {
+  return stats?.map((s) => (/\breviews?\b/i.test(s?.label ?? '') ? { ...s, value: String(REVIEW_COUNT) } : s))
+}
 
 /**
  * areaServed for the sitewide business entities. Mirrors the active GBP
@@ -61,13 +71,13 @@ export const PERSON_MAJID = {
   givenName: 'Majid',
   familyName: 'Behzad',
   jobTitle: 'Founder & Senior Digital Marketing Strategist',
-  description: "14+ years building data-driven marketing systems for GTA businesses. Google-certified, Master's in Engineering, Postgraduate in Marketing Management.",
+  description: "14+ years building data-driven marketing systems for GTA businesses. Google-certified, Master's in Engineering, Postgraduate in Marketing Management. Also a landscape photographer and digital content creator (@mbehzadpix on Instagram) and a NiSi Filters ambassador.",
   url: 'https://cicon.ca/about-us/',
   image: 'https://cicon.ca/majid-behzad.jpg',
   worksFor: { '@id': 'https://cicon.ca/#organization' },
-  knowsAbout: ['Local Search Engine Optimization','Google Business Profile Optimization','Pay-Per-Click Advertising','Conversion Rate Optimization','Dental Marketing Strategy'],
+  knowsAbout: ['Local Search Engine Optimization','Google Business Profile Optimization','Pay-Per-Click Advertising','Conversion Rate Optimization','Dental Marketing Strategy','Landscape Photography','Photo and Video Production'],
   alumniOf: [{ '@type': 'EducationalOrganization', name: "Master's in Engineering" },{ '@type': 'EducationalOrganization', name: 'Postgraduate Diploma in Marketing Management' }],
-  sameAs: ['https://linkedin.com/in/majidlm/','https://instagram.com/mbehzadpix/'],
+  sameAs: ['https://linkedin.com/in/majidlm/','https://www.instagram.com/mbehzadpix/'],
 } as const
 
 export const ORG_CICON = {

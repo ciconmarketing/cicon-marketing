@@ -181,6 +181,9 @@ let founderData = {
   subheading: 'Founder & Senior Strategist',
   body: "CiCon was built as a direct reaction to what I kept seeing: agencies that optimized for retainer renewal, not client results. After 14+ years building growth systems — first for enterprise clients, then for the GTA's local businesses and dental clinics — I started CiCon to do this work at a level of specificity that large agencies structurally can't.\n\nI hold a Master's in Engineering and a Postgraduate Diploma in Marketing Management. I'm Google-certified and I run every account personally. That's not a selling point — it's a constraint I set deliberately. The moment you stop doing the work yourself is the moment the work gets generic.",
   linkedinUrl: 'https://linkedin.com/in/majidlm/',
+  // Founder's photography profile (same person — links the two public
+  // "Majid Behzad" identities for search and AI engines).
+  instagramUrl: 'https://www.instagram.com/mbehzadpix/',
 };
 // Merge Sanity founder data if available
 if (aboutData.founder) founderData = { ...founderData, ...aboutData.founder };
@@ -192,7 +195,7 @@ let whyCiconCardsData = {
   cards: [
     { label: 'THE OPERATOR', heading: 'Senior strategy on every account', body: "You get direct access to the strategist who built your system — not an account coordinator reading dashboards. Senior-level thinking, every call, every quarter." },
     { label: 'THE METHOD',   heading: 'A documented 90-day system',        body: "Every engagement runs on a documented 90-day cycle: audit, roadmap, build, and quarterly business review. No guesswork, no scope creep, no surprises." },
-    { label: 'THE FOOTPRINT',heading: 'Local GTA market knowledge',        body: "14+ years operating in GTA markets means the campaigns we build reflect real local search behaviour — not borrowed playbooks written for other cities." },
+    { label: 'THE FOOTPRINT',heading: 'Local GTA market knowledge',        body: "14+ years of hands-on work in GTA markets means the campaigns we build reflect real local search behaviour — not borrowed playbooks written for other cities." },
   ],
 };
 try {
@@ -229,7 +232,7 @@ try {
 
   <!-- Primary meta -->
   <title>{aboutData?.seoTitle ?? 'About CiCon Marketing | Boutique Agency, Richmond Hill GTA'}</title>
-  <meta name="description" content={aboutData?.seoDescription ?? 'Meet the boutique GTA agency behind 14+ years of real growth. Senior-led, AI-augmented marketing for local businesses and dental clinics.'} />
+  <meta name="description" content={aboutData?.seoDescription ?? 'A boutique GTA agency founded in 2023, led by a strategist with 14+ years of experience. Senior-led marketing for local businesses and dental clinics.'} />
   <link rel="canonical" href={toAbsoluteUrl(aboutData?.canonicalOverride, canonicalUrl)} />
   {isPreview
     ? <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
@@ -240,13 +243,13 @@ try {
   <meta property="og:type"        content="website" />
   <meta property="og:url"         content={toAbsoluteUrl(aboutData?.canonicalOverride, canonicalUrl)} />
   <meta property="og:title"       content={aboutData?.seoTitle ?? 'About CiCon Marketing | Boutique Agency, Richmond Hill GTA'} />
-  <meta property="og:description" content={aboutData?.seoDescription ?? 'Meet the boutique GTA agency behind 14+ years of real growth. Senior-led, AI-augmented marketing for local businesses and dental clinics.'} />
+  <meta property="og:description" content={aboutData?.seoDescription ?? 'A boutique GTA agency founded in 2023, led by a strategist with 14+ years of experience. Senior-led marketing for local businesses and dental clinics.'} />
   <meta property="og:image"       content={aboutData?.ogImageUrl ?? 'https://cicon.ca/logo-cicon.jpg'} />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={aboutData?.seoTitle ?? 'About CiCon Marketing | Boutique Agency, Richmond Hill GTA'} />
-  <meta name="twitter:description" content={aboutData?.seoDescription ?? 'Meet the boutique GTA agency behind 14+ years of real growth. Senior-led marketing for local businesses and dental clinics in the GTA.'} />
+  <meta name="twitter:description" content={aboutData?.seoDescription ?? 'A boutique GTA agency founded in 2023, led by a strategist with 14+ years of experience. Senior-led marketing for local businesses and dental clinics.'} />
   <meta name="twitter:image" content={aboutData?.ogImageUrl ?? 'https://cicon.ca/logo-cicon.jpg'} />
 
   <!-- JSON-LD -->
@@ -461,6 +464,25 @@ try {
               </svg>
               Connect on LinkedIn
             </a>
+            <!-- Instagram (photography) — own line, same alignment as LinkedIn -->
+            <div style="margin-top:10px;">
+            <a
+              href={founderData.instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer me"
+              style="display:inline-flex;align-items:center;gap:8px;font-size:0.9rem;font-weight:600;color:var(--accent);text-decoration:none;transition:color .15s;"
+              onmouseover="this.style.color='#c13584'"
+              onmouseout="this.style.color='var(--accent)'"
+              aria-label="See Majid Behzad's photography on Instagram (@mbehzadpix)"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+                <rect x="3" y="3" width="18" height="18" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+              </svg>
+              Photography on Instagram
+            </a>
+            </div>
           </div>
         </div>
 

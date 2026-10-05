@@ -8,7 +8,7 @@
  */
 import '../../styles/globals.css';
 import { getServicePage, ALL_SERVICE_SLUGS_QUERY } from '../../lib/sanity'
-import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON } from '../../lib/schema-constants'
+import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON, syncReviewStats } from '../../lib/schema-constants'
 import { toAbsoluteUrl } from '../../lib/url'
 import { getServicePricing, hasRetainer, offerJsonLd } from '../../lib/service-pricing'
 import Nav                 from '../../components/Nav.astro'
@@ -227,7 +227,7 @@ const jsonLd = {
     headline={page.heroHeadline}
     subheadline={page.heroSubheadline}
     description={page.heroDescription}
-    stats={page.heroStats}
+    stats={syncReviewStats(page.heroStats)}
     serviceName={page.title}
     heroImage={page.heroImage}
     pricing={pricing}
@@ -269,7 +269,7 @@ const jsonLd = {
   <EeatBlock
     headline={page.eeatHeadline}
     body={page.eeatBody}
-    stats={page.eeatStats}
+    stats={syncReviewStats(page.eeatStats)}
   />
 
   <PricingBlock pricing={pricing} />

@@ -8,7 +8,7 @@
  */
 import '../../styles/globals.css';
 import { getAllServicePages, getServicesHub } from '../../lib/sanity'
-import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON } from '../../lib/schema-constants'
+import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON, syncReviewStats } from '../../lib/schema-constants'
 import Nav              from '../../components/Nav.astro'
 import Footer           from '../../components/Footer.astro'
 import AntiPitch        from '../../components/services/AntiPitch.astro'
@@ -286,7 +286,7 @@ const jsonLd = {
           </div>
           {hub?.heroStats?.length && (
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
-              {hub.heroStats.map((s: { value: string; label: string }) => (
+              {syncReviewStats(hub.heroStats)!.map((s: { value: string; label: string }) => (
                 <div class="border-l-2 pl-4" style="border-color:var(--accent)">
                   <div class="text-2xl font-extrabold text-white">{s.value}</div>
                   <div class="text-xs mt-0.5" style="color:#888">{s.label}</div>
