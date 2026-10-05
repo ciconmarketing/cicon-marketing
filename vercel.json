@@ -75,7 +75,7 @@
   ],
   "redirects": [
     {
-      "source": "/seo/",
+      "source": "/seo{/}?",
       "destination": "/marketing-services/ai-seo/",
       "permanent": true
     },
@@ -90,17 +90,17 @@
       "permanent": true
     },
     {
-      "source": "/google-ads/",
+      "source": "/google-ads{/}?",
       "destination": "/marketing-services/paid-advertising-services/",
       "permanent": true
     },
     {
-      "source": "/digital-marketing/",
+      "source": "/digital-marketing{/}?",
       "destination": "/marketing-services/",
       "permanent": true
     },
     {
-      "source": "/social-media/",
+      "source": "/social-media{/}?",
       "destination": "/marketing-services/social-media-marketing-services/",
       "permanent": true
     },
@@ -115,97 +115,97 @@
       "permanent": true
     },
     {
-      "source": "/meta-ads/",
+      "source": "/meta-ads{/}?",
       "destination": "/marketing-services/paid-advertising-services/",
       "permanent": true
     },
     {
-      "source": "/services/",
+      "source": "/services{/}?",
       "destination": "/marketing-services/",
       "permanent": true
     },
     {
-      "source": "/services/dental/",
+      "source": "/services/dental{/}?",
       "destination": "/marketing-services/dental-marketing-services/",
       "permanent": true
     },
     {
-      "source": "/services/ai-seo/",
+      "source": "/services/ai-seo{/}?",
       "destination": "/marketing-services/ai-seo/",
       "permanent": true
     },
     {
-      "source": "/services/local-seo/",
+      "source": "/services/local-seo{/}?",
       "destination": "/marketing-services/local-seo-optimization/",
       "permanent": true
     },
     {
-      "source": "/services/social-media-marketing/",
+      "source": "/services/social-media-marketing{/}?",
       "destination": "/marketing-services/social-media-marketing-services/",
       "permanent": true
     },
     {
-      "source": "/services/paid-advertising/",
+      "source": "/services/paid-advertising{/}?",
       "destination": "/marketing-services/paid-advertising-services/",
       "permanent": true
     },
     {
-      "source": "/services/media-production/",
+      "source": "/services/media-production{/}?",
       "destination": "/marketing-services/media-content-production/",
       "permanent": true
     },
     {
-      "source": "/services/crm-integration/",
+      "source": "/services/crm-integration{/}?",
       "destination": "/marketing-services/crm-integration/",
       "permanent": true
     },
     {
-      "source": "/services/website-development/",
+      "source": "/services/website-development{/}?",
       "destination": "/marketing-services/website-development/",
       "permanent": true
     },
     {
-      "source": "/local-seo-agency-toronto-guide-2026/",
+      "source": "/local-seo-agency-toronto-guide-2026{/}?",
       "destination": "/blog/local-seo-agency-toronto-guide-2026/",
       "permanent": true
     },
     {
-      "source": "/meta-ads-agency-how-to-use/",
+      "source": "/meta-ads-agency-how-to-use{/}?",
       "destination": "/blog/meta-ads-agency-how-to-use/",
       "permanent": true
     },
     {
-      "source": "/seo-optimization-near-me-2026/",
+      "source": "/seo-optimization-near-me-2026{/}?",
       "destination": "/blog/seo-optimization-near-me-2026/",
       "permanent": true
     },
     {
-      "source": "/dental-marketin-canada-guide-2026/",
+      "source": "/dental-marketin-canada-guide-2026{/}?",
       "destination": "/blog/dental-marketing-canada-guide-2026/",
       "permanent": true
     },
     {
-      "source": "/blog/dental-marketin-canada-guide-2026/",
+      "source": "/blog/dental-marketin-canada-guide-2026{/}?",
       "destination": "/blog/dental-marketing-canada-guide-2026/",
       "permanent": true
     },
     {
-      "source": "/digital-marketing-agency-strategies-2026/",
+      "source": "/digital-marketing-agency-strategies-2026{/}?",
       "destination": "/blog/digital-marketing-agency-strategies-2026/",
       "permanent": true
     },
     {
-      "source": "/cafe-for-working-near-me/",
+      "source": "/cafe-for-working-near-me{/}?",
       "destination": "/blog/cafe-for-working-near-me/",
       "permanent": true
     },
     {
-      "source": "/social-media-marketing-for-canadian-business-owners-2026-guide/",
+      "source": "/social-media-marketing-for-canadian-business-owners-2026-guide{/}?",
       "destination": "/blog/social-media-marketing-for-canadian-business-owners-2026-guide/",
       "permanent": true
     },
     {
-      "source": "/digital-marketing-agency-in-richmond-hill-2026/",
+      "source": "/digital-marketing-agency-in-richmond-hill-2026{/}?",
       "destination": "/blog/digital-marketing-agency-in-richmond-hill-2026/",
       "permanent": true
     },
@@ -220,12 +220,12 @@
       "permanent": true
     },
     {
-      "source": "/google-ads-management-gta-trades-spring-checklist/",
+      "source": "/google-ads-management-gta-trades-spring-checklist{/}?",
       "destination": "/blog/google-ads-management-gta-trades-spring-checklist/",
       "permanent": true
     },
     {
-      "source": "/dental-seo-services-cdcp-renewal-gta/",
+      "source": "/dental-seo-services-cdcp-renewal-gta{/}?",
       "destination": "/blog/cdcp-dental-marketing-2026-gta-clinics/",
       "permanent": true
     },
@@ -240,27 +240,27 @@
       "permanent": true
     },
     {
-      "source": "/why-local-seo-is-important-and-how-to-do-it-in-2026/",
+      "source": "/why-local-seo-is-important-and-how-to-do-it-in-2026{/}?",
       "destination": "/blog/why-local-seo-is-important-and-how-to-do-it-in-2026/",
       "permanent": true
     },
     {
-      "source": "/marketing-for-dental-clinics-a-practical-growth-playbook/",
+      "source": "/marketing-for-dental-clinics-a-practical-growth-playbook{/}?",
       "destination": "/blog/marketing-for-dental-clinics-a-practical-growth-playbook/",
       "permanent": true
     },
     {
-      "source": "/book-a-strategy-call-with-cicon-marketing/",
+      "source": "/book-a-strategy-call-with-cicon-marketing{/}?",
       "destination": "/contact-us/",
       "permanent": true
     },
     {
-      "source": "/blog/best-website-development-for-small-businesses-in-toronto-2026/",
+      "source": "/blog/best-website-development-for-small-businesses-in-toronto-2026{/}?",
       "destination": "/blog/website-development-toronto-small-businesses-2026/",
       "permanent": true
     },
     {
-      "source": "/marketing-services/paid-advertising/",
+      "source": "/marketing-services/paid-advertising{/}?",
       "destination": "/marketing-services/paid-advertising-services/",
       "permanent": true
     },
