@@ -77,7 +77,16 @@ export const PERSON_MAJID = {
   worksFor: { '@id': 'https://cicon.ca/#organization' },
   knowsAbout: ['Local Search Engine Optimization','Google Business Profile Optimization','Pay-Per-Click Advertising','Conversion Rate Optimization','Dental Marketing Strategy','Landscape Photography','Photo and Video Production'],
   alumniOf: [{ '@type': 'EducationalOrganization', name: "Master's in Engineering" },{ '@type': 'EducationalOrganization', name: 'Postgraduate Diploma in Marketing Management' }],
-  sameAs: ['https://linkedin.com/in/majidlm/','https://www.instagram.com/mbehzadpix/'],
+  // Order matters: blog author box renders [0] (LinkedIn) and [1] (Instagram).
+  sameAs: [
+    'https://linkedin.com/in/majidlm/',
+    'https://www.instagram.com/mbehzadpix/',
+    'https://1x.com/l1m1a',
+    'https://500px.com/p/bhzad',
+    'https://x.com/mbehzadpix',
+    'https://www.facebook.com/mbehzadpix/',
+    'https://www.shutterstock.com/g/Majid+Behzad',
+  ],
 } as const
 
 export const ORG_CICON = {

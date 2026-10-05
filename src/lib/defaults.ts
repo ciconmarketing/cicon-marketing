@@ -20,8 +20,8 @@ export const defaultHomepageData: HomepageData = {
   whyCicon: {
     headline: 'Why Businesses in the GTA Trust CiCon Marketing',
     stats: [
-      { value: '250+', label: 'Projects Completed' },
-      { value: '100+', label: 'Happy Clients' },
+      { value: '250+', label: "Projects in Our Founder's Career" },
+      { value: '100+', label: "Clients in Our Founder's Career" },
       { value: '14+',  label: 'Years of Experience' },
       { value: '40%',  label: 'More Dental Leads' },
     ],
