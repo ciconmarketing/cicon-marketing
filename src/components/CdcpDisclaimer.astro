@@ -1,0 +1,65 @@
+---
+/**
+ * CdcpDisclaimer — Canadian Dental Care Plan disclaimer for every dental page.
+ *
+ * Rendered on blog posts in the "dental-marketing" category (blog/[slug].astro)
+ * and on service pages with serviceType 'dental' (marketing-services/[slug].astro),
+ * so a new dental post or page gets it automatically. The wording lives only
+ * here. It states no CDCP rules or figures on purpose: those change, so the
+ * block sends readers to the official Canada.ca page instead.
+ *
+ * variant="inline"  — just the note, for use inside an existing column (blog).
+ * variant="section" — wrapped in its own page section (service pages).
+ */
+interface Props {
+  variant?: 'inline' | 'section'
+}
+const { variant = 'inline' } = Astro.props
+
+const CDCP_URL = 'https://www.canada.ca/en/services/benefits/dental/dental-care-plan.html'
+---
+
+{variant === 'section' ? (
+  <section class="py-12" style="background:#fff">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <aside class="cdcp-disclaimer" aria-labelledby="cdcp-disclaimer-title" data-cdcp-disclaimer>
+        <p id="cdcp-disclaimer-title" class="cdcp-disclaimer__title">About the Canadian Dental Care Plan (CDCP)</p>
+        <p>CiCon Marketing is a marketing agency for dental clinics. We are not part of the Government of Canada or the CDCP, and we do not provide dental care. We do not decide who qualifies for the CDCP, what it covers or what it pays.</p>
+        <p>CDCP rules, eligibility and fees change over time. For current information, see the official <a href={CDCP_URL} target="_blank" rel="noopener noreferrer">Canadian Dental Care Plan page on Canada.ca</a>. This content is general marketing information for clinic owners. It is not legal, billing or clinical advice.</p>
+      </aside>
+    </div>
+  </section>
+) : (
+  <aside class="cdcp-disclaimer mt-16" aria-labelledby="cdcp-disclaimer-title" data-cdcp-disclaimer>
+    <p id="cdcp-disclaimer-title" class="cdcp-disclaimer__title">About the Canadian Dental Care Plan (CDCP)</p>
+    <p>CiCon Marketing is a marketing agency for dental clinics. We are not part of the Government of Canada or the CDCP, and we do not provide dental care. We do not decide who qualifies for the CDCP, what it covers or what it pays.</p>
+    <p>CDCP rules, eligibility and fees change over time. For current information, see the official <a href={CDCP_URL} target="_blank" rel="noopener noreferrer">Canadian Dental Care Plan page on Canada.ca</a>. This content is general marketing information for clinic owners. It is not legal, billing or clinical advice.</p>
+  </aside>
+)}
+
+<style>
+  .cdcp-disclaimer {
+    background: #FAFAFA;
+    border: 1px solid var(--alabaster);
+    border-left: 3px solid var(--accent);
+    border-radius: 12px;
+    padding: 20px 24px;
+    color: #3A3A3A;
+    font-size: 0.875rem;
+    line-height: 1.65;
+  }
+  .cdcp-disclaimer p + p {
+    margin-top: 0.6em;
+  }
+  .cdcp-disclaimer .cdcp-disclaimer__title {
+    color: #000;
+    font-weight: 700;
+    font-size: 0.9375rem;
+    margin-bottom: 0.5em;
+  }
+  .cdcp-disclaimer a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>

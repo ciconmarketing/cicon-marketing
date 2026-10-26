@@ -27,6 +27,7 @@ import FinalCta            from '../../components/services/FinalCta.astro'
 import GoogleReviews       from '../../components/react/GoogleReviews.tsx'
 import CdcpBlock           from '../../components/services/dental/CdcpBlock.astro'
 import PatientChannels     from '../../components/services/dental/PatientChannels.astro'
+import CdcpDisclaimer      from '../../components/CdcpDisclaimer.astro'
 
 // ── Static paths ──────────────────────────────────────────────────────────────
 export async function getStaticPaths() {
@@ -262,6 +263,10 @@ const jsonLd = {
 
   {isDental && (
     <PatientChannels channels={page.patientChannels} />
+  )}
+
+  {isDental && (
+    <CdcpDisclaimer variant="section" />
   )}
 
   <ProcessStrip steps={page.processSteps} />

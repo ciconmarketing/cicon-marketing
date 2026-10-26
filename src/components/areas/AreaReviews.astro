@@ -1,28 +1,32 @@
 ---
 /**
  * AreaReviews — static, zero-hydration replacement for the React
- * GoogleReviews island on areas-served pages. Same 5 reviews, same
+ * GoogleReviews island on areas-served pages. Same reviews, same
  * auto-rotate-every-7s + dot-navigation behaviour, same accessible
  * star/count labelling — but server-rendered with a ~15-line vanilla
  * <script> instead of shipping framer-motion + lucide-react + Radix
  * Avatar/Separator to hydrate a client:visible React island.
  * Auto-rotation is disabled under prefers-reduced-motion; dots still work.
  */
-import { RATING_VALUE, REVIEW_COUNT } from '../../lib/schema-constants'
+import { RATING_VALUE, GOOGLE_REVIEWS_URL } from '../../lib/schema-constants'
 
-// Pulled verbatim from the connected Google Business Profile (via Localo) on
-// 2026-08-15 — kept in sync with RReviews.astro / GoogleReviews.tsx (the
-// homepage and service-page versions of this same section). Must stay a 1:1
-// match with the live GBP review set, since RATING_VALUE/REVIEW_COUNT claims
-// exactly these reviews exist. Two placeholder entries that didn't correspond
-// to any real Google review ("Alex" / "Soroush") were removed for that reason.
+// Same curated, verbatim set as RReviews.astro / GoogleReviews.tsx (13 of the
+// 15 live Google reviews, re-checked 2026-10-26 — see RReviews.astro for why
+// two are left out). No count is shown; the rating line links to the full list.
 const REVIEWS = [
   {
     name: 'Sparkle Light',
     role: 'Business Owner, Sparkle Light',
     rating: 5,
     content:
-      "Majid and his team brought an incredible level of creativity, expertise, and genuine dedication — handling everything from content creation to our full digital strategy across Instagram, Facebook, YouTube, and TikTok. What makes CiCon truly stand out is their personalized approach. We've seen measurable improvements in brand awareness, engagement, and most importantly — sales. I truly believe Sparkle Light would not be where it is today without their continued support.",
+      "From day one, Majid and his talented, professional team brought an incredible level of creativity, expertise, and genuine dedication to our marketing efforts. … What makes Cicon truly stand out is their personalized approach and commitment to excellence. … We have seen measurable improvements in our brand awareness, customer engagement, and most importantly—sales. I truly believe Sparkle Light would not be where it is today without their continued support.",
+  },
+  {
+    name: 'David Fazaeli',
+    role: 'Client, Website & AI Visibility',
+    rating: 5,
+    content:
+      "Cicon Marketing did an amazing job with our website service and [AI] visibility setup! Their team is super skilled, attentive, and really understands how to position a business for modern search engines and [AI] discovery. The process was smooth, and the quality of work is top-notch. Highly recommend them to anyone wanting real digital growth!",
   },
   {
     name: 'Ali Majlesi',
@@ -99,7 +103,7 @@ const REVIEWS = [
     role: 'Local Business Owner',
     rating: 5,
     content:
-      'Creative, responsive, and results-driven. CiCon helped elevate our brand with smart strategy and great execution. From the very first meeting they understood exactly what we needed and delivered beyond expectations.',
+      "CiCon has been a fantastic marketing partner—creative, responsive, and results-driven. They've helped elevate our brand with smart strategies and great execution. Highly recommend!",
   },
 ]
 
@@ -116,7 +120,7 @@ const STAR = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" wi
     <p class="text-base mb-2" style="color:var(--charcoal)">
       Real results from real GTA businesses who trusted CiCon Marketing to grow their brand.
     </p>
-    <p class="text-sm mb-8" style="color:#5a5a5a">{RATING_VALUE} ★ average from {REVIEW_COUNT} Google Reviews</p>
+    <p class="text-sm mb-8" style="color:#5a5a5a">{RATING_VALUE} ★ on Google · <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-underline-offset:3px">Read all our Google reviews</a></p>
 
     <div class="review-stage" id="area-review-stage">
       {REVIEWS.map((r, i) => (

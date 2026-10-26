@@ -1,24 +1,26 @@
 /**
- * Update these in one place — they propagate to every AggregateRating node
- * sitewide (nested on Organization and LocalBusiness below) and to the
- * visible rating line on the homepage reviews section.
+ * Visible Google rating, used by the review sections and by the service-page
+ * stats (via syncReviewStats). There is no AggregateRating schema anywhere —
+ * see the note above PERSON_MAJID.
  */
+// Live Google Business Profile rating. Re-verified on Google Maps 2026-10-26:
+// 5.0 from 15 reviews. The site no longer shows a review *count*: a hard-coded
+// count went stale after every new review (14 on the site vs 15 on Google in
+// the 2026-10 audit). The review sections link to the live listing instead.
 export const RATING_VALUE = '5.0'
-// Google Business Profile review count. Re-verified against live GBP data
-// (Localo sync + place.latestPlaceSnapshot.reviewsCount) on 2026-10-05: 14.
-// The review carousels (RReviews.astro / GoogleReviews.tsx / AreaReviews.astro)
-// show a curated 12 of these; 2 short/related-party reviews are left out on
-// purpose. Service-page "Verified 5-star reviews" stats read this value too,
-// via syncReviewStats() below, so the number lives in one place.
-export const REVIEW_COUNT = 14
+
+// Live CiCon Marketing listing on Google Maps, where every review and the
+// current count are shown. CID taken from the place URL (0xf0ecdf8b7b227761).
+export const GOOGLE_REVIEWS_URL = 'https://www.google.com/maps?cid=17360496453765724001'
 
 /**
- * Sanity stores some page stats as free text ({ value: '9', label: 'Verified
+ * Sanity stores some page stats as free text ({ value: '14', label: 'Verified
  * 5-star reviews' }). Those drifted from the real count more than once, so any
- * stat whose label is about reviews is rewritten to REVIEW_COUNT at build time.
+ * stat whose label is about reviews is rewritten at build time to the Google
+ * rating, with no count.
  */
 export function syncReviewStats<T extends { value?: string; label?: string }>(stats?: T[] | null): T[] | undefined {
-  return stats?.map((s) => (/\breviews?\b/i.test(s?.label ?? '') ? { ...s, value: String(REVIEW_COUNT) } : s))
+  return stats?.map((s) => (/\breviews?\b/i.test(s?.label ?? '') ? { ...s, value: RATING_VALUE, label: 'Rating on Google' } : s))
 }
 
 /**
@@ -59,8 +61,7 @@ const AREA_SERVED_GBP = [
  * So it never earned a star snippet, and shipping it sitewide was live exposure
  * to a structured-data manual action. Removed 2026-08-23.
  *
- * RATING_VALUE / REVIEW_COUNT above are still exported and still correct — they
- * drive the *visible* "5.0 star average from N Google Reviews" line in the
+ * RATING_VALUE above still drives the *visible* "5.0 ★ on Google" line in the
  * review sections. Please don't re-add an aggregateRating property here.
  */
 
