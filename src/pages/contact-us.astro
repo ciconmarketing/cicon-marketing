@@ -5,6 +5,7 @@ import Footer       from '../components/Footer.astro';
 import ContactForm  from '../components/contact/ContactForm.astro';
 import { getContactPage } from '../lib/sanity';
 import { toAbsoluteUrl } from '../lib/url';
+import { LOCAL_BUSINESS_CICON } from '../lib/schema-constants';
 import { formatAmount, lowestStartingOffers } from '../lib/service-pricing';
 
 const isPreview = import.meta.env.VERCEL_ENV !== 'production';
@@ -71,13 +72,9 @@ const jsonLdLocalBusiness = {
     "opens": "09:00",
     "closes": "18:00"
   },
-  "sameAs": [
-    "https://www.linkedin.com/in/majidlm/",
-    "https://www.instagram.com/mbehzadpix/",
-    "https://www.facebook.com/ciconmarketing/",
-    "https://www.instagram.com/ciconmktg/",
-    "https://linkedin.com/company/cicon-marketing/"
-  ]
+  // Business profiles only. The founder's personal profiles (LinkedIn /in/,
+  // Instagram @mbehzadpix) belong on his Person entity, not on LocalBusiness.
+  "sameAs": LOCAL_BUSINESS_CICON.sameAs
 };
 
 // Built from the FAQs the page actually renders (Sanity, or the fallback

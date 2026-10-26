@@ -503,7 +503,7 @@ const homepage = defineType({
           initialValue: [
             { _key: 'sl1', platform: 'linkedin',  url: 'https://www.linkedin.com/company/cicon-marketing/' },
             { _key: 'sl2', platform: 'facebook',  url: 'https://www.facebook.com/ciconmarketing/' },
-            { _key: 'sl3', platform: 'instagram', url: 'https://www.instagram.com/ciconmarketing/' },
+            { _key: 'sl3', platform: 'instagram', url: 'https://www.instagram.com/ciconmktg/' },
           ],
         }),
       ],

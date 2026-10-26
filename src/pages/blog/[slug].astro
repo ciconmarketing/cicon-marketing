@@ -10,6 +10,7 @@ import { PERSON_MAJID, ORG_CICON, WEBSITE_CICON } from '../../lib/schema-constan
 import Nav from '../../components/Nav.astro'
 import Footer from '../../components/Footer.astro'
 import InlineVideoPlayer from '../../components/blog/InlineVideoPlayer.astro'
+import CdcpDisclaimer from '../../components/CdcpDisclaimer.astro'
 import '../../styles/globals.css'
 
 // ── Sanity client ──────────────────────────────────────────────────────────────
@@ -460,6 +461,9 @@ const schema: any = {
           </div>
         </section>
       )}
+
+      <!-- ══ CDCP DISCLAIMER — every post in the dental-marketing category ═══ -->
+      {post.category?.slug === 'dental-marketing' && <CdcpDisclaimer />}
     </article>
 
     <!-- STICKY RIGHT SIDEBAR (desktop ≥1024px) -->
