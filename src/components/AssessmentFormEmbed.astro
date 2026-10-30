@@ -7,13 +7,20 @@
  * supplied. Do not edit them here without MJ's approval.
  *
  * `#assessment-form` is the anchor the shared Nav and page CTAs point to.
+ * GhlFormLoader loads the form and form_embed.js when a visitor gets near it.
  */
+import GhlFormLoader from './GhlFormLoader.astro';
 ---
 
 <div id="assessment-form" class="assess-form-card">
+  <p class="ghl-form-wait">
+    Loading the form…
+    <a href="https://link.cicon.ca/widget/form/rVKz0UwgPdVZhWVL7t4H" target="_blank" rel="noopener">Open it in a new tab</a>
+  </p>
   <iframe
     src="https://link.cicon.ca/widget/form/rVKz0UwgPdVZhWVL7t4H"
     id="inline-rVKz0UwgPdVZhWVL7t4H"
+    loading="lazy"
     class="assess-form-frame"
     data-layout="{'id':'INLINE'}"
     data-trigger-type="alwaysShow"
@@ -30,11 +37,14 @@
     data-cookie-consent-provider="auto"
     title="Free Marketing Assessment request form"
   ></iframe>
-  <script is:inline src="https://link.cicon.ca/js/form_embed.js"></script>
+  <GhlFormLoader />
 </div>
 
 <style is:global>
   .assess-form-card {
+    --form-h: 1420px;
+    position: relative;
+    min-height: var(--form-h);
     background: #fff;
     border: 1px solid #E7E7E7;
     border-radius: 14px;
@@ -44,7 +54,7 @@
   }
 
   /* Starting heights from the measured form; GHL's script can then resize the iframe */
-  .assess-form-frame { display: block; width: 100%; height: 1420px; border: 0; }
+  .assess-form-frame { display: block; width: 100%; height: var(--form-h); border: 0; }
   /* GHL's script hides the iframe off-page until the form reports in. Keep it visible
      and in place so the form never depends on that; the script still sets the height. */
   .assess-form-frame {
@@ -54,7 +64,7 @@
     visibility: visible !important;
     pointer-events: auto !important;
   }
-  @media (max-width: 340px) { .assess-form-frame { height: 1480px; } }
+  @media (max-width: 340px) { .assess-form-card { --form-h: 1480px; } }
   /* Phones: edge-to-edge card so the form's Cloudflare check has room */
   @media (max-width: 639px) {
     .assess-form-card {
@@ -65,7 +75,7 @@
       border-right: 0;
     }
   }
-  @media (min-width: 480px) { .assess-form-frame { height: 1280px; } }
-  @media (min-width: 640px) { .assess-form-frame { height: 1170px; } }
-  @media (min-width: 1024px) { .assess-form-frame { height: 1190px; } }
+  @media (min-width: 480px) { .assess-form-card { --form-h: 1280px; } }
+  @media (min-width: 640px) { .assess-form-card { --form-h: 1170px; } }
+  @media (min-width: 1024px) { .assess-form-card { --form-h: 1190px; } }
 </style>

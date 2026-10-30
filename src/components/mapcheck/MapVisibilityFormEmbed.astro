@@ -9,13 +9,20 @@
  *
  * The form's heading and fields live in GHL. After submit, GHL opens
  * /gbp-thank-you/, which vercel.json forwards to /thank-you/.
+ * GhlFormLoader loads the form and form_embed.js when a visitor gets near it.
  */
+import GhlFormLoader from '../GhlFormLoader.astro';
 ---
 
 <div class="map-form-card">
+  <p class="ghl-form-wait">
+    Loading the form…
+    <a href="https://link.cicon.ca/widget/form/NcwBsJYWmlpd2jI3BkHr" target="_blank" rel="noopener">Open it in a new tab</a>
+  </p>
   <iframe
     src="https://link.cicon.ca/widget/form/NcwBsJYWmlpd2jI3BkHr"
     id="inline-NcwBsJYWmlpd2jI3BkHr"
+    loading="lazy"
     class="map-form-frame"
     data-layout="{'id':'INLINE'}"
     data-trigger-type="alwaysShow"
@@ -32,11 +39,14 @@
     data-cookie-consent-provider="auto"
     title="Google Map Visibility"
   ></iframe>
-  <script is:inline src="https://link.cicon.ca/js/form_embed.js"></script>
+  <GhlFormLoader />
 </div>
 
 <style is:global>
   .map-form-card {
+    --form-h: 1640px;
+    position: relative;
+    min-height: var(--form-h);
     background: #fff;
     border: 1px solid #E7E7E7;
     border-radius: 14px;
@@ -45,7 +55,7 @@
   }
 
   /* Starting heights from the measured form; GHL's script can then resize the iframe */
-  .map-form-frame { display: block; width: 100%; height: 1640px; border: 0; }
+  .map-form-frame { display: block; width: 100%; height: var(--form-h); border: 0; }
   /* GHL's script hides the iframe off-page until the form reports in. Keep it visible
      and in place so the form never depends on that; the script still sets the height. */
   .map-form-frame {
@@ -55,7 +65,7 @@
     visibility: visible !important;
     pointer-events: auto !important;
   }
-  @media (max-width: 340px) { .map-form-frame { height: 1870px; } }
+  @media (max-width: 340px) { .map-form-card { --form-h: 1870px; } }
   /* Phones: edge-to-edge card so the form's Cloudflare check has room */
   @media (max-width: 639px) {
     .map-form-card {
@@ -66,6 +76,6 @@
       border-right: 0;
     }
   }
-  @media (min-width: 480px) { .map-form-frame { height: 1420px; } }
-  @media (min-width: 640px) { .map-form-frame { height: 1330px; } }
+  @media (min-width: 480px) { .map-form-card { --form-h: 1420px; } }
+  @media (min-width: 640px) { .map-form-card { --form-h: 1330px; } }
 </style>

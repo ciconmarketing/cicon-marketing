@@ -1,0 +1,81 @@
+---
+/**
+ * GhlFormLoader — loads a GHL inline form when a visitor gets near it.
+ * Place it directly after the form's iframe, inside the form card.
+ *
+ * The form downloads over 1 MB, so it stays held until a visitor is near it and
+ * the page has finished loading. That keeps it from delaying first paint.
+ * form_embed.js loads first, so it catches the form's first messages.
+ *
+ * The iframe is only held once the observer is running. Without JavaScript or
+ * IntersectionObserver nothing is held and the iframe loads as normal.
+ */
+---
+
+<script is:inline>
+  (function () {
+    var frame = document.currentScript.previousElementSibling;
+    var card = frame.parentElement;
+    var wait = frame.previousElementSibling;
+    var started = false;
+    var observer;
+
+    frame.addEventListener('load', function () {
+      wait.hidden = true;
+    });
+
+    function show() {
+      frame.style.setProperty('display', 'block');
+      card.style.minHeight = '0';
+    }
+
+    function start() {
+      if (started) return;
+      started = true;
+      if (observer) observer.disconnect();
+      var script = document.createElement('script');
+      script.src = 'https://link.cicon.ca/js/form_embed.js';
+      script.onload = script.onerror = show;
+      document.body.appendChild(script);
+      // Never leave the form hidden if the script hangs
+      setTimeout(show, 4000);
+    }
+
+    function startAfterLoad() {
+      if (document.readyState === 'complete') return start();
+      window.addEventListener('load', start, { once: true });
+      // A slow resource can delay the load event
+      setTimeout(start, 5000);
+    }
+
+    try {
+      observer = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) startAfterLoad();
+      }, { rootMargin: '1500px 0px' });
+      observer.observe(card);
+      frame.style.setProperty('display', 'none', 'important');
+    } catch (error) {
+      startAfterLoad();
+    }
+
+    // A CTA click starts the form now, so it is ready when the scroll ends
+    document.addEventListener('click', function (event) {
+      if (card.id && event.target.closest('a[href$="#' + card.id + '"]')) start();
+    });
+  })();
+</script>
+
+<style is:global>
+  .ghl-form-wait {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 32px 24px;
+    text-align: center;
+    font-size: 0.95rem;
+    color: #3a3a3a;
+  }
+  .ghl-form-wait a { color: inherit; text-decoration: underline; }
+</style>
