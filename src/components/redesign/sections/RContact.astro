@@ -1,10 +1,10 @@
 ---
 /**
- * RContact — dark re-skin of the contact section (info column + the 4-step
- * qualifier). Copy and contact details flow through unchanged.
+ * RContact — dark re-skin of the contact section: info column + the inline
+ * Free Marketing Assessment form. Contact details flow through unchanged.
  */
 import type { ContactData } from '../../../lib/types';
-import RContactForm from './RContactForm.astro';
+import AssessmentFormEmbed from '../../AssessmentFormEmbed.astro';
 interface Props { data: ContactData }
 const { data } = Astro.props;
 
@@ -26,8 +26,8 @@ const SOCIALS = [
           <span class="rd-k"><span class="rd-k-in">{data.headline}</span></span>
         </h2>
         <p class="rd-sub rd-r">
-          Whether you have a quick question or you're ready to get started, we'd love to hear from you.
-          Reach out and a real human will get back to you promptly.
+          Request your Free Marketing Assessment: a two-page summary based on public information.
+          Or reach us by email, phone or WhatsApp.
         </p>
 
         <div class="rd-contact-rows">
@@ -89,9 +89,9 @@ const SOCIALS = [
         </div>
       </div>
 
-      <!-- Right: the 4-step qualifier, re-skinned -->
-      <div class="rd-r">
-        <RContactForm source="redesign-preview" />
+      <!-- Right: MJ's GHL form, visible with no extra step -->
+      <div>
+        <AssessmentFormEmbed />
       </div>
 
     </div>
