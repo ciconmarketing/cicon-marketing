@@ -2,7 +2,7 @@
 import '../styles/globals.css';
 import Nav          from '../components/Nav.astro';
 import Footer       from '../components/Footer.astro';
-import ContactForm  from '../components/contact/ContactForm.astro';
+import AssessmentFormEmbed from '../components/AssessmentFormEmbed.astro';
 import { getContactPage } from '../lib/sanity';
 import { toAbsoluteUrl } from '../lib/url';
 import { LOCAL_BUSINESS_CICON } from '../lib/schema-constants';
@@ -12,15 +12,21 @@ const isPreview = import.meta.env.VERCEL_ENV !== 'production';
 const LOWEST = lowestStartingOffers();
 
 // ── Sanity-driven content with hardcoded fallbacks ────────────────────────────
-let contactHero = {
-  headline: "Talk to a senior strategist — not a sales funnel.",
-  subheadline: "Tell us about your clinic or local business and you'll hear back within 1 business hour, Monday to Saturday. No discovery-call gauntlet. No junior account manager.",
+// These two answers replace the Sanity text on this page: the old response-time
+// promise and agency audit offer do not match the GHL form or the public-only assessment.
+const FAQ_HOURS = {
+  question: 'When can I reach you?',
+  answer: "Our office hours are Monday to Saturday, 9am – 6pm ET. We're closed on Sunday. If something is time-sensitive, call us or message us on WhatsApp.",
+};
+const FAQ_OTHER_AGENCY = {
+  question: "What if I'm already working with another agency?",
+  answer: "You can still request the Free Marketing Assessment. It uses public information only, so it can't review your agency's private accounts, reports or results. It shows what's visible from the outside, where the gaps appear and what to prioritize, and we'll say where a finding has limits.",
 };
 let contactFaqs = [
-  { question: 'How fast do you actually respond?', answer: 'Within 1 business hour, Monday to Saturday, 9am – 6pm ET. Submissions after hours or on Sundays get a reply first thing the next business day. No exceptions, no auto-replies pretending to be us.' },
+  FAQ_HOURS,
   { question: "What's your minimum engagement?", answer: `Our lowest starting prices are ${formatAmount(LOWEST.monthly.amount)} CAD per month (${LOWEST.monthly.name}) and ${formatAmount(LOWEST.oneTime.amount)} CAD one-time (${LOWEST.oneTime.name}). Every service has its own published starting price on our services page, and final pricing depends on the agreed scope. Ad spend is always excluded from our service fees.` },
   { question: 'Do you work with businesses outside the GTA?', answer: "Most of our clients are GTA-based because local SEO and Google Business Profile work benefit from us knowing the territory. We do take on remote clients for paid ads, SEO, and content — but if you need physical photo/video production or in-person strategy, GTA-only." },
-  { question: "What if I'm already working with another agency?", answer: "Two options. We can run a no-strings audit of what they're doing — sometimes the answer is 'they're doing fine, stay put.' Or, if you're already decided to switch, we handle the offboarding so you don't have to fight for assets and access. Either way, no awkwardness — we've been on both sides of that conversation." },
+  FAQ_OTHER_AGENCY,
 ];
 let contactSeoCopy = {
   headline: 'Marketing that earns its keep — for clinics and local businesses across the GTA',
@@ -29,14 +35,33 @@ let contactSeoCopy = {
 let contactSeoOverrides: { seoTitle?: string; seoDescription?: string; ogImageUrl?: string; canonicalOverride?: string } = {};
 try {
   const sanity = await getContactPage();
-  if (sanity?.hero?.headline) contactHero = sanity.hero;
-  if (sanity?.faqs?.length) contactFaqs = sanity.faqs;
+  if (sanity?.faqs?.length) {
+    contactFaqs = sanity.faqs.map((faq: { question: string; answer: string }) => {
+      if (/how fast/i.test(faq.question)) return FAQ_HOURS;
+      if (/another agency/i.test(faq.question)) return FAQ_OTHER_AGENCY;
+      return faq;
+    });
+  }
   if (sanity?.seoCopy?.headline) contactSeoCopy = sanity.seoCopy;
   if (sanity?.seoTitle) contactSeoOverrides.seoTitle = sanity.seoTitle;
   if (sanity?.seoDescription) contactSeoOverrides.seoDescription = sanity.seoDescription;
   if (sanity?.ogImageUrl) contactSeoOverrides.ogImageUrl = sanity.ogImageUrl;
   if (sanity?.canonicalOverride) contactSeoOverrides.canonicalOverride = sanity.canonicalOverride;
 } catch {}
+
+// Free Marketing Assessment scope (public-information review only)
+const ASSESSMENT_ITEMS = [
+  { label: 'Strengths', detail: 'what is already working and worth keeping' },
+  { label: 'Gaps', detail: 'what is missing or unclear to someone new' },
+  { label: 'Priorities', detail: 'what to work on first' },
+  { label: 'Channels', detail: 'where you are visible today and where you are not' },
+  { label: 'Booking path', detail: 'how easily someone can call, book or get in touch' },
+  { label: 'Google Business Profile and Maps', detail: 'how your public listing looks' },
+  { label: 'Service pages', detail: 'how clearly your pages explain what you offer' },
+  { label: 'Mobile experience and speed', detail: 'how your site works and loads on a phone' },
+  { label: 'Public measurement signals', detail: 'what can be seen from the outside, and what cannot' },
+];
+const WA_ICON_PATH = 'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z';
 
 // JSON-LD blocks
 const jsonLdContactPage = {
@@ -97,12 +122,12 @@ const jsonLdFaq = {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="/fonts/fonts.css" />
 
-  <!-- Resource hints: warm up connections before GTM/GA4/form endpoint fire -->
+  <!-- Resource hints: warm up connections before GTM/GA4/assessment form fire -->
   <link rel="preconnect" href="https://www.googletagmanager.com" />
   <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
   <link rel="preconnect" href="https://www.google-analytics.com" crossorigin />
   <link rel="dns-prefetch" href="https://www.google-analytics.com" />
-  <link rel="dns-prefetch" href="https://services.leadconnectorhq.com" />
+  <link rel="preconnect" href="https://link.cicon.ca" />
 
   <!-- Lazy GTM: dataLayer + gtag stub available immediately for inline event calls.
        GTM itself loads after 3.5 s or on first user interaction — keeps GA4 off
@@ -133,7 +158,7 @@ const jsonLdFaq = {
 
   <!-- Primary Meta -->
   <title>{contactSeoOverrides.seoTitle ?? 'Contact CiCon Marketing | GTA Agency, Richmond Hill ON'}</title>
-  <meta name="description" content={contactSeoOverrides.seoDescription ?? 'Reach a senior marketing strategist in Richmond Hill. Serving GTA businesses and dental clinics. Response within 1 business hour, Mon–Sat.'} />
+  <meta name="description" content={contactSeoOverrides.seoDescription ?? 'Request a Free Marketing Assessment from CiCon Marketing in Richmond Hill, or reach us by WhatsApp or phone. For GTA clinics and local businesses.'} />
   <link rel="canonical" href={toAbsoluteUrl(contactSeoOverrides.canonicalOverride, 'https://cicon.ca/contact-us/')} />
   {isPreview
     ? <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
@@ -144,13 +169,13 @@ const jsonLdFaq = {
   <meta property="og:type" content="website" />
   <meta property="og:url" content={toAbsoluteUrl(contactSeoOverrides.canonicalOverride, 'https://cicon.ca/contact-us/')} />
   <meta property="og:title" content={contactSeoOverrides.seoTitle ?? 'Contact CiCon Marketing | GTA Agency, Richmond Hill ON'} />
-  <meta property="og:description" content={contactSeoOverrides.seoDescription ?? 'Reach a senior marketing strategist in Richmond Hill. Serving GTA businesses and dental clinics. Same-business-hour response, Mon–Sat.'} />
+  <meta property="og:description" content={contactSeoOverrides.seoDescription ?? 'Request a Free Marketing Assessment from CiCon Marketing in Richmond Hill, or reach us by WhatsApp or phone. For GTA clinics and local businesses.'} />
   <meta property="og:image" content={contactSeoOverrides.ogImageUrl ?? 'https://cicon.ca/logo-cicon.jpg'} />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={contactSeoOverrides.seoTitle ?? 'Contact CiCon Marketing | GTA Agency, Richmond Hill ON'} />
-  <meta name="twitter:description" content={contactSeoOverrides.seoDescription ?? 'Reach a senior marketing strategist in Richmond Hill. Serving GTA businesses and dental clinics. Same-business-hour response, Mon–Sat.'} />
+  <meta name="twitter:description" content={contactSeoOverrides.seoDescription ?? 'Request a Free Marketing Assessment from CiCon Marketing in Richmond Hill, or reach us by WhatsApp or phone. For GTA clinics and local businesses.'} />
   <meta name="twitter:image" content={contactSeoOverrides.ogImageUrl ?? 'https://cicon.ca/logo-cicon.jpg'} />
 
   <!-- Fonts: self-hosted via @fontsource-variable/inter in globals.css (no CDN, no render-block) -->
@@ -203,25 +228,144 @@ const jsonLdFaq = {
     body { margin: 0; font-family: 'Inter', sans-serif; background: var(--off-white); color: var(--charcoal); }
     h1, h2, h3, h4, h5, h6 { font-family: 'Clash Display', 'Inter', sans-serif; }
 
-    /* ── Two-column content layout ─────────────── */
-    .contact-grid {
+    /* ── Free Marketing Assessment hero ────────── */
+    .assess-hero { background: var(--shadow); padding: 64px 0 56px; }
+    .assess-hero__inner { max-width: 640px; }
+    .assess-eyebrow {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0 0 16px;
+    }
+    .assess-hero__title {
+      font-family: 'Clash Display', 'Inter', sans-serif;
+      font-size: clamp(30px, 5vw, 52px);
+      font-weight: 900;
+      line-height: 1.1;
+      color: #fff;
+      margin: 0 0 20px;
+    }
+    .assess-hero__lead {
+      font-size: clamp(16px, 2vw, 19px);
+      line-height: 1.6;
+      color: #c4c4cf;
+      margin: 0 0 28px;
+    }
+    .assess-hero__phone { font-size: 14px; color: #a0a0b0; margin: 20px 0 0; }
+    .assess-hero__phone a { color: #fff; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+
+    /* ── Co-primary CTA pair ───────────────────── */
+    .assess-cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
+    .assess-cta-row--center { justify-content: center; }
+    .assess-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background .15s;
+    }
+    .assess-btn--primary { background: var(--action); color: var(--shadow); }
+    .assess-btn--primary:hover { background: #F2C400; }
+    .assess-btn--whatsapp { background: #25D366; color: #10231A; }
+    .assess-btn--whatsapp:hover { background: #1ebe5d; }
+    @media (max-width: 479px) {
+      .assess-cta-row .assess-btn { width: 100%; }
+    }
+
+    /* ── Form + scope layout ───────────────────── */
+    .assess-section { padding: 40px 0 72px; }
+    .assess-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 48px;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 40px;
     }
-    @media (min-width: 768px) {
-      .contact-grid {
-        grid-template-columns: 3fr 2fr;
-        gap: 60px;
+    @media (min-width: 1024px) {
+      .assess-hero { padding: 72px 0 112px; }
+      .assess-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 520px);
+        gap: 64px;
       }
-      /* Trust stack moves to right column on desktop */
-      .trust-stack { order: 2; }
-      .form-col    { order: 1; }
+      .assess-form-col { order: 2; margin-top: -132px; }
+      .assess-info-col { order: 1; }
+      .assess-info-sticky { position: sticky; top: 112px; }
     }
-    /* On mobile: trust stack appears above form */
-    @media (max-width: 767px) {
-      .trust-stack { order: -1; }
-      .form-col    { order: 1; }
+
+    .assess-info__title {
+      font-family: 'Clash Display', 'Inter', sans-serif;
+      font-size: clamp(22px, 3vw, 30px);
+      font-weight: 800;
+      color: var(--shadow);
+      margin: 0 0 12px;
+    }
+    .assess-info__lead { font-size: 16px; line-height: 1.7; color: #555; margin: 0 0 20px; }
+    .assess-list { list-style: none; margin: 0 0 24px; padding: 0; }
+    .assess-list li {
+      display: flex;
+      gap: 12px;
+      padding: 9px 0;
+      font-size: 15px;
+      line-height: 1.55;
+      color: #555;
+      border-bottom: 1px solid var(--alabaster);
+    }
+    .assess-list li:last-child { border-bottom: none; }
+    .assess-list strong { color: var(--shadow); }
+    .assess-list__tick { color: var(--accent); font-weight: 800; flex-shrink: 0; }
+    .assess-note {
+      background: #fff;
+      border: 1px solid var(--alabaster);
+      border-left: 4px solid var(--accent);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .assess-note__title {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--shadow);
+      margin: 0 0 6px;
+    }
+    .assess-note p { font-size: 14px; line-height: 1.65; color: #555; margin: 0; }
+
+    /* ── Other ways to reach us ────────────────── */
+    .assess-section-title {
+      font-family: 'Clash Display', 'Inter', sans-serif;
+      font-size: clamp(22px, 3vw, 30px);
+      font-weight: 800;
+      color: var(--shadow);
+      text-align: center;
+      margin: 0 0 32px;
+    }
+    .choice-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    @media (min-width: 768px) { .choice-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    .choice-grid .trust-card { margin-bottom: 0; }
+    .choice-title {
+      font-family: 'Clash Display', 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--accent);
+      margin: 0 0 12px;
+    }
+
+    /* ── Closing CTA band ──────────────────────── */
+    .assess-band { background: var(--shadow); padding: 56px 0; text-align: center; }
+    .assess-band__title {
+      font-family: 'Clash Display', 'Inter', sans-serif;
+      font-size: clamp(22px, 3.5vw, 32px);
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 24px;
     }
 
     /* ── Trust stack card ──────────────────────── */
@@ -303,32 +447,6 @@ const jsonLdFaq = {
     @media (min-width: 640px) {
       .container-xl { padding: 0 32px; }
     }
-
-    /* Hero path buttons */
-    .path-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 14px 28px;
-      border: 2px solid rgba(255,255,255,0.5);
-      border-radius: 10px;
-      color: #fff;
-      font-size: 15px;
-      font-weight: 700;
-      font-family: 'Inter', sans-serif;
-      text-decoration: none;
-      cursor: pointer;
-      background: transparent;
-      transition: border-color .15s, background .15s;
-      white-space: nowrap;
-    }
-    .path-btn:hover {
-      border-color: #FFCF00;
-      background: rgba(255,207,0,0.1);
-    }
-    .path-btn.dental:hover {
-      border-color: #FFCF00;
-    }
   </style>
 </head>
 
@@ -345,145 +463,131 @@ const jsonLdFaq = {
     <!-- ═══════════════════════════════════════
          HERO SECTION
     ═══════════════════════════════════════ -->
-    <section style="background:#212129;padding:80px 0 72px;" aria-labelledby="contact-hero-heading">
-      <div class="container-xl" style="text-align:center;">
+    <section class="assess-hero" aria-labelledby="contact-hero-heading">
+      <div class="container-xl">
+        <div class="assess-hero__inner">
 
-        <p style="font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9D833E;margin:0 0 16px;">
-          GTA's Boutique Marketing Partner
-        </p>
+          <p class="assess-eyebrow">Contact CiCon Marketing</p>
 
-        <h1
-          id="contact-hero-heading"
-          class="font-heading"
-          style="font-family:'Clash Display','Inter',sans-serif;font-size:clamp(28px,5vw,52px);font-weight:900;color:#fff;line-height:1.1;margin:0 0 20px;max-width:760px;margin-left:auto;margin-right:auto;"
-        >
-          {contactHero.headline}
-        </h1>
+          <h1 id="contact-hero-heading" class="font-heading assess-hero__title">
+            Request your Free Marketing Assessment
+          </h1>
 
-        <p style="font-size:clamp(16px,2vw,19px);color:#a0a0b0;max-width:580px;margin:0 auto 36px;line-height:1.6;">
-          {contactHero.subheadline}
-        </p>
+          <p class="assess-hero__lead">
+            Tell us about your clinic or local business. We'll review what's publicly visible online and show you your strengths, your gaps and what to prioritize first.
+          </p>
 
-        <!-- Path buttons -->
-        <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;">
-          <button
-            class="path-btn dental"
-            onclick="ciconPreselect('dental')"
-            aria-label="I run a dental clinic — go to contact form"
-          >
-            🦷 I run a dental clinic →
-          </button>
-          <button
-            class="path-btn"
-            onclick="ciconPreselect('local')"
-            aria-label="I run a local business — go to contact form"
-          >
-            🏢 I run a local business →
-          </button>
+          <div class="assess-cta-row">
+            <a href="#assessment-form" class="assess-btn assess-btn--primary">Request My Free Assessment</a>
+            <a href="https://wa.me/16475840800" target="_blank" rel="noopener noreferrer" class="assess-btn assess-btn--whatsapp">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={WA_ICON_PATH} /></svg>
+              Chat on WhatsApp
+            </a>
+          </div>
+
+          <p class="assess-hero__phone">
+            Prefer to talk? Call <a href="tel:+12898071020">+1 (289) 807-1020</a>, Mon–Sat, 9am – 6pm ET.
+          </p>
+
         </div>
-
       </div>
     </section>
 
     <!-- ═══════════════════════════════════════
-         MAIN CONTENT: FORM + TRUST STACK
+         FREE MARKETING ASSESSMENT: FORM + SCOPE
     ═══════════════════════════════════════ -->
-    <section class="section-xl" aria-label="Contact form and information">
+    <section class="assess-section" aria-label="Free Marketing Assessment">
       <div class="container-xl">
-        <div class="contact-grid">
+        <div class="assess-grid">
 
-          <!-- Form column -->
-          <div class="form-col">
-            <ContactForm />
+          <!-- Form column: MJ's GHL form, visible on the page with no extra step -->
+          <div class="assess-form-col">
+            <AssessmentFormEmbed />
           </div>
 
-          <!-- Trust stack column -->
-          <div class="trust-stack">
-
-            <!-- Response guarantee -->
-            <div class="trust-card">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-                <span style="font-size:22px;" aria-hidden="true">⚡</span>
-                <h2 class="font-heading" style="font-family:'Clash Display','Inter',sans-serif;font-size:18px;font-weight:800;color:#212129;margin:0;">
-                  1 business hour. That's the promise.
-                </h2>
-              </div>
-              <p style="font-size:14px;line-height:1.7;color:#555;margin:0;">
-                Every form goes straight to MJ (founder) and Soroush (senior strategist).
-                One of us replies inside an hour, Monday to Saturday — usually faster.
-                No ticketing system. No automated reply.
+          <!-- Scope column -->
+          <div class="assess-info-col">
+            <div class="assess-info-sticky">
+              <h2 class="font-heading assess-info__title">What the assessment covers</h2>
+              <p class="assess-info__lead">
+                You get a two-page summary based on public information. It covers how your business appears online, how your site works on mobile and how easy it is for someone to reach you.
               </p>
-            </div>
 
-            <!-- Call the office -->
-            <div class="trust-card">
-              <h3 class="font-heading" style="font-family:'Clash Display','Inter',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#9D833E;margin:0 0 12px;">
-                Call the office
-              </h3>
-              <a
-                href="tel:+12898071020"
-                id="phone-link"
-                style="font-size:20px;font-weight:800;color:#212129;text-decoration:none;font-family:'Inter',sans-serif;display:block;margin-bottom:6px;"
-                onmouseover="this.style.color='#9D833E'"
-                onmouseout="this.style.color='#212129'"
-              >
-                +1 (289) 807-1020
-              </a>
-              <p style="font-size:13px;color:#888;margin:0;">Mon–Sat, 9am – 6pm ET</p>
-            </div>
+              <ul class="assess-list">
+                {ASSESSMENT_ITEMS.map((item) => (
+                  <li>
+                    <span class="assess-list__tick" aria-hidden="true">✓</span>
+                    <span><strong>{item.label}:</strong> {item.detail}</span>
+                  </li>
+                ))}
+              </ul>
 
-            <!-- WhatsApp -->
-            <div class="trust-card">
-              <h3 class="font-heading" style="font-family:'Clash Display','Inter',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#9D833E;margin:0 0 12px;">
-                Prefer messaging?
-              </h3>
-              <a
-                href="https://wa.me/16475840800"
-                id="whatsapp-trust-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                style="display:inline-flex;align-items:center;gap:10px;padding:12px 22px;background:#25D366;color:#10231A;font-weight:700;font-size:14px;border-radius:10px;text-decoration:none;transition:background .15s;"
-                onmouseover="this.style.background='#1ebe5d'"
-                onmouseout="this.style.background='#25D366'"
-                aria-label="Chat with CiCon Marketing on WhatsApp"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                </svg>
-                Chat on WhatsApp
-              </a>
-              <p style="font-size:12px;color:#888;margin:10px 0 0;">Reply times same as the form.</p>
+              <div class="assess-note">
+                <h3 class="assess-note__title">What it is not</h3>
+                <p>
+                  This is a public-information review. We don't ask for logins or look inside your private accounts, so we can't confirm your ad results, analytics or bookings. The mobile speed review is a point-in-time check, not a guaranteed score or result. Where a finding has limits, we'll say so.
+                </p>
+              </div>
             </div>
+          </div>
 
-            <!-- Email -->
-            <div class="trust-card">
-              <h3 class="font-heading" style="font-family:'Clash Display','Inter',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#9D833E;margin:0 0 10px;">
-                Or email directly
-              </h3>
-              <a
-                href="mailto:info@cicon.ca"
-                style="font-size:15px;font-weight:600;color:#212129;text-decoration:none;"
-                onmouseover="this.style.color='#9D833E'"
-                onmouseout="this.style.color='#212129'"
-              >info@cicon.ca</a>
-            </div>
+        </div>
+      </div>
+    </section>
 
-            <!-- Office address -->
-            <div class="trust-card">
-              <h3 class="font-heading" style="font-family:'Clash Display','Inter',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#9D833E;margin:0 0 12px;">
-                Find us
-              </h3>
-              <address style="font-style:normal;font-size:14px;line-height:1.7;color:#555;">
-                <strong style="color:#212129;">CiCon Marketing</strong><br />
-                30 Via Renzo Drive, Suite 259<br />
-                Richmond Hill, ON L4S 0B8<br />
-                Canada
-              </address>
-              <p style="font-size:13px;color:#888;margin:8px 0 0;">Serving clinics and local businesses across the GTA.</p>
-            </div>
+    <!-- ═══════════════════════════════════════
+         OTHER WAYS TO REACH US
+    ═══════════════════════════════════════ -->
+    <section class="section-lg" style="background:#fff;" aria-labelledby="other-ways-heading">
+      <div class="container-xl">
 
-          </div><!-- /trust stack -->
-        </div><!-- /contact grid -->
+        <h2 id="other-ways-heading" class="font-heading assess-section-title">Prefer another way to reach us?</h2>
+
+        <div class="choice-grid">
+
+          <!-- WhatsApp -->
+          <div class="trust-card">
+            <h3 class="font-heading choice-title">Message us</h3>
+            <a
+              href="https://wa.me/16475840800"
+              id="whatsapp-trust-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="assess-btn assess-btn--whatsapp"
+              aria-label="Chat with CiCon Marketing on WhatsApp"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={WA_ICON_PATH} /></svg>
+              Chat on WhatsApp
+            </a>
+          </div>
+
+          <!-- Call the office -->
+          <div class="trust-card">
+            <h3 class="font-heading choice-title">Call the office</h3>
+            <a
+              href="tel:+12898071020"
+              id="phone-link"
+              style="font-size:20px;font-weight:800;color:#212129;text-decoration:none;font-family:'Inter',sans-serif;display:block;margin-bottom:6px;"
+              onmouseover="this.style.color='#9D833E'"
+              onmouseout="this.style.color='#212129'"
+            >
+              +1 (289) 807-1020
+            </a>
+            <p style="font-size:13px;color:#888;margin:0;">Mon–Sat, 9am – 6pm ET</p>
+          </div>
+
+          <!-- Email -->
+          <div class="trust-card">
+            <h3 class="font-heading choice-title">Or email directly</h3>
+            <a
+              href="mailto:info@cicon.ca"
+              style="font-size:15px;font-weight:600;color:#212129;text-decoration:none;"
+              onmouseover="this.style.color='#9D833E'"
+              onmouseout="this.style.color='#212129'"
+            >info@cicon.ca</a>
+          </div>
+
+        </div>
       </div>
     </section>
 
@@ -518,6 +622,22 @@ const jsonLdFaq = {
             </details>
           ))}
 
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         CLOSING CTA BAND
+    ═══════════════════════════════════════ -->
+    <section class="assess-band" aria-labelledby="assess-band-heading">
+      <div class="container-xl">
+        <h2 id="assess-band-heading" class="font-heading assess-band__title">Want a clearer view of your marketing?</h2>
+        <div class="assess-cta-row assess-cta-row--center">
+          <a href="#assessment-form" class="assess-btn assess-btn--primary">Request My Free Assessment</a>
+          <a href="https://wa.me/16475840800" target="_blank" rel="noopener noreferrer" class="assess-btn assess-btn--whatsapp">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={WA_ICON_PATH} /></svg>
+            Chat on WhatsApp
+          </a>
         </div>
       </div>
     </section>
@@ -655,12 +775,6 @@ const jsonLdFaq = {
 
   <!-- Page-level GA4 event wiring — runs after load to keep main thread free at paint time -->
   <script is:inline>
-    // Hero path-button pre-selection (must be synchronous — called from onclick attribute)
-    function ciconPreselect(type) {
-      if (typeof gtag === 'function') gtag('event', 'contact_path_select', { path: type });
-      window.dispatchEvent(new CustomEvent('cicon:preselect', { detail: { type: type } }));
-    }
-
     // Defer click-event tracking until after load — no user can click before that anyway
     window.addEventListener('load', function () {
       var phoneLink = document.getElementById('phone-link');

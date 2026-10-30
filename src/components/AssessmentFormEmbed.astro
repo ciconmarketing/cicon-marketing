@@ -1,0 +1,71 @@
+---
+/**
+ * AssessmentFormEmbed — MJ's GHL "Main Form", shown as a visible inline form.
+ *
+ * Adapted from his supplied STICKY_SIDEBAR embed: only the layout type and
+ * iframe ids change. The form, trigger and cookie-consent attributes stay as
+ * supplied. Do not edit them here without MJ's approval.
+ *
+ * `#assessment-form` is the anchor the shared Nav and page CTAs point to.
+ */
+---
+
+<div id="assessment-form" class="assess-form-card">
+  <iframe
+    src="https://link.cicon.ca/widget/form/rVKz0UwgPdVZhWVL7t4H"
+    id="inline-rVKz0UwgPdVZhWVL7t4H"
+    class="assess-form-frame"
+    data-layout="{'id':'INLINE'}"
+    data-trigger-type="alwaysShow"
+    data-trigger-value=""
+    data-activation-type="alwaysActivated"
+    data-activation-value=""
+    data-deactivation-type="neverDeactivate"
+    data-deactivation-value=""
+    data-form-name="Main Form"
+    data-height="952"
+    data-layout-iframe-id="inline-rVKz0UwgPdVZhWVL7t4H"
+    data-form-id="rVKz0UwgPdVZhWVL7t4H"
+    data-cookie-consent="true"
+    data-cookie-consent-provider="auto"
+    title="Free Marketing Assessment request form"
+  ></iframe>
+  <script is:inline src="https://link.cicon.ca/js/form_embed.js"></script>
+</div>
+
+<style is:global>
+  .assess-form-card {
+    background: #fff;
+    border: 1px solid #E7E7E7;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(33, 33, 41, 0.08);
+    scroll-margin-top: 96px;
+  }
+
+  /* Starting heights from the measured form; GHL's script can then resize the iframe */
+  .assess-form-frame { display: block; width: 100%; height: 1420px; border: 0; }
+  /* GHL's script hides the iframe off-page until the form reports in. Keep it visible
+     and in place so the form never depends on that; the script still sets the height. */
+  .assess-form-frame {
+    position: relative !important;
+    left: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+  @media (max-width: 340px) { .assess-form-frame { height: 1480px; } }
+  /* Phones: edge-to-edge card so the form's Cloudflare check has room */
+  @media (max-width: 639px) {
+    .assess-form-card {
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      border-radius: 0;
+      border-left: 0;
+      border-right: 0;
+    }
+  }
+  @media (min-width: 480px) { .assess-form-frame { height: 1280px; } }
+  @media (min-width: 640px) { .assess-form-frame { height: 1170px; } }
+  @media (min-width: 1024px) { .assess-form-frame { height: 1190px; } }
+</style>
