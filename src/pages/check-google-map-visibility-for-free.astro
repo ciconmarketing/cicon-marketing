@@ -3,11 +3,10 @@
  * /check-google-map-visibility-for-free/
  * Lead-magnet page: free local SEO heat-map scanner → manual audit CTA
  * 7 sections per brief: Hero → Localo widget → Results explainer →
- * Lead form (ContactForm) → Social proof (GoogleReviews) → FAQ → Final CTA
+ * Lead form (MapVisibilityFormEmbed) → Social proof (GoogleReviews) → FAQ → Final CTA
  */
 import Nav            from '../components/Nav.astro';
 import Footer         from '../components/Footer.astro';
-import ContactForm    from '../components/contact/ContactForm.astro';
 // Static, zero-hydration reviews. The React GoogleReviews island pulled
 // React + framer-motion + Radix (349 KB raw / 112 KB gzip) onto this route for
 // a testimonial carousel; this renders the same GBP reviews with the same
@@ -15,6 +14,7 @@ import ContactForm    from '../components/contact/ContactForm.astro';
 import AreaReviews    from '../components/areas/AreaReviews.astro';
 import LocalVisibilityScan from '../components/mapcheck/LocalVisibilityScan.astro';
 import RankingByLocation   from '../components/mapcheck/RankingByLocation.astro';
+import MapVisibilityFormEmbed from '../components/mapcheck/MapVisibilityFormEmbed.astro';
 import { ORG_CICON, WEBSITE_CICON } from '../lib/schema-constants';
 import '../styles/globals.css';
 import { getFreeMapCheckPage } from '../lib/sanity';
@@ -597,12 +597,8 @@ const heroImageUrl = mapCheckData.hero.heroImage?.asset?.url ?? null;
         </p>
       </div>
 
-      <!-- Reuse ContactForm exactly — source tagged, submit label overridden -->
       <div style="max-width:680px;margin:0 auto;">
-        <ContactForm
-          source="Google Map Visibility Audit"
-          submitLabel="Get My Free Audit"
-        />
+        <MapVisibilityFormEmbed />
       </div>
 
     </div>

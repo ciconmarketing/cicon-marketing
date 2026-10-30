@@ -273,6 +273,11 @@
       "source": "/marketing-services/ai-seo-and-seo",
       "destination": "/marketing-services/ai-seo/",
       "permanent": true
+    },
+    {
+      "source": "/gbp-thank-you{/}?",
+      "destination": "/thank-you/",
+      "permanent": false
     }
   ]
 }
