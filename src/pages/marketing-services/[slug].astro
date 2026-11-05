@@ -4,13 +4,15 @@
  * Dynamically renders one servicePage document from Sanity.
  * Section order: Hero → StickyBar → PAA → AntiPitch →
  * Capabilities → [Dental: CDCP + Channels] → Process →
- * EeatBlock → Pricing (#pricing) → FAQ → RelatedServices → RelatedPosts → FinalCta
+ * EeatBlock → Proof (#case-study-1) → Ranking proof (#case-study-2) → Pricing (#pricing) → FAQ → RelatedServices → RelatedPosts → FinalCta
  */
 import '../../styles/globals.css';
 import { getServicePage, ALL_SERVICE_SLUGS_QUERY } from '../../lib/sanity'
 import { ORG_CICON, PERSON_MAJID, WEBSITE_CICON, syncReviewStats } from '../../lib/schema-constants'
 import { toAbsoluteUrl } from '../../lib/url'
 import { getServicePricing, hasRetainer, offerJsonLd } from '../../lib/service-pricing'
+import { getServiceProof } from '../../lib/service-proof'
+import { getServiceRankingProof } from '../../lib/service-ranking-proof'
 import Nav                 from '../../components/Nav.astro'
 import Footer              from '../../components/Footer.astro'
 import ServiceHero         from '../../components/services/ServiceHero.astro'
@@ -21,6 +23,8 @@ import ProcessStrip        from '../../components/services/ProcessStrip.astro'
 import EeatBlock           from '../../components/services/EeatBlock.astro'
 import ServiceFaq          from '../../components/services/ServiceFaq.astro'
 import PricingBlock        from '../../components/services/PricingBlock.astro'
+import ServiceProof        from '../../components/services/ServiceProof.astro'
+import ServiceRankingProof from '../../components/services/ServiceRankingProof.astro'
 import RelatedServices     from '../../components/services/RelatedServices.astro'
 import RelatedPosts        from '../../components/services/RelatedPosts.astro'
 import FinalCta            from '../../components/services/FinalCta.astro'
@@ -57,6 +61,11 @@ const isDental = page.serviceType === 'dental'
 // answered from the same source and leads the FAQ, so the visible answer, the
 // #pricing section and the FAQPage/Offer JSON-LD can never disagree.
 const pricing = getServicePricing(slug)
+const proof = getServiceProof(slug)
+const rankingProof = getServiceRankingProof(slug)
+// The dental page omits the site-wide reviews block (approved 2026-11-05), so
+// its anonymous client examples are never shown next to named client reviews.
+const hideSiteReviews = slug === 'dental-marketing-services'
 const faqs: Array<{ question: string; answer: string }> = [
   ...(pricing ? [{ question: pricing.costQuestion, answer: pricing.explanation }] : []),
   ...(page.faqs ?? []),
@@ -277,6 +286,10 @@ const jsonLd = {
     stats={syncReviewStats(page.eeatStats)}
   />
 
+  <ServiceProof proof={proof} />
+
+  <ServiceRankingProof proof={rankingProof} />
+
   <PricingBlock pricing={pricing} />
 
   {faqs.length > 0 && (
@@ -291,7 +304,7 @@ const jsonLd = {
     <RelatedPosts posts={page.relatedPosts} />
   )}
 
-  <GoogleReviews client:visible />
+  {!hideSiteReviews && <GoogleReviews client:visible />}
 
   <FinalCta
     headline={page.finalCtaHeadline}
