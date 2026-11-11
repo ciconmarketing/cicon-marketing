@@ -53,9 +53,9 @@ export default defineType({
       type: 'text',
       rows: 3,
       group: 'seo',
-      description: 'Required: 130–140 characters (CiCon editorial standard).',
-      validation: (Rule) => Rule.required().min(140).max(150)
-        .error('Meta description must be 130–140 characters for Google SERP.'),
+      description: 'Required: 130–150 characters (CiCon editorial standard).',
+      validation: (Rule) => Rule.required().min(130).max(150)
+        .error('Meta description must be 130–150 characters for Google SERP.'),
     }),
     defineField({
       name: 'ogImage',

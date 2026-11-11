@@ -183,12 +183,12 @@ export default defineType({
       rows: 3,
       group: 'seo',
       hidden: ({ document }) => !hasPage(document),
-      description: 'Required: 130–140 characters (CiCon editorial standard).',
+      description: 'Required: 130–150 characters (CiCon editorial standard).',
       validation: (Rule) => Rule.custom((value, context) => {
         if (!hasPage(context.document)) return true
         if (!value) return 'Required once Has Dedicated Page is Yes.'
         const len = value.length
-        if (len < 130 || len > 140) return `Meta description must be 130–140 characters for Google SERP (currently ${len}).`
+        if (len < 130 || len > 150) return `Meta description must be 130–150 characters for Google SERP (currently ${len}).`
         return true
       }),
     }),

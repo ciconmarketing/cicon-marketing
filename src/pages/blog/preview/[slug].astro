@@ -244,8 +244,8 @@ const metaDesc  = post.metaDescription || post.dek || ''
         <td>metaDescription</td>
         <td>
           {metaDesc}
-          <span class={`char-count ${metaDesc.length >= 130 && metaDesc.length <= 160 ? 'char-ok' : 'char-err'}`}>
-            ({metaDesc.length} chars {metaDesc.length >= 130 && metaDesc.length <= 160 ? '✓' : '✗ — target 130–160'})
+          <span class={`char-count ${metaDesc.length >= 130 && metaDesc.length <= 150 ? 'char-ok' : 'char-err'}`}>
+            ({metaDesc.length} chars {metaDesc.length >= 130 && metaDesc.length <= 150 ? '✓' : '✗ — target 130–150'})
           </span>
         </td>
       </tr>

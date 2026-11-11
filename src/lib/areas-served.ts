@@ -17,10 +17,10 @@
  *   - Whitby was removed from the GBP service-area list on 2026-07-24 and is
  *     hard-banned here. Do not re-add without an explicit business decision.
  *
- * Areas Served editorial metadata standard (tightened 2026-07-24 — distinct
- * from the sitewide blog/service-page default of 55–62 / 130–160):
+ * Areas Served editorial metadata standard (tightened 2026-07-24; meta
+ * description aligned to the sitewide 130–150 standard 2026-11-11):
  *   - metaTitle: 50–60 characters inclusive
- *   - metaDescription: 130–140 characters inclusive
+ *   - metaDescription: 130–150 characters inclusive
  */
 
 import type { ServiceAreaData } from './sanity'
@@ -77,8 +77,8 @@ export function validateAreaPages(areas: ServiceAreaData[]): void {
 
     if (!p.metaTitle || p.metaTitle.length < 50 || p.metaTitle.length > 60)
       errors.push(`${id} metaTitle must be 50–60 chars (is ${p.metaTitle?.length ?? 0}).`)
-    if (!p.metaDescription || p.metaDescription.length < 130 || p.metaDescription.length > 140)
-      errors.push(`${id} metaDescription must be 130–140 chars (is ${p.metaDescription?.length ?? 0}).`)
+    if (!p.metaDescription || p.metaDescription.length < 130 || p.metaDescription.length > 150)
+      errors.push(`${id} metaDescription must be 130–150 chars (is ${p.metaDescription?.length ?? 0}).`)
 
     const sw = wordCount(p.summary ?? '')
     if (sw < 40 || sw > 80) errors.push(`${id} summary must be 40–80 words (is ${sw}).`)
