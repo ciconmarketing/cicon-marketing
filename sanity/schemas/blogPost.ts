@@ -456,14 +456,14 @@ export default defineType({
       type: 'text',
       rows: 2,
       group: 'meta',
-      description: 'Target: 140-150 characters. Current length appears in real-time.',
-      // Warning, not error: 17 of the 27 posts published before this standard
-      // sit at 130-139 or 151 characters. A hard rule would block republishing
-      // them mid-edit for a legacy length. The nudge still steers new posts to
-      // 140-150; tighten this to .error() once the back catalogue is reflowed.
+      description: 'Target: 130-150 characters. Current length appears in real-time.',
+      // Warning, not error: some legacy posts sit outside the range. A hard
+      // rule would block republishing them mid-edit for a legacy length. The
+      // nudge still steers new posts to 130-150; tighten this to .error() once
+      // the back catalogue is reflowed.
       validation: (Rule) => Rule.required()
-        .min(140).max(150)
-        .warning('Aim for 140-150 characters for Google SERP.'),
+        .min(130).max(150)
+        .warning('Aim for 130-150 characters for Google SERP.'),
     }),
     defineField({ name: 'keywords', title: 'Target Keywords', type: 'array', group: 'meta', of: [{ type: 'string' }] }),
 

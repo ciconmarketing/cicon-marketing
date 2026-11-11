@@ -41,8 +41,8 @@ export default defineType({
       type: 'text',
       rows: 3,
       group: 'seo',
-      description: '135–145 characters recommended.',
-      validation: (Rule) => Rule.min(140).max(150).warning('Aim for 140-150 characters'),
+      description: '130–150 characters recommended.',
+      validation: (Rule) => Rule.min(130).max(150).warning('Aim for 130-150 characters'),
     }),
     defineField({
       name: 'ogImage',

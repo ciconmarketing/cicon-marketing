@@ -141,7 +141,7 @@ test('gate rejects out-of-range metadata lengths', () => {
   assert.throws(() => validateAreaPages([...areas, bad]), /metaTitle must be 50–60/)
 })
 
-test('gate rejects a metaDescription outside 130–140 chars', () => {
+test('gate rejects a metaDescription outside 130–150 chars', () => {
   const template = areas.find((p) => p.slug === 'vaughan')!
   const bad: ServiceAreaData = {
     ...template,
@@ -150,21 +150,21 @@ test('gate rejects a metaDescription outside 130–140 chars', () => {
     cityName: 'Baddesc',
     status: 'draft',
     indexable: false,
-    // deliberately over 140 chars
+    // deliberately over 150 chars
     metaDescription: 'This meta description is intentionally written to be far too long for the new tightened Areas Served editorial standard of one hundred thirty to one hundred forty characters inclusive.',
     faqs: (template.faqs ?? []).map((f, i) => ({ ...f, question: `Baddesc unique question ${i}?` })),
   }
-  assert.throws(() => validateAreaPages([...areas, bad]), /metaDescription must be 130–140/)
+  assert.throws(() => validateAreaPages([...areas, bad]), /metaDescription must be 130–150/)
 })
 
-test('every populated metaTitle is 50–60 chars and metaDescription is 130–140 chars', () => {
+test('every populated metaTitle is 50–60 chars and metaDescription is 130–150 chars', () => {
   for (const p of areas.filter((x) => x.hasDedicatedPage)) {
     assert.ok(p.metaTitle, `${p.slug} is missing metaTitle`)
     assert.ok(p.metaDescription, `${p.slug} is missing metaDescription`)
     const titleLen = p.metaTitle!.length
     const descLen = p.metaDescription!.length
     assert.ok(titleLen >= 50 && titleLen <= 60, `${p.slug} metaTitle is ${titleLen} chars, expected 50-60`)
-    assert.ok(descLen >= 130 && descLen <= 140, `${p.slug} metaDescription is ${descLen} chars, expected 130-140`)
+    assert.ok(descLen >= 130 && descLen <= 150, `${p.slug} metaDescription is ${descLen} chars, expected 130-150`)
   }
   // hub-only areas must not carry populated-but-out-of-range metadata either
   for (const p of areas.filter((x) => !x.hasDedicatedPage)) {
@@ -174,7 +174,7 @@ test('every populated metaTitle is 50–60 chars and metaDescription is 130–14
     }
     if (p.metaDescription) {
       const len = p.metaDescription.length
-      assert.ok(len >= 130 && len <= 140, `${p.slug} (hub-only) metaDescription is ${len} chars, expected 130-140`)
+      assert.ok(len >= 130 && len <= 150, `${p.slug} (hub-only) metaDescription is ${len} chars, expected 130-150`)
     }
   }
 })

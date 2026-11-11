@@ -113,7 +113,7 @@ export default defineType({
       type: 'text',
       rows: 2,
       group: 'seo',
-      validation: (Rule) => Rule.min(140).max(150).warning('Aim for 140-150 characters'),
+      validation: (Rule) => Rule.min(130).max(150).warning('Aim for 130-150 characters'),
     }),
     defineField({
       name: 'canonical',

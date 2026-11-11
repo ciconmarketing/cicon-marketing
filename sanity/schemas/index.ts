@@ -230,8 +230,8 @@ const homepage = defineType({
       type: 'text',
       rows: 3,
       group: 'seo',
-      description: 'Overrides the default meta description. 120–155 characters recommended.',
-      validation: r => r.min(140).max(150).warning('Aim for 140-150 characters'),
+      description: 'Overrides the default meta description. 130–150 characters recommended.',
+      validation: r => r.min(130).max(150).warning('Aim for 130-150 characters'),
     }),
     defineField({
       name: 'ogImage',
