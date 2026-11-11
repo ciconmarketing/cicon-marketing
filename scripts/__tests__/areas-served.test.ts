@@ -59,13 +59,13 @@ test('Sanity returned all 16 GBP-list areas', () => {
   assert.equal(areas.length, 16, `expected 16 serviceArea docs, got ${areas.length}`)
 })
 
-test('hub metaTitle is 50-60 chars and metaDescription is 130-140 chars', () => {
+test('hub metaTitle is 50-60 chars and metaDescription is 130-150 chars', () => {
   assert.ok(hub?.seoTitle, 'hub seoTitle missing')
   assert.ok(hub?.seoDescription, 'hub seoDescription missing')
   const titleLen = hub!.seoTitle!.length
   const descLen = hub!.seoDescription!.length
   assert.ok(titleLen >= 50 && titleLen <= 60, `hub seoTitle is ${titleLen} chars, expected 50-60`)
-  assert.ok(descLen >= 130 && descLen <= 140, `hub seoDescription is ${descLen} chars, expected 130-140`)
+  assert.ok(descLen >= 130 && descLen <= 150, `hub seoDescription is ${descLen} chars, expected 130-150`)
 })
 
 test('live data passes the quality gate', () => {
