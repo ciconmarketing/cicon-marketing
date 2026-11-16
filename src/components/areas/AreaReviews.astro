@@ -8,11 +8,12 @@
  * Avatar/Separator to hydrate a client:visible React island.
  * Auto-rotation is disabled under prefers-reduced-motion; dots still work.
  */
-import { RATING_VALUE, GOOGLE_REVIEWS_URL } from '../../lib/schema-constants'
+import { RATING_VALUE, GOOGLE_REVIEW_COUNT, GOOGLE_REVIEWS_URL } from '../../lib/schema-constants'
 
 // Same curated, verbatim set as RReviews.astro / GoogleReviews.tsx (13 of the
 // 15 live Google reviews, re-checked 2026-10-26 — see RReviews.astro for why
-// two are left out). No count is shown; the rating line links to the full list.
+// two are left out). The rating line shows the Google total and links to the
+// full list; the counter says "featured".
 const REVIEWS = [
   {
     name: 'Sparkle Light',
@@ -120,7 +121,7 @@ const STAR = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" wi
     <p class="text-base mb-2" style="color:var(--charcoal)">
       Real results from real GTA businesses who trusted CiCon Marketing to grow their brand.
     </p>
-    <p class="text-sm mb-8" style="color:#5a5a5a">{RATING_VALUE} ★ on Google · <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-underline-offset:3px">Read all our Google reviews</a></p>
+    <p class="text-sm mb-8" style="color:#5a5a5a">{RATING_VALUE} ★ from {GOOGLE_REVIEW_COUNT} Google reviews · <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-underline-offset:3px">Read all our Google reviews</a></p>
 
     <div class="review-stage" id="area-review-stage">
       {REVIEWS.map((r, i) => (
@@ -150,7 +151,7 @@ const STAR = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" wi
           ></button>
         ))}
       </div>
-      <span class="text-sm" style="color:#5a5a5a"><span id="area-review-idx">1</span> of {REVIEWS.length} reviews</span>
+      <span class="text-sm" style="color:#5a5a5a"><span id="area-review-idx">1</span> of {REVIEWS.length} featured reviews</span>
     </div>
   </div>
 </section>

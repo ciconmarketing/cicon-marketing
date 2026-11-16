@@ -112,7 +112,7 @@ export function AnimatedTestimonials({
 
               {/* Reviewer counter */}
               <p className="text-sm text-gray-400 pt-2">
-                {activeIndex + 1} of {testimonials.length} reviews
+                {activeIndex + 1} of {testimonials.length} featured reviews
               </p>
             </div>
           </motion.div>

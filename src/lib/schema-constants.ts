@@ -3,11 +3,15 @@
  * stats (via syncReviewStats). There is no AggregateRating schema anywhere —
  * see the note above PERSON_MAJID.
  */
-// Live Google Business Profile rating. Re-verified on Google Maps 2026-10-26:
-// 5.0 from 15 reviews. The site no longer shows a review *count*: a hard-coded
-// count went stale after every new review (14 on the site vs 15 on Google in
-// the 2026-10 audit). The review sections link to the live listing instead.
+// Live Google Business Profile rating and review count. Re-verified on Google
+// Maps 2026-10-26 and in Localo's GBP snapshot 2026-11-16: 5.0 from 15 reviews.
+// GOOGLE_REVIEW_COUNT is shown once, in the review sections' rating line. It is
+// hard-coded, so it goes stale when a new review arrives (14 on the site vs 15
+// on Google in the 2026-10 audit): update it here, the single source, whenever
+// Google's count changes. The carousel counters say "featured" because they
+// show a curated subset, never the Google total.
 export const RATING_VALUE = '5.0'
+export const GOOGLE_REVIEW_COUNT = 15
 
 // Live CiCon Marketing listing on Google Maps, where every review and the
 // current count are shown. CID taken from the place URL (0xf0ecdf8b7b227761).
