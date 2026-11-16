@@ -6,15 +6,16 @@
  * navigation, "N of M reviews" counter, single active card crossfade.
  * Auto-rotation is disabled under prefers-reduced-motion; dots still work.
  */
-import { RATING_VALUE, GOOGLE_REVIEWS_URL } from '../../../lib/schema-constants';
+import { RATING_VALUE, GOOGLE_REVIEW_COUNT, GOOGLE_REVIEWS_URL } from '../../../lib/schema-constants';
 
 // Verbatim from the live Google Business Profile, re-checked word for word on
 // Google Maps 2026-10-26 (long reviews are cut with "…", never reworded;
 // "[AI]" marks the reviewer's "Al" typo). Google shows 15 reviews, all 5-star;
 // this curated set shows 13 of them. Two are left out on purpose: one is a
-// single short line and one is from a related party. No count is shown on the
-// page, so the set is a selection, and the line above the dots links to the
-// full live list. Keep in sync with GoogleReviews.tsx and AreaReviews.astro.
+// single short line and one is from a related party. The rating line shows the
+// Google total (GOOGLE_REVIEW_COUNT) and links to the full live list; the
+// counter says "featured", so the set reads as a selection. Keep in sync with
+// GoogleReviews.tsx and AreaReviews.astro.
 const REVIEWS = [
   {
     id: 1,
@@ -150,7 +151,7 @@ const STAR = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
         <p class="rd-sub rd-r">
           Real results from real GTA businesses who trusted CiCon Marketing to grow their brand.
         </p>
-        <p class="rd-review-count rd-r">{RATING_VALUE} ★ on Google · <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-underline-offset:3px">Read all our Google reviews</a></p>
+        <p class="rd-review-count rd-r">{RATING_VALUE} ★ from {GOOGLE_REVIEW_COUNT} Google reviews · <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-underline-offset:3px">Read all our Google reviews</a></p>
 
         <div class="rd-dots rd-r" role="group" aria-label="Reviews">
           {REVIEWS.map((r, i) => (
@@ -161,7 +162,7 @@ const STAR = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
             ></button>
           ))}
         </div>
-        <p class="rd-review-count rd-r"><span id="rd-review-idx">1</span> of {REVIEWS.length} reviews</p>
+        <p class="rd-review-count rd-r"><span id="rd-review-idx">1</span> of {REVIEWS.length} featured reviews</p>
       </div>
 
       <div class="rd-review-stage rd-r" id="rd-review-stage">
